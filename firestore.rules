@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Profils (Social) : chaque personne n'écrit que le sien ; toute personne connectée peut les lire.
+    match /profiles/{uid} {
+      allow read: if request.auth != null;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['j'])
+        && request.resource.data.j is string
+        && request.resource.data.j.size() < 60000;
+      allow delete: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Sauvegarde par compte : strictement privée.
+    match /data/users/{uid}/{docId} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['j'])
+        && request.resource.data.j is string
+        && request.resource.data.j.size() < 200000;
+      allow delete: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Tout le reste est fermé.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

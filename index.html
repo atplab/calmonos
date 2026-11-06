@@ -665,6 +665,90 @@ body.xm :is(.whl b,.rw i,.cl,.sc,.sd-c){text-shadow:none}
 <main id="app"></main>
 <nav id="nav" class="glass" aria-label="Navigation"><button data-a="tab" data-v="aqua"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12c2.5-4.5 7-6 11.5-3.2L19.5 6v12l-5-2.8C10 18 5.5 16.5 3 12z"/><circle cx="8.3" cy="11" r=".9" fill="currentColor" stroke="none"/></svg><span>Aquarium</span><i class="ndot" hidden></i></button><button data-a="tab" data-v="games"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg><span>Jeux</span></button><button data-a="tab" data-v="daily"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg><span>Histoire</span></button><button data-a="tab" data-v="soc"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8.5" r="3"/><path d="M3.5 19c.5-3.3 2.9-5 5.5-5s5 1.7 5.5 5"/><circle cx="17" cy="9" r="2.4"/><path d="M16.2 14.1c2.5-.2 4.4 1.3 4.9 4.4"/></svg><span>Social</span><i class="ndot sdot" hidden></i></button><button data-a="tab" data-v="set"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14M5 16h14"/><circle cx="9" cy="8" r="2.2"/><circle cx="15" cy="16" r="2.2"/></svg><span>Réglages</span></button></nav>
 <script>
+/* Firebase : à l’extérieur de Claude, ce petit adaptateur fournit la même interface « claude.use('db' | 'user') » que l’appli utilise déjà,
+   avec de vrais comptes (e-mail ou Google) et la base Firestore. Chaque document est stocké sous la forme { j : "<JSON>" }. */
+(()=>{
+if(window.claude)return;
+const CFG={apiKey:"AIzaSyDi7m8lfhpeSHjX-dvIuFkD8oL0PhO-o08",authDomain:"calmonus.firebaseapp.com",projectId:"calmonus",storageBucket:"calmonus.firebasestorage.app",messagingSenderId:"219014024976",appId:"1:219014024976:web:dcaa4e350cbfaf174c9f95"};
+const B='https://www.gstatic.com/firebasejs/10.14.1/';
+const fb=window.__fb={u:null,ready:false,failed:false};
+let P=null;
+const load=()=>P||(P=(async()=>{
+ const [A,Au,Fs]=await Promise.all([import(B+'firebase-app.js'),import(B+'firebase-auth.js'),import(B+'firebase-firestore.js')]);
+ const app=A.initializeApp(CFG),auth=Au.getAuth(app),db=Fs.getFirestore(app);
+ try{auth.languageCode='fr'}catch(e){}
+ await auth.authStateReady();
+ fb.u=auth.currentUser?(auth.currentUser.email||'compte'):null;fb.ready=true;
+ Au.onAuthStateChanged(auth,u=>{fb.u=u?(u.email||'compte'):null});
+ return{A,Au,Fs,app,auth,db};
+})().catch(e=>{fb.failed=true;P=null;throw e}));
+setTimeout(()=>{load().catch(()=>{})},0);
+const code=e=>{const c=e&&e.code;return c==='permission-denied'||c==='unauthenticated'?'not_granted':'unavailable'};
+const parse=d=>{try{const v=d&&d.j!=null?JSON.parse(d.j):null;return v&&typeof v==='object'?v:{}}catch(e){return{}}};
+window.claude={use:async n=>{
+ let F;try{F=await load()}catch(e){return null}
+ const {Fs,auth,db}=F;
+ if(n==='user')return{id:async()=>auth.currentUser?auth.currentUser.uid:null,can:async()=>true,isOwner:async()=>false,canEdit:async()=>false};
+ if(n==='db'){
+  if(!auth.currentUser)return null;
+  return{collection:cp=>({
+   doc:id=>({
+    set:async d=>{try{await Fs.setDoc(Fs.doc(db,cp+'/'+id),{j:JSON.stringify(d)})}catch(e){const x=new Error(e&&e.message||'x');x.code=code(e);throw x}},
+    get:async()=>{try{const s=await Fs.getDoc(Fs.doc(db,cp+'/'+id));return{exists:s.exists(),data:()=>parse(s.data())}}catch(e){const x=new Error(e&&e.message||'x');x.code=code(e);throw x}},
+    delete:async()=>{try{await Fs.deleteDoc(Fs.doc(db,cp+'/'+id))}catch(e){const x=new Error(e&&e.message||'x');x.code=code(e);throw x}}}),
+   onSnapshot:(next,err)=>Fs.onSnapshot(Fs.collection(db,cp),sn=>next({docs:sn.docs.map(d=>({id:d.id,data:()=>parse(d.data())})),metadata:{fromCache:sn.metadata.fromCache,hasPendingWrites:sn.metadata.hasPendingWrites}}),e=>{if(err)err(e)})
+  })}}
+ return null}};
+/* ---- fenêtre de connexion ---- */
+const MSG={'auth/invalid-credential':'Adresse ou mot de passe incorrect.','auth/wrong-password':'Adresse ou mot de passe incorrect.','auth/user-not-found':'Adresse ou mot de passe incorrect.','auth/invalid-email':'Cette adresse e-mail n’est pas valide.','auth/email-already-in-use':'Un compte existe déjà avec cette adresse : connecte-toi.','auth/weak-password':'Mot de passe trop court : 6 caractères au moins.','auth/missing-password':'Entre ton mot de passe.','auth/too-many-requests':'Trop d’essais. Réessaie dans quelques minutes.','auth/network-request-failed':'Pas de connexion à internet.','auth/unauthorized-domain':'Ce site n’est pas encore autorisé dans Firebase (domaines autorisés).','auth/operation-not-allowed':'Cette méthode de connexion n’est pas activée dans Firebase.','auth/popup-blocked':'La fenêtre Google a été bloquée par le navigateur.','auth/account-exists-with-different-credential':'Un compte existe déjà avec cette adresse, avec une autre méthode.'};
+const CSS=`.fbo{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;padding:16px;background:rgba(8,10,40,.6);backdrop-filter:blur(4px);font-family:inherit}
+.fbo *{box-sizing:border-box}.fbc{width:min(100%,360px);background:#f6f2fc;color:#2e2a63;border-radius:20px;padding:22px 20px 18px;box-shadow:0 18px 50px rgba(0,0,20,.5);max-height:calc(100dvh - 32px);overflow:auto}
+.fbc h2{margin:0 0 4px;font:600 21px/1.25 Fraunces,Georgia,serif}.fbc p{margin:0 0 12px;font-size:14px;line-height:1.45;color:#4d4986}
+.fbc label{display:block;font-size:13px;font-weight:700;margin:10px 0 4px}.fbc input{width:100%;font:inherit;font-size:16px;padding:11px 12px;border-radius:12px;border:1.5px solid #b9b3e2;background:#fff;color:#2e2a63}
+.fbc input:focus{outline:2px solid #5458ab;outline-offset:1px}.fbc button{display:block;width:100%;font:inherit;font-weight:700;font-size:15px;min-height:46px;margin-top:10px;border-radius:14px;border:0;cursor:pointer}
+.fbc .p{background:#3d3a85;color:#fff}.fbc .g{background:#fff;color:#2e2a63;border:1.5px solid #b9b3e2}.fbc .l{background:none;color:#3d3a85;font-weight:600;text-decoration:underline;min-height:40px;margin-top:2px}
+.fbc button:disabled{opacity:.55}.fbc .e{margin:10px 0 0;color:#a12b2b;font-size:14px;font-weight:600}.fbc .o{margin:10px 0 0;color:#1b6b3d;font-size:14px;font-weight:600}.fbc .sp{margin:12px 0 2px;text-align:center;font-size:12px;color:#8a86c4}`;
+let ov=null,mode='in';
+const $=s=>ov&&ov.querySelector(s);
+function close(){if(ov){ov.remove();ov=null}}
+function draw(){
+ if(!ov)return;const up=mode==='up';
+ ov.innerHTML=`<div class="fbc" role="dialog" aria-modal="true" aria-labelledby="fbt"><h2 id="fbt">${up?'Créer un compte':'Se connecter'}</h2><p>${up?'Un compte te permet de retrouver tes flocons, ton aquarium et tes amis sur tous tes appareils.':'Retrouve ta progression sur cet appareil.'}</p><form id="fbf" novalidate><label for="fbe">Adresse e-mail</label><input id="fbe" type="email" autocomplete="email" inputmode="email" autocapitalize="off"><label for="fbp">Mot de passe</label><input id="fbp" type="password" autocomplete="${up?'new-password':'current-password'}"><div class="e" id="fbm" role="alert" hidden></div><button class="p" type="submit" id="fbs">${up?'Créer mon compte':'Me connecter'}</button></form><div class="sp">ou</div><button class="g" type="button" id="fbg">Continuer avec Google</button>${up?'':'<button class="l" type="button" id="fbr">Mot de passe oublié ?</button>'}<button class="l" type="button" id="fbw">${up?'J’ai déjà un compte':'Créer un compte'}</button><button class="l" type="button" id="fbx">Plus tard</button></div>`;
+ $('#fbw').onclick=()=>{mode=up?'in':'up';draw()};$('#fbx').onclick=close;
+ const r=$('#fbr');if(r)r.onclick=reset;
+ $('#fbf').onsubmit=e=>{e.preventDefault();go(up)};$('#fbg').onclick=google;
+ ov.onclick=e=>{if(e.target===ov)close()};
+ const f=$('#fbe');if(f)f.focus();
+}
+const say=(t,ok)=>{const m=$('#fbm');if(!m)return;m.className=ok?'o':'e';m.hidden=!t;m.textContent=t||''};
+const busy=b=>{ov&&ov.querySelectorAll('button').forEach(x=>x.disabled=b)};
+const fail=e=>{busy(false);const c=e&&e.code;if(c==='auth/popup-closed-by-user'||c==='auth/cancelled-popup-request')return say('');say(MSG[c]||'Connexion impossible pour l’instant. Réessaie dans un moment.')};
+async function done(){close();try{if(window.__fbDone)window.__fbDone()}catch(e){}}
+async function go(up){
+ const em=($('#fbe').value||'').trim(),pw=$('#fbp').value||'';
+ if(!em)return say('Entre ton adresse e-mail.');if(!pw)return say('Entre ton mot de passe.');
+ say('');busy(true);
+ try{const F=await load(),Au=F.Au;if(up)await Au.createUserWithEmailAndPassword(F.auth,em,pw);else await Au.signInWithEmailAndPassword(F.auth,em,pw);done()}catch(e){fail(e)}
+}
+async function google(){
+ say('');busy(true);
+ try{const F=await load(),Au=F.Au;await Au.signInWithPopup(F.auth,new Au.GoogleAuthProvider());done()}catch(e){fail(e)}
+}
+async function reset(){
+ const em=($('#fbe').value||'').trim();if(!em)return say('Entre d’abord ton adresse e-mail.');
+ busy(true);
+ try{const F=await load();await F.Au.sendPasswordResetEmail(F.auth,em);busy(false);say('Un e-mail pour changer ton mot de passe vient d’être envoyé.',true)}catch(e){fail(e)}
+}
+fb.open=(m)=>{
+ if(ov)return;mode=m==='up'?'up':'in';
+ if(!document.getElementById('fbcss')){const s=document.createElement('style');s.id='fbcss';s.textContent=CSS;document.head.appendChild(s)}
+ ov=document.createElement('div');ov.className='fbo';document.body.appendChild(ov);draw();
+ document.addEventListener('keydown',function k(e){if(!ov){document.removeEventListener('keydown',k);return}if(e.key==='Escape')close()});
+};
+fb.out=async()=>{try{const F=await load();await F.Au.signOut(F.auth)}catch(e){}try{if(window.__fbOut)window.__fbOut()}catch(e){}};
+})();
+</script>
+<script>
 const $=s=>document.querySelector(s),app=$('#app'),mem={};
 let onSet=null;
 const st={get(k,d){if(k in mem)return mem[k];try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){mem[k]=v;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}if(onSet)onSet(k)}};
@@ -2326,7 +2410,7 @@ onSet=k=>{if(quiet||!/^(fl|c:|aq$|fav$|wd$|sty$)/.test(k))return;schedulePush()}
 function accText(){
  if(!st.get('sync:acc',false))return'Désactivée. Active-la pour retrouver ta progression automatiquement sur tes appareils.';
  const hm=Sy.at?new Date(Sy.at).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}):'';
- return({conn:'Connexion en cours…',ok:'Synchronisée'+(hm?' · '+hm:'')+'. Visible par toi seul(e).',slow:'Pas de réponse pour l’instant : la progression reste ici et partira dès que possible.',na:'Indisponible ici : ouvre la page connecté(e) à Claude. En attendant, utilise le code.',err:'Synchro interrompue. Elle reprendra à la prochaine ouverture.',ro:'Ton accès est en lecture seule : la sauvegarde par compte demande le rôle Contributeur. Utilise le code.'})[Sy.state]||''}
+ return({conn:'Connexion en cours…',ok:'Synchronisée'+(hm?' · '+hm:'')+'. Visible par toi seul(e).',slow:'Pas de réponse pour l’instant : la progression reste ici et partira dès que possible.',na:'Connecte-toi (bouton ci-dessous) pour synchroniser ta progression sur tes appareils. En attendant, utilise le code.',err:'Synchro interrompue. Elle reprendra à la prochaine ouverture.',ro:'Ton accès est en lecture seule : la sauvegarde par compte demande le rôle Contributeur. Utilise le code.'})[Sy.state]||''}
 function sRefresh(){const e=$('#accs');if(e)e.textContent=accText()}
 async function accInit(){
  if(Sy.ref||Sy.state==='conn')return;
@@ -2383,10 +2467,11 @@ function syncHTML(){
   const why=nochg?'Cet appareil a déjà tout : rien à changer.':cnt(R)>cnt(L)?'Ce code est le plus avancé : ses flocons sont repris, tes niveaux terminés sont gardés.':cnt(R)===cnt(L)?'Même avancement : tu gardes le plus de flocons, et les niveaux du code sont ajoutés.':'Cet appareil est plus avancé : tes flocons restent, les niveaux du code sont ajoutés.';
   low=`<div class="syv"><b>Le code</b><span>${cnt(R)} niveaux · ${R.fl} ❄</span><b>Cet appareil</b><span>${cnt(L)} niveaux · ${L.fl} ❄</span><i class="sep"></i><b>Après la reprise</b><span>${cnt(M)} niveaux · ${M.fl} ❄</span><p>${why}</p></div>${nochg?'':'<button class="btn" data-a="syOk">Reprendre cette progression</button>'}<button class="btn alt" data-a="syNo">${nochg?'Fermer':'Annuler'}</button>`;
  }else low=`<button class="btn alt" data-a="syChk">Vérifier le code</button>`;
- return`<h2 class="s">Sauvegarde</h2><section class="glass play sy"><p class="note">Retrouve tes niveaux et tes flocons sur un autre appareil.</p><button class="tg ${acc?'on':''}" role="switch" aria-checked="${acc}" data-a="syAcc"><span>Synchroniser avec mon compte</span><i></i></button><p class="note" id="accs" style="margin-top:8px">${accText()}</p><div class="sy-h">Mon code</div><div class="code" id="code" aria-label="Mon code de sauvegarde">${encode(readState())}</div><p class="note" style="margin:8px 0 0">Code court de 10 chiffres : il retient à peu près ta progression (niveaux terminés arrondis vers le bas par paliers de 2, 3 ou 5, et flocons approchés), jamais plus que ce que tu as. Le compte, lui, synchronise tout à l’identique.</p><button class="btn alt" data-a="syCp" id="cpb">Copier le code</button><div class="sy-h">Reprendre avec un code</div><input class="ci" id="ci" type="text" inputmode="numeric" maxlength="20" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="${DG+1} chiffres" value="${esc(Sy.in)}" aria-label="Code à reprendre">${Sy.err?`<p class="m err">${Sy.err}</p>`:''}${Sy.done?`<p class="m">${Sy.done}</p>`:''}${low}</section>`;
+ return`<h2 class="s">Sauvegarde</h2><section class="glass play sy"><p class="note">Retrouve tes niveaux et tes flocons sur un autre appareil.</p><button class="tg ${acc?'on':''}" role="switch" aria-checked="${acc}" data-a="syAcc"><span>Synchroniser avec mon compte</span><i></i></button><p class="note" id="accs" style="margin-top:8px">${accText()}</p>${window.__fb?`<button class="btn alt" data-a="${window.__fb.u?'fbOut':'fbIn'}">${window.__fb.u?'Me déconnecter ('+esc(window.__fb.u)+')':'Se connecter ou créer un compte'}</button>`:''}<div class="sy-h">Mon code</div><div class="code" id="code" aria-label="Mon code de sauvegarde">${encode(readState())}</div><p class="note" style="margin:8px 0 0">Code court de 10 chiffres : il retient à peu près ta progression (niveaux terminés arrondis vers le bas par paliers de 2, 3 ou 5, et flocons approchés), jamais plus que ce que tu as. Le compte, lui, synchronise tout à l’identique.</p><button class="btn alt" data-a="syCp" id="cpb">Copier le code</button><div class="sy-h">Reprendre avec un code</div><input class="ci" id="ci" type="text" inputmode="numeric" maxlength="20" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="${DG+1} chiffres" value="${esc(Sy.in)}" aria-label="Code à reprendre">${Sy.err?`<p class="m err">${Sy.err}</p>`:''}${Sy.done?`<p class="m">${Sy.done}</p>`:''}${low}</section>`;
 }
 Object.assign(act,{
- syAcc:()=>{const on=!st.get('sync:acc',false);st.set('sync:acc',on);if(on)accInit();else accOff();prefScreen()},
+ fbIn:()=>window.__fb&&window.__fb.open(),fbOut:()=>window.__fb&&window.__fb.out(),
+ syAcc:()=>{const on=!st.get('sync:acc',false);st.set('sync:acc',on);if(on){accInit();if(window.__fb&&window.__fb.ready&&!window.__fb.u)window.__fb.open()}else accOff();prefScreen()},
  syCp:async()=>{const c=encode(readState());let ok=false;try{await navigator.clipboard.writeText(c);ok=true}catch(e){}
   if(!ok){try{const r=document.createRange();r.selectNodeContents($('#code'));const g=getSelection();g.removeAllRanges();g.addRange(r)}catch(e){}}
   const b=$('#cpb');if(b){b.textContent=ok?'Copié ✓':'Code sélectionné : copie-le';setTimeout(()=>{const b2=$('#cpb');if(b2)b2.textContent='Copier le code'},2200)}},
@@ -2397,6 +2482,7 @@ Object.assign(act,{
 });
 document.addEventListener('input',e=>{if(e.target.id==='ci'){Sy.in=e.target.value;if(Sy.err){Sy.err='';const m=$('.sy .m.err');if(m)m.remove()}}});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='ci'){e.preventDefault();act.syChk()}});
+window.__fbDone=()=>{st.set('sync:acc',true);location.reload()};window.__fbOut=()=>{st.set('sync:acc',false);accOff();location.reload()};
 if(st.get('sync:acc',false))setTimeout(accInit,0);
 
 /* ---------- Social : code ami, amis, flocons offerts ----------
@@ -2491,7 +2577,7 @@ async function socPush(){
 }
 function socBody(){
  const M=st.get('soc:me',null),crd=(t,b)=>`<section class="glass play soc-i"><h2>${t}</h2><p class="note" style="margin:0">${b}</p></section>`;
- if(SO.st==='na')return crd('Une connexion est nécessaire','Ouvre cette page connecté(e) à Claude, avec un accès en écriture (rôle Contributeur ou plus), pour ajouter des amis et leur offrir des flocons.');
+ if(SO.st==='na')return crd('Une connexion est nécessaire','Connecte-toi pour ajouter des amis et leur offrir des flocons.<br><button class="btn" style="margin-top:12px" data-a="fbIn">Se connecter ou créer un compte</button>');
  if(!SO.can&&!(M&&M.code))return crd('Accès en lecture seule','Pour ajouter des amis et envoyer des flocons, il faut le rôle Contributeur sur cette page. Demande à la personne qui te l’a partagée de changer ton accès.');
  if(!SO.got||!M||!M.code){const w=SO.st==='slow'||SO.st==='err';return crd(w?'Pas de réponse pour l’instant':'Un instant…',w?'Le Social se connectera dès que possible. Tes flocons et tes niveaux ne bougent pas.':'Ton profil se prépare.')}
  const me=SO.uid,P=SO.P,live=SO.can&&SO.got&&!!SO.col;
