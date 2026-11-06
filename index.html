@@ -78,7 +78,7 @@ body::before{content:"";position:fixed;left:0;right:0;top:0;height:env(safe-area
 .shf{position:absolute;left:0;top:0;z-index:2;width:46px;height:46px;padding:0;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25)}
 .shf:active{background:rgba(255,255,255,.26)}.shf svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 @media(max-width:359px){.tl{display:none}.shf{width:40px;height:40px;left:-6px;top:-6px}}
-.glass{background:var(--ngl,rgba(255,255,255,.12));-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid var(--nbd,rgba(255,255,255,.22));border-radius:26px;box-shadow:0 10px 30px var(--nsh,rgba(20,20,70,.35))}
+.glass{background:var(--ngl,rgba(255,255,255,.12));border:1px solid var(--nbd,rgba(255,255,255,.22));border-radius:26px;box-shadow:0 10px 30px var(--nsh,rgba(20,20,70,.35))}
 .quote{display:block;width:100%;text-align:left;padding:22px;margin-bottom:22px}
 .quote p{font:400 19px/1.45 Fraunces,Georgia,serif;margin:0 0 10px}
 .quote span,.note,small{color:var(--soft);font-size:14px}
@@ -139,7 +139,7 @@ h2.s{font-size:18px;margin:0 0 12px;color:var(--soft)}
 .aqm-pt{display:inline-block;width:8px;height:8px;margin-left:6px;border-radius:50%;background:#ff8f7a;vertical-align:middle}
 @property --dt{syntax:'<number>';inherits:true;initial-value:0}
 @property --gr{syntax:'<number>';inherits:true;initial-value:0}
-.aqm-haze{position:absolute;inset:0;z-index:3;pointer-events:none;-webkit-backdrop-filter:blur(calc(var(--dt,0)*2.8px));backdrop-filter:blur(calc(var(--dt,0)*2.8px))}
+.aqm-haze{position:absolute;inset:0;z-index:3;pointer-events:none;background:rgba(120,140,70,calc(var(--dt,0)*.2));background:rgba(120,140,70,calc(var(--dt,0)*.2))}
 .aqm-air{position:absolute;inset:0;transform:translateY(-100%);pointer-events:none;background:linear-gradient(180deg,rgba(16,24,52,.94),rgba(24,34,66,.9))}
 .aqm-air::after{content:'';position:absolute;left:0;right:0;bottom:-2px;height:4px;border-radius:2px;background:rgba(255,255,255,.55);box-shadow:0 0 10px rgba(255,255,255,.5)}
 .aqm-air.go{animation:aqm-dr 4.4s cubic-bezier(.45,0,.55,1) forwards}
@@ -305,7 +305,7 @@ body.g #pat{filter:blur(2px)}
 .opts{display:grid;gap:12px}
 .dd-h b{font-weight:700}
 .dd-h small{display:block;font-weight:400;color:rgba(255,255,255,.82)}
-.dd{border-radius:22px;border:1px solid color-mix(in srgb,var(--a) 50%,transparent);background-color:color-mix(in srgb,var(--a) 14%,var(--nb6,rgba(255,255,255,.06)));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);overflow:hidden}
+.dd{border-radius:22px;border:1px solid color-mix(in srgb,var(--a) 50%,transparent);background-color:color-mix(in srgb,var(--a) 14%,var(--nb6,rgba(255,255,255,.06)));backdrop-filter:blur(5px);backdrop-filter:blur(5px);overflow:hidden}
 .dd-h{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:16px 20px;background:none;border:0;text-align:left}
 .dd-h svg{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s}
 .dd.open .dd-h svg{transform:rotate(180deg)}
@@ -586,7 +586,7 @@ button.pf-h{width:100%;background:none;border:0;padding:0;color:inherit;font:inh
 .gf{fill:none;stroke:rgba(255,255,255,.5);stroke-width:1.8;stroke-linejoin:round;transform-origin:20px 20px;transform:scale(.66)}
 .gh{fill:rgba(255,255,255,.75)}.gh2{fill:rgba(255,255,255,.85)}
 .m3t.sp i{box-shadow:none;animation:m3g 1.4s ease-in-out infinite alternate;filter:drop-shadow(0 0 6px var(--c)) drop-shadow(0 0 2px #fff6c8)}
-.m3t.sp i u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-size:calc(100cqw/8*.78);filter:drop-shadow(0 1px 3px rgba(0,0,0,.55))}
+.m3t.sp i u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-size:calc(100cqw/8*.78)}
 .m3t.sp-x i{border-radius:50%;background:conic-gradient(#ff9db3,#ffd36a,#8ff0c4,#7fc4f2,#c9a2ff,#ff9db3);animation:m3g 1.4s ease-in-out infinite alternate,m3r 4s linear infinite}
 .m3t.sp-x i u{animation:m3r 4s linear infinite reverse}
 .m3t.out{opacity:0;scale:1.35;transition:opacity .26s ease-out,scale .26s ease-out,transform .42s}
@@ -636,7 +636,7 @@ header.shud{position:fixed;top:0;left:50%;transform:translateX(-50%);width:min(1
 header.shud>*{pointer-events:auto}
 /* verre : comme le reste de l’application le jour (transparent et flou), noir la nuit ; --gs vaut 1 de jour et 0 de nuit (fondu à l’aube et au crépuscule) */
 body:has(#stg){--gb:var(--ngl);--gbd:var(--nbd);--gsh:var(--nsh)}
-.shc,.sht .chip,.shb,.sbar,.shm,body:has(#stg) #aq-rem,body:has(#stg) #nav{background:var(--gb);border:1px solid var(--gbd);-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2);box-shadow:0 8px 24px var(--gsh)}
+.shc,.sht .chip,.shb,.sbar,.shm,body:has(#stg) #aq-rem,body:has(#stg) #nav{background:var(--gb);border:1px solid var(--gbd);backdrop-filter:blur(5px);backdrop-filter:blur(5px);box-shadow:0 8px 24px var(--gsh)}
 .shc{flex:1;min-width:0;padding:10px 14px 12px;border-radius:20px}
 .shc h1{margin:0;font:600 21px/1.15 Fraunces,Georgia,serif;color:#fff}
 .shc small{display:block;margin-top:2px;font-size:12.5px;color:rgba(255,255,255,.88);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -797,9 +797,9 @@ body{transition:--sk-t 1.4s ease,--sk-b 1.4s ease,--dk-t 1.4s ease,--dk-b 1.4s e
 @media (prefers-reduced-motion:reduce){body{transition:none}}
 /* fluidité : pas de flou d’arrière-plan sur les grandes cartes (il se recalcule à chaque image dès que la neige ou un poisson bouge dessous) ; la barre du bas et les petites pastilles de l’histoire gardent le leur */
 .glass,.dd{-webkit-backdrop-filter:none;backdrop-filter:none}
-#nav{-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2)}
+#nav{backdrop-filter:blur(5px);backdrop-filter:blur(5px)}
 .aqm-haze{-webkit-backdrop-filter:none;backdrop-filter:none}
-.tank[data-dirty="1"] .aqm-haze{-webkit-backdrop-filter:blur(calc(var(--dt,0)*2.8px));backdrop-filter:blur(calc(var(--dt,0)*2.8px))}
+.tank[data-dirty="1"] .aqm-haze{background:rgba(120,140,70,calc(var(--dt,0)*.2));background:rgba(120,140,70,calc(var(--dt,0)*.2))}
 /* fenêtre « Comment l’appeler ? » (achat d’un poisson) */
 .aqnm{text-align:center}.aqnp{width:104px;margin:4px auto 2px}.aqnp svg{display:block;width:100%;height:auto;overflow:visible}.aqnm .note{margin:2px 0 0}.aqnm .ci{margin-top:12px;text-align:center}.aqnm .aqnh{margin:6px 0 0;font-size:13px}.aqnm .btn{margin-top:10px}.aqnm .lnk{margin:6px auto 0}
 .sfr .sfc{background:rgba(26,24,74,.95)}
@@ -3679,7 +3679,7 @@ const cv=$('#snow'),x=cv.getContext('2d');let W,H;const P=[];
 const rs=()=>{W=cv.width=innerWidth;H=cv.height=innerHeight};rs();addEventListener('resize',rs);
 for(let i=0;i<45;i++)P.push({x:Math.random()*W,y:Math.random()*H,r:1+Math.random()*2.5,v:.15+Math.random()*.35,d:Math.random()*6});
 let sOn=0,sT=0;
-const snow=ts=>{if(!prefs().snow||document.hidden){if(sOn){x.clearRect(0,0,W,H);sOn=0}sT=0;return setTimeout(snow,300)}const k=sT?Math.min(3,(ts-sT)/16.67)||1:1;sT=ts||0;sOn=1;x.clearRect(0,0,W,H);x.fillStyle=`rgba(${Math.round(120+135*(1-GS))},${Math.round(110+145*(1-GS))},${Math.round(200+55*(1-GS))},${(.5+.2*(1-GS)).toFixed(2)})`;x.beginPath();for(const p of P){p.y+=p.v*k;p.d+=.004*k;p.x+=Math.sin(p.d)*.25*k;if(p.y>H+5){p.y=-5;p.x=Math.random()*W}x.moveTo(p.x+p.r,p.y);x.arc(p.x,p.y,p.r,0,7)}x.fill();requestAnimationFrame(snow)};
+const snow=ts=>{if(!prefs().snow||document.hidden||playing){if(sOn){x.clearRect(0,0,W,H);sOn=0}sT=0;return setTimeout(snow,300)}if(sT&&ts-sT<32)return requestAnimationFrame(snow);const k=sT?Math.min(3,(ts-sT)/16.67)||1:1;sT=ts||0;sOn=1;x.clearRect(0,0,W,H);x.fillStyle=`rgba(${Math.round(120+135*(1-GS))},${Math.round(110+145*(1-GS))},${Math.round(200+55*(1-GS))},${(.5+.2*(1-GS)).toFixed(2)})`;x.beginPath();for(const p of P){p.y+=p.v*k;p.d+=.004*k;p.x+=Math.sin(p.d)*.25*k;if(p.y>H+5){p.y=-5;p.x=Math.random()*W}x.moveTo(p.x+p.r,p.y);x.arc(p.x,p.y,p.r,0,7)}x.fill();requestAnimationFrame(snow)};
 if(!matchMedia('(prefers-reduced-motion: reduce)').matches)snow();
 </script>
 <script>if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});</script>
