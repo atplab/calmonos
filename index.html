@@ -664,6 +664,43 @@ html,body{overflow-x:clip}
 
 .m3tl{position:absolute;inset:0;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
 
+/* ---- quiz : le bonhomme pose les questions ---- */
+.pt-quiz{background-image:radial-gradient(circle at 18% 22%,rgba(255,255,255,.3) 0,rgba(255,255,255,0) 9px),radial-gradient(circle at 72% 48%,rgba(255,255,255,.26) 0,rgba(255,255,255,0) 12px),radial-gradient(circle at 40% 82%,rgba(255,255,255,.24) 0,rgba(255,255,255,0) 7px);background-size:110px 110px}
+body:has(.pg-quiz) .skw{display:none}
+.glass.pg-quiz{padding:18px 16px 20px}
+.qz-h{display:flex;align-items:flex-end;gap:12px;margin:0 0 16px}
+.qz-m{flex:none;width:86px}
+.qz-m svg{display:block;width:100%;height:auto;overflow:visible;transform-origin:50% 100%}
+.qz-m.ask svg{animation:qzbob 3.2s ease-in-out infinite}
+.qz-m.ok svg{animation:qzjump .72s ease-out 2}
+.qz-m.no svg{animation:qzsad 1s ease-out both}
+@keyframes qzbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes qzjump{0%,100%{transform:translateY(0) scale(1,1)}15%{transform:translateY(0) scale(1.06,.9)}50%{transform:translateY(-16px) scale(.96,1.05)}}
+@keyframes qzsad{0%{transform:translateY(0) rotate(0)}30%{transform:translateY(2px) rotate(-5deg) scale(1,.94)}60%{transform:translateY(2px) rotate(4deg) scale(1,.94)}100%{transform:translateY(2px) rotate(0) scale(1,.95)}}
+.qzsp{animation:qztw 1s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}.qzsp.s2{animation-delay:.25s}.qzsp.s3{animation-delay:.5s}
+@keyframes qztw{0%{opacity:.25;transform:scale(.6)}100%{opacity:1;transform:scale(1.15)}}
+.qz-bub{position:relative;flex:1;min-width:0;padding:12px 14px 13px;border-radius:18px;background:rgba(255,255,255,.17);border:1px solid rgba(255,255,255,.3)}
+.qz-bub::before{content:"";position:absolute;left:-8px;bottom:24px;width:14px;height:14px;background:rgba(255,255,255,.17);border-left:1px solid rgba(255,255,255,.3);border-bottom:1px solid rgba(255,255,255,.3);transform:rotate(45deg)}
+.qz-bub small{display:block;margin:0 0 4px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.8}
+.qz-q{margin:0;font-size:18px;line-height:1.3;font-weight:700;text-wrap:balance}
+.qz-ch{display:grid;gap:10px}
+.qz-b{display:flex;align-items:center;gap:12px;width:100%;min-height:54px;padding:10px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.26);background:rgba(255,255,255,.12);color:var(--text);font:inherit;font-weight:600;text-align:left;cursor:pointer;transition:transform .12s,background .2s,opacity .25s}
+.qz-b i{flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;font-style:normal;font-weight:800;font-size:14px;background:rgba(255,255,255,.2)}
+.qz-b span{min-width:0}
+.qz-b:not([disabled]):active{transform:scale(.985);background:rgba(255,255,255,.22)}
+.qz-b:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.qz-b[disabled]{cursor:default}
+.qz-b.ok{background:#2f9e6a;border-color:#a6efc8;color:#fff}
+.qz-b.ok i{background:rgba(255,255,255,.28)}
+.qz-b.no{background:#c2503f;border-color:#f6b4a9;color:#fff}
+.qz-b.no i{background:rgba(255,255,255,.28)}
+.qz-b.dim{opacity:.5}
+.qz-fb{margin:14px 2px 0;min-height:1.4em;text-align:center;font-weight:700}
+.qz-fb b{font-weight:800}
+.qz-e{display:block;margin-top:6px;font-weight:400;opacity:.92}
+.qz-next{margin-top:14px}
+@media(prefers-reduced-motion:reduce){.qz-m svg,.qzsp{animation:none!important}}
+
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
 .sb.cf{background:linear-gradient(180deg,#ffd18a,#e8944a);color:#3a2310;border:0}
@@ -1044,7 +1081,7 @@ const st={get(k,d){if(k in mem)return mem[k];try{const v=localStorage.getItem(k)
 const sh=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const today=new Date().toLocaleDateString('sv'),di=Math.floor(Date.now()/864e5);
 const dkey=g=>'d:'+g+':'+today,ckey=g=>'c:'+g;
-const NLS={mots:40,memo:20,caches:20,phrase:20,maze:20,match3:20,demenage:10},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
+const NLS={mots:40,memo:20,caches:20,phrase:20,maze:20,match3:20,demenage:10,quiz:40},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
 /* Section temporaire « fêtes » : 10 niveaux spéciaux de plus par jeu (indices nl, nl+1 … nl+9), disponible tout de suite et jusqu’au 11 janvier 2027 inclus ; #noel dans l’adresse force l’affichage.
    Ils ne font pas partie du code de sauvegarde ni de la synchronisation. */
 const NLX=10,xmasOn=()=>{const t=Date.now();return location.hash==='#noel'||t<new Date(2027,0,12).getTime()},isX=(g,l)=>l>=nl(g),xn=(g,l)=>l-nl(g)+1;
@@ -1067,10 +1104,11 @@ const G=[
 {id:'caches',n:'Mots cachés',ic:'◎',a:'#8fd0b8',b:'#3b7f72',t:'Les mots sous la neige',s:'Sous la neige fraîche, des mots se cachent dans la grille : à l’endroit, à l’envers, vers le haut ou vers le bas. Retrouve-les un à un.',w:'Tous les mots sont sortis de la neige.'},
 {id:'maze',n:'Labyrinthe',ic:'❖',a:'#b4cf8e',b:'#4f7a46',t:'Le sentier de la lune',s:'Entre les sapins, un sentier suit la lumière de la lune. Guide le petit renard jusqu’à son terrier.',w:'Le petit renard est rentré au terrier, bien au chaud sous la lune.'},
 {id:'match3',n:'Constellations',ic:'✧',a:'#8fb4f0',b:'#4a5db0',t:'Les constellations',s:'Dans le ciel, des pièces brillantes se mêlent. Aligne-les pour les faire briller : quatre alignées font naître une lune, un carré de quatre une étoile, et cinq alignées un soleil.',w:'Le ciel brille un peu plus fort ce soir.'},
-{id:'demenage',n:'Déménagement',ic:'⌂',a:'#e8b98a',b:'#9a5f3a',t:'Les boîtes du déménagement',s:'Une nouvelle maison, des boîtes partout. Sors les objets un à un et range-les là où ils vont : la brosse à dents sur le lavabo, le toutou sur le lit…',w:'Tout est rangé. La maison sent déjà le chez-soi.'}
+{id:'demenage',n:'Déménagement',ic:'⌂',a:'#e8b98a',b:'#9a5f3a',t:'Les boîtes du déménagement',s:'Une nouvelle maison, des boîtes partout. Sors les objets un à un et range-les là où ils vont : la brosse à dents sur le lavabo, le toutou sur le lit…',w:'Tout est rangé. La maison sent déjà le chez-soi.'},
+{id:'quiz',n:'Quiz',ic:'?',a:'#8fd6d0',b:'#2f7f87',t:'Le quiz du bonhomme',s:'Le petit bonhomme te pose une question de culture générale, avec quatre réponses possibles. Bonne réponse : il est content et tu gagnes un flocon. Mauvaise réponse : il est déçu, la bonne réponse t’est montrée, et on passe à la suite.',w:'Le bonhomme est ravi.'}
 ];
 const SP=[{id:'scrabble',n:'Scrabble',ic:'Ⓢ',a:'#e6b86a',b:'#9a6a2e',t:'La partie du soir',s:'Pose des mots sur le plateau avec les sept lettres de ton chevalet. Joue ton tour, ton ami joue le sien quand il le souhaite. Pas d’indices ici.',sp:'Entre amis'}];
-const ORD=['mots','caches','croises','phrase','tournade','maze','memo','sudoku','match3','demenage'],GD=[...ORD.map(i=>G.find(g=>g.id===i)),...SP,...G.filter(g=>g.soon)];
+const ORD=['mots','caches','croises','phrase','tournade','maze','memo','sudoku','match3','demenage','quiz'],GD=[...ORD.map(i=>G.find(g=>g.id===i)),...SP,...G.filter(g=>g.soon)];
 const DL=[
 {id:'wordle',n:'Le mot du jour',ic:'✺',a:'#cfd6ff',b:'#4a5a9a',t:'Le mot du jour',w:'Le mot du jour est trouvé.'}
 ];
@@ -2159,7 +2197,99 @@ async function socPhoto(inp){
   socSetAv('p',d)
  }catch(e){SO.ms='Cette image n’a pas pu être utilisée : essaie une autre photo.';SO.mse=true;SO.h='';socRefresh()}}
 document.addEventListener('change',e=>{if(e.target&&e.target.id==='soc-ph')socPhoto(e.target)});
-const RWD={mots:5,caches:3,croises:5,phrase:2,tournade:2,maze:2,memo:2,sudoku:5,demenage:4,match3:3},rw=id=>RWD[id]||5;
+const RWD={mots:5,caches:3,croises:5,phrase:2,tournade:2,maze:2,memo:2,sudoku:5,demenage:4,match3:3,quiz:1},rw=id=>RWD[id]||5;
+/* ---------- Quiz : le bonhomme pose une question de culture générale ----------
+   Un niveau = une question à 4 réponses. Bonne réponse : +1 ❄ (la première fois) et le bonhomme est content.
+   Mauvaise réponse : la bonne est montrée, le bonhomme est déçu, et on passe quand même à la suite. */
+const QZ=[
+['Quelle est la capitale de l’Australie ?',['Canberra','Sydney','Melbourne','Perth'],'Canberra a été choisie comme compromis entre Sydney et Melbourne.'],
+['Quel est le plus grand océan du monde ?',['L’océan Pacifique','L’océan Atlantique','L’océan Indien','L’océan Arctique'],'Il couvre environ un tiers de la surface de la Terre.'],
+['Qui a peint la Joconde ?',['Léonard de Vinci','Michel-Ange','Raphaël','Botticelli'],'Elle est exposée au musée du Louvre, à Paris.'],
+['Quelle planète est surnommée la planète rouge ?',['Mars','Vénus','Jupiter','Mercure'],'Sa couleur vient de l’oxyde de fer présent à sa surface.'],
+['Combien de côtés a un hexagone ?',['6','5','7','8'],''],
+['Quel est le plus long fleuve de France ?',['La Loire','La Seine','Le Rhône','La Garonne'],'La Loire mesure environ 1 000 km.'],
+['Dans quel pays se trouve le Machu Picchu ?',['Le Pérou','Le Mexique','La Bolivie','Le Chili'],'Cette cité inca est perchée dans les Andes.'],
+['Quel gaz les plantes absorbent-elles pour la photosynthèse ?',['Le dioxyde de carbone','L’oxygène','L’azote','L’hélium'],'Elles captent le CO₂ et rejettent de l’oxygène.'],
+['Qui a écrit « Le Petit Prince » ?',['Antoine de Saint-Exupéry','Jules Verne','Victor Hugo','Albert Camus'],''],
+['Quel est l’animal terrestre le plus rapide ?',['Le guépard','Le lion','L’antilope','Le cheval'],'Il peut dépasser 100 km/h sur de courtes distances.'],
+['En quelle année l’être humain a-t-il marché sur la Lune pour la première fois ?',['1969','1965','1972','1959'],'Neil Armstrong a posé le pied sur la Lune en juillet 1969.'],
+['Quelle langue compte le plus de locuteurs natifs dans le monde ?',['Le mandarin','L’anglais','L’espagnol','Le hindi'],''],
+['Combien de joueurs une équipe de soccer aligne-t-elle sur le terrain ?',['11','10','9','12'],''],
+['Quel est le symbole chimique de l’or ?',['Au','Or','Ag','Fe'],'Au vient du mot latin « aurum ».'],
+['Quelle ville est surnommée la Ville lumière ?',['Paris','Lyon','Rome','Vienne'],''],
+['Combien de touches compte un piano standard ?',['88','76','92','100'],'52 touches blanches et 36 touches noires.'],
+['Quel est le plus grand mammifère du monde ?',['La baleine bleue','L’éléphant d’Afrique','La girafe','Le requin-baleine'],'Elle peut mesurer près de 30 mètres.'],
+['Quel pays a la forme d’une botte ?',['L’Italie','L’Espagne','La Grèce','Le Portugal'],''],
+['Qui a atteint l’Amérique en 1492 pour le compte de l’Espagne ?',['Christophe Colomb','Magellan','Vasco de Gama','Jacques Cartier'],''],
+['Combien de cordes a une guitare classique ?',['6','4','5','7'],''],
+['À quelle température l’eau bout-elle au niveau de la mer ?',['100 °C','90 °C','110 °C','120 °C'],'C’est à la pression atmosphérique normale.'],
+['Quel peintre a réalisé « La Nuit étoilée » ?',['Vincent van Gogh','Claude Monet','Paul Cézanne','Pablo Picasso'],'Il l’a peinte en 1889.'],
+['Quel est le plus petit pays du monde ?',['Le Vatican','Monaco','Saint-Marin','Le Liechtenstein'],'Il couvre à peine plus de 0,4 km².'],
+['Quelle est la capitale du Canada ?',['Ottawa','Toronto','Montréal','Québec'],'Ottawa se trouve en Ontario, juste en face du Québec.'],
+['Combien d’os compte le squelette d’un adulte ?',['206','186','226','256'],''],
+['Qui a écrit « Les Misérables » ?',['Victor Hugo','Émile Zola','Alexandre Dumas','Gustave Flaubert'],'Le roman a été publié en 1862.'],
+['Quelle planète est connue pour ses anneaux spectaculaires ?',['Saturne','Mars','Mercure','Vénus'],''],
+['Quel est le plus vaste désert chaud du monde ?',['Le Sahara','Le Gobi','Le Kalahari','L’Atacama'],'Il s’étend sur environ 9 millions de km².'],
+['En quelle année a débuté la Révolution française ?',['1789','1799','1769','1815'],'La prise de la Bastille a eu lieu le 14 juillet 1789.'],
+['Quel est le plus grand organe du corps humain ?',['La peau','Le foie','Le cerveau','Les poumons'],''],
+['Quelle est la monnaie du Japon ?',['Le yen','Le won','Le yuan','Le baht'],''],
+['Quelle est la plus haute montagne du monde ?',['L’Everest','Le K2','Le mont Blanc','Le Kilimandjaro'],'Elle culmine à environ 8 849 mètres.'],
+['Quel animal pond des œufs tout en allaitant ses petits ?',['L’ornithorynque','Le kangourou','La chauve-souris','Le pingouin'],''],
+['Combien de minutes compte une journée ?',['1 440','1 240','1 640','1 340'],'24 heures × 60 minutes.'],
+['Quel fleuve traverse Le Caire ?',['Le Nil','Le Tigre','Le Congo','Le Niger'],''],
+['Quel est l’élément chimique le plus abondant de l’univers ?',['L’hydrogène','L’hélium','L’oxygène','Le carbone'],''],
+['Quel peintre est célèbre pour ses séries de nymphéas ?',['Claude Monet','Édouard Manet','Auguste Renoir','Edgar Degas'],'Il les a peints dans son jardin de Giverny.'],
+['Quelle feuille figure sur le drapeau du Canada ?',['L’érable','Le chêne','Le bouleau','Le peuplier'],'C’est une feuille d’érable à onze pointes.'],
+['Quel est le plus grand récif corallien du monde ?',['La Grande Barrière de corail','Le récif de Belize','Le récif de la mer Rouge','Le récif de Floride'],'Il se trouve au large de l’Australie et mesure plus de 2 000 km.']
+];
+const QZX=[
+['Quels animaux tirent le traîneau du père Noël ?',['Des rennes','Des chevaux','Des loups','Des bœufs'],''],
+['Dans quel pays est née la tradition du sapin de Noël décoré ?',['L’Allemagne','La France','L’Italie','L’Espagne'],''],
+['Combien de branches principales ont en général les cristaux de neige ?',['6','4','8','5'],'Les cristaux de glace s’organisent en hexagone.'],
+['Où vivent les manchots empereurs ?',['En Antarctique','Au Groenland','En Alaska','En Sibérie'],''],
+['Quel dessert de Noël a la forme d’un tronc d’arbre ?',['La bûche','Le Paris-Brest','Le saint-honoré','Le mille-feuille'],''],
+['Quelle plante aux feuilles piquantes et aux baies rouges décore Noël ?',['Le houx','Le lierre','Le laurier','L’if'],''],
+['Quel pays offre chaque année un grand sapin à Londres, à Trafalgar Square ?',['La Norvège','La Suède','La Finlande','Le Danemark'],'C’est un remerciement pour l’aide reçue pendant la guerre.'],
+['Quelle saison commence vers le 21 décembre dans l’hémisphère nord ?',['L’hiver','L’automne','Le printemps','L’été'],'C’est le solstice d’hiver, la nuit la plus longue de l’année.'],
+['Quel phénomène lumineux colore le ciel près des pôles ?',['L’aurore boréale','L’arc-en-ciel','La comète','L’éclipse'],'Elle naît de particules du Soleil qui rencontrent l’atmosphère.'],
+['Quelle grande île est couverte de glace à environ 80 % ?',['Le Groenland','L’Islande','Madagascar','Bornéo'],'']
+];
+const qzFr=s=>String(s).replace(/ ([?!:;»])/g,' $1').replace(/« /g,'« ');
+/* le bonhomme : content (ok), déçu (no) ou en attente (ask) */
+const qzGuy=m=>{
+ const ok=m==='ok',no=m==='no',ey='stroke="#4a4290" stroke-width="1.9" fill="none" stroke-linecap="round"';
+ const ant=no?`<path d="M1 -38Q9 -42 12 -36" stroke="#a79bdc" stroke-width="2" fill="none" stroke-linecap="round"/><polygon points="${sStar(13,-34,4.8,2.3)}" fill="#ddd7f7" stroke="#b9acec" stroke-width="1.2" stroke-linejoin="round"/>`
+  :`<path d="M1 -38Q6 -46 4 -52" stroke="#a79bdc" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="4" cy="-55" r="9" fill="url(#qzg)"/><polygon points="${sStar(4,-55,5.8,2.8)}" fill="url(#qzs)" stroke="#ffc83d" stroke-width="1.6" stroke-linejoin="round"/>`;
+ const hands=ok?[[-17.6,-27],[17.6,-27]]:no?[[-13.6,-5.5],[13.6,-5.5]]:[[-14.8,-10],[14.8,-10]];
+ const face=ok?`<path d="M-9.2 -21.4q3.4 -4.2 6.8 0M2.4 -21.4q3.4 -4.2 6.8 0" ${ey}/><path d="M-4.6 -17.6Q0 -9.4 4.6 -17.6Z" fill="#b8456a" stroke="#b8456a" stroke-width="1" stroke-linejoin="round"/><path d="M-2.2 -13.4q2.2 -2.2 4.4 0q-2.2 1.8 -4.4 0z" fill="#ff8fa8"/><ellipse cx="-11" cy="-16.6" rx="2.7" ry="1.7" fill="#ff9db8" opacity=".7"/><ellipse cx="11" cy="-16.6" rx="2.7" ry="1.7" fill="#ff9db8" opacity=".7"/>`
+  :no?`<ellipse cx="-5.8" cy="-21" rx="1.9" ry="2.6" fill="#4a4290"/><ellipse cx="5.8" cy="-21" rx="1.9" ry="2.6" fill="#4a4290"/><circle cx="-5.2" cy="-22" r=".75" fill="#fff"/><circle cx="6.4" cy="-22" r=".75" fill="#fff"/><path d="M-10.4 -24.2L-3.6 -27.4M10.4 -24.2L3.6 -27.4" ${ey}/><path d="M-3.8 -13Q0 -17.2 3.8 -13" stroke="#7a6cc0" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M-9.8 -17.6q2.2 2.8 0 4.6q-2.2 -1.8 0 -4.6z" fill="#8fd0ff" stroke="#5aa8e0" stroke-width=".7"/>`
+  :`<ellipse cx="-5.8" cy="-23" rx="2.1" ry="2.9" fill="#4a4290"/><ellipse cx="5.8" cy="-23" rx="2.1" ry="2.9" fill="#4a4290"/><circle cx="-5.1" cy="-24.2" r=".85" fill="#fff"/><circle cx="6.5" cy="-24.2" r=".85" fill="#fff"/><path d="M-2.8 -16.4q2.8 2.6 5.6 0" stroke="#7a6cc0" stroke-width="1.5" fill="none" stroke-linecap="round"/>`;
+ const spk=ok?`<path class="qzsp" d="M-21 -44l1.2 2.8 2.8 1.2-2.8 1.2-1.2 2.8-1.2-2.8-2.8-1.2 2.8-1.2z" fill="#ffe27a"/><path class="qzsp s2" d="M22 -36l1 2.4 2.4 1-2.4 1-1 2.4-1-2.4-2.4-1 2.4-1z" fill="#ffe27a"/><path class="qzsp s3" d="M20 -8l.9 2 2 .9-2 .9-.9 2-.9-2-2-.9 2-.9z" fill="#fff6c8"/>`:'';
+ return`<svg viewBox="-28 -66 56 68" aria-hidden="true"><defs><radialGradient id="qzb" cx=".36" cy=".26" r=".98"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#ece6ff"/><stop offset="1" stop-color="#b9acec"/></radialGradient><radialGradient id="qzs" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#fff6c2"/><stop offset="1" stop-color="#ffc83d"/></radialGradient><radialGradient id="qzg"><stop offset="0" stop-color="#fff3c0" stop-opacity=".85"/><stop offset="1" stop-color="#fff3c0" stop-opacity="0"/></radialGradient></defs><ellipse cx="0" cy="-1" rx="12" ry="2.2" fill="rgba(0,0,0,.2)"/>${ant}<path d="M0 -39C10 -39 15.5 -29 15.5 -19C15.5 -8 9 -2 0 -2C-9 -2 -15.5 -8 -15.5 -19C-15.5 -29 -10 -39 0 -39Z" fill="url(#qzb)"/><ellipse cx="-6.4" cy="-30" rx="3.2" ry="5.4" fill="#fff" opacity=".6" transform="rotate(18 -6.4 -30)"/>${face}<g fill="#efb63e"><circle cx="-11.8" cy="-18.4" r="1.1"/><circle cx="-9.6" cy="-16" r="1.1"/><circle cx="-12.6" cy="-15.2" r=".9"/><circle cx="11.8" cy="-18.4" r="1.1"/><circle cx="9.6" cy="-16" r="1.1"/><circle cx="12.6" cy="-15.2" r=".9"/></g>${hands.map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4.6" fill="#e6defc" stroke="#c7bbf0" stroke-width="1"/>`).join('')}${spk}</svg>`};
+function pQuiz(r){
+ const X=isX('quiz',lv),q=X?QZX[(xn('quiz',lv)-1)%QZX.length]:QZ[lv%QZ.length],o=r&&Array.isArray(r.o)&&r.o.length===4&&[0,1,2,3].every(i=>r.o.includes(i))?r.o:sh([0,1,2,3]),ci=o.indexOf(0);
+ let done=false,good=false,pick=-1,say='',gain=0,first=true;
+ snap=()=>({o});
+ const L='ABCD',last=X?lv>=nl('quiz')+NLX-1:lv>=nl('quiz')-1;
+ const d=()=>{
+  const mood=!done?'ask':good?'ok':'no';
+  frame(`<div class="qz"><div class="qz-h"><div class="qz-m ${mood}">${qzGuy(mood)}</div><div class="qz-bub"><small>${done?say:X?'Question de fêtes '+xn('quiz',lv):'Question '+(lv+1)}</small><p class="qz-q">${qzFr(q[0])}</p></div></div><div class="qz-ch" role="group" aria-label="Réponses">${o.map((k,i)=>`<button class="qz-b${done?(i===ci?' ok':i===pick?' no':' dim'):''}" data-a="qa" data-v="${i}"${done?' disabled':''}><i>${L[i]}</i><span>${qzFr(q[1][k])}</span></button>`).join('')}</div><p class="qz-fb" id="qzfb" role="status" aria-live="polite">${!done?'':good?(gain?'Bonne réponse ! +1 ❄':'Bonne réponse ! (déjà jouée : pas de flocon cette fois)'):'La bonne réponse : <b>'+qzFr(q[1][0])+'</b>'}${done&&q[2]?`<span class="qz-e">${qzFr(q[2])}</span>`:''}</p>${done?`<button class="btn qz-next" data-a="qn">${last?'Terminer':'Question suivante'}</button>`:''}</div>`);
+  if(done){const b=$('.qz-next');if(b)b.focus({preventScroll:true})}
+ };
+ act.qa=v=>{
+  if(done)return;const i=+v;if(!(i>=0&&i<4))return;
+  done=true;pick=i;good=i===ci;
+  const lk=ckey('quiz')+':'+lv;first=!st.get(lk,false);gain=0;
+  if(good&&first){fl+=1;st.set('fl',fl);styGain();gain=1}
+  st.set(lk,true);st.set('p:quiz:'+lv,null);st.set('last',{g:'quiz',daily:false,lv,date:today,done:1});snap=null;
+  const A=good?['Bravo !','Exact !','Bien joué !','Parfait !']:['Oh non…','Dommage…','Aïe…','Presque…'];say=A[Math.floor(Math.random()*A.length)];
+  d();
+  if(good){[523,659,784].forEach((f,k)=>setTimeout(()=>sfx(f,.5),k*130));vib([20,40,20]);const m=$('.qz-m');if(m)confetti(m)}
+  else{sfx(262,.35);setTimeout(()=>sfx(196,.5),180);vib(60)}
+ };
+ act.qn=()=>{if(!done)return;if(last)hub('quiz');else start('quiz',false,lv+1)};
+ d();
+}
 const sv=keep;
 const chip=()=>{const c=$('.chip');if(c)c.textContent='❄ '+FLX()};
 const nk=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase();
@@ -2385,7 +2515,7 @@ act.skip=()=>{const w=$('#skw');if(w)w.innerHTML='<span>Passer ce niveau sans r�
 act.skipn=()=>{const w=$('#skw');if(w)w.innerHTML='<button class="skp" data-a="skip">Passer ce niveau</button>'};
 act.skipy=()=>{const g=cur,l=lv;if(!g||daily)return;st.set('k:'+g+':'+l,true);st.set('last',{g,daily:false,lv:l,date:today,done:1});
  if(isX(g,l)?l<nl(g)+NLX-1:l<nl(g)-1){start(g,false,l+1);msg('Niveau passé, sans flocons : tu pourras y revenir.')}else hub(g)};
-function start(g,d,l,r){if(!d&&l>=nl(g)&&!xmasOn())return hub(g);cur=g;daily=d;lv=l;playing=true;wsG=null;if(!r&&!d&&!st.get(ckey(g)+':'+l,false))r=st.get('p:'+g+':'+l,null)||undefined;theme(g,!d&&l>=nl(g));({mots:pRoue,croises:pCross,phrase:pPhrase,tournade:pTourne,maze:pMaze,memo:pMemo,sudoku:pSudoku,caches:pSearch,match3:pMatch,demenage:pDemen})[g](r);window.scrollTo(0,0)}
+function start(g,d,l,r){if(!d&&l>=nl(g)&&!xmasOn())return hub(g);cur=g;daily=d;lv=l;playing=true;wsG=null;if(!r&&!d&&!st.get(ckey(g)+':'+l,false))r=st.get('p:'+g+':'+l,null)||undefined;theme(g,!d&&l>=nl(g));({mots:pRoue,croises:pCross,phrase:pPhrase,tournade:pTourne,maze:pMaze,memo:pMemo,sudoku:pSudoku,caches:pSearch,match3:pMatch,demenage:pDemen,quiz:pQuiz})[g](r);window.scrollTo(0,0)}
 function theme(id,x){const g=ALL.find(x=>x.id===id),s=document.body.style;s.setProperty('--a',x?'#d9453d':g?g.a:'#a99cf0');s.setProperty('--b',x?'#1f8a52':g?g.b:'#5458AB');$('#tint').classList.toggle('on',!!g);document.body.classList.toggle('g',!!g);document.body.classList.toggle('xm',!!x);const p=$('#pat');if(g)p.className='pt-'+id+' on';else p.classList.remove('on')}
 function nv(t){playing=false;wsG=null;theme(null);if(t!=='set'){rc=false;Sy.done='';Sy.pv=null;Sy.err=''}const n=$('#nav');n.hidden=false;n.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===t))}
 function resume(){const l=st.get('last',null);if(!l||l.daily||l.g==='melange'||!G.some(g=>g.id===l.g))return;const X=isX(l.g,l.lv);if(X&&!xmasOn())return;if(l.done)return(X?l.lv<nl(l.g)+NLX-1:l.lv<nl(l.g)-1)?start(l.g,false,l.lv+1):hub(l.g);start(l.g,false,l.lv,l.s)}
