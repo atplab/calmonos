@@ -646,6 +646,11 @@ html,body{overflow-x:clip}
 .pg-scrabble .scpl,.pg-scrabble .scmid{background:rgba(70,50,130,.3);color:#fff}
 .pg-scrabble .m,.pg-scrabble .note,.pg-scrabble .sca+*{text-shadow:0 1px 4px rgba(40,25,90,.65)}
 
+.sct[data-a=scr],.scc.pd{touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.sct.dg,.scc.pd.dg{opacity:.35}
+.scc.dh{outline:2px dashed #2f6fe0;outline-offset:-2px;background:#fff2c4}
+.scgh{position:fixed;z-index:999;pointer-events:none;width:48px;max-width:none;flex:none;transform:translate(-50%,-50%) scale(1.15);box-shadow:0 8px 18px rgba(0,0,0,.4)}
+
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
 .sb.cf{background:linear-gradient(180deg,#ffd18a,#e8944a);color:#3a2310;border:0}
@@ -1325,7 +1330,7 @@ function pMemo(r){
 /* v57 */
 /* ---------- Constellations : un jeu d’alignements (match-3) ----------
    4 alignés → une lune (efface sa ligne) · carré de 4 → une étoile (explose autour) · 5 alignés → un soleil (échangé avec un élément, efface tous ceux-là) */
-const M3KX=['#e3534f','#3fae6a','#f2c14e','#e9eef7','#5aa3e8','#f08a3c'],M3W=['Bien !','Super !','Magnifique !','Splendide !','Incroyable !'];
+const M3KX=['#e3534f','#3fae6a','#f2c14e','#e9eef7','#5aa3e8','#f27fae'],M3W=['Bien !','Super !','Magnifique !','Splendide !','Incroyable !'];
 const M3P=['20,2 37,15 20,38 3,15','20,2 35,11 35,29 20,38 5,29 5,11','c','h','r','12,3 28,3 37,12 37,28 28,37 12,37 3,28 3,12'];
 const M3SF=[...Array(10)].map((_,i)=>{const a=(-90+i*36)*Math.PI/180,r=i%2?8.8:18.5;return(20+r*Math.cos(a)).toFixed(1)+','+(21+r*Math.sin(a)).toFixed(1)}).join(' ');
 const M3SD=[...Array(5)].map((_,i)=>{const a=(-90+i*72)*Math.PI/180;return`<circle cx="${(20+11*Math.cos(a)).toFixed(1)}" cy="${(21+11*Math.sin(a)).toFixed(1)}" r="1.3"/>`}).join('');
@@ -1334,9 +1339,10 @@ const m3Gem=t=>{const k=t%6,hl='<ellipse cx="14" cy="12" rx="6.5" ry="3.4" trans
  else if(k===1)b=`<path class="gb" d="M20 35 7 22Q3 12 9.5 7.5Q15 4 20 6Q25 4 30.5 7.5Q37 12 33 22z"/><path class="gb" d="M15 34.4h10l-1.6 3.4h-6.8z"/><g class="gr"><path d="M20 34 9.5 9M20 34 14.5 6.5M20 34V6M20 34l5.5-27.5M20 34 30.5 9"/></g>${hl}`;
  else if(k===2)b=`<circle class="gb" cx="20" cy="20" r="15.5"/><circle cx="18" cy="18" r="11" fill="rgba(255,255,255,.3)"/><circle cx="14.5" cy="13.5" r="4.4" fill="rgba(255,255,255,.9)"/><path d="M31 5l1.3 3.2 3.2 1.3-3.2 1.3L31 14l-1.3-3.2-3.2-1.3 3.2-1.3z" fill="#fff"/>`;
  else if(k===3)b=`<g class="go"><path d="M20 36V21M20 27 11 18V9M20 22 29 14V6M11 18 5 14M29 14l6-4M20 22V11"/></g><g class="gc"><path d="M20 36V21M20 27 11 18V9M20 22 29 14V6M11 18 5 14M29 14l6-4M20 22V11"/></g><g class="gl"><path d="M18.4 33V22M10.2 16V10"/></g>`;
+ else if(k===5)b=`<g class="go" style="stroke-width:6.4"><path d="M12.5 24Q9 29 12.5 33T11.5 38M20 25Q16.5 30 20 34T19 38.5M27.5 24Q31 29 27.5 33T28.5 38"/></g><g class="gc" style="stroke-width:3"><path d="M12.5 24Q9 29 12.5 33T11.5 38M20 25Q16.5 30 20 34T19 38.5M27.5 24Q31 29 27.5 33T28.5 38"/></g><path class="gb" d="M6.5 21Q6.5 4.5 20 4.5Q33.5 4.5 33.5 21Q33.5 24.5 30 24Q26.5 26.5 23 24Q20 26 17 24Q13.5 26.5 10 24Q6.5 24.5 6.5 21z"/><path d="M11 18Q11 9 20 9" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="15" r="1.8" fill="rgba(255,255,255,.55)"/><circle cx="28" cy="19.5" r="1.3" fill="rgba(255,255,255,.45)"/>${hl}`;
  else{const s=M3P[k],f=s==='r'?'<rect x="4" y="4" width="32" height="32" rx="10"/>':`<polygon points="${s}"/>`;b=`<g class="gb">${f}</g><g class="gf">${f}</g>${hl}<circle cx="28" cy="29" r="1.8" class="gh2"/>`}
  return`<svg viewBox="0 0 40 40" aria-hidden="true">${b}</svg>`};
-const M3N=8,M3E=['❄️','🌲','🔔','🍄','🧣','🍪'],M3XE=['🎄','🎁','🔔','🍪','🧦','🦌'],M3K=['#7db9ee','#5fbf84','#f0c15c','#e3706a','#a98fe0','#eaa468'],M3S={m:`<svg viewBox="0 0 40 40" aria-hidden="true"><g transform="translate(3.95 -.65)"><path d="M18.83 4.50A15.5 15.5 0 1 0 32.57 26.49A13 13 0 0 1 18.83 4.50z" fill="#f2a91e" stroke="#8a4f08" stroke-width="2.6" stroke-linejoin="round"/><path d="M18.83 4.50A15.5 15.5 0 1 0 32.57 26.49A13 13 0 0 1 18.83 4.50z" fill="#ffe680" transform="translate(18 20) scale(.86) translate(-18 -20) translate(-1.6 -.6)"/><circle cx="14.5" cy="22" r="1.5" fill="#fff6c8"/><path d="M31 5l1.2 2.8 2.8 1.2-2.8 1.2L31 13l-1.2-2.8-2.8-1.2 2.8-1.2z" fill="#fff" stroke="none"/></g></svg>`,s:`<svg viewBox="0 0 40 40" aria-hidden="true"><g transform="translate(0 .9)"><polygon fill="#f2a91e" stroke="#8a4f08" stroke-width="2.6" stroke-linejoin="round" points="20.0,2.3 24.9,13.7 37.3,14.9 28.0,23.1 30.7,35.2 20.0,28.9 9.3,35.2 12.0,23.1 2.7,14.9 15.1,13.7"/><polygon fill="#ffe680" points="20,20.5 15.1,13.7 20.0,2.3"/><polygon fill="#f2a91e" points="20,20.5 20.0,2.3 24.9,13.7"/><polygon fill="#ffe680" points="20,20.5 24.9,13.7 37.3,14.9"/><polygon fill="#f2a91e" points="20,20.5 37.3,14.9 28.0,23.1"/><polygon fill="#ffe680" points="20,20.5 28.0,23.1 30.7,35.2"/><polygon fill="#f2a91e" points="20,20.5 30.7,35.2 20.0,28.9"/><polygon fill="#ffe680" points="20,20.5 20.0,28.9 9.3,35.2"/><polygon fill="#f2a91e" points="20,20.5 9.3,35.2 12.0,23.1"/><polygon fill="#ffe680" points="20,20.5 12.0,23.1 2.7,14.9"/><polygon fill="#f2a91e" points="20,20.5 2.7,14.9 15.1,13.7"/><circle cx="20" cy="20.5" r="2.4" fill="#fff6c8"/><path d="M31 5l1.2 2.8 2.8 1.2-2.8 1.2L31 13l-1.2-2.8-2.8-1.2 2.8-1.2z" fill="#fff" stroke="none"/></g></svg>`,x:`<svg viewBox="0 0 40 40" aria-hidden="true"><g transform="translate(.4 -.9)"><polygon fill="#f2a91e" stroke="#8a4f08" stroke-width="2.6" stroke-linejoin="round" points="20.0,2.1 23.0,9.3 29.2,4.6 28.2,12.3 35.9,11.3 31.2,17.5 38.4,20.5 31.2,23.5 35.9,29.7 28.2,28.7 29.2,36.4 23.0,31.7 20.0,38.9 17.0,31.7 10.8,36.4 11.8,28.7 4.1,29.7 8.8,23.5 1.6,20.5 8.8,17.5 4.1,11.3 11.8,12.3 10.8,4.6 17.0,9.3"/><polygon fill="#ffe680" points="20,20.5 17.0,9.3 20.0,2.1"/><polygon fill="#f2a91e" points="20,20.5 20.0,2.1 23.0,9.3"/><polygon fill="#ffe680" points="20,20.5 23.0,9.3 29.2,4.6"/><polygon fill="#f2a91e" points="20,20.5 29.2,4.6 28.2,12.3"/><polygon fill="#ffe680" points="20,20.5 28.2,12.3 35.9,11.3"/><polygon fill="#f2a91e" points="20,20.5 35.9,11.3 31.2,17.5"/><polygon fill="#ffe680" points="20,20.5 31.2,17.5 38.4,20.5"/><polygon fill="#f2a91e" points="20,20.5 38.4,20.5 31.2,23.5"/><polygon fill="#ffe680" points="20,20.5 31.2,23.5 35.9,29.7"/><polygon fill="#f2a91e" points="20,20.5 35.9,29.7 28.2,28.7"/><polygon fill="#ffe680" points="20,20.5 28.2,28.7 29.2,36.4"/><polygon fill="#f2a91e" points="20,20.5 29.2,36.4 23.0,31.7"/><polygon fill="#ffe680" points="20,20.5 23.0,31.7 20.0,38.9"/><polygon fill="#f2a91e" points="20,20.5 20.0,38.9 17.0,31.7"/><polygon fill="#ffe680" points="20,20.5 17.0,31.7 10.8,36.4"/><polygon fill="#f2a91e" points="20,20.5 10.8,36.4 11.8,28.7"/><polygon fill="#ffe680" points="20,20.5 11.8,28.7 4.1,29.7"/><polygon fill="#f2a91e" points="20,20.5 4.1,29.7 8.8,23.5"/><polygon fill="#ffe680" points="20,20.5 8.8,23.5 1.6,20.5"/><polygon fill="#f2a91e" points="20,20.5 1.6,20.5 8.8,17.5"/><polygon fill="#ffe680" points="20,20.5 8.8,17.5 4.1,11.3"/><polygon fill="#f2a91e" points="20,20.5 4.1,11.3 11.8,12.3"/><polygon fill="#ffe680" points="20,20.5 11.8,12.3 10.8,4.6"/><polygon fill="#f2a91e" points="20,20.5 10.8,4.6 17.0,9.3"/><circle cx="20" cy="20.5" r="8.4" fill="#ffc533" stroke="#8a4f08" stroke-width="1.6"/><circle cx="20" cy="20.5" r="5.3" fill="#ffe680"/><ellipse cx="17.6" cy="18" rx="2.2" ry="1.3" transform="rotate(-35 17.6 18)" fill="#fff"/><path d="M31 5l1.2 2.8 2.8 1.2-2.8 1.2L31 13l-1.2-2.8-2.8-1.2 2.8-1.2z" fill="#fff" stroke="none"/></g></svg>`};
+const M3N=8,M3E=['❄️','🌲','🔔','🍄','🧣','🍪'],M3XE=['🎄','🎁','🔔','🍪','🧦','🦌'],M3K=['#7db9ee','#5fbf84','#f0c15c','#e3706a','#a98fe0','#f089b8'],M3S={m:`<svg viewBox="0 0 40 40" aria-hidden="true"><g transform="translate(3.95 -.65)"><path d="M18.83 4.50A15.5 15.5 0 1 0 32.57 26.49A13 13 0 0 1 18.83 4.50z" fill="#f2a91e" stroke="#8a4f08" stroke-width="2.6" stroke-linejoin="round"/><path d="M18.83 4.50A15.5 15.5 0 1 0 32.57 26.49A13 13 0 0 1 18.83 4.50z" fill="#ffe680" transform="translate(18 20) scale(.86) translate(-18 -20) translate(-1.6 -.6)"/><circle cx="14.5" cy="22" r="1.5" fill="#fff6c8"/><path d="M31 5l1.2 2.8 2.8 1.2-2.8 1.2L31 13l-1.2-2.8-2.8-1.2 2.8-1.2z" fill="#fff" stroke="none"/></g></svg>`,s:`<svg viewBox="0 0 40 40" aria-hidden="true"><g transform="translate(0 .9)"><polygon fill="#f2a91e" stroke="#8a4f08" stroke-width="2.6" stroke-linejoin="round" points="20.0,2.3 24.9,13.7 37.3,14.9 28.0,23.1 30.7,35.2 20.0,28.9 9.3,35.2 12.0,23.1 2.7,14.9 15.1,13.7"/><polygon fill="#ffe680" points="20,20.5 15.1,13.7 20.0,2.3"/><polygon fill="#f2a91e" points="20,20.5 20.0,2.3 24.9,13.7"/><polygon fill="#ffe680" points="20,20.5 24.9,13.7 37.3,14.9"/><polygon fill="#f2a91e" points="20,20.5 37.3,14.9 28.0,23.1"/><polygon fill="#ffe680" points="20,20.5 28.0,23.1 30.7,35.2"/><polygon fill="#f2a91e" points="20,20.5 30.7,35.2 20.0,28.9"/><polygon fill="#ffe680" points="20,20.5 20.0,28.9 9.3,35.2"/><polygon fill="#f2a91e" points="20,20.5 9.3,35.2 12.0,23.1"/><polygon fill="#ffe680" points="20,20.5 12.0,23.1 2.7,14.9"/><polygon fill="#f2a91e" points="20,20.5 2.7,14.9 15.1,13.7"/><circle cx="20" cy="20.5" r="2.4" fill="#fff6c8"/><path d="M31 5l1.2 2.8 2.8 1.2-2.8 1.2L31 13l-1.2-2.8-2.8-1.2 2.8-1.2z" fill="#fff" stroke="none"/></g></svg>`,x:`<svg viewBox="0 0 40 40" aria-hidden="true"><g transform="translate(.4 -.9)"><polygon fill="#f2a91e" stroke="#8a4f08" stroke-width="2.6" stroke-linejoin="round" points="20.0,2.1 23.0,9.3 29.2,4.6 28.2,12.3 35.9,11.3 31.2,17.5 38.4,20.5 31.2,23.5 35.9,29.7 28.2,28.7 29.2,36.4 23.0,31.7 20.0,38.9 17.0,31.7 10.8,36.4 11.8,28.7 4.1,29.7 8.8,23.5 1.6,20.5 8.8,17.5 4.1,11.3 11.8,12.3 10.8,4.6 17.0,9.3"/><polygon fill="#ffe680" points="20,20.5 17.0,9.3 20.0,2.1"/><polygon fill="#f2a91e" points="20,20.5 20.0,2.1 23.0,9.3"/><polygon fill="#ffe680" points="20,20.5 23.0,9.3 29.2,4.6"/><polygon fill="#f2a91e" points="20,20.5 29.2,4.6 28.2,12.3"/><polygon fill="#ffe680" points="20,20.5 28.2,12.3 35.9,11.3"/><polygon fill="#f2a91e" points="20,20.5 35.9,11.3 31.2,17.5"/><polygon fill="#ffe680" points="20,20.5 31.2,17.5 38.4,20.5"/><polygon fill="#f2a91e" points="20,20.5 38.4,20.5 31.2,23.5"/><polygon fill="#ffe680" points="20,20.5 31.2,23.5 35.9,29.7"/><polygon fill="#f2a91e" points="20,20.5 35.9,29.7 28.2,28.7"/><polygon fill="#ffe680" points="20,20.5 28.2,28.7 29.2,36.4"/><polygon fill="#f2a91e" points="20,20.5 29.2,36.4 23.0,31.7"/><polygon fill="#ffe680" points="20,20.5 23.0,31.7 20.0,38.9"/><polygon fill="#f2a91e" points="20,20.5 20.0,38.9 17.0,31.7"/><polygon fill="#ffe680" points="20,20.5 17.0,31.7 10.8,36.4"/><polygon fill="#f2a91e" points="20,20.5 10.8,36.4 11.8,28.7"/><polygon fill="#ffe680" points="20,20.5 11.8,28.7 4.1,29.7"/><polygon fill="#f2a91e" points="20,20.5 4.1,29.7 8.8,23.5"/><polygon fill="#ffe680" points="20,20.5 8.8,23.5 1.6,20.5"/><polygon fill="#f2a91e" points="20,20.5 1.6,20.5 8.8,17.5"/><polygon fill="#ffe680" points="20,20.5 8.8,17.5 4.1,11.3"/><polygon fill="#f2a91e" points="20,20.5 4.1,11.3 11.8,12.3"/><polygon fill="#ffe680" points="20,20.5 11.8,12.3 10.8,4.6"/><polygon fill="#f2a91e" points="20,20.5 10.8,4.6 17.0,9.3"/><circle cx="20" cy="20.5" r="8.4" fill="#ffc533" stroke="#8a4f08" stroke-width="1.6"/><circle cx="20" cy="20.5" r="5.3" fill="#ffe680"/><ellipse cx="17.6" cy="18" rx="2.2" ry="1.3" transform="rotate(-35 17.6 18)" fill="#fff"/><path d="M31 5l1.2 2.8 2.8 1.2-2.8 1.2L31 13l-1.2-2.8-2.8-1.2 2.8-1.2z" fill="#fff" stroke="none"/></g></svg>`};
 const M3G=[{mv:24,k:4,c:{0:10}},{mv:24,k:4,p:600},{mv:24,k:5,c:{0:12,1:12}},{mv:22,k:5,m:{m:1}},{mv:24,k:5,c:{2:16}},{mv:24,k:5,p:1000},{mv:24,k:5,c:{1:14,3:14}},{mv:22,k:5,m:{s:1}},{mv:26,k:5,c:{0:16,4:14}},{mv:24,k:5,m:{m:2,s:1}},
 {mv:26,k:5,p:1500},{mv:24,k:5,c:{2:18,3:18}},{mv:24,k:5,m:{x:1}},{mv:28,k:5,c:{0:15,1:15,2:15}},{mv:26,k:6,p:1800},{mv:26,k:6,c:{4:18,5:18}},{mv:26,k:6,m:{m:2,s:2}},{mv:28,k:6,c:{0:16,2:16,5:16}},{mv:28,k:6,p:2400},{mv:30,k:6,m:{x:1,m:1,s:1},c:{3:20}}];
 let m3Tok=0;
@@ -2046,7 +2052,43 @@ const SCA={
  scQuit:()=>{const x=scrMine();if(!x||x.S.e||SC.busy)return;if(!scrCf('quit'))return;
   SC.pend=[];SC.sel=-1;scrSend(scrResign(x.S,x.mi),0).then(()=>scrDraw())}
 };
-const scrInstall=()=>{Object.assign(act,SCA)};
+let SCD=null,SCDt=0;
+const scrDragInit=()=>{if(window.__scd)return;window.__scd=1;
+ const cellAt=(x,y)=>{const e=document.elementFromPoint(x,y);return e&&e.closest?e.closest('#scbw .scc[data-v]'):null};
+ const clr=()=>{document.querySelectorAll('.scc.dh').forEach(n=>n.classList.remove('dh'))};
+ const end=()=>{if(SCD){if(SCD.g)SCD.g.remove();if(SCD.t)SCD.t.classList.remove('dg')}clr();SCD=null};
+ document.addEventListener('pointerdown',e=>{
+  if(SCD)end();
+  const t=e.target.closest&&e.target.closest('#scg .sct[data-a="scr"],#scg .scc.pd');
+  if(!t||(e.pointerType==='mouse'&&e.button!==0))return;
+  const x=scrMine();if(!x||!x.my||x.S.e||SC.mode==='swap'||SC.busy)return;
+  const r=t.classList.contains('sct');
+  SCD={t,r,id:e.pointerId,x0:e.clientX,y0:e.clientY,on:false,v:+t.dataset.v}},true);
+ document.addEventListener('pointermove',e=>{
+  const d=SCD;if(!d||e.pointerId!==d.id)return;
+  if(!d.on){if(Math.hypot(e.clientX-d.x0,e.clientY-d.y0)<8)return;
+   d.on=true;const g=document.createElement('div');g.className='sct scgh';g.innerHTML=d.t.innerHTML;document.body.appendChild(g);d.g=g;d.t.classList.add('dg');vib&&vib(8)}
+  e.preventDefault();
+  d.g.style.left=e.clientX+'px';d.g.style.top=(e.clientY-34)+'px';
+  clr();const c=cellAt(e.clientX,e.clientY);if(c&&c.dataset.a==='scc'&&!c.classList.contains('t'))c.classList.add('dh')},{passive:false});
+ const up=e=>{
+  const d=SCD;if(!d||e.pointerId!==d.id)return;
+  if(!d.on){SCD=null;return}
+  SCDt=Date.now();
+  const c=e.type==='pointerup'?cellAt(e.clientX,e.clientY):null;
+  const free=c&&c.dataset.a==='scc'&&!c.classList.contains('t')?+c.dataset.v:-1;
+  end();
+  const x=scrMine();if(!x||!x.my||x.S.e)return;
+  if(d.r){if(free<0)return scrDraw();
+   SC.sel=d.v;act.scc(free)}
+  else{const q=SC.pend.findIndex(p=>p.i===d.v);if(q<0)return scrDraw();
+   if(free>=0){SC.pend[q].i=free;SC.m='';scrDraw()}
+   else if(!c){SC.pend.splice(q,1);SC.m='';scrDraw()}
+   else scrDraw()}};
+ document.addEventListener('pointerup',up);document.addEventListener('pointercancel',up);
+ window.addEventListener('click',e=>{if(Date.now()-SCDt<80){e.stopPropagation();e.preventDefault()}},true);
+ document.addEventListener('dragstart',e=>{if(SCD)e.preventDefault()})};
+const scrInstall=()=>{scrDragInit();Object.assign(act,SCA)};
 /* ---------- Social : mon profil, photo de profil ----------
    Profil : av = { k: 'p' (photo réduite en JPEG) | 'e' (personnage) | '' (initiale), v, t }, la dernière modification gagne. */
 const SOAV=['🦊','🐻','🦉','🐧','⛄','🐰','🦌','🐱','🐶','🐟','🐙','🐢','🌙','⭐','❄️','🌲','🍄','🦋','🐳','🧸'];
