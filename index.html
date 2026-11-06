@@ -503,9 +503,9 @@ body.g #pat{filter:blur(2px)}
 .dmhz{fill:rgba(255,236,160,.35);stroke:#fff3b0;stroke-width:2.4;stroke-linejoin:round;animation:dmhz .7s ease-in-out infinite alternate;pointer-events:none}
 .dmb{margin:12px auto 0;max-width:420px;border-radius:18px;padding:10px 10px 12px;background:linear-gradient(180deg,#c99a64,#b0814f);box-shadow:inset 0 2px 0 rgba(255,255,255,.25),inset 0 -6px 0 rgba(0,0,0,.14),0 6px 16px rgba(10,10,40,.3)}
 .dmc{display:flex;align-items:center;gap:8px;color:#3b2616;margin:0 0 8px}.dmc i{font-style:normal;font-size:20px}.dmc b{font-size:14px}
-.dmt{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;background:rgba(60,36,18,.28);border-radius:12px;padding:10px 6px;min-height:64px}
-.dmi{display:flex;flex-direction:column;align-items:center;gap:2px;width:70px;padding:6px 2px 4px;border:0;border-radius:12px;background:#efe3cb;color:#4a3322;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
-.dmi small{font-size:11px;line-height:1.1;text-align:center;color:#4a3322}.dmi span{display:block;height:38px}
+.dmt{display:flex;flex-wrap:nowrap;overflow:hidden;gap:6px;justify-content:center;background:rgba(60,36,18,.28);border-radius:12px;padding:8px 6px;min-height:66px}
+.dmi{display:flex;flex-direction:column;align-items:center;gap:2px;width:56px;flex:none;padding:5px 1px 3px;border:0;border-radius:12px;background:#efe3cb;color:#4a3322;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+.dmi small{font-size:9.5px;line-height:1.1;text-align:center;color:#4a3322}.dmi span{display:block;height:32px}
 .dmi.sel{outline:3px solid #7fc0ee;background:#fff}
 .dmi.no{animation:dmno .3s}
 .dmg{position:fixed;z-index:30;pointer-events:none;transform:translate(-50%,-70%);filter:drop-shadow(0 6px 8px rgba(0,0,0,.35))}
@@ -585,8 +585,8 @@ button.pf-h{width:100%;background:none;border:0;padding:0;color:inherit;font:inh
 .gb{fill:var(--c);stroke:rgba(25,10,50,.5);stroke-width:1.7;stroke-linejoin:round}
 .gf{fill:none;stroke:rgba(255,255,255,.5);stroke-width:1.8;stroke-linejoin:round;transform-origin:20px 20px;transform:scale(.66)}
 .gh{fill:rgba(255,255,255,.75)}.gh2{fill:rgba(255,255,255,.85)}
-.m3t.sp i{box-shadow:none;animation:m3g 1.4s ease-in-out infinite alternate;filter:drop-shadow(0 0 7px #fff6c8)}
-.m3t.sp i u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-size:calc(100cqw/8*.5);filter:drop-shadow(0 1px 3px rgba(0,0,0,.55))}
+.m3t.sp i{box-shadow:none;animation:m3g 1.4s ease-in-out infinite alternate;filter:drop-shadow(0 0 6px var(--c)) drop-shadow(0 0 2px #fff6c8)}
+.m3t.sp i u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-size:calc(100cqw/8*.78);filter:drop-shadow(0 1px 3px rgba(0,0,0,.55))}
 .m3t.sp-x i{border-radius:50%;background:conic-gradient(#ff9db3,#ffd36a,#8ff0c4,#7fc4f2,#c9a2ff,#ff9db3);animation:m3g 1.4s ease-in-out infinite alternate,m3r 4s linear infinite}
 .m3t.sp-x i u{animation:m3r 4s linear infinite reverse}
 .m3t.out{opacity:0;scale:1.35;transition:opacity .26s ease-out,scale .26s ease-out,transform .42s}
@@ -1316,23 +1316,24 @@ function m3Plan(T,pref,isSp){
 }
 function pMatch(r){
  const N=M3N,X=isX('match3',lv),L=M3G[X?10+xn('match3',lv)-1:lv],E=X?M3XE:M3E,K=X?M3KX:M3K,tok=++m3Tok;
- let g=Array(N*N).fill(null),mv=Math.round(L.mv*1.35),sc=0,pg={c:{},m:{m:0,s:0,x:0}},busy=false,sel=null,uid=0,hintT=0,over=false;
- if(r){pg.c=r.c||{};pg.m=Object.assign(pg.m,r.m||{});mv=r.mv;sc=r.sc}
- snap=()=>({T:g.map(t=>t?[t.t,t.s||0,t.o||0]:null),mv,sc,c:pg.c,m:pg.m});
+ let g=Array(N*N).fill(null),mv=0,sc=0,pg={c:{},m:{m:0,s:0,x:0}},busy=false,sel=null,uid=0,hintT=0,over=false;
+ if(r){pg.c=r.c||{};pg.m=Object.assign(pg.m,r.m||{});mv=r.n||0;sc=r.sc}
+ snap=()=>({T:g.map(t=>t?[t.t,t.s||0,t.o||0]:null),n:mv,sc,c:pg.c,m:pg.m});
  const ob=[];if(L.c)Object.entries(L.c).forEach(([t,n])=>ob.push({k:'c',t:+t,n}));if(L.p)ob.push({k:'p',n:L.p});if(L.m)Object.entries(L.m).forEach(([s,n])=>ob.push({k:'m',s,n}));
  const cur=o=>o.k==='c'?pg.c[o.t]||0:o.k==='p'?sc:pg.m[o.s]||0,done=o=>cur(o)>=o.n,allDone=()=>ob.every(done);
  const oh=o=>`<span class="m3g${done(o)?' ok':''}">${o.k==='c'?`<i style="--c:${K[o.t]}">${m3Gem(o.t)}</i>`:o.k==='p'?'<i>✦</i>':`<i>${M3S[o.s]}</i>`}<b>${done(o)?'✓':Math.min(cur(o),o.n)+' / '+o.n}</b></span>`;
  const hud=()=>{const a=$('#m3mv'),b=$('#m3sc'),c=$('#m3go');if(a)a.textContent=mv;if(b)b.textContent=sc;if(c)c.innerHTML=ob.map(oh).join('')};
- frame(`<div class="m3"><div class="m3sea" aria-hidden="true">${[8,22,35,50,63,77,90].map((x,k)=>`<span class="m3bu" style="left:${x}%;--s:${6+k%3*4}px;--d:${5+k%4*1.7}s;animation-delay:-${k*1.3}s"></span>`).join('')}<span class="m3fi" style="top:22%;--t:19s">🐠</span><span class="m3fi r" style="top:58%;--t:26s;animation-delay:-9s">🐟</span></div><div class="m3h"><div class="m3m"><b id="m3mv">${mv}</b><small>coups</small></div><div class="m3o" id="m3go"></div><div class="m3m"><b id="m3sc">${sc}</b><small>points</small></div></div><div class="m3b" id="m3b" role="application" aria-label="Plateau de jeu"></div><div class="m3l"><span><i>🌙</i>4 alignés : efface une ligne</span><span><i>⭐</i>carré de 4 : explose autour</span><span><i>☀️</i>5 alignés : échange-la avec un élément</span></div></div>`,1);
+ frame(`<div class="m3"><div class="m3sea" aria-hidden="true">${[8,22,35,50,63,77,90].map((x,k)=>`<span class="m3bu" style="left:${x}%;--s:${6+k%3*4}px;--d:${5+k%4*1.7}s;animation-delay:-${k*1.3}s"></span>`).join('')}<span class="m3fi" style="top:22%;--t:19s">🐠</span><span class="m3fi r" style="top:58%;--t:26s;animation-delay:-9s">🐟</span></div><div class="m3h"><div class="m3m"><b id="m3mv">${mv}</b><small>coups joués</small></div><div class="m3o" id="m3go"></div><div class="m3m"><b id="m3sc">${sc}</b><small>points</small></div></div><div class="m3b" id="m3b" role="application" aria-label="Plateau de jeu"></div><div class="m3l"><span><i>🌙</i>4 alignés : efface une ligne</span><span><i>⭐</i>carré de 4 : explose autour</span><span><i>☀️</i>5 alignés : échange-la avec un élément</span></div></div>`,1);
  const bd=$('#m3b'),alive=()=>tok===m3Tok&&playing&&$('#m3b')===bd,wt=ms=>new Promise(res=>setTimeout(res,matchMedia('(prefers-reduced-motion: reduce)').matches?ms/3:ms));
  const pos=(t,r0,c0)=>{t.r=r0;t.c=c0;t.el.style.transform=`translate(${c0*100}%,${r0*100}%)`};
- const look=t=>{t.el.className='m3t'+(t.s?' sp sp-'+t.s+(t.o?' o-'+t.o:''):'');t.el.dataset.t=t.t;t.el.style.setProperty('--c',t.t>=0?K[t.t]:'#fff');t.el.innerHTML=t.s?`<i>${t.t>=0?m3Gem(t.t):''}<u>${M3S[t.s]}</u></i>`:`<i>${m3Gem(t.t)}</i>`};
+ const look=t=>{t.el.className='m3t'+(t.s?' sp sp-'+t.s+(t.o?' o-'+t.o:''):'');t.el.dataset.t=t.t;t.el.style.setProperty('--c',t.t>=0?K[t.t]:'#fff');t.el.innerHTML=t.s?`<i><u>${M3S[t.s]}</u></i>`:`<i>${m3Gem(t.t)}</i>`};
  const mkT=(t,s,o,r0,c0)=>{const e=document.createElement('div'),x={id:++uid,t,s:s||0,o:o||0,el:e};e.setAttribute('role','img');e.setAttribute('aria-hidden','true');look(x);pos(x,r0,c0);bd.appendChild(e);return x};
  const types=()=>g.map(t=>t&&t.t>=0?t.t:-1);
  /* plateau de départ : aucun alignement, au moins un coup possible */
  if(r)r.T.forEach((q,i)=>{if(q)g[i]=mkT(q[0],q[1],q[2],(i/N)|0,i%N)});
  else{let T;do{T=Array(N*N).fill(-1);for(let i=0;i<N*N;i++){let t,n=0;do{t=Math.floor(Math.random()*L.k);T[i]=t;n++}while(n<30&&m3Has(T.map((v,j)=>j<=i?v:-1)))}}while(m3Has(T)||!m3Swap(T));T.forEach((t,i)=>{g[i]=mkT(t,0,0,(i/N)|0,i%N)})}
  const rnd=()=>Math.floor(Math.random()*L.k);
+ if(r)for(let i=0;i<N*N;i++)if(!g[i])g[i]=mkT(rnd(),0,0,(i/N)|0,i%N);
  const note=t=>{if(t.t>=0)pg.c[t.t]=(pg.c[t.t]||0)+1};
  const band=(kind,i)=>{const e=document.createElement('div');e.className='m3f '+kind;if(kind==='row')e.style.top=((i/N|0)*100/N)+'%';else if(kind==='col')e.style.left=(i%N*100/N)+'%';else{e.style.left=((i%N)-1)*100/N+'%';e.style.top=(((i/N)|0)-1)*100/N+'%'}bd.appendChild(e);setTimeout(()=>e.remove(),500)};
  /* explosions en chaîne : renvoie les événements pour l’animation */
@@ -1386,15 +1387,14 @@ function pMatch(r){
  const finish=async()=>{
   hud();sv();
   if(allDone()){over=true;const c=$('#m3b');if(c)confetti(c);setTimeout(()=>{if(tok===m3Tok&&playing)win()},900);return}
-  if(mv<=0){over=true;st.set(pkey(),null);const f=document.createElement('div');f.className='m3end';f.innerHTML='<h3>Plus de coups</h3><p>Ce n’est pas grave : respire, et réessaie.</p><button class="btn" data-a="m3r">Recommencer le niveau</button>';bd.appendChild(f);return}
   const T=types();if(!g.some(t=>t&&t.s)&&!m3Swap(T))await shuffle();
  };
  const swap=async(a,b)=>{
-  if(busy||over||mv<=0)return;busy=true;unsel();msg('');
+  if(busy||over)return;busy=true;unsel();msg('');
   const A=g[a],B=g[b];
   const mvAB=()=>{const ra=A.r,ca=A.c;pos(A,B.r,B.c);pos(B,ra,ca);[g[a],g[b]]=[g[b],g[a]]};
   if(A.s==='x'||B.s==='x'){
-   const S=A.s==='x'?A:B,O=S===A?B:A,si=S===A?a:b;mv--;hud();
+   const S=A.s==='x'?A:B,O=S===A?B:A,si=S===A?a:b;mv++;hud();
    const set=new Set([si]);
    if(O.s==='x'){g.forEach((u,j)=>{if(u)set.add(j)});S.all=true}
    else{S.col=O.t;g.forEach((u,j)=>{if(u&&u.t===O.t)set.add(j)});set.add(a);set.add(b)}
@@ -1404,10 +1404,10 @@ function pMatch(r){
   mvAB();await wt(210);if(!alive())return;
   const T=types();
   if(!m3Has(T)){mvAB();A.el.classList.add('no');B.el.classList.add('no');await wt(210);if(!alive())return;A.el.classList.remove('no');B.el.classList.remove('no');msg('Pas d’alignement ici.');busy=false;return}
-  mv--;hud();await settle([a,b]);if(!alive())return;busy=false;finish();
+  mv++;hud();await settle([a,b]);if(!alive())return;busy=false;finish();
  };
  const fire=async t=>{
-  if(busy||over||mv<=0)return;busy=true;unsel();msg('');mv--;hud();
+  if(busy||over)return;busy=true;unsel();msg('');mv++;hud();
   const i=g.indexOf(t),set=new Set([i]),ev=boom(set);
   await removeSet(set,ev,1);if(!alive())return;await fall();await settle();if(!alive())return;busy=false;finish();
  };
@@ -1431,6 +1431,7 @@ function pMatch(r){
  hud();
  if(!r&&lv===0&&!X)msg('Fais glisser une pièce vers sa voisine pour aligner 3 pièces identiques.');
  else if(r&&allDone())setTimeout(()=>{if(tok===m3Tok&&playing)win()},400);
+ else if(r)setTimeout(async()=>{if(tok!==m3Tok||!playing)return;busy=true;await settle();busy=false;if(alive())finish()},300);
 }
 /* ---------- Déménagement : des pièces en perspective isométrique, des boîtes à vider ---------- */
 const DU=21,DZ=24;
@@ -1525,7 +1526,11 @@ const DIT={
  globe:['Boule à neige','<circle cx="16" cy="13" r="10.5" fill="#cfe9fa" stroke="#9fc8e0" stroke-width="1.2"/><path d="M8 19q8-5 16 0v3H8z" fill="#fff"/><path d="M16 9l4 6h-8z" fill="#3f9a62"/><circle cx="11" cy="9" r="1" fill="#fff"/><circle cx="21" cy="12" r="1" fill="#fff"/><rect x="8" y="22" width="16" height="7" rx="2.4" fill="#8f6a46"/>',['desk','side','shelf','sink','counter','table','coffee','tv','dresser','ptable']],
  candle:['Bougie','<rect x="11" y="11" width="10" height="16" rx="2" fill="#f4efe0"/><rect x="11" y="11" width="10" height="4" rx="2" fill="#fff"/><path d="M16 10V7" stroke="#6a5a4a" stroke-width="1.2"/><path d="M16 1q4 4 0 7-4-3 0-7z" fill="#f4a24a"/><path d="M16 3.6q2 2.4 0 4-2-1.6 0-4z" fill="#ffe9a8"/><ellipse cx="16" cy="28" rx="8" ry="2" fill="#c9774f"/>',['desk','side','shelf','sink','counter','table','coffee','tv','dresser','ptable']],
  cocoa:['Chocolat chaud','<path d="M6 10h16v11q0 6-8 6t-8-6z" fill="#e8667a"/><path d="M22 13q7 0 6 5t-6 3" stroke="#e8667a" stroke-width="3" fill="none"/><ellipse cx="14" cy="10" rx="8" ry="2.4" fill="#fff3dc"/><ellipse cx="14" cy="10.4" rx="6.4" ry="1.7" fill="#6a3a22"/><circle cx="11" cy="9" r="2" fill="#fff"/><circle cx="16" cy="8.4" r="2" fill="#fff"/><path d="M10 6q-2-3 1-4M16 5q-2-3 1-4" stroke="#fff" stroke-width="1" fill="none" opacity=".7"/>',['desk','side','shelf','sink','counter','table','coffee','tv','dresser','ptable']],
- wreath:['Couronne','<circle cx="16" cy="16" r="11" fill="none" stroke="#3f9a62" stroke-width="6"/><circle cx="16" cy="16" r="11" fill="none" stroke="#35875a" stroke-width="2" stroke-dasharray="3 3"/><circle cx="9" cy="10" r="1.8" fill="#e8667a"/><circle cx="23" cy="12" r="1.8" fill="#e8667a"/><circle cx="18" cy="26" r="1.8" fill="#e8667a"/><path d="M16 27l-4 4 4-1 4 1z" fill="#e8667a"/>',['wall']]
+ wreath:['Couronne','<circle cx="16" cy="16" r="11" fill="none" stroke="#3f9a62" stroke-width="6"/><circle cx="16" cy="16" r="11" fill="none" stroke="#35875a" stroke-width="2" stroke-dasharray="3 3"/><circle cx="9" cy="10" r="1.8" fill="#e8667a"/><circle cx="23" cy="12" r="1.8" fill="#e8667a"/><circle cx="18" cy="26" r="1.8" fill="#e8667a"/><path d="M16 27l-4 4 4-1 4 1z" fill="#e8667a"/>',['wall']],
+ cshirt:['Chemise sur cintre','<path d="M16 2.6a2.3 2.3 0 1 1 2.3 2.3L16 6.6 4 14h24L16 6.6" fill="none" stroke="#9aa0ad" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 13l-5 4 2.5 3.5L9 19v10h14V19l2.5 1.5L28 17l-5-4-2.4 1.6q-2.6 1.6-5.2 0z" fill="#4f86d9"/><path d="M13 14.6l3 3 3-3" fill="#8fb4ee"/><path d="M16 17.6V29" stroke="#3a69b8" stroke-width=".9"/>',['wardrobe']],
+ dress:['Robe sur cintre','<path d="M16 2.6a2.3 2.3 0 1 1 2.3 2.3L16 6.6 6 13h20L16 6.6" fill="none" stroke="#9aa0ad" stroke-width="1.4" stroke-linejoin="round"/><path d="M12 12h8l1.6 6L27 30H5l5.4-12z" fill="#d9689a"/><path d="M10.4 18q5.6 2.6 11.2 0" stroke="#b34b7e" stroke-width="1.4" fill="none"/><path d="M12 12h8v2.4h-8z" fill="#ec8db6"/>',['wardrobe']],
+ sweater:['Chandail','<path d="M10 5l-7 6.4 2.6 5.4 3.2-1.6V27h14.4V15.2l3.2 1.6 2.6-5.4L22 5q-3 3.4-6 3.4T10 5z" fill="#e8a24a"/><rect x="8.8" y="24" width="14.4" height="3.2" fill="#cf8a34"/><path d="M12 5q4 5 8 0" fill="none" stroke="#cf8a34" stroke-width="1.6"/><path d="M10 14v8M16 12v10M22 14v8" stroke="#f3c07e" stroke-width="1" opacity=".7"/>',['wardrobe']],
+ socks:['Bas','<path d="M4 3h9v15l5 5q2.4 4.6-2.4 5.4-4 .2-6.4-3.4L4 18z" fill="#8fc4f0"/><rect x="4" y="3" width="9" height="4" fill="#fff"/><path d="M19 7h8v10l3.4 3.6q2 4.4-2.4 5-3.6 0-5.6-3L19 17z" fill="#e8667a"/><rect x="19" y="7" width="8" height="3.6" fill="#fff"/>',['wardrobe']]
 };
 const dSpr=(id,s)=>`<svg viewBox="0 0 32 32" width="${s}" height="${s}" aria-hidden="true">${DIT[id][1]}</svg>`;
 /* ---- meubles : chacun dessine ses pavés et déclare ses zones d’accueil ---- */
@@ -1593,15 +1598,15 @@ const DRM=[
  {h:'Condo',n:'Le salon',W:7,D:7,Hh:5.2,c:['#e8d9c4','#dccbb2','#b08e6a'],b:o=>{dWinR(o,2.9,4.9,2.4,4.4);dRug(o,2.4,2.0,3.6,3.4,'#8fb0c9');dSide(o,0,.2,1,1);dSofa(o,0,1.8,2.1,3.8,'#6f86a8');dTV(o,2.4,0,2.8,1.2);dShelf(o,5.6,0,1.4,1.0,3.4,dWood,'L');dTable(o,3.3,2.7,1.6,1.7,.9,dWood,'coffee')},
   items:['tv','gamepad','remote','book','cushion','plant','lamp','frame']},
  {h:'Maison',n:'La chambre des parents',W:7,D:7,Hh:5.2,c:['#d8e6d8','#c5d8c8','#d3ae82'],b:o=>{dWinR(o,2.8,4.6,2.6,4.5);dRug(o,3.6,2.8,3,3,'#e0bfa0');dSide(o,0,.3,.9,1.1);dBed(o,0,1.6,3.2,4.2,'#7fb8c9','#8a5a36');dDresser(o,2.6,0,2.2,1.1);dWard(o,5.3,0,1.7,1.3,4.2,'#c8b08c','L')},
-  items:['pillow','quilt','lamp','clock','perfume','jewel','shirt','frame']},
+  items:['pillow','quilt','lamp','clock','perfume','jewel','shirt','frame','cshirt','dress','sweater','socks']},
  {h:'Maison',n:'Ta chambre',W:7,D:7,Hh:5.2,c:['#f6d9e4','#eecbda','#e7cfae'],b:o=>{dWinR(o,5.2,6.6,2.4,4.4);dRug(o,2.6,2.4,3.2,3.2,'#b9d9a0');dSide(o,0,.2,.9,.9);dBed(o,0,1.2,2.2,3.2,'#7fb8c9','#f4efe6');dShelf(o,2.8,0,2.4,.9,2.8,'#f1e6d4','L');dChest(o,5.0,4.8,1.6,1.1)},
-  items:['teddy','blocks','ball','train','horse','book','nightlight','duck']},
+  items:['teddy','blocks','ball','train','horse','book','nightlight','duck','pillow','poster']},
  {h:'Maison',n:'La salle de bain',W:7,D:7,Hh:5.2,c:['#e9dff4','#d9cdeb','#efe9f6','#dcd2ea'],b:dBath({cab:'#8b6fb0'}),
-  items:['toothbrush','soap','towel','shampoo','paper','duck','bathmat','plant']},
+  items:['toothbrush','soap','towel','shampoo','paper','duck','bathmat','plant','mirror','perfume']},
  {h:'Maison',n:'La cuisine',W:7,D:7,Hh:5.2,c:['#f3e4c6','#e8d6b0','#c59a68'],b:o=>{dWinL(o,2.3,4.5,2.0,4.3);dUpper(o,.4,3.3,'#8a6a4a');dUpper(o,3.3,5.2,'#8a6a4a');dRug(o,1.6,3.0,3.6,3.2,'#d98c63');dCounter(o,.4,0,1.5,1.3,1.9,'#d9cdb6','counter','#8a6a4a');dStove(o,1.9,0,1.4,1.3);dCounter(o,3.3,0,1.9,1.3,1.9,'#d9cdb6','counter','#8a6a4a');dFridge(o,5.4,0,1.4,1.3);dChairOf(o,1.3,3.6,'#5fa9a0');dTable(o,2.5,3.3,2.0,1.8,1.7);dChairOf(o,4.9,3.6,'#5fa9a0')},
-  items:['pot','pan','mug','plate','fruit','kettle','magnet','book']},
+  items:['pot','pan','mug','plate','fruit','kettle','magnet','book','toaster','plant']},
  {h:'Maison',n:'Le salon',W:7,D:7,Hh:5.2,c:['#e4e8f4','#d4daea','#a98d6c'],b:o=>{dWinR(o,2.9,4.9,2.4,4.4);dRug(o,2.4,2.0,3.6,3.4,'#e0a99a');dSide(o,0,.2,1,1);dSofa(o,0,1.8,2.1,3.8,'#c97b6a');dTV(o,2.4,0,2.8,1.2);dShelf(o,5.6,0,1.4,1.0,3.4,dWood,'L');dTable(o,3.3,2.7,1.6,1.7,.9,dWood,'coffee')},
-  items:['tv','remote','cushion','blanket','vase','book','plant','frame']},
+  items:['tv','remote','cushion','blanket','vase','book','plant','frame','gamepad','lamp']},
  {h:'Maison',n:'La cour',W:7,D:7,Hh:2.2,yard:1,c:['#d9c8a6','#cdbb98','#8fcf8a'],b:o=>{
    const fz=(F,k)=>{};
    for(let k=.25;k<7;k+=.5){o.ln(o.P(0,k,.05),o.P(0,k,2.0),'#b9a782',1.1);o.ln(o.P(k,0,.05),o.P(k,0,2.0),'#b9a782',1.1)}
@@ -1610,7 +1615,7 @@ const DRM=[
    const sh=o.box(5.0,.4,0,1.8,1.7,2.4,'#b98a5a');o.pg([o.P(4.9,.3,2.4),o.P(6.9,.3,2.4),o.P(6.9,2.2,2.4),o.P(4.9,2.2,2.4)].map(p=>p),'#8a4a3a','#6a3a2a');o.zone('shed',sh.L,dHull([...sh.hull]),'c');
    dTable(o,1.4,3.5,1.6,1.4,1.5,'#b98a5a','ptable');
    const sb=o.box(4.4,4.2,0,2.2,2.2,.55,'#c9a36a');const sd=[o.P(4.55,4.35,.55),o.P(6.45,4.35,.55),o.P(6.45,6.25,.55),o.P(4.55,6.25,.55)];o.pg(sd,'#f0d9a0');o.zone('sandbox',sd,sb.hull)},
-  items:['ball','bucket','shovel','can','flowerpot','bike','chair','book']}
+  items:['ball','bucket','shovel','can','flowerpot','bike','chair','book','train','blocks']}
 ];
 const dPool=['tree','gift','gift2','garland','stocking','wreath','globe','candle','cocoa'];
 const DXI=DRM.map((_,i)=>dPool.filter((_,j)=>j!==i%9));
@@ -1627,9 +1632,9 @@ function pDemen(r){
  let placed=r&&r.p?r.p.filter(q=>ids.includes(q[0])):[],selId=null,hintT=0,done=false,bad=new Set();
  snap=()=>({p:placed});act.dmx=()=>{const d=$('#dmo');if(d)d.remove()};
  const left=()=>ids.filter(id=>!placed.some(q=>q[0]===id));
- const sp=(id,x,y,c,cls='')=>`<svg class="dmp ${cls}" data-id="${id}" x="${(x-16).toFixed(1)}" y="${(y-(c==='c'?16:30)).toFixed(1)}" width="32" height="32" viewBox="0 0 32 32"><title>${DIT[id][0]}</title>${DIT[id][1]}</svg>`;
+ const sp=(id,x,y,c,cls='')=>`<svg class="dmp ${cls}" data-id="${id}" x="${(x-13.5).toFixed(1)}" y="${(y-(c==='c'?13.5:25.3)).toFixed(1)}" width="27" height="27" viewBox="0 0 32 32"><title>${DIT[id][0]}</title>${DIT[id][1]}</svg>`;
  const layer=()=>{const g=$('#dml');if(g)g.innerHTML=placed.slice().sort((a,b)=>a[2]-b[2]).map(q=>sp(q[0],q[1],q[2],q[3],(q[4]?'pop':'')+(bad.has(q[0])?' bad':''))).join('')};
- const tray=()=>{const t=$('#dmt'),n=left();if(!t)return;t.innerHTML=n.map(id=>`<button class="dmi${selId===id?' sel':''}" data-id="${id}" aria-label="${DIT[id][0]}"><span>${dSpr(id,38)}</span><small>${DIT[id][0]}</small></button>`).join('')||(bad.size?'<p class="note" style="margin:0;text-align:center">Touche un objet en surbrillance pour le reprendre et le ranger au bon endroit.</p>':'<p class="note" style="margin:0;text-align:center">La boîte est vide.</p>');const c=$('#dmn');if(c)c.textContent=n.length?n.length+' objet'+(n.length>1?'s':'')+' à ranger':bad.size?bad.size+' objet'+(bad.size>1?'s':'')+' à replacer':'Boîte vide ✓'};
+ const tray=()=>{const t=$('#dmt'),n=left();if(!t)return;const K=Math.max(3,Math.floor(((t.clientWidth||320)-12+6)/62)),vis=n.slice(0,K);if(selId&&!vis.includes(selId))selId=null;t.innerHTML=vis.map(id=>`<button class="dmi${selId===id?' sel':''}" data-id="${id}" aria-label="${DIT[id][0]}"><span>${dSpr(id,32)}</span><small>${DIT[id][0]}</small></button>`).join('')||(bad.size?'<p class="note" style="margin:0;text-align:center">Touche un objet en surbrillance pour le reprendre et le ranger au bon endroit.</p>':'<p class="note" style="margin:0;text-align:center">La boîte est vide.</p>');const c=$('#dmn');if(c)c.textContent=n.length?n.length+' objet'+(n.length>1?'s':'')+' à ranger':bad.size?bad.size+' objet'+(bad.size>1?'s':'')+' à replacer':'Boîte vide ✓'};
  frame(`<div class="dm"><p class="lit">${X?'Fêtes · ':R.h+' · '}${R.n}</p><div class="dmw"><svg id="dmr" viewBox="0 0 ${sc.vw} ${sc.vh}" role="img" aria-label="${R.n}">${sc.s}<g id="dml"></g><g id="dmh"></g></svg></div><div class="dmb"><div class="dmc"><i>📦</i><b id="dmn"></b></div><div class="dmt" id="dmt"></div></div></div>`,1);
  const svg=$('#dmr'),ptr=e=>{const m=svg.getScreenCTM();if(!m)return null;const p=new DOMPoint(e.clientX,e.clientY).matrixTransform(m.inverse());return[p.x,p.y]};
  const alive=()=>$('#dmr')===svg&&playing;
@@ -1647,7 +1652,7 @@ function pDemen(r){
   done=true;confetti($('#dmr'));setTimeout(()=>{if(alive())win()},900)};
  /* toucher ou glisser */
  let dr=null;
- const ghost=(id,x,y)=>{let g=$('#dmg');if(!g){g=document.createElement('div');g.id='dmg';g.className='dmg';document.body.appendChild(g)}g.innerHTML=dSpr(id,46);g.style.left=x+'px';g.style.top=y+'px'};
+ const ghost=(id,x,y)=>{let g=$('#dmg');if(!g){g=document.createElement('div');g.id='dmg';g.className='dmg';document.body.appendChild(g)}g.innerHTML=dSpr(id,40);g.style.left=x+'px';g.style.top=y+'px'};
  const noGhost=()=>{const g=$('#dmg');if(g)g.remove()};
  const tt=$('#dmt');
  const mvH=e=>{if(!dr)return;if(!dr.mv&&Math.hypot(e.clientX-dr.x,e.clientY-dr.y)>8){dr.mv=true;selId=dr.id;tt.querySelectorAll('.dmi').forEach(b=>b.classList.toggle('sel',b.dataset.id===selId))}if(dr.mv)ghost(dr.id,e.clientX,e.clientY)};
@@ -1794,7 +1799,8 @@ function scrPaid(f,S){
 /* pourquoi ça ne marche pas : un texte clair plutôt qu’un silence */
 const scrWhy=e=>{const c=String(e&&(e.code||e.message)||e||'').toLowerCase();
  if(!e||e===0)return'La base de données n’est pas disponible ici.';
- if(/permission|not_granted|not_writer|unauth/.test(c))return'Le serveur refuse l’accès aux parties (permission).';
+ if(/permission-denied/.test(c))return'Firebase refuse l’accès aux parties : il manque la règle « sc » dans les règles de sécurité Firestore.';
+ if(/not_granted|not_writer|unauth/.test(c))return'Cette page doit être partagée avec toi avec un droit d’interaction.';
  if(/invalid/.test(c))return'Ce compte n’a pas le droit d’écrire ici : la page doit être partagée avec un droit d’interaction.';
  if(/unavail|network|offline|deadline|timeout/.test(c))return'Pas de connexion au serveur.';
  return'Erreur : '+c.slice(0,60)};
