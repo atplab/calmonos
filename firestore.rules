@@ -35,6 +35,15 @@ service cloud.firestore {
         && request.resource.data[request.auth.uid] == 1;
     }
 
+    // Parties de Scrabble : sc/<uid1>_<uid2> (identifiants triés). Seuls les deux joueurs lisent et écrivent leur partie.
+    match /sc/{gid} {
+      allow get: if request.auth != null && request.auth.uid in gid.split('_');
+      allow create, update: if request.auth != null && request.auth.uid in gid.split('_')
+        && request.resource.data.keys().hasOnly(['j'])
+        && request.resource.data.j is string
+        && request.resource.data.j.size() < 20000;
+    }
+
     // Sauvegarde par compte : strictement privée.
     match /data/users/{uid}/{docId} {
       allow read: if request.auth != null && request.auth.uid == uid;
