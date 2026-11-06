@@ -305,7 +305,7 @@ body.g #pat{filter:blur(2px)}
 .opts{display:grid;gap:12px}
 .dd-h b{font-weight:700}
 .dd-h small{display:block;font-weight:400;color:rgba(255,255,255,.82)}
-.dd{border-radius:22px;border:1px solid color-mix(in srgb,var(--a) 50%,transparent);background-color:color-mix(in srgb,var(--a) 14%,var(--nb6,rgba(255,255,255,.06)));backdrop-filter:blur(5px);backdrop-filter:blur(5px);overflow:hidden}
+.dd{border-radius:22px;border:1px solid color-mix(in srgb,var(--a) 50%,transparent);background-color:color-mix(in srgb,var(--a) 14%,var(--nb6,rgba(255,255,255,.06)));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);overflow:hidden}
 .dd-h{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:16px 20px;background:none;border:0;text-align:left}
 .dd-h svg{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s}
 .dd.open .dd-h svg{transform:rotate(180deg)}
@@ -602,6 +602,23 @@ button.pf-h{width:100%;background:none;border:0;padding:0;color:inherit;font:inh
 @keyframes m3y{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(-34px);opacity:0}}
 @keyframes m3z{0%{transform:scale(.3);opacity:0}25%{transform:scale(1.2);opacity:1}70%{transform:scale(1)}100%{transform:scale(1) translateY(-24px);opacity:0}}
 
+/* gemmes marines, rayons du soleil */
+.go{fill:none;stroke:rgba(25,10,50,.55);stroke-width:9;stroke-linecap:round;stroke-linejoin:round}
+.gc{fill:none;stroke:var(--c);stroke-width:5.6;stroke-linecap:round;stroke-linejoin:round}
+.gl{fill:none;stroke:rgba(255,255,255,.55);stroke-width:1.8;stroke-linecap:round}
+.gr path{fill:none;stroke:rgba(0,0,0,.2);stroke-width:1.3;stroke-linecap:round}
+.m3t.sp i u{line-height:1;transform:translateY(.02em)}
+.m3t.sunfx i{animation:m3sun .7s ease-in forwards}
+.m3t.zap i{animation:m3zap .7s ease-in forwards}
+.m3ray{position:absolute;z-index:3;height:3px;margin-top:-1.5px;border-radius:2px;pointer-events:none;transform-origin:0 50%;background:linear-gradient(90deg,#fff6c8,var(--c));box-shadow:0 0 6px var(--c);opacity:0;animation:m3ray .5s ease-out forwards}
+@keyframes m3ray{0%{clip-path:inset(0 100% 0 0);opacity:1}55%{clip-path:inset(0);opacity:1}100%{clip-path:inset(0);opacity:0}}
+@keyframes m3sun{0%{rotate:0deg;scale:1}100%{rotate:540deg;scale:1.7}}
+@keyframes m3zap{0%{translate:0 0;scale:1;filter:brightness(1)}15%{translate:-2px 1px}30%{translate:2px -1px;scale:1.08;filter:brightness(1.3)}45%{translate:-2px -1px}60%{translate:2px 1px;scale:1.18;filter:brightness(1.6)}80%{translate:-1px 0;scale:1.25;filter:brightness(2)}100%{translate:0 0;scale:.7;filter:brightness(2.4);opacity:.8}}
+
+/* la transition entre sections glisse hors de l'écran : on rogne le débord pour que la barre du bas ne saute pas */
+html,body{overflow-x:clip}
+#app{overflow-x:clip;overflow-y:visible}
+
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
 .sb.cf{background:linear-gradient(180deg,#ffd18a,#e8944a);color:#3a2310;border:0}
@@ -636,7 +653,7 @@ header.shud{position:fixed;top:0;left:50%;transform:translateX(-50%);width:min(1
 header.shud>*{pointer-events:auto}
 /* verre : comme le reste de l’application le jour (transparent et flou), noir la nuit ; --gs vaut 1 de jour et 0 de nuit (fondu à l’aube et au crépuscule) */
 body:has(#stg){--gb:var(--ngl);--gbd:var(--nbd);--gsh:var(--nsh)}
-.shc,.sht .chip,.shb,.sbar,.shm,body:has(#stg) #aq-rem,body:has(#stg) #nav{background:var(--gb);border:1px solid var(--gbd);backdrop-filter:blur(5px);backdrop-filter:blur(5px);box-shadow:0 8px 24px var(--gsh)}
+.shc,.sht .chip,.shb,.sbar,.shm,body:has(#stg) #aq-rem,body:has(#stg) #nav{background:var(--gb);border:1px solid var(--gbd);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 8px 24px var(--gsh)}
 .shc{flex:1;min-width:0;padding:10px 14px 12px;border-radius:20px}
 .shc h1{margin:0;font:600 21px/1.15 Fraunces,Georgia,serif;color:#fff}
 .shc small{display:block;margin-top:2px;font-size:12.5px;color:rgba(255,255,255,.88);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -797,7 +814,7 @@ body{transition:--sk-t 1.4s ease,--sk-b 1.4s ease,--dk-t 1.4s ease,--dk-b 1.4s e
 @media (prefers-reduced-motion:reduce){body{transition:none}}
 /* fluidité : pas de flou d’arrière-plan sur les grandes cartes (il se recalcule à chaque image dès que la neige ou un poisson bouge dessous) ; la barre du bas et les petites pastilles de l’histoire gardent le leur */
 .glass,.dd{-webkit-backdrop-filter:none;backdrop-filter:none}
-#nav{backdrop-filter:blur(5px);backdrop-filter:blur(5px)}
+#nav{-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 .aqm-haze{-webkit-backdrop-filter:none;backdrop-filter:none}
 .tank[data-dirty="1"] .aqm-haze{background:rgba(120,140,70,calc(var(--dt,0)*.2));background:rgba(120,140,70,calc(var(--dt,0)*.2))}
 /* fenêtre « Comment l’appeler ? » (achat d’un poisson) */
@@ -1283,8 +1300,15 @@ function pMemo(r){
    4 alignés → une lune (efface sa ligne) · carré de 4 → une étoile (explose autour) · 5 alignés → un soleil (échangé avec un élément, efface tous ceux-là) */
 const M3KX=['#e3534f','#3fae6a','#f2c14e','#e9eef7','#5aa3e8','#f08a3c'],M3W=['Bien !','Super !','Magnifique !','Splendide !','Incroyable !'];
 const M3P=['20,2 37,15 20,38 3,15','20,2 35,11 35,29 20,38 5,29 5,11','c','h','r','12,3 28,3 37,12 37,28 28,37 12,37 3,28 3,12'];
-const m3Gem=t=>{const s=M3P[t%6],b=s==='c'?'<circle cx="20" cy="20" r="17"/>':s==='h'?'<path d="M20 36C6 26 3 17 3 12.5A8.5 8.5 0 0 1 20 9a8.5 8.5 0 0 1 17 3.5C37 17 34 26 20 36z"/>':s==='r'?'<rect x="4" y="4" width="32" height="32" rx="10"/>':`<polygon points="${s}"/>`;
- return`<svg viewBox="0 0 40 40" aria-hidden="true"><g class="gb">${b}</g><g class="gf">${b}</g><ellipse cx="14" cy="12" rx="6.5" ry="3.4" transform="rotate(-35 14 12)" class="gh"/><circle cx="28" cy="29" r="1.8" class="gh2"/></svg>`};
+const M3SF=[...Array(10)].map((_,i)=>{const a=(-90+i*36)*Math.PI/180,r=i%2?8.8:18.5;return(20+r*Math.cos(a)).toFixed(1)+','+(21+r*Math.sin(a)).toFixed(1)}).join(' ');
+const M3SD=[...Array(5)].map((_,i)=>{const a=(-90+i*72)*Math.PI/180;return`<circle cx="${(20+11*Math.cos(a)).toFixed(1)}" cy="${(21+11*Math.sin(a)).toFixed(1)}" r="1.3"/>`}).join('');
+const m3Gem=t=>{const k=t%6,hl='<ellipse cx="14" cy="12" rx="6.5" ry="3.4" transform="rotate(-35 14 12)" class="gh"/>';let b;
+ if(k===0)b=`<polygon class="gb" points="${M3SF}"/><g class="gh2">${M3SD}<circle cx="20" cy="21" r="2.2"/></g><ellipse cx="14.5" cy="12.5" rx="3.2" ry="1.7" transform="rotate(-40 14.5 12.5)" class="gh"/>`;
+ else if(k===1)b=`<path class="gb" d="M20 35 7 22Q3 12 9.5 7.5Q15 4 20 6Q25 4 30.5 7.5Q37 12 33 22z"/><path class="gb" d="M15 34.4h10l-1.6 3.4h-6.8z"/><g class="gr"><path d="M20 34 9.5 9M20 34 14.5 6.5M20 34V6M20 34l5.5-27.5M20 34 30.5 9"/></g>${hl}`;
+ else if(k===2)b=`<circle class="gb" cx="20" cy="20" r="15.5"/><circle cx="18" cy="18" r="11" fill="rgba(255,255,255,.3)"/><circle cx="14.5" cy="13.5" r="4.4" fill="rgba(255,255,255,.9)"/><path d="M31 5l1.3 3.2 3.2 1.3-3.2 1.3L31 14l-1.3-3.2-3.2-1.3 3.2-1.3z" fill="#fff"/>`;
+ else if(k===3)b=`<g class="go"><path d="M20 36V21M20 27 11 18V9M20 22 29 14V6M11 18 5 14M29 14l6-4M20 22V11"/></g><g class="gc"><path d="M20 36V21M20 27 11 18V9M20 22 29 14V6M11 18 5 14M29 14l6-4M20 22V11"/></g><g class="gl"><path d="M18.4 33V22M10.2 16V10"/></g>`;
+ else{const s=M3P[k],f=s==='r'?'<rect x="4" y="4" width="32" height="32" rx="10"/>':`<polygon points="${s}"/>`;b=`<g class="gb">${f}</g><g class="gf">${f}</g>${hl}<circle cx="28" cy="29" r="1.8" class="gh2"/>`}
+ return`<svg viewBox="0 0 40 40" aria-hidden="true">${b}</svg>`};
 const M3N=8,M3E=['❄️','🌲','🔔','🍄','🧣','🍪'],M3XE=['🎄','🎁','🔔','🍪','🧦','🦌'],M3K=['#7db9ee','#5fbf84','#f0c15c','#e3706a','#a98fe0','#eaa468'],M3S={m:'🌙',s:'⭐',x:'☀️'};
 const M3G=[{mv:24,k:4,c:{0:10}},{mv:24,k:4,p:600},{mv:24,k:5,c:{0:12,1:12}},{mv:22,k:5,m:{m:1}},{mv:24,k:5,c:{2:16}},{mv:24,k:5,p:1000},{mv:24,k:5,c:{1:14,3:14}},{mv:22,k:5,m:{s:1}},{mv:26,k:5,c:{0:16,4:14}},{mv:24,k:5,m:{m:2,s:1}},
 {mv:26,k:5,p:1500},{mv:24,k:5,c:{2:18,3:18}},{mv:24,k:5,m:{x:1}},{mv:28,k:5,c:{0:15,1:15,2:15}},{mv:26,k:6,p:1800},{mv:26,k:6,c:{4:18,5:18}},{mv:26,k:6,m:{m:2,s:2}},{mv:28,k:6,c:{0:16,2:16,5:16}},{mv:28,k:6,p:2400},{mv:30,k:6,m:{x:1,m:1,s:1},c:{3:20}}];
@@ -1349,6 +1373,7 @@ function pMatch(r){
  };
  const burst=(i,col,n)=>{const r0=(i/N)|0,c0=i%N;for(let k=0;k<n;k++){const e=document.createElement('i'),a=Math.random()*6.283,d=22+Math.random()*34;e.className='m3sp'+(k%2?' b':'');e.style.cssText=`left:${(c0+.5)*100/N}%;top:${(r0+.5)*100/N}%;--c:${col};--dx:${Math.cos(a)*d}%;--dy:${Math.sin(a)*d}%`;bd.appendChild(e);setTimeout(()=>e.remove(),650)}};
  const pop=(txt,cls,cell)=>{const e=document.createElement('b');e.className='m3pt '+(cls||'');e.textContent=txt;if(cell!==undefined){e.style.left=((cell%N+.5)*100/N)+'%';e.style.top=(((cell/N|0)+.5)*100/N)+'%'}bd.appendChild(e);setTimeout(()=>e.remove(),1100)};
+ const rays=(si,ts)=>{const cs=bd.getBoundingClientRect().width/N,cx=(si%N+.5)*cs,cy=((si/N|0)+.5)*cs;ts.forEach((j,k)=>{const t=g[j];if(!t)return;t.el.classList.add('zap');const x=(j%N+.5)*cs,y=((j/N|0)+.5)*cs,d=Math.hypot(x-cx,y-cy),e=document.createElement('i');e.className='m3ray';e.style.cssText=`left:${cx}px;top:${cy}px;width:${d}px;transform:rotate(${Math.atan2(y-cy,x-cx)}rad);--c:${t.t>=0?K[t.t]:'#fff6c8'};animation-delay:${Math.min(k*14,260)}ms`;bd.appendChild(e);setTimeout(()=>e.remove(),700)})};
  const removeSet=async(set,ev,ch,keep)=>{
   ev.forEach(e=>{e.s==='m'?band(e.o==='v'?'col':'row',e.i):e.s==='s'?band('blast',e.i):0});
   let n=0;set.forEach(i=>{const t=g[i];if(!t)return;note(t);t.el.classList.add('out');if(ev.length)t.el.classList.add('boom');burst(i,t.t>=0?K[t.t]:'#fff6c8',set.size>14?2:4);n++});
@@ -1398,8 +1423,13 @@ function pMatch(r){
    const set=new Set([si]);
    if(O.s==='x'){g.forEach((u,j)=>{if(u)set.add(j)});S.all=true}
    else{S.col=O.t;g.forEach((u,j)=>{if(u&&u.t===O.t)set.add(j)});set.add(a);set.add(b)}
-   S.el.classList.add('pulse');await wt(260);if(!alive())return;
+   S.el.classList.add('sunfx');rays(si,[...set].filter(j=>j!==si));await wt(700);if(!alive())return;
    const ev=boom(set);ev.push({s:'x',i:si});await removeSet(set,ev,1);if(!alive())return;await fall();await settle();if(!alive())return;busy=false;return finish();
+  }
+  if(A.s==='m'||A.s==='s'||B.s==='m'||B.s==='s'){
+   mv++;hud();mvAB();await wt(210);if(!alive())return;
+   const set=new Set();[a,b].forEach(i=>{const u=g[i];if(u&&(u.s==='m'||u.s==='s'))set.add(i)});
+   const ev=boom(set);await removeSet(set,ev,1);if(!alive())return;await fall();await settle();if(!alive())return;busy=false;return finish();
   }
   mvAB();await wt(210);if(!alive())return;
   const T=types();
@@ -1428,6 +1458,7 @@ function pMatch(r){
  act.m3r=()=>{st.set(pkey(),null);start('match3',false,lv)};
  act.hint=()=>{if(busy||over)return;let h=null;const T=types();const s=m3Swap(T);if(s)h=s;else{const k=g.findIndex(t=>t&&t.s);if(k>=0)h=[k]}
   if(!h||!spend(1))return;h.forEach(i=>g[i]&&g[i].el.classList.add('hint'));clearTimeout(hintT);hintT=setTimeout(()=>g.forEach(t=>t&&t.el.classList.remove('hint')),2200)};
+ if(window.__M3DBG)window.__M3DBG({g:()=>g,look,swap,types,tap});
  hud();
  if(!r&&lv===0&&!X)msg('Fais glisser une pièce vers sa voisine pour aligner 3 pièces identiques.');
  else if(r&&allDone())setTimeout(()=>{if(tok===m3Tok&&playing)win()},400);
@@ -3679,7 +3710,7 @@ const cv=$('#snow'),x=cv.getContext('2d');let W,H;const P=[];
 const rs=()=>{W=cv.width=innerWidth;H=cv.height=innerHeight};rs();addEventListener('resize',rs);
 for(let i=0;i<45;i++)P.push({x:Math.random()*W,y:Math.random()*H,r:1+Math.random()*2.5,v:.15+Math.random()*.35,d:Math.random()*6});
 let sOn=0,sT=0;
-const snow=ts=>{if(!prefs().snow||document.hidden||playing){if(sOn){x.clearRect(0,0,W,H);sOn=0}sT=0;return setTimeout(snow,300)}if(sT&&ts-sT<32)return requestAnimationFrame(snow);const k=sT?Math.min(3,(ts-sT)/16.67)||1:1;sT=ts||0;sOn=1;x.clearRect(0,0,W,H);x.fillStyle=`rgba(${Math.round(120+135*(1-GS))},${Math.round(110+145*(1-GS))},${Math.round(200+55*(1-GS))},${(.5+.2*(1-GS)).toFixed(2)})`;x.beginPath();for(const p of P){p.y+=p.v*k;p.d+=.004*k;p.x+=Math.sin(p.d)*.25*k;if(p.y>H+5){p.y=-5;p.x=Math.random()*W}x.moveTo(p.x+p.r,p.y);x.arc(p.x,p.y,p.r,0,7)}x.fill();requestAnimationFrame(snow)};
+const snow=ts=>{if(!prefs().snow||document.hidden){if(sOn){x.clearRect(0,0,W,H);sOn=0}sT=0;return setTimeout(snow,300)}if(sT&&ts-sT<32)return requestAnimationFrame(snow);const k=sT?Math.min(3,(ts-sT)/16.67)||1:1;sT=ts||0;sOn=1;x.clearRect(0,0,W,H);x.fillStyle=`rgba(${Math.round(120+135*(1-GS))},${Math.round(110+145*(1-GS))},${Math.round(200+55*(1-GS))},${(.5+.2*(1-GS)).toFixed(2)})`;x.beginPath();let qn=0;for(const p of P){if(playing&&++qn>22)break;p.y+=p.v*k;p.d+=.004*k;p.x+=Math.sin(p.d)*.25*k;if(p.y>H+5){p.y=-5;p.x=Math.random()*W}x.moveTo(p.x+p.r,p.y);x.arc(p.x,p.y,p.r,0,7)}x.fill();requestAnimationFrame(snow)};
 if(!matchMedia('(prefers-reduced-motion: reduce)').matches)snow();
 </script>
 <script>if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});</script>
