@@ -449,6 +449,11 @@ body.g #pat{filter:blur(2px)}
 .fr-t small{line-height:1.3}
 .fr-b{flex:none;display:flex;flex-direction:column;align-items:flex-end}
 .fr-b .lnk{margin:2px 0 0;padding:4px 6px;font-size:12px}
+.fr-o{flex:1;min-width:0;display:flex;align-items:center;gap:12px;background:none;border:0;padding:0;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.fr-bk{margin:0 0 6px;text-decoration:none;font-size:15px}
+.pf-c .fr-rm{margin-top:22px}.pf-h{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.pf-g{display:flex;gap:10px}.pf-g>div{flex:1;text-align:center;background:rgba(255,255,255,.08);border-radius:14px;padding:10px 4px}.pf-g b{display:block;font:600 1.5rem Fraunces,Georgia,serif}.pf-g small{font-size:12px;color:var(--soft)}
+.pf-c .wmini{margin:12px 0 0}
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
 .sb.cf{background:linear-gradient(180deg,#ffd18a,#e8944a);color:#3a2310;border:0}
@@ -1904,7 +1909,7 @@ function wdRead(){
  if(!x||x.d!==t)return{d:t,g:[],r:0,h:[]};
  x.r=x.g.length&&x.g[x.g.length-1]===wKey(t)?1:x.g.length>=WT?2:0;return x;
 }
-function wdSave(x){x.r=x.g.length&&x.g[x.g.length-1]===wKey(x.d)?1:x.g.length>=WT?2:0;st.set('wd',{d:x.d,g:x.g,r:x.r,h:x.h})}
+function wdSave(x){x.r=x.g.length&&x.g[x.g.length-1]===wKey(x.d)?1:x.g.length>=WT?2:0;st.set('wd',{d:x.d,g:x.g,r:x.r,h:x.h});try{if(SO.col&&SO.got&&SO.can)socLater()}catch(e){}}
 /* Entre appareils : la date la plus récente gagne, puis la partie terminée, puis celle qui a le plus d’essais. */
 function wdMerge(L,O){
  const all=[L].concat(O||[]).map(wdClean).filter(Boolean);if(!all.length)return null;
@@ -2563,7 +2568,7 @@ if(st.get('sync:acc',false))setTimeout(accInit,0);
    (un compteur par appareil, qui ne fait que monter). Chacun n’écrit que son propre profil ;
    le destinataire additionne ce que les autres lui ont offert et se crédite la différence, une seule fois. */
 const SOA='ABCDEFGHJKMNPQRSTUVWXYZ23456789',SOR=/^[A-HJKMNP-Z2-9]{8}$/,SOK=/^[A-Za-z0-9_-]{1,128}$/,SG=5,SMAX=30,SCAP=50000;
-const SO={st:'off',col:null,uid:'',unsub:null,t10:null,got:false,can:true,P:{},R:null,rec:{},gt:+st.get('soc:gt',0)||0,cf:'',cft:null,rm:'',rmt:null,in:'',nm:null,m:'',merr:false,ms:'',mse:false,busy:false,again:false,pt:null,want:false,h:'',rk:'',we:false,tries:0};
+const SO={pf:'',st:'off',col:null,uid:'',unsub:null,t10:null,got:false,can:true,P:{},R:null,rec:{},gt:+st.get('soc:gt',0)||0,cf:'',cft:null,rm:'',rmt:null,in:'',nm:null,m:'',merr:false,ms:'',mse:false,busy:false,again:false,pt:null,want:false,h:'',rk:'',we:false,tries:0};
 function socDay(){return new Date().toLocaleDateString('sv')}
 const socOn=()=>{const o=$('#nav .on');return!!o&&o.dataset.v==='soc'};
 const socDev=()=>{let d=st.get('sync:dev','');if(!d){d=Math.random().toString(36).slice(2,10);st.set('sync:dev',d)}return d};
@@ -2576,6 +2581,8 @@ function socMerge(R,L){
  [R,L].forEach(x=>{
   if(!x||typeof x!=='object')return;
   if(!o.code&&typeof x.code==='string'&&SOR.test(x.code))o.code=x.code;
+  if(x.g&&typeof x.g==='object'&&(+x.g.t||0)>=((o.g&&o.g.t)||0)){const q=v=>Math.max(0,Math.floor(+v)||0);o.g={p:Math.min(SMX,q(x.g.p)),n:Math.min(999,q(x.g.n)),f:Math.min(99,q(x.g.f)),t:+x.g.t||0}}
+  if(x.w&&typeof x.w==='object'&&/^\d{4}-\d{2}-\d{2}$/.test(x.w.d)&&(!o.w||x.w.d>=o.w.d)){const pp=(Array.isArray(x.w.p)?x.w.p:[]).filter(s=>/^[012]{5}$/.test(s)).slice(0,6);o.w={d:x.w.d,r:x.w.r===1||x.w.r===2?x.w.r:0,n:pp.length,p:pp}}
   const nm=typeof x.name==='string'?x.name.replace(/\s+/g,' ').trim().slice(0,20):'',nt=+x.nt||0;
   if(nm&&nt>o.nt){o.name=nm;o.nt=nt}
   if(x.fr&&typeof x.fr==='object')Object.entries(x.fr).forEach(([k,t])=>{t=+t||0;if(!t||!SOK.test(k))return;const p=o.fr[k];if(p===undefined||Math.abs(t)>Math.abs(p))o.fr[k]=t});
@@ -2584,11 +2591,12 @@ function socMerge(R,L){
  });
  if(o.nt<0)o.nt=0;
  return o}
-const socKey=o=>JSON.stringify([o.code,o.name,o.nt,Object.entries(o.fr).sort(),Object.entries(o.d).sort(),Object.entries(o.s).sort().map(([d,m])=>[d,Object.entries(m).sort()])]);
+const socKey=o=>JSON.stringify([o.code,o.name,o.nt,o.g&&[o.g.p,o.g.n,o.g.f],o.w,Object.entries(o.fr).sort(),Object.entries(o.d).sort(),Object.entries(o.s).sort().map(([d,m])=>[d,Object.entries(m).sort()])]);
 /* Mon profil : fusion de ce qui est enregistré dans le compte et de ce qui est sur cet appareil ; le crée au premier passage sur l’onglet. */
 function socMine(){
  if(!SO.got||SO.st==='na')return;
  const M=socMerge(SO.R,st.get('soc:me',null));
+ if(SO.got){M.g=Object.assign(socProg(),{t:Date.now()});M.w=socWord()}
  if(!M.code&&SO.want&&SO.can){const used=new Set(Object.values(SO.P).map(p=>p.code));let c;do{c=socNew()}while(used.has(c));M.code=c}
  if(!M.code)return;
  if(!M.name)M.name='Veilleur '+(100+Math.floor(Math.random()*900));
@@ -2642,12 +2650,23 @@ async function socPush(){
  if(SO.busy){SO.again=true;return}
  const M=st.get('soc:me',null);if(!M||!M.code)return;
  SO.busy=true;
- try{await SO.col.doc(SO.uid).set({code:M.code,name:M.name,nt:M.nt,fr:M.fr,s:M.s,d:M.d,at:Date.now()});SO.we=false;SO.tries=0}
+ try{await SO.col.doc(SO.uid).set({code:M.code,name:M.name,nt:M.nt,fr:M.fr,s:M.s,d:M.d,g:Object.assign(socProg(),{t:Date.now()}),w:socWord(),at:Date.now()});SO.we=false;SO.tries=0}
  catch(e){const c=e&&e.code;if(c==='invalid_argument'||c==='not_granted'){SO.can=false;SO.st='ro'}else{SO.we=true;if(SO.tries++<3){clearTimeout(SO.pt);SO.pt=setTimeout(socPush,20000)}}}
  SO.busy=false;
  if(SO.again){SO.again=false;socPush()}
  socRefresh();
 }
+const socProg=()=>{let n=0;try{readState().lv.forEach(a=>a.forEach(v=>{if(v)n++}))}catch(e){}let f=0;try{f=Object.keys(aqRead().f||{}).length}catch(e){}return{p:styRead().p,n,f}};
+const socWord=()=>{const x=wdRead(),k=wKey(x.d);return x.g.length?{d:x.d,r:x.r,n:x.g.length,p:x.g.map(q=>wdEval(q,k).join(''))}:{d:x.d,r:0,n:0,p:[]}};
+function socProfile(id,M,p,av,nameOf){
+ const g=p&&p.g,w=p&&p.w,t=socDay(),ch=g?CHP[sCh(g.p)]:null;
+ const pr=!g?'<p class="note" style="margin:0">Pas encore de progression : ton ami doit rouvrir l’onglet Social avec la dernière version du jeu.</p>'
+  :`<div class="pf-g"><div><b>${g.p}</b><small>/ ${SMX} étapes</small></div><div><b>${g.n}</b><small>niveaux terminés</small></div><div><b>${g.f}</b><small>poisson${g.f>1?'s':''}</small></div></div><p class="note" style="margin:10px 0 0">Chapitre : ${ch?esc(ch.t):'—'}</p>`;
+ let wd;
+ if(!w||w.d!==t)wd='<p class="note" style="margin:0">Pas encore joué aujourd’hui.</p>';
+ else{const mini=w.p.length?`<div class="wmini" aria-hidden="true">${w.p.map(q=>`<div>${[...q].map(e=>`<i class="${['no','pr','ok'][+e]}"></i>`).join('')}</div>`).join('')}</div>`:'';
+  wd=`<p class="note" style="margin:0">${w.r===1?'Trouvé en '+w.n+' essai'+(w.n>1?'s':'')+' ✓':w.r===2?'Pas trouvé aujourd’hui ('+w.n+' / '+WT+' essais)':w.n?'En cours : '+w.n+' / '+WT+' essais':'Pas encore joué aujourd’hui.'}</p>${mini}`}
+ return`<button class="lnk fr-bk" data-a="socPb">‹ Mes amis</button><section class="glass play soc-i pf-c"><div class="pf-h">${av(id)}<h2 style="margin:0">${esc(nameOf(id))}</h2></div><div class="sy-h">Progression</div>${pr}<div class="sy-h">Mot du jour</div>${wd}<button class="lnk fr-rm" data-a="socRm" data-v="${esc(id)}">${SO.rm===id?'Confirmer le retrait':'Retirer de mes amis'}</button></section>`}
 function socBody(){
  const M=st.get('soc:me',null),crd=(t,b)=>`<section class="glass play soc-i"><h2>${t}</h2><p class="note" style="margin:0">${b}</p></section>`;
  if(SO.st==='na')return crd('Une connexion est nécessaire','Connecte-toi pour ajouter des amis et leur offrir des flocons.<br><button class="btn" style="margin-top:12px" data-a="fbIn">Se connecter ou créer un compte</button>');
@@ -2659,12 +2678,13 @@ function socBody(){
  const list=Object.entries(M.fr).filter(([,t])=>t>0).map(([id])=>id).sort((a,b)=>nameOf(a).localeCompare(nameOf(b),'fr'));
  const back=Object.keys(P).filter(id=>id!==me&&P[id].fr[me]>0&&!(M.fr[id]>0)).sort((a,b)=>nameOf(a).localeCompare(nameOf(b),'fr'));
  const day=SO.dy=socDay(),row=id=>{const p=P[id],r=SO.rec[id],dn=((M.d||{})[id]||'')>=day;
-  return`<div class="fr-i">${av(id)}<div class="fr-t"><b>${esc(nameOf(id))}</b><small>${p?(p.fr[me]>0?'Amis':'N’a pas encore ajouté ton code'):'Profil introuvable'}${r?' · t’a offert '+r+'\u00a0❄':''}</small></div><div class="fr-b">${dn?`<button class="sb done" data-a="socSend" data-v="${esc(id)}" aria-label="Cadeau déjà offert aujourd’hui à ${esc(nameOf(id))}" disabled>Offert aujourd’hui ✓</button>`:`<button class="sb buy${SO.cf===id?' cf':''}" data-a="socSend" data-v="${esc(id)}" aria-label="Offrir ${SG} flocons à ${esc(nameOf(id))}"${live&&p?'':' disabled'}>${SO.cf===id?'Confirmer · offrir '+SG+' ❄':'Offrir '+SG+' ❄'}</button>`}<button class="lnk" data-a="socRm" data-v="${esc(id)}">${SO.rm===id?'Confirmer le retrait':'Retirer'}</button></div></div>`};
+  return`<div class="fr-i"><button class="fr-o" data-a="socProf" data-v="${esc(id)}" aria-label="Voir le profil de ${esc(nameOf(id))}">${av(id)}<span class="fr-t"><b>${esc(nameOf(id))}</b><small>${p?(p.fr[me]>0?'Amis':'N’a pas encore ajouté ton code'):'Profil introuvable'}${r?' · t’a offert '+r+'\u00a0❄':''}</small></span></button><div class="fr-b">${dn?`<button class="sb done" data-a="socSend" data-v="${esc(id)}" aria-label="Cadeau déjà offert aujourd’hui à ${esc(nameOf(id))}" disabled>Offert aujourd’hui ✓</button>`:`<button class="sb buy${SO.cf===id?' cf':''}" data-a="socSend" data-v="${esc(id)}" aria-label="Offrir ${SG} flocons à ${esc(nameOf(id))}"${live&&p?'':' disabled'}>Offrir ${SG} ❄</button>`}</div></div>`};
  const inc=id=>`<div class="fr-i">${av(id)}<div class="fr-t"><b>${esc(nameOf(id))}</b><small>T’a ajouté(e) avec ton code</small></div><div class="fr-b"><button class="sb buy" data-a="socBack" data-v="${esc(id)}"${live?'':' disabled'}>Ajouter</button></div></div>`;
+ if(SO.pf&&M.fr[SO.pf]>0)return socProfile(SO.pf,M,P[SO.pf],av,nameOf);SO.pf='';
  const named=M.nt>0;
  const A=!named?`<section class="glass play soc-i"><div class="sy-h" style="margin-top:0">Mon code ami</div><div class="sadd"><div class="code lock" aria-label="Code ami verrouillé">🔒 ••••-••••</div><button class="btn alt" disabled>Copier</button></div><div class="sy-h">Choisis ton pseudo</div><div class="sadd"><input class="ci nm" id="soc-nm" type="text" maxlength="20" autocomplete="off" spellcheck="false" placeholder="Ton pseudo" aria-label="Choisis ton pseudo" value="${esc(SO.nm||'')}"><button class="btn" data-a="socNm"${SO.can?'':' disabled'}>Valider</button></div><p class="note" style="margin:10px 0 0">Ton code ami se débloque dès que tu as choisi un pseudo. Il sera visible, avec ton pseudo, par les personnes qui ont accès à cette page.</p></section>`:`<section class="glass play soc-i"><div class="sy-h" style="margin-top:0">Mon code ami</div><div class="sadd"><div class="code" id="soc-code" aria-label="Mon code ami">${socFmt(M.code)}</div><button class="btn alt" data-a="socCp" id="soc-cp">Copier</button></div><div class="sy-h">Mon pseudo</div><div class="sadd"><input class="ci nm" id="soc-nm" type="text" maxlength="20" autocomplete="off" spellcheck="false" aria-label="Mon pseudo" value="${esc(SO.nm===null?M.name:SO.nm)}"><button class="btn alt" data-a="socNm"${SO.can?'':' disabled'}>Enregistrer</button></div><p class="note" style="margin:10px 0 0">Ton pseudo et ton code sont visibles par les personnes qui ont accès à cette page.</p></section>`;
  const B=`<h2 class="s">Ajouter un ami</h2><section class="glass play soc-i"><div class="sadd"><input class="ci" id="soc-in" type="text" maxlength="14" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" placeholder="Code de ton ami" aria-label="Code ami à ajouter" value="${esc(SO.in)}"><button class="btn" data-a="socAdd"${live?'':' disabled'}>Ajouter</button></div><p class="m${SO.merr?' err':''}" id="soc-m" role="status" aria-live="polite">${esc(SO.m)}</p></section>`;
- const C=`<h2 class="s">Mes amis${list.length?' · '+list.length:''}</h2><section class="glass play soc-i">${list.length?`<p class="note" style="margin:0 0 4px">Offrir ${SG} ❄ à un ami : c’est gratuit : ça ne coûte rien à ton total, et ils arrivent dans le sien. Un cadeau par ami et par jour.</p>${list.map(row).join('')}`:'<p class="note" style="margin:0">Pas encore d’amis. Donne ton code à quelqu’un, ou saisis le sien ci-dessus.</p>'}<p class="m${SO.mse?' err':''}" id="soc-ms" role="status" aria-live="polite">${esc(SO.ms)}</p>${SO.we?'<p class="note" style="margin:0;text-align:center">Envoi en attente : il repartira dès que possible.</p>':''}</section>`;
+ const C=`<h2 class="s">Mes amis${list.length?' · '+list.length:''}</h2><section class="glass play soc-i">${list.length?`${list.map(row).join('')}`:'<p class="note" style="margin:0">Pas encore d’amis. Donne ton code à quelqu’un, ou saisis le sien ci-dessus.</p>'}<p class="m${SO.mse?' err':''}" id="soc-ms" role="status" aria-live="polite">${esc(SO.ms)}</p>${SO.we?'<p class="note" style="margin:0;text-align:center">Envoi en attente : il repartira dès que possible.</p>':''}</section>`;
  const D=(back.length?`<h2 class="s">Ils t’ont ajouté</h2><section class="glass play soc-i">${back.map(inc).join('')}</section>`:'');
  return C+D+B+A;
 }
@@ -2677,7 +2697,7 @@ function socRefresh(){
  if(id){const n=document.getElementById(id);if(n){n.focus();try{n.setSelectionRange(s,e)}catch(_){}}}
 }
 function socScreen(){
- cur=null;origin='home';nv('soc');mt='m';SO.want=true;SO.cf='';SO.rm='';SO.h='';
+ cur=null;origin='home';nv('soc');mt='m';SO.want=true;SO.cf='';SO.rm='';SO.pf='';SO.h='';
  app.innerHTML=`<header class="top"><h1>Social</h1><div class="tr"><div class="chip">❄ ${FLX()}</div></div></header><button class="quote" data-a="open" data-v="quote" aria-label="Ouvrir le carnet du soir : ${Q[di%Q.length]}"><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><p>«&nbsp;${Q[di%Q.length]}&nbsp;»</p></button><div id="soc" class="soc"></div>`;
  SO.ms=SO.got?socNews():'';SO.mse=false;
  if(!SO.col&&SO.st!=='conn')socInit();else socMine();
@@ -2690,6 +2710,8 @@ function socAddId(id){
  if(Object.values(M.fr).filter(t=>t>0).length>=SMAX)return'max';
  M.fr[id]=Math.max(Date.now(),Math.abs(M.fr[id]||0)+1);st.set('soc:me',M);socLater();return'ok'}
 Object.assign(act,{
+ socProf:id=>{SO.pf=id;SO.rm='';SO.ms='';SO.h='';socRefresh();window.scrollTo(0,0)},
+ socPb:()=>{SO.pf='';SO.rm='';SO.h='';socRefresh();window.scrollTo(0,0)},
  socCp:async()=>{const M=st.get('soc:me',null);if(!M||!M.code||!(M.nt>0))return;let ok=false;try{await navigator.clipboard.writeText(socFmt(M.code));ok=true}catch(e){}
   if(!ok){try{const r=document.createRange();r.selectNodeContents($('#soc-code'));const g=getSelection();g.removeAllRanges();g.addRange(r)}catch(e){}}
   const b=$('#soc-cp');if(b){b.textContent=ok?'Copié ✓':'Sélectionné';setTimeout(()=>{const b2=$('#soc-cp');if(b2)b2.textContent='Copier'},2200)}},
@@ -2722,19 +2744,17 @@ Object.assign(act,{
   const M=st.get('soc:me',null);if(!M||!(M.fr[id]>0))return;
   if(SO.rm!==id){SO.rm=id;clearTimeout(SO.rmt);SO.rmt=setTimeout(()=>{SO.rm='';socRefresh()},3500);return socRefresh()}
   clearTimeout(SO.rmt);SO.rm='';
-  M.fr[id]=-Math.max(Date.now(),Math.abs(M.fr[id])+1);st.set('soc:me',M);SO.cf='';SO.ms='Ami retiré.';SO.mse=false;socLater();socRefresh()},
+  M.fr[id]=-Math.max(Date.now(),Math.abs(M.fr[id])+1);st.set('soc:me',M);SO.cf='';SO.pf='';SO.ms='Ami retiré.';SO.mse=false;SO.h='';socLater();socRefresh();window.scrollTo(0,0)},
  socSend:id=>{
   const M=st.get('soc:me',null),p=SO.P[id];
   if(!M||!SO.can||!SO.got||!SO.col)return socFail('Le Social n’est pas prêt : réessaie dans un instant.');
   if(!(M.fr[id]>0)||!p)return socFail('Cet ami n’est plus dans ta liste.');
   M.d=M.d||{};
   if((M.d[id]||'')>=socDay())return socFail('Tu as déjà offert un cadeau à '+p.name+' aujourd’hui. Reviens demain !');
-  if(SO.cf!==id){SO.cf=id;clearTimeout(SO.cft);SO.cft=setTimeout(()=>{SO.cf='';socRefresh()},3500);SO.ms='';SO.mse=false;return socRefresh()}
-  clearTimeout(SO.cft);SO.cf='';
   const dv=socDev(),q=M.s[dv]||(M.s[dv]={});
   if((q[id]||0)+SG>SCAP)return socFail('Tu as déjà beaucoup gâté cet ami !');
   q[id]=(q[id]||0)+SG;M.d[id]=socDay();st.set('soc:me',M);
-  SO.ms=SG+' ❄ envoyés à '+p.name+' ✓ À demain pour un autre cadeau.';SO.mse=false;sfx(660,.4);vib(20);socLater();socRefresh()}
+  SO.ms='';SO.mse=false;sfx(660,.4);vib(20);socLater();socRefresh()}
 });
 document.addEventListener('input',e=>{const t=e.target;
  if(t.id==='soc-in'){SO.in=t.value;if(SO.merr&&SO.m){SO.m='';SO.merr=false;SO.h='';const m=$('#soc-m');if(m){m.textContent='';m.classList.remove('err')}}}
