@@ -1448,12 +1448,9 @@ function pMatch(r){
  };
  const fall=async()=>{
   const hs=[];
-  for(let c=0;c<N;c++){let r0=N-1;
-   while(r0>=0){if(!A[r0*N+c]){r0--;continue}
-    let top=r0;while(top>0&&A[(top-1)*N+c])top--;
-    let w=r0;for(let q=r0;q>=top;q--){const t=g[q*N+c];if(t){if(q!==w){g[w*N+c]=t;g[q*N+c]=null;pos(t,w,c)}w--}}
-    let k=0;for(let q=w;q>=top;q--){k++;const t=mkT(rnd(),0,0,top-k,c);if(shaped)t.el.style.opacity=0;hs.push([t,q,c]);g[q*N+c]=t}
-    r0=top-1}}
+  for(let c=0;c<N;c++){const R=[];for(let q=0;q<N;q++)if(A[q*N+c])R.push(q);if(!R.length)continue;
+   let w=R.length-1;for(let j=R.length-1;j>=0;j--){const t=g[R[j]*N+c];if(t){if(j!==w){g[R[w]*N+c]=t;g[R[j]*N+c]=null;pos(t,R[w],c)}w--}}
+   let k=0;for(let j=w;j>=0;j--){k++;const t=mkT(rnd(),0,0,R[0]-k,c);if(shaped)t.el.style.opacity=0;hs.push([t,R[j],c]);g[R[j]*N+c]=t}}
   void bd.offsetWidth;hs.forEach(([t,q,c])=>{pos(t,q,c);t.el.style.opacity=''});
   await wt(340);
  };
