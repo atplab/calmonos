@@ -2,6 +2,8 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0e0f34"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Nuit de neige"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Nuit de neige 2</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -2752,5 +2754,6 @@ let sOn=0,sT=0;
 const snow=ts=>{if(!prefs().snow||document.hidden){if(sOn){x.clearRect(0,0,W,H);sOn=0}sT=0;return setTimeout(snow,300)}const k=sT?Math.min(3,(ts-sT)/16.67)||1:1;sT=ts||0;sOn=1;x.clearRect(0,0,W,H);x.fillStyle=`rgba(${Math.round(120+135*(1-GS))},${Math.round(110+145*(1-GS))},${Math.round(200+55*(1-GS))},${(.5+.2*(1-GS)).toFixed(2)})`;x.beginPath();for(const p of P){p.y+=p.v*k;p.d+=.004*k;p.x+=Math.sin(p.d)*.25*k;if(p.y>H+5){p.y=-5;p.x=Math.random()*W}x.moveTo(p.x+p.r,p.y);x.arc(p.x,p.y,p.r,0,7)}x.fill();requestAnimationFrame(snow)};
 if(!matchMedia('(prefers-reduced-motion: reduce)').matches)snow();
 </script>
+<script>if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});</script>
 </body>
 </html>

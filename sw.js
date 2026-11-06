@@ -1,0 +1,10 @@
+/* Nuit de neige : service worker. Le jeu fonctionne sans réseau ; une nouvelle version est prise dès qu'elle est en ligne. */
+const V='nds-7be1861c06',FILES=['./','index.html','manifest.webmanifest','icon-192.png','icon-512.png','icon-maskable-512.png','apple-touch-icon.png'];
+self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()))});
+self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(n=>n.startsWith('nds-')&&n!==V).map(n=>caches.delete(n)))).then(()=>self.clients.claim()))});
+self.addEventListener('fetch',e=>{
+ const r=e.request;if(r.method!=='GET')return;
+ const u=new URL(r.url);if(u.origin!==location.origin)return;
+ /* réseau d'abord (version à jour), cache si hors ligne */
+ e.respondWith(fetch(r).then(res=>{if(res&&res.ok){const cp=res.clone();caches.open(V).then(c=>c.put(r,cp))}return res}).catch(()=>caches.match(r,{ignoreSearch:true}).then(m=>m||(r.mode==='navigate'?caches.match('index.html'):Response.error()))));
+});
