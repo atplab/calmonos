@@ -691,7 +691,7 @@ window.claude={use:async n=>{
  if(n==='user')return{id:async()=>auth.currentUser?auth.currentUser.uid:null,can:async()=>true,isOwner:async()=>false,canEdit:async()=>false};
  if(n==='db'){
   if(!auth.currentUser)return null;
-  return{collection:cp=>({
+  return{collection:cp=>cp==='profiles'?profilesCol(F):({
    doc:id=>({
     set:async d=>{try{await Fs.setDoc(Fs.doc(db,cp+'/'+id),{j:JSON.stringify(d)})}catch(e){const x=new Error(e&&e.message||'x');x.code=code(e);throw x}},
     get:async()=>{try{const s=await Fs.getDoc(Fs.doc(db,cp+'/'+id));return{exists:s.exists(),data:()=>parse(s.data())}}catch(e){const x=new Error(e&&e.message||'x');x.code=code(e);throw x}},
@@ -699,6 +699,77 @@ window.claude={use:async n=>{
    onSnapshot:(next,err)=>Fs.onSnapshot(Fs.collection(db,cp),sn=>next({docs:sn.docs.map(d=>({id:d.id,data:()=>parse(d.data())})),metadata:{fromCache:sn.metadata.fromCache,hasPendingWrites:sn.metadata.hasPendingWrites}}),e=>{if(err)err(e)})
   })}}
  return null}};
+
+/* ---- Social : on ne lit plus tous les profils, seulement le sien, ceux de mes amis et de ceux qui m’ont ajouté ou offert un cadeau ----
+   Index d’appoint : codes/<CODE> = { u: uid } (recherche d’un ami par son code) ; inbox/<uid> = { <expéditeur>: 1 } (qui m’a ajouté ou gâté). */
+const OKID=/^[A-Za-z0-9_-]{1,128}$/,OKC=/^[A-HJKMNP-Z2-9]{8}$/,MK='fb:mk:',tried=new Set();
+let LIVE=null;
+async function index(F,uid,d){
+ if(!d||typeof d!=='object')return;const {Fs,db}=F;let S;
+ try{S=new Set(JSON.parse(localStorage.getItem(MK+uid))||[])}catch(e){S=new Set()}
+ const T=[];
+ if(typeof d.code==='string'&&OKC.test(d.code))T.push(['c:'+d.code,()=>Fs.setDoc(Fs.doc(db,'codes/'+d.code),{u:uid})]);
+ const R=new Set();
+ Object.entries(d.fr||{}).forEach(([k,t])=>{if(+t>0&&OKID.test(k))R.add(k)});
+ Object.values(d.s||{}).forEach(m=>{if(m&&typeof m==='object')Object.entries(m).forEach(([k,n])=>{if(+n>0&&OKID.test(k))R.add(k)})});
+ R.forEach(k=>{if(k!==uid)T.push(['i:'+k,()=>Fs.setDoc(Fs.doc(db,'inbox/'+k),{[uid]:1},{merge:true})])});
+ let ch=false;
+ for(const [key,fn] of T.filter(t=>!S.has(t[0])&&!tried.has(uid+t[0])).slice(0,40)){
+  tried.add(uid+key);
+  try{await fn();S.add(key);ch=true}catch(e){tried.delete(uid+key)}
+ }
+ if(ch){try{localStorage.setItem(MK+uid,JSON.stringify([...S]))}catch(e){}}
+}
+function profilesCol(F){
+ const {Fs,db,auth}=F,uid=auth.currentUser.uid;
+ return{
+  doc:id=>({
+   set:async d=>{try{await Fs.setDoc(Fs.doc(db,'profiles/'+id),{j:JSON.stringify(d)})}catch(e){const x=new Error(e&&e.message||'x');x.code=code(e);throw x}if(id===uid)index(F,uid,d).catch(()=>{})},
+   get:async()=>{try{const s=await Fs.getDoc(Fs.doc(db,'profiles/'+id));return{exists:s.exists(),data:()=>parse(s.data())}}catch(e){const x=new Error(e&&e.message||'x');x.code=code(e);throw x}},
+   delete:async()=>{try{await Fs.deleteDoc(Fs.doc(db,'profiles/'+id))}catch(e){const x=new Error(e&&e.message||'x');x.code=code(e);throw x}}}),
+  onSnapshot:(next,err)=>{
+   const docs=new Map(),subs=new Map(),loaded=new Set(),extra=new Set();
+   let own=null,inbox=[],gotOwn=false,gotInbox=false,late=false,dead=false,tm=0;
+   const ready=()=>gotOwn&&(late||(gotInbox&&[...subs.keys()].every(k=>loaded.has(k))));
+   const emit=()=>{tm=0;if(dead||!gotOwn)return;next({docs:[...docs].map(([id,v])=>({id,data:()=>v})),metadata:{fromCache:false,hasPendingWrites:false}})};
+   const sched=()=>{if(dead||tm||!ready())return;tm=setTimeout(emit,40)};
+   const watch=id=>{if(subs.has(id)||id===uid)return;
+    subs.set(id,Fs.onSnapshot(Fs.doc(db,'profiles/'+id),s=>{if(dead)return;loaded.add(id);if(s.exists())docs.set(id,parse(s.data()));else docs.delete(id);sched()},()=>{loaded.add(id);sched()}))};
+   const want=()=>{
+    const ids=[];const add=k=>{if(OKID.test(k)&&k!==uid&&!ids.includes(k))ids.push(k)};
+    if(own&&own.fr&&typeof own.fr==='object')Object.entries(own.fr).forEach(([k,t])=>{if(+t>0)add(k)});
+    extra.forEach(add);inbox.forEach(add);
+    const keep=new Set(ids.slice(0,80));
+    keep.forEach(watch);
+    subs.forEach((u,id)=>{if(!keep.has(id)){u();subs.delete(id);docs.delete(id);loaded.delete(id)}});
+   };
+   const u0=Fs.onSnapshot(Fs.doc(db,'profiles/'+uid),{includeMetadataChanges:true},s=>{
+    if(dead)return;
+    if(s.metadata.fromCache&&!s.exists())return;
+    own=s.exists()?parse(s.data()):null;
+    if(own)docs.set(uid,own);else docs.delete(uid);
+    gotOwn=true;want();
+    if(s.metadata.hasPendingWrites)return;
+    sched();if(own)index(F,uid,own).catch(()=>{});
+   },e=>{if(!dead&&err)err(e)});
+   const u1=Fs.onSnapshot(Fs.doc(db,'inbox/'+uid),s=>{if(dead)return;const v=s.exists()?s.data():null;inbox=v&&typeof v==='object'?Object.keys(v):[];gotInbox=true;want();sched()},()=>{gotInbox=true;sched()});
+   const tl=setTimeout(()=>{late=true;sched()},3000);
+   const live={addExtra:(id,v)=>{extra.add(id);docs.set(id,v);loaded.add(id);want();if(gotOwn)emit()},
+    stop:()=>{dead=true;clearTimeout(tm);clearTimeout(tl);try{u0()}catch(e){}try{u1()}catch(e){}subs.forEach(u=>{try{u()}catch(e){}});subs.clear()}};
+   LIVE=live;
+   return()=>{live.stop();if(LIVE===live)LIVE=null};
+  }};
+}
+/* recherche d’un ami par son code : renvoie son identifiant (et charge son profil), ou null */
+fb.lookup=async c=>{
+ const F=await load(),{Fs,db,auth}=F;
+ if(!auth.currentUser||!OKC.test(c))return null;
+ const s=await Fs.getDoc(Fs.doc(db,'codes/'+c));if(!s.exists())return null;
+ const d=s.data(),id=d&&d.u;if(typeof id!=='string'||!OKID.test(id))return null;
+ const p=await Fs.getDoc(Fs.doc(db,'profiles/'+id));if(!p.exists())return null;
+ if(LIVE)LIVE.addExtra(id,parse(p.data()));
+ return id;
+};
 /* ---- fenêtre de connexion ---- */
 const MSG={'auth/invalid-credential':'Adresse ou mot de passe incorrect.','auth/wrong-password':'Adresse ou mot de passe incorrect.','auth/user-not-found':'Adresse ou mot de passe incorrect.','auth/invalid-email':'Cette adresse e-mail n’est pas valide.','auth/email-already-in-use':'Un compte existe déjà avec cette adresse : connecte-toi.','auth/weak-password':'Mot de passe trop court : 6 caractères au moins.','auth/missing-password':'Entre ton mot de passe.','auth/too-many-requests':'Trop d’essais. Réessaie dans quelques minutes.','auth/network-request-failed':'Pas de connexion à internet.','auth/unauthorized-domain':'Ce site n’est pas encore autorisé dans Firebase (domaines autorisés).','auth/operation-not-allowed':'Cette méthode de connexion n’est pas activée dans Firebase.','auth/popup-blocked':'La fenêtre Google a été bloquée par le navigateur.','auth/account-exists-with-different-credential':'Un compte existe déjà avec cette adresse, avec une autre méthode.'};
 const CSS=`.fbo{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;padding:16px;background:rgba(8,10,40,.6);backdrop-filter:blur(4px);font-family:inherit}
@@ -2630,12 +2701,16 @@ Object.assign(act,{
   if(!c)return bad('Saisis le code de ton ami.');
   if(!SOR.test(c))return bad('Ce code n’est pas valide : il fait 8 lettres et chiffres, comme '+socFmt('KQ7M4XD2')+'.');
   if(c===M.code)return bad('C’est ton propre code ! Donne-le plutôt à un ami.');
-  const hit=Object.keys(SO.P).find(id=>id!==SO.uid&&SO.P[id].code===c);
-  if(!hit)return bad('Aucun ami avec ce code. Vérifie-le, et demande-lui d’ouvrir d’abord l’onglet Social.');
-  const r=socAddId(hit),n=SO.P[hit].name;
-  if(r==='dup')return bad(n+' est déjà dans tes amis.');
-  if(r==='max')return bad('Tu as atteint la limite de '+SMAX+' amis.');
-  SO.in='';SO.m=n+' ajouté(e) à tes amis ✓';SO.merr=false;SO.h='';socRefresh()},
+  const fin=hit=>{
+   if(!hit)return bad('Aucun ami avec ce code. Vérifie-le, et demande-lui d’ouvrir d’abord l’onglet Social.');
+   const r=socAddId(hit),n=(SO.P[hit]&&SO.P[hit].name)||'Ton ami';
+   if(r==='dup')return bad(n+' est déjà dans tes amis.');
+   if(r==='max')return bad('Tu as atteint la limite de '+SMAX+' amis.');
+   SO.in='';SO.m=n+' ajouté(e) à tes amis ✓';SO.merr=false;SO.h='';socRefresh()};
+  const hit0=Object.keys(SO.P).find(id=>id!==SO.uid&&SO.P[id].code===c);
+  if(hit0||!(window.__fb&&window.__fb.lookup))return fin(hit0);
+  SO.m='Recherche…';SO.merr=false;socRefresh();
+  return window.__fb.lookup(c).then(id=>fin(id&&id!==SO.uid?id:null),()=>bad('Recherche impossible pour l’instant : réessaie dans un moment.'))},
  socBack:id=>{
   const M=st.get('soc:me',null);if(!M||!SO.can||!SO.got||!SO.col||!SO.P[id])return;
   const r=socAddId(id);

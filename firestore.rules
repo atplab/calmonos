@@ -2,14 +2,37 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Profils (Social) : chaque personne n'écrit que le sien ; toute personne connectée peut les lire.
+    // Profils (Social) : chacun n'écrit que le sien. On ne peut lire qu'un profil dont on connaît l'identifiant
+    // (jamais toute la liste), ce qui limite les lectures et empêche de tout aspirer.
     match /profiles/{uid} {
-      allow read: if request.auth != null;
+      allow get: if request.auth != null;
       allow create, update: if request.auth != null && request.auth.uid == uid
         && request.resource.data.keys().hasOnly(['j'])
         && request.resource.data.j is string
         && request.resource.data.j.size() < 60000;
       allow delete: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Codes amis : codes/<CODE> = { u: identifiant }. Lecture un par un seulement ; chacun ne peut écrire que son propre code.
+    match /codes/{code} {
+      allow get: if request.auth != null;
+      allow create, update: if request.auth != null
+        && code.matches('[A-HJKMNP-Z2-9]{8}')
+        && request.resource.data.keys().hasOnly(['u'])
+        && request.resource.data.u == request.auth.uid
+        && (resource == null || resource.data.u == request.auth.uid);
+    }
+
+    // Boîte d'arrivée : inbox/<destinataire> = { <expéditeur>: 1 } indique qui m'a ajouté ou m'a offert un cadeau.
+    // Seul le destinataire la lit ; chaque expéditeur n'écrit que sa propre clé.
+    match /inbox/{rcpt} {
+      allow get: if request.auth != null && request.auth.uid == rcpt;
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly([request.auth.uid])
+        && request.resource.data[request.auth.uid] == 1;
+      allow update: if request.auth != null
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([request.auth.uid])
+        && request.resource.data[request.auth.uid] == 1;
     }
 
     // Sauvegarde par compte : strictement privée.
