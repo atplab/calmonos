@@ -863,6 +863,10 @@ body .m3::before{position:fixed;inset:0;border-radius:0;opacity:.6;mask-image:li
 @keyframes mgw{from{transform:translateY(-2px) rotate(-3deg)}to{transform:translateY(3px) rotate(3deg)}}
 @keyframes mgp{0%,72%,100%{scale:1 1}86%{scale:1.08 1.08}}
 @media(prefers-reduced-motion:reduce){.tank .fx[data-id] .fy,.tank .fx[data-id] .fi svg{animation:none}}
+.tank .aqq{position:absolute;z-index:7;pointer-events:none;filter:drop-shadow(0 6px 10px rgba(0,20,60,.35))}
+.tank .aqq svg{display:block;width:100%;height:auto;overflow:visible}
+.tank .aqb{position:absolute;z-index:8;left:50%;top:6%;translate:-50% 0;width:min(88%,330px);box-sizing:border-box;padding:10px 14px;border-radius:16px;background:rgba(255,255,255,.93);color:#243064;font:600 14px/1.35 Fraunces,Georgia,serif;text-align:center;box-shadow:0 6px 22px rgba(0,0,0,.28);opacity:0;scale:.92;transition:opacity .4s,scale .4s;pointer-events:none}
+.tank .aqb.on{opacity:1;scale:1}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -4259,6 +4263,46 @@ function aqDash(el){
  const an=el.animate([{transform:'translateX('+(x0-x1).toFixed(1)+'px)'},{transform:'translateX(0px)'}],{duration:760,easing:'cubic-bezier(.12,.8,.25,1)'});
  an.onfinish=an.oncancel=()=>{el._dsh=0};
 }
+/* toucher un animal : un petit sursaut dans le sens où il regarde (sans quitter sa route) */
+function aqDash(el){
+ if(wRM||!el||!el.isConnected||el._dsh||el._qt)return;
+ const fr=el.querySelector('.fr'),fi=el.querySelector('.fi');if(!fi)return;
+ const m=getComputedStyle(fi).transform,nat=m&&m!=='none'?Math.sign(parseFloat(m.slice(m.indexOf('(')+1)))||1:1,face=nat*(fr&&fr.classList.contains('x')?-1:1);
+ el._dsh=1;
+ const an=el.animate([{transform:'translateX(0)'},{transform:'translateX('+face*30+'px)',offset:.3,easing:'ease-in-out'},{transform:'translateX(0)'}],{duration:850,easing:'ease-out'});
+ an.onfinish=an.oncancel=()=>{el._dsh=0};
+}
+/* de temps à autre, un animal s’approche de l’écran, dit une citation 5 s, puis reprend sa route */
+let aqQT=0;
+function aqQuoteSched(){clearTimeout(aqQT);aqQT=setTimeout(()=>{try{aqQuoteGo()}catch(e){}aqQuoteSched()},30000+Math.random()*45000)}
+async function aqQuoteGo(){
+ const t=document.querySelector('#tank');
+ if(!t||!t.isConnected||document.hidden||wRM||t.classList.contains('ed')||t.querySelector('.aqq')||aqBusy>Date.now()||(AQS&&Object.values(AQS.F||{}).some(f=>f.mode!=='done')))return;
+ const fs=[...t.querySelectorAll('.fx')].filter(e=>!e._dsh&&e.querySelector('.fi svg'));if(!fs.length)return;
+ const el=fs[Math.floor(Math.random()*fs.length)],tb=t.getBoundingClientRect(),r=el.getBoundingClientRect(),fr=el.querySelector('.fr'),fi=el.querySelector('.fi'),
+  m=getComputedStyle(fi).transform,nat=m&&m!=='none'?Math.sign(parseFloat(m.slice(m.indexOf('(')+1)))||1:1,face=nat*(fr&&fr.classList.contains('x')?-1:1),
+  S=Math.min(3.4,tb.width*.46/r.width),dx=tb.width/2-(r.left-tb.left+r.width/2),dy=tb.height*.68-(r.top-tb.top+r.height/2),
+  c=document.createElement('div'),b=document.createElement('div'),sl=ms=>new Promise(o=>setTimeout(o,ms)),
+  qt=Q[Math.floor(Math.random()*Q.length)];
+ c.className='aqq';c.style.cssText=`left:${r.left-tb.left}px;top:${r.top-tb.top}px;width:${r.width}px;height:${r.height}px`;
+ c.innerHTML=`<div style="transform:scaleX(${face})">${el.querySelector('.fi svg').outerHTML}</div>`;
+ b.className='aqb';b.textContent='« '+qt+' »';if(qt.length>90)b.style.fontSize='13px';
+ t.appendChild(c);t.appendChild(b);el._qt=1;el.style.visibility='hidden';
+ const ok=()=>t.isConnected&&c.isConnected;
+ try{
+  await c.animate([{transform:'none'},{transform:`translate(${dx}px,${dy}px) scale(${S})`}],{duration:1100,easing:'cubic-bezier(.3,.8,.3,1)',fill:'forwards'}).finished;
+  if(!ok())throw 0;
+  b.classList.add('on');
+  c.firstChild.animate([{translate:'0 -3px'},{translate:'0 3px'}],{duration:1300,iterations:Infinity,direction:'alternate',easing:'ease-in-out'});
+  await sl(5000);if(!ok())throw 0;
+  b.classList.remove('on');
+  const r2=el.getBoundingClientRect(),t2=t.getBoundingClientRect(),ex=(r2.left-t2.left+r2.width/2)-(r.left-tb.left+r.width/2),ey=(r2.top-t2.top+r2.height/2)-(r.top-tb.top+r.height/2);
+  await c.animate([{transform:`translate(${dx}px,${dy}px) scale(${S})`},{transform:`translate(${ex}px,${ey}px) scale(1)`}],{duration:1000,easing:'cubic-bezier(.5,0,.3,1)',fill:'forwards'}).finished;
+ }catch(e){}
+ el.style.visibility='';el._qt=0;c.remove();b.remove();
+}
+aqQuoteSched();
+
 function aqNear(P,cx,cy){let b=null,bd=1e9;for(const p of P){if(p.state!==1)continue;const d=Math.hypot(p.xs-cx,p.y-cy)+90*p.n;if(d<bd){bd=d;b=p}}return b}
 function aqStep(ts){
  const S=AQS;if(!S)return;S.raf=0;
