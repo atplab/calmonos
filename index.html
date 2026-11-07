@@ -4266,7 +4266,7 @@ function xBookS(){
 
 function dayScreen(){
  cur=null;origin='day';nv('daily');mt='m';sBusy=false;clearTimeout(sMT);
- const Y=styRead(),X=sxOn();
+ const Y=styRead(),X=sxOn();xmMus(X);
  app.innerHTML=`<div class="stg" id="stg" data-ph="day"><div class="smv" id="smv">${X?xMapSVG(Y,'d'):sMapSVG(Y,'d')}${X?xMapSVG(Y,'n'):sMapSVG(Y,'n')}<div class="sgy" id="guy"><svg viewBox="-100 -68 130 100" aria-hidden="true">${GUYSVG}</svg></div></div></div>${X?xHud(Y):sHud(Y)}${aquaRemind()}<p class="m shm" id="m" role="status" aria-live="polite"></p>${X?xBar(Y):sBar(Y)}`;
  const stg=$('#stg'),qq=SGY.NXY[X?(Y.xp||0):Y.p];
  ['touchmove','wheel','gesturestart'].forEach(ev=>stg.addEventListener(ev,e=>e.preventDefault(),{passive:false}));
@@ -4351,7 +4351,7 @@ function bookClose(){
  app.animate([{opacity:0},{opacity:1}],{duration:BKMS,easing:BKE,fill:'backwards'});
 }
 function storyBook(S){
- if(!S&&sxOn())S=xBookS();cur=S?'dbook':'book';nv(S&&S.tab?S.tab:S?'games':'daily');const Y=S?null:styRead();
+ if(!S&&sxOn())S=xBookS();cur=S?'dbook':'book';nv(S&&S.tab?S.tab:S?'games':'daily');if(S&&S.tab==='daily')xmMus(true);const Y=S?null:styRead();
  const ks=S?S.ks:Object.keys(STORY).map(Number).filter(n=>n<=Y.p&&(n%10!==0||Y.bw>=n)),nx=S?0:Object.keys(STORY).map(Number).find(n=>!ks.includes(n)),
   P=S?S.P:[{k:'cov'},{k:'pro'},...ks.map(n=>({k:'fr',n})),nx?{k:'lk',n:nx}:{k:'end'}],N=P.length,last=ks.length+1;
  let ix=ks.length?last:0;
