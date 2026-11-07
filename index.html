@@ -1027,6 +1027,18 @@ body:has(.pg-quiz) .skh,body:has(.m3) .skh{display:none}
 .hbar{background:linear-gradient(180deg,rgba(24,30,78,.5),rgba(14,18,52,.66));-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .ht.far{opacity:.5}
 .hcd h2{margin:2px 0 0;font-size:30px;line-height:1.1;font-weight:700;text-wrap:balance}
+/* barres pleines (la scène s’arrête dessous), aux couleurs de la météo : --gs = 1 jour, 0 nuit */
+.hf{--hc1:color-mix(in srgb,#f3efff calc(var(--gs,1)*100%),#222a66);--hc2:color-mix(in srgb,#ddd6f8 calc(var(--gs,1)*100%),#12163f);--hfg:color-mix(in srgb,#2c286b calc(var(--gs,1)*100%),#fff);--hbd:color-mix(in srgb,rgba(70,60,150,.28) calc(var(--gs,1)*100%),rgba(255,255,255,.2));--hpl:color-mix(in srgb,rgba(255,255,255,.7) calc(var(--gs,1)*100%),rgba(255,255,255,.1))}
+.hv{top:calc(var(--ht) + env(safe-area-inset-top,0px));bottom:calc(var(--hb) + env(safe-area-inset-bottom,0px))}
+.htb{background:linear-gradient(0deg,var(--hc1),var(--hc2));border-bottom:1px solid var(--hbd);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:0 6px 18px rgba(20,16,70,.22)}
+.hbar{background:linear-gradient(180deg,var(--hc1),var(--hc2));border-top:1px solid var(--hbd);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:0 -6px 18px rgba(20,16,70,.22)}
+.hf .back,.hf .hb,.hf .chip{background:var(--hpl);color:var(--hfg);border:1px solid var(--hbd)}
+.hzb{background:var(--hpl);color:var(--hfg);border-color:var(--hbd)}
+.hti{color:var(--hfg)}
+.hti:not(.ok) .hte{filter:brightness(0) invert(calc(1 - var(--gs,1)));opacity:.42}
+.hf .hhd .back,.hf .hhd .hb,.hf .hhd .chip,.hf .hzb,.hf .hti,.hf .hti small{color:var(--hfg)!important;text-shadow:none!important}
+.hf .hhd .back,.hf .hhd .hb,.hf .hhd .chip,.hf .hzb{background:var(--hpl)!important;border-color:var(--hbd)!important}
+.hf{--hfg:color-mix(in srgb,#2c286b clamp(0%,calc((var(--gs,1) - .45)*1000%),100%),#fff)}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
