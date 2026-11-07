@@ -871,6 +871,7 @@ body .m3::before{position:fixed;inset:0;border-radius:0;opacity:.6;mask-image:li
 .tank .dc.lgo{filter:none;z-index:4;mix-blend-mode:screen;pointer-events:none;opacity:calc((1 - var(--sun,1))*.5);background:none}
 .tank.ed .dc.lgo{display:none}
 .tank .dc[data-id=lanterne],.tank .dc[data-id=meduse],.tank .dc[data-id=cristal],.tank .dc[data-id=lampions],.tank .dc[data-id=guirlande]{filter:none}
+.tank .fx svg{filter:brightness(calc(var(--br,1) + (1.06 - var(--br,1))*var(--lit,0))) saturate(calc(.7 + .3*var(--sun,1) + (.45 - .3*var(--sun,1))*var(--lit,0))) drop-shadow(0 0 calc(var(--lit,0)*7px) var(--litc,transparent));transition:filter .3s linear}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -4322,6 +4323,20 @@ function aqGlowEl(d,q){
  const L=g(),cs=[...new Set(L.map(l=>l[3]))];
  return`<svg class="dc lgo ${d.k||''}" viewBox="${d.vb||'0 0 100 100'}" style="left:${q.x}%;width:${d.w}%;bottom:${q.b}%;aspect-ratio:${d.ar||1};${d.k==='float'?'animation-delay:'+(-(hs(d.id)%7))+'s':''}" aria-hidden="true"><defs>${cs.map(c=>`<radialGradient id="lg${c.slice(1)}"><stop offset="0" stop-color="${c}" stop-opacity=".62"/><stop offset=".4" stop-color="${c}" stop-opacity=".22"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></radialGradient>`).join('')}</defs>${L.map(([x,y,r,c])=>`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r}" fill="url(#lg${c.slice(1)})"/>`).join('')}</svg>`;
 }
+/* un animal qui passe près d’une lumière est éclairé : il retrouve un peu ses couleurs du jour */
+function aqLit(){
+ if(document.hidden)return;
+ const t=document.querySelector('#tank');if(!t)return;
+ const sun=parseFloat(getComputedStyle(t).getPropertyValue('--sun')),fs=[...t.querySelectorAll('.fx')];
+ const L=isNaN(sun)||sun>.97?[]:[...t.querySelectorAll('.lgo circle')].map(c=>{const r=c.getBoundingClientRect(),m=/lg([0-9a-f]{6})/i.exec(c.getAttribute('fill')||'');return{x:r.left+r.width/2,y:r.top+r.height/2,r:r.width*.34,c:m?'#'+m[1]:'#ffd98a'}});
+ fs.forEach(f=>{
+  let best=0,bc='';
+  if(L.length&&!f._qt){const r=f.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;L.forEach(l=>{const v=Math.max(0,1-Math.hypot(x-l.x,y-l.y)/l.r);if(v>best){best=v;bc=l.c}})}
+  const v=best?(Math.min(1,best*1.25)*(1-sun)).toFixed(2):'0';
+  if(f._lit!==v){f._lit=v;f.style.setProperty('--lit',v);if(bc)f.style.setProperty('--litc',bc)}
+ });
+}
+setInterval(aqLit,140);
 
 function aqNear(P,cx,cy){let b=null,bd=1e9;for(const p of P){if(p.state!==1)continue;const d=Math.hypot(p.xs-cx,p.y-cy)+90*p.n;if(d<bd){bd=d;b=p}}return b}
 function aqStep(ts){
