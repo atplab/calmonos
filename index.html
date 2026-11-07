@@ -525,12 +525,12 @@ body.g #pat{filter:blur(2px)}
 .chgo{margin-top:20px;width:100%}
 .chres{margin-bottom:14px}
 /* fragments d'étoile : la jauge de poussière */
-.sbi{flex-direction:column;align-items:flex-start;gap:2px}.sdr{display:flex;align-items:center;gap:9px}
-.sbi b em{font-style:normal;font-size:12px;font-weight:600;margin-left:5px;opacity:.9}
-.sdp{display:flex;gap:3px}.sdp i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.28);box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
-.sdp i.on{background:#ffd45a;box-shadow:0 0 6px rgba(255,212,90,.8)}
-body[data-tx=d] .sdp i{background:rgba(60,40,0,.18);box-shadow:inset 0 0 0 1px rgba(60,40,0,.25)}
-body[data-tx=d] .sdp i.on{background:#e0a010;box-shadow:0 0 5px rgba(224,160,16,.6)}
+.sbi{flex-direction:column;align-items:flex-start;gap:2px}.sdr{display:flex;align-items:center;gap:7px;font-size:13px}
+.sbi b{font-size:13px;font-weight:600}.sbi b em{font-style:normal;font-size:11px;font-weight:500;margin-left:4px;opacity:.75}
+.sdp{display:flex;gap:2px;opacity:.8}.sdp i{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.25)}
+.sdp i.on{background:#ffd45a;box-shadow:0 0 3px rgba(255,212,90,.7)}
+body[data-tx=d] .sdp i{background:rgba(60,40,0,.2)}
+body[data-tx=d] .sdp i.on{background:#e0a010;box-shadow:none}
 .chp .sn{fill:#eaf6ff;stroke:#7b9db8;stroke-width:1.3}.chp .x1{fill:var(--x1)}.chp .x2{fill:var(--x2)}
 .chp .dt2{fill:none;stroke:var(--x2);stroke-width:1.5}
 .chp .bb{fill:rgba(190,235,248,.65);stroke:#3f98a6;stroke-width:1}
@@ -3573,7 +3573,7 @@ function sHud(Y){
 function sBar(Y){
  const d=styDust(Y),g=styGate(Y),end=Y.p>=SMX&&!g,fr=Math.floor(d/SDU),rm=d%SDU,
   pips=UNL()?'':`<span class="sdp" aria-hidden="true">${Array.from({length:SDU},(_,i)=>`<i${i<rm?' class="on"':''}></i>`).join('')}</span>`;
- return`<div class="sbar" id="sbar"><div class="sbi"><span class="sdr"><b role="img" aria-label="${UNL()?'fragments d’étoile illimités':fr+' fragment'+(fr>1?'s':'')+' d’étoile, '+rm+' poussière'+(rm>1?'s':'')+' sur '+SDU+' pour le suivant'}">✦ ${UNL()?'∞':fr}<em>${UNL()?'':fr>1?'fragments':'fragment'}</em></b>${pips}</span>${end||g?`<small>${end?'Fin du premier voyage':'Un gardien bloque le chemin'}</small>`:UNL()?'':`<small>${rm} / ${SDU} poussières</small>`}</div><button class="btn${!g&&!end&&d<SDU?' low':''}" data-a="sgo" ${end||sBusy?'disabled':''}>${g?'Affronter':'Avancer'}</button></div>`;
+ return`<div class="sbar" id="sbar"><div class="sbi"><span class="sdr"><b role="img" aria-label="${UNL()?'fragments d’étoile illimités':fr+' fragment'+(fr>1?'s':'')+' d’étoile, '+rm+' poussière'+(rm>1?'s':'')+' sur '+SDU+' pour le suivant'}">✦ ${UNL()?'∞':fr}<em>${UNL()?'':fr>1?'fragments':'fragment'}</em></b>${pips}</span>${end||g?`<small>${end?'Fin du premier voyage':'Un gardien bloque le chemin'}</small>`:''}</div><button class="btn${!g&&!end&&d<SDU?' low':''}" data-a="sgo" ${end||sBusy?'disabled':''}>${g?'Affronter':'Avancer'}</button></div>`;
 }
 function sOv(h,b){
  const nv0=$('#nav');if(nv0)nv0.hidden=true;
