@@ -1040,6 +1040,17 @@ body:has(.pg-quiz) .skh,body:has(.m3) .skh{display:none}
 .hf .hhd .back,.hf .hhd .hb,.hf .hhd .chip,.hf .hzb{background:var(--hpl)!important;border-color:var(--hbd)!important}
 .hf{--hfg:color-mix(in srgb,#2c286b clamp(0%,calc((var(--gs,1) - .45)*1000%),100%),#fff)}
 
+/* thème de l’univers : couleurs de la barre (clair le jour, sombre la nuit) + petits motifs, barre du haut plus fine */
+.hf{--ht:48px;
+ --hc1:color-mix(in srgb,var(--bc1,#f3efff) calc(var(--gs,1)*100%),color-mix(in srgb,var(--bc1,#222a66) 18%,#0b0f2c));
+ --hc2:color-mix(in srgb,var(--bc2,#ddd6f8) calc(var(--gs,1)*100%),color-mix(in srgb,var(--bc2,#12163f) 16%,#070a22));
+ --hfg:color-mix(in srgb,var(--bink,#2c286b) clamp(0%,calc((var(--gs,1) - .45)*1000%),100%),#fff);
+ --hbd:color-mix(in srgb,color-mix(in srgb,var(--bink,#2c286b) 32%,transparent) calc(var(--gs,1)*100%),rgba(255,255,255,.2))}
+.hf .hhd{padding-top:calc(8px + env(safe-area-inset-top,0px))}
+.htb,.hbar{overflow:hidden}
+.htb::after,.hbar::after{content:var(--bem,'');position:absolute;left:-6px;right:0;top:50%;translate:0 -50%;font-size:22px;letter-spacing:18px;white-space:nowrap;overflow:hidden;opacity:calc(.13 + var(--gs,1)*.12);pointer-events:none;font-family:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif}
+.hbar>*{position:relative;z-index:1}
+
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
 .sb.cf{background:linear-gradient(180deg,#ffd18a,#e8944a);color:#3a2310;border:0}
@@ -1439,51 +1450,51 @@ const CHW=1000,CHH=1400;
 const chRnd=s=>()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
 /* n : nom · hz : hauteur de l’horizon · sky / gr : couleurs du ciel et des collines · se / ge : éléments du ciel / du sol · it : objets à trouver [emoji, nom, nom court] */
 const CHU=[
-{n:'La forêt des lucioles',hz:.28,sky:['#232c6b','#4a5aa6'],gr:['#2f6b52','#235642','#173f33'],se:['⭐','✨','🌙','🦇','☁️','🌟'],ge:['🌲','🌲','🌳','🍄','🌿','🪵','🦉','🦊','🐿️','🐇','🌰','🍂','🪨','🌱','🐞','🐛','🦔','🕯️'],
+{n:'La forêt des lucioles',bc:['#cfe8d4','#a8d2b4','#1d4a3a'],hz:.28,sky:['#232c6b','#4a5aa6'],gr:['#2f6b52','#235642','#173f33'],se:['⭐','✨','🌙','🦇','☁️','🌟'],ge:['🌲','🌲','🌳','🍄','🌿','🪵','🦉','🦊','🐿️','🐇','🌰','🍂','🪨','🌱','🐞','🐛','🦔','🕯️'],
  it:[['🔦','la lampe de poche','lampe'],['🧭','la boussole','boussole'],['🥾','les bottes','bottes']],
  s:'Une nuit, le petit bonhomme a glissé de son étoile filante et il est tombé dans la forêt des lucioles. Retrouve-le entre les arbres. Pour rentrer chez lui, il aura aussi besoin de sa lampe de poche, de sa boussole et de ses bottes.',
  w:'Le bonhomme te serre dans ses petits bras. Avec sa lampe, sa boussole et ses bottes, il repart sur le chemin.'},
-{n:'La plage aux coquillages',hz:.38,sky:['#7fd0f0','#cdeefc'],gr:['#f3dd9f','#ead08a','#dcbf75'],se:['☁️','🐦','⛵','☀️','🕊️','☁️'],ge:['🐚','🦀','⭐','🌴','🏖️','🪣','🐢','🌊','🦩','🍹','🐠','🪼','🏝️','🦞','🐟','🌺'],
+{n:'La plage aux coquillages',bc:['#fcebbd','#a6dff2','#1b5a7a'],hz:.38,sky:['#7fd0f0','#cdeefc'],gr:['#f3dd9f','#ead08a','#dcbf75'],se:['☁️','🐦','⛵','☀️','🕊️','☁️'],ge:['🐚','🦀','⭐','🌴','🏖️','🪣','🐢','🌊','🦩','🍹','🐠','🪼','🏝️','🦞','🐟','🌺'],
  it:[['🗺️','la carte','carte'],['🔭','la longue-vue','longue-vue'],['🪢','la corde','corde']],
  s:'Le vent a poussé le petit bonhomme jusqu’à une plage tranquille, où le sable est tiède. Cherche-le parmi les coquillages. Il a perdu sa carte, sa longue-vue et sa corde : retrouve-les aussi.',
  w:'Avec sa carte et sa longue-vue, le bonhomme sait maintenant dans quelle direction se trouve la maison.'},
-{n:'Le village sous la neige',hz:.35,sky:['#7a8cc8','#dfe8ff'],gr:['#f4f7ff','#e3ebfb','#cfdaf2'],se:['❄️','☁️','⭐','🌨️','🌙','❄️'],ge:['🏠','🏡','🌲','⛄','🎄','🧊','🦌','🐧','🕯️','🍪','☃️','🎁','🪵','🐇','🦊','🍵'],
+{n:'Le village sous la neige',bc:['#f4f8ff','#cfdcf5','#35508a'],hz:.35,sky:['#7a8cc8','#dfe8ff'],gr:['#f4f7ff','#e3ebfb','#cfdaf2'],se:['❄️','☁️','⭐','🌨️','🌙','❄️'],ge:['🏠','🏡','🌲','⛄','🎄','🧊','🦌','🐧','🕯️','🍪','☃️','🎁','🪵','🐇','🦊','🍵'],
  it:[['🧣','l’écharpe','écharpe'],['🧤','les moufles','moufles'],['🛷','la luge','luge']],
  s:'Le bonhomme a atterri dans un village où il neige doucement. Il a froid ! Retrouve-le au milieu des maisons, puis son écharpe, ses moufles et sa luge pour descendre la colline.',
  w:'Bien au chaud dans son écharpe, le bonhomme descend la colline en luge, tout content.'},
-{n:'Le jardin des fleurs',hz:.33,sky:['#9ad8ff','#e8f8ff'],gr:['#8fd18a','#6dbb72','#4fa35e'],se:['☁️','🦋','🐝','🌈','🕊️','☀️'],ge:['🌸','🌷','🌻','🌼','🌹','🌺','🪻','🍓','🐛','🐞','🐝','🦋','🍄','🌿','🌱','🥕','🐌'],
+{n:'Le jardin des fleurs',bc:['#ffdce9','#cdeec3','#3f6a37'],hz:.33,sky:['#9ad8ff','#e8f8ff'],gr:['#8fd18a','#6dbb72','#4fa35e'],se:['☁️','🦋','🐝','🌈','🕊️','☀️'],ge:['🌸','🌷','🌻','🌼','🌹','🌺','🪻','🍓','🐛','🐞','🐝','🦋','🍄','🌿','🌱','🥕','🐌'],
  it:[['🪜','l’échelle','échelle'],['🔑','la clé','clé'],['🧺','le panier','panier']],
  s:'Le bonhomme s’est caché dans un immense jardin fleuri. Retrouve-le entre les pétales. Il lui faut aussi une échelle, une clé et un panier pour franchir la grande barrière.',
  w:'L’échelle contre la barrière, la clé dans la serrure : le jardin n’a plus de secrets pour lui.'},
-{n:'Le grand ciel étoilé',hz:.12,sky:['#0b0f2e','#2a2a6e'],gr:['#3a2f7a','#2c2563','#1f1a4d'],se:['⭐','✨','🌟','🪐','☄️','🌙'],ge:['🪐','🌑','🌕','🛸','👽','🚀','☄️','⭐','🌟','🛰️','🌍','💫','✨','🌙'],
+{n:'Le grand ciel étoilé',bc:['#c9c3ff','#8f86e6','#241b6b'],hz:.12,sky:['#0b0f2e','#2a2a6e'],gr:['#3a2f7a','#2c2563','#1f1a4d'],se:['⭐','✨','🌟','🪐','☄️','🌙'],ge:['🪐','🌑','🌕','🛸','👽','🚀','☄️','⭐','🌟','🛰️','🌍','💫','✨','🌙'],
  it:[['🔋','la pile','pile'],['📡','l’antenne','antenne'],['🔧','la clé à molette','clé à molette']],
  s:'Le bonhomme flotte au milieu des planètes ! Retrouve-le dans le ciel étoilé. Sa fusée a besoin d’une pile, d’une antenne et d’une clé à molette pour repartir.',
  w:'La fusée ronronne de nouveau. Le bonhomme t’adresse un grand signe de la main.'},
-{n:'La fête foraine',hz:.3,sky:['#ff9ec4','#ffe1a8'],gr:['#f2a25a','#e48a4a','#c96d3c'],se:['🎈','🎈','🎆','🎇','☁️','🎈'],ge:['🎪','🎡','🎠','🎢','🍿','🍭','🤡','🍬','🎨','🧁','🎁','🎈','🧸','🎯','🎲','🍩','🍦'],
+{n:'La fête foraine',bc:['#ffd0e0','#ffe3a6','#8a2f55'],hz:.3,sky:['#ff9ec4','#ffe1a8'],gr:['#f2a25a','#e48a4a','#c96d3c'],se:['🎈','🎈','🎆','🎇','☁️','🎈'],ge:['🎪','🎡','🎠','🎢','🍿','🍭','🤡','🍬','🎨','🧁','🎁','🎈','🧸','🎯','🎲','🍩','🍦'],
  it:[['🎟️','le billet','billet'],['🪁','le cerf-volant','cerf-volant'],['🥁','le tambour','tambour']],
  s:'Quelle fête ! Le bonhomme s’est glissé parmi les manèges et les ballons. Retrouve-le, ainsi que son billet, son cerf-volant et son tambour.',
  w:'Le tambour résonne doucement : le bonhomme défile fièrement jusqu’à la sortie.'},
-{n:'Le désert doré',hz:.36,sky:['#ffcf8a','#ffefc7'],gr:['#f0c27a','#e3b062','#cf9a4c'],se:['☀️','☁️','🦅','🌤️'],ge:['🌵','🐪','🏜️','🦂','🐍','🦎','🪨','🌴','🔥','🏺','🧱','🐫','🌵','🪲'],
+{n:'Le désert doré',bc:['#ffe2ab','#f0be72','#7a4a14'],hz:.36,sky:['#ffcf8a','#ffefc7'],gr:['#f0c27a','#e3b062','#cf9a4c'],se:['☀️','☁️','🦅','🌤️'],ge:['🌵','🐪','🏜️','🦂','🐍','🦎','🪨','🌴','🔥','🏺','🧱','🐫','🌵','🪲'],
  it:[['🧢','la casquette','casquette'],['🕶️','les lunettes','lunettes'],['🪔','la lampe magique','lampe magique']],
  s:'Le soleil brille sur les dunes et le bonhomme se repose à l’ombre d’un cactus. Retrouve-le. Il aura besoin de sa casquette, de ses lunettes et d’une lampe magique pour traverser le désert.',
  w:'Un petit nuage de poussière dorée, et la lampe magique l’emmène de l’autre côté des dunes.'},
-{n:'Les profondeurs',hz:.1,sky:['#0a4a7a','#1a86b5'],gr:['#1d6fa0','#165a8a','#0f4670'],se:['🫧','🫧','🐟','🫧'],ge:['🐠','🐟','🐡','🐙','🦑','🦀','🪸','🐢','🐬','🦈','🪼','🌿','🫧','⭐','🦞','🐋'],
+{n:'Les profondeurs',bc:['#a8e3f5','#5ab6dc','#0b3e68'],hz:.1,sky:['#0a4a7a','#1a86b5'],gr:['#1d6fa0','#165a8a','#0f4670'],se:['🫧','🫧','🐟','🫧'],ge:['🐠','🐟','🐡','🐙','🦑','🦀','🪸','🐢','🐬','🦈','🪼','🌿','🫧','⭐','🦞','🐋'],
  it:[['⚓','l’ancre','ancre'],['🐚','le coquillage','coquillage'],['🔱','le trident','trident']],
  s:'Plouf ! Le bonhomme est tombé dans l’océan. Retrouve-le parmi les poissons. L’ancre, le coquillage et le trident l’aideront à remonter.',
  w:'Tenu par l’ancre, soufflé par une bulle, le bonhomme remonte lentement vers la lumière.'},
-{n:'Le château endormi',hz:.32,sky:['#6f7ad8','#d3d9ff'],gr:['#9aa0b8','#7f86a2','#636a88'],se:['🏰','☁️','🦅','🐉','⭐','☁️'],ge:['🏰','🛡️','🏹','🐴','🐉','🏇','🦄','🏺','🕯️','🪙','🍷','🦢','🌹','🗡️'],
+{n:'Le château endormi',bc:['#d7dcfb','#aab2e6','#2e3584'],hz:.32,sky:['#6f7ad8','#d3d9ff'],gr:['#9aa0b8','#7f86a2','#636a88'],se:['🏰','☁️','🦅','🐉','⭐','☁️'],ge:['🏰','🛡️','🏹','🐴','🐉','🏇','🦄','🏺','🕯️','🪙','🍷','🦢','🌹','🗡️'],
  it:[['👑','la couronne','couronne'],['🗝️','la vieille clé','vieille clé'],['📜','le parchemin','parchemin']],
  s:'Dans un château silencieux, tout le monde dort… sauf le bonhomme. Retrouve-le dans les tours. Pour ouvrir la grande porte, il lui faut la couronne, la vieille clé et le parchemin.',
  w:'La grande porte s’ouvre sans un bruit, et le bonhomme passe sur la pointe des pieds.'},
-{n:'La jungle',hz:.25,sky:['#2f8f6a','#bff0a0'],gr:['#2e8b4f','#1f7040','#165a33'],se:['🦜','🦋','☁️','🐒','🌤️'],ge:['🌴','🌿','🦜','🐒','🐍','🦎','🐅','🐘','🦧','🌺','🍃','🐸','🦋','🪲','🐜','🍌'],
+{n:'La jungle',bc:['#c8efb0','#8fd08a','#1c5a2c'],hz:.25,sky:['#2f8f6a','#bff0a0'],gr:['#2e8b4f','#1f7040','#165a33'],se:['🦜','🦋','☁️','🐒','🌤️'],ge:['🌴','🌿','🦜','🐒','🐍','🦎','🐅','🐘','🦧','🌺','🍃','🐸','🦋','🪲','🐜','🍌'],
  it:[['🥥','la noix de coco','noix de coco'],['🪶','la plume','plume'],['🪵','le tronc','tronc']],
  s:'Les feuilles sont immenses et le bonhomme joue à cache-cache. Retrouve-le dans la jungle. Une noix de coco, une plume et un tronc l’aideront à traverser la rivière.',
  w:'Un tronc pour traverser, une plume pour se faire un chapeau : la rivière est derrière lui.'},
-{n:'La ville la nuit',hz:.3,sky:['#141a45','#3a3f86'],gr:['#2a2f5e','#212551','#181c40'],se:['🌙','⭐','✨','☁️','🦇','⭐'],ge:['🏢','🏙️','🚕','🚌','🚦','🚲','🛵','💡','🏪','☕','🍕','🐈','🐀','🚏','⛲'],
+{n:'La ville la nuit',bc:['#d3d6f5','#a5aae0','#252a72'],hz:.3,sky:['#141a45','#3a3f86'],gr:['#2a2f5e','#212551','#181c40'],se:['🌙','⭐','✨','☁️','🦇','⭐'],ge:['🏢','🏙️','🚕','🚌','🚦','🚲','🛵','💡','🏪','☕','🍕','🐈','🐀','🚏','⛲'],
  it:[['🧳','la valise','valise'],['🎫','le ticket','ticket'],['☂️','le parapluie','parapluie']],
  s:'Les fenêtres s’allument une à une. Le bonhomme se promène dans la ville, perdu. Retrouve-le, ainsi que sa valise, son ticket et son parapluie.',
  w:'Valise en main, ticket en poche, il monte dans le dernier bus de la nuit.'},
-{n:'La maison des étoiles',hz:.3,sky:['#1a1550','#7a5bb8'],gr:['#5a4a9a','#46397d','#332a63'],se:['⭐','🌟','✨','🌙','💫','☁️'],ge:['🏡','🌲','🛋️','🪑','📚','🧶','🍪','🥛','🐈','🐕','🧦','🖼️','🪟','🌙','⭐','🍲'],
+{n:'La maison des étoiles',bc:['#e7d8ff','#cdb6f2','#3d2a85'],hz:.3,sky:['#1a1550','#7a5bb8'],gr:['#5a4a9a','#46397d','#332a63'],se:['⭐','🌟','✨','🌙','💫','☁️'],ge:['🏡','🌲','🛋️','🪑','📚','🧶','🍪','🥛','🐈','🐕','🧦','🖼️','🪟','🌙','⭐','🍲'],
  it:[['🕯️','la bougie','bougie'],['🛏️','le lit','lit'],['🔑','la clé','clé'],['🧸','l’ourson','ourson']],
  s:'Le voilà presque chez lui ! La maison des étoiles brille au loin. Retrouve le bonhomme, puis une dernière fois ses affaires : la bougie, le lit, la clé et l’ourson.',
  w:'La clé tourne, la bougie s’allume, l’ourson l’attend sur le lit. Le petit bonhomme est enfin chez lui. Merci de l’avoir ramené.'}
@@ -1535,7 +1546,7 @@ function pCherche(r){
  const al=()=>playing&&cur==='cherche'&&document.body.contains($('#hv'));
  const tray=()=>T.map((t,i)=>{const ok=found.includes(i);return`<div class="hti${ok?' ok':''}" data-t="${i}"><span class="hte">${t.k==='g'?qzGuy(ok?'ok':'ask'):t.e}</span><small>${t.s}</small>${ok?'<b>✓</b>':''}</div>`}).join('');
  $('#nav').hidden=true;mt='m';keep();
- app.innerHTML=`<div class="hf" id="hf"><div class="hv" id="hv"><div class="hw" id="hw" style="width:${CHW}px;height:${CHH}px">${S.html}</div></div>
+ app.innerHTML=`<div class="hf" id="hf" style="--bc1:${u.bc[0]};--bc2:${u.bc[1]};--bink:${u.bc[2]};--bem:'${[...u.ge.filter(e=>e.length<=4).slice(0,7)].join(' ')}  '"><div class="hv" id="hv"><div class="hw" id="hw" style="width:${CHW}px;height:${CHH}px">${S.html}</div></div>
 <div class="htb"></div>
 <div class="hhd"><button class="back" data-a="back" data-v="hub">‹ Retour</button><span class="hsp"></span><button class="hb skh" data-a="skip">Passer</button><button class="hb" data-a="hint">Indice · 1 ❄</button><div class="chip">❄ ${FLX()}</div></div>
 <p class="m hmsg" id="m" role="status" aria-live="polite"></p>
