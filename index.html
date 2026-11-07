@@ -925,6 +925,10 @@ body:has(.tank.ed) .aqbar,body:has(.tank.ed) .aqst{display:none}
 .aqsh{background:linear-gradient(180deg,rgba(30,52,112,.98),rgba(18,32,82,.99));color:#fff;border:1px solid rgba(255,255,255,.18)}
 .aqsh .aqc,.aqsh small,.aqsh .atx small{color:rgba(255,255,255,.78)}
 body:has(.aqsh.open) #nav{opacity:0;pointer-events:none}
+/* Match-3 : l’eau suit jour / nuit (--gs : 1 jour, 0 nuit, graduel en Auto) */
+body:has(.m3){background:radial-gradient(70% 38% at 25% 0,rgba(255,255,255,calc(.04 + var(--gs,1)*.26)),transparent 72%),radial-gradient(55% 32% at 85% 0,rgba(255,255,255,calc(.03 + var(--gs,1)*.17)),transparent 72%),linear-gradient(0deg,rgba(226,200,140,calc(.08 + var(--gs,1)*.2)),transparent 10%),linear-gradient(180deg,color-mix(in srgb,#2fb0d2 calc(var(--gs,1)*100%),#0b3f66) 0%,color-mix(in srgb,#1c84b8 calc(var(--gs,1)*100%),#07335c) 34%,color-mix(in srgb,#13539b calc(var(--gs,1)*100%),#04204a) 66%,color-mix(in srgb,#0a2b69 calc(var(--gs,1)*100%),#020c25) 100%) fixed!important}
+.m3bu{opacity:calc(.45 + var(--gs,1)*.55)}
+.m3fi{opacity:calc(.22 + var(--gs,1)*.28)}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
