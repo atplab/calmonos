@@ -4225,7 +4225,7 @@ function xHud(Y){
 function xBar(Y){
  const d=xDust(Y),end=(Y.xp||0)>=XMX,fr=Math.floor(d/XDU),rm=d%XDU,
   pips=`<span class="orb xm" aria-hidden="true"><i>🎄</i>${UNL()?'':`<span class="ring">${Array.from({length:rm},(_,i)=>`<u class="on" style="--a:${i*360/rm}deg"></u>`).join('')}</span>`}</span>`;
- return`<div class="sbar" id="sbar"><div class="sbi"><span class="sdr">${pips}<b role="img" aria-label="${UNL()?'sapins illimités':fr+' sapin'+(fr>1?'s':'')+', '+rm+' boule'+(rm>1?'s':'')+' de Noël sur '+XDU+' pour le suivant'}">${UNL()?'∞':fr}</b></span>${end?'<small>Joyeux Noël</small>':''}</div><button class="btn${!end&&d<XDU?' low':''}" data-a="sgo" ${end||sBusy?'disabled':''}>Avancer</button></div>`;
+ return`<div class="sbar" id="sbar"><div class="sbi"><span class="sdr">${pips}<b role="img" aria-label="${UNL()?'sapins illimités':fr+' sapin'+(fr>1?'s':'')+', '+rm+' boule'+(rm>1?'s':'')+' de Noël sur '+XDU+' pour le suivant'}">${UNL()?'∞':fr}<em>${UNL()?'':fr>1?'sapins':'sapin'}</em></b></span>${end?'<small>Joyeux Noël</small>':''}</div><button class="btn${!end&&d<XDU?' low':''}" data-a="sgo" ${end||sBusy?'disabled':''}>Avancer</button></div>`;
 }
 function xGo(){
  if(sBusy)return;const Y=styRead();mt='m';
