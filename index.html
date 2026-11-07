@@ -1025,7 +1025,7 @@ body:has(.pg-quiz) .skh,body:has(.m3) .skh{display:none}
 .hv{top:0;bottom:0}
 .htb{background:linear-gradient(0deg,rgba(24,30,78,.5),rgba(14,18,52,.62));-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .hbar{background:linear-gradient(180deg,rgba(24,30,78,.5),rgba(14,18,52,.66));-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-.ht.far{opacity:.5}
+.ht.far{opacity:1}
 .hcd h2{margin:2px 0 0;font-size:30px;line-height:1.1;font-weight:700;text-wrap:balance}
 /* barres pleines (la scène s’arrête dessous), aux couleurs de la météo : --gs = 1 jour, 0 nuit */
 .hf{--hc1:color-mix(in srgb,#f3efff calc(var(--gs,1)*100%),#222a66);--hc2:color-mix(in srgb,#ddd6f8 calc(var(--gs,1)*100%),#12163f);--hfg:color-mix(in srgb,#2c286b calc(var(--gs,1)*100%),#fff);--hbd:color-mix(in srgb,rgba(70,60,150,.28) calc(var(--gs,1)*100%),rgba(255,255,255,.2));--hpl:color-mix(in srgb,rgba(255,255,255,.7) calc(var(--gs,1)*100%),rgba(255,255,255,.1))}
@@ -1534,7 +1534,7 @@ function chScene(u,li,sd){
  T.forEach(t=>{const k=2+Math.floor(R()*2);for(let j=0;j<k;j++){const an=rr(0,Math.PI*2),d=TS*rr(.6,.82),s=TS*rr(1.05,1.4);D.push({e:pick(t.y<hz-10&&se.length?se:ge),x:t.x+Math.cos(an)*d,y:t.y+Math.abs(Math.sin(an))*d*.6+3,s,a:rr(-10,10),f:R()<.5?-1:1})}});
  /* décor lointain : grandes silhouettes pâles au fond, et mille petits détails au sol */
  A.extra.forEach(e=>D.push({e:e.e,x:e.x,y:e.y,s:e.s,a:0,f:1}));
- const FAR=[];for(let j=0;j<16;j++){const sky=hz>240&&R()<.3&&!gy,y=sky?rr(80,hz-20):rr(Math.max(hz-70,gy-40),Math.max(hz+60,gy+50)),s=rr(70,130);FAR.push({e:pick(sky?se:ge),x:rr(0,W),y,s,a:rr(-8,8),f:R()<.5?-1:1})}
+ const FAR=[];for(let j=0;j<16;j++){const sky=hz>240&&R()<.3&&!gy,y=sky?rr(80,hz-20):rr(Math.max(hz-70,gy-40),Math.max(hz+60,gy+50)),s=rr(70,130);const x=rr(0,W);if(!keepClear(x,y,s*1.1)||av(x,y)){continue}FAR.push({e:pick(sky?se:ge),x,y,s,a:rr(-8,8),f:R()<.5?-1:1})}
  for(let j=0,k=0;j<110&&k<900;k++){const y=rr(Math.max(hz+10,gy),H-20),x=rr(10,W-10),s=rr(13,20);if(!keepClear(x,y,s)||av(x,y))continue;D.push({e:pick(ge),x,y,s,a:rr(-25,25),f:R()<.5?-1:1});j++}
  const L=[...FAR.map(d=>({y:-1000+d.y,h:`<span class="ht far" style="left:${d.x.toFixed(1)}px;top:${d.y.toFixed(1)}px;font-size:${d.s.toFixed(1)}px;transform:translate(-50%,-50%) rotate(${d.a.toFixed(1)}deg) scaleX(${d.f})">${d.e}</span>`})),...D.map(d=>({y:d.y,h:`<span class="ht" style="left:${d.x.toFixed(1)}px;top:${d.y.toFixed(1)}px;font-size:${d.s.toFixed(1)}px;transform:translate(-50%,-50%) rotate(${d.a.toFixed(1)}deg) scaleX(${d.f})">${d.e}</span>`})),
   ...T.map((t,i)=>({y:t.y,h:t.k==='g'?`<span class="ht g" data-t="${i}" style="left:${t.x.toFixed(1)}px;top:${t.y.toFixed(1)}px;width:${(TS*1.05).toFixed(1)}px">${qzGuy('ask')}</span>`:`<span class="ht o" data-t="${i}" style="left:${t.x.toFixed(1)}px;top:${t.y.toFixed(1)}px;font-size:${TS}px">${t.e}</span>`}))];
