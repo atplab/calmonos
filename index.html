@@ -5390,6 +5390,26 @@ for(let i=0;i<45;i++)P.push({x:Math.random()*W,y:Math.random()*H,r:1+Math.random
 let sOn=0,sT=0;
 const snow=ts=>{if(!prefs().snow||document.hidden){if(sOn){x.clearRect(0,0,W,H);sOn=0}sT=0;return setTimeout(snow,300)}if(sT&&ts-sT<32)return requestAnimationFrame(snow);const k=sT?Math.min(3,(ts-sT)/16.67)||1:1;sT=ts||0;sOn=1;x.clearRect(0,0,W,H);x.fillStyle=`rgba(${Math.round(120+135*(1-GS))},${Math.round(110+145*(1-GS))},${Math.round(200+55*(1-GS))},${(.5+.2*(1-GS)).toFixed(2)})`;x.beginPath();let qn=0;for(const p of P){if(playing&&++qn>22)break;p.y+=p.v*k;p.d+=.004*k;p.x+=Math.sin(p.d)*.25*k;if(p.y>H+5){p.y=-5;p.x=Math.random()*W}x.moveTo(p.x+p.r,p.y);x.arc(p.x,p.y,p.r,0,7)}x.fill();requestAnimationFrame(snow)};
 if(!matchMedia('(prefers-reduced-motion: reduce)').matches)snow();
+/* Bouton retour du téléphone : remonte d’un écran dans le jeu au lieu de quitter l’application */
+(()=>{
+ const q=s=>document.querySelector(s);
+ const toast=t=>{let d=q('#bkt');if(!d){d=document.createElement('div');d.id='bkt';d.style.cssText='position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));translate:-50% 0;z-index:99999;padding:10px 16px;border-radius:99px;background:rgba(30,34,60,.9);color:#fff;font:600 13px system-ui,sans-serif;pointer-events:none;transition:opacity .3s;max-width:86vw;text-align:center';document.body.appendChild(d)}d.textContent=t;d.style.opacity='1';clearTimeout(d._t);d._t=setTimeout(()=>d.style.opacity='0',2200)};
+ const goBack=()=>{
+  const sh=q('#aqsh.open');if(sh){aqShut();return true}
+  const ed=q('#app .aqfs');if(ed&&typeof aqEd!=='undefined'&&aqEd){act.aqed();return true}
+  const b=q('#app [data-a=back],#app [data-a=chBk],#app [data-a=scrBk]');if(b){b.click();return true}
+  const on=q('#nav button.on');if(on&&on.dataset.v!=='games'&&!q('#nav[hidden]')){q('#nav [data-v=games]').click();return true}
+  return false;
+ };
+ const push=()=>{try{history.pushState({nb:1},'')}catch(e){}};
+ try{history.replaceState({nb:0},'');push()}catch(e){}
+ addEventListener('popstate',()=>{
+  if(goBack()){push();return}
+  toast('Appuie encore sur retour pour quitter');
+  setTimeout(push,2400);
+ });
+})();
+
 </script>
 <script>if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});</script>
 </body>
