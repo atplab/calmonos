@@ -2382,7 +2382,7 @@ function pPhrase(r){
  d();
 }
 const act={
- open:v=>{lvOpen=false;return v==='quote'?quote():v==='scrabble'?scrHub():hub(v)},
+ open:v=>{lvOpen=false;const r=v==='quote'?quote():v==='scrabble'?scrHub():hub(v);window.scrollTo(0,0);return r},
  back:v=>v==='home'?home():v==='day'?dayScreen():v==='soc'?socScreen():hub(cur),
  play:v=>start(cur,false,+v),
  dd:()=>{const d=$('.dd:not(.xm)');lvOpen=d.classList.toggle('open');d.querySelector('.dd-h').setAttribute('aria-expanded',lvOpen)},
