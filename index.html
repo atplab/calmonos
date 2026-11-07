@@ -1731,11 +1731,16 @@ function pMatch(r){
  const shuffle=async()=>{
   const ts=g.filter(t=>t&&!t.s);let ok=false;
   const bn=document.createElement('div');bn.className='m3sh';bn.innerHTML='<i>✦</i><b>Les pièces se mélangent…</b><i>✦</i>';bd.appendChild(bn);bd.classList.add('shw');
-  ts.forEach(t=>t.el.classList.add('shk'));sfx(520,.3);
-  await wt(480);if(!alive()){bn.remove();bd.classList.remove('shw');return}
-  for(let k=0;k<80&&!ok;k++){const a=sh(ts.map(t=>t.t));ts.forEach((t,i)=>{t.t=a[i]});const T=types();ok=!m3Has(T)&&!!m3Swap(T)}
-  ts.forEach(t=>{look(t);t.el.classList.add('shin')});sfx(780,.3);
-  await wt(750);bn.remove();bd.classList.remove('shw');ts.forEach(t=>t.el.classList.remove('shin'));
+  const T=(t,a,s,f)=>`translate(350%,350%) rotate(${a}deg) translate(${(t.c-3.5)*100*f}%,${(t.r-3.5)*100*f}%) scale(${s})`,dl=t=>Math.hypot(t.c-3.5,t.r-3.5)*38,A=[];
+  const run=(fn)=>Promise.all(ts.map(t=>{const an=t.el.animate(fn(t),{duration:620,delay:fn.d(t),easing:fn.e,fill:'both'});A.push(an);return an.finished.catch(()=>{})}));
+  const end=()=>{A.forEach(x=>{try{x.cancel()}catch(e){}});bn.remove();bd.classList.remove('shw')};
+  sfx(520,.3);
+  if(!wRM){const f1=t=>[{transform:T(t,0,1,1)},{transform:T(t,440,.2,0),opacity:.85}];f1.d=dl;f1.e='cubic-bezier(.5,0,.85,.45)';await run(f1)}else await wt(500);
+  if(!alive()){end();return}
+  for(let k=0;k<80&&!ok;k++){const a=sh(ts.map(t=>t.t));ts.forEach((t,i)=>{t.t=a[i]});const Y=types();ok=!m3Has(Y)&&!!m3Swap(Y)}
+  ts.forEach(t=>look(t));sfx(780,.3);
+  if(!wRM){const f2=t=>[{transform:T(t,-440,.2,0),opacity:.85},{transform:T(t,0,1,1),opacity:1}];f2.d=dl;f2.e='cubic-bezier(.15,.6,.3,1.25)';A.length=0;ts.forEach(t=>t.el.getAnimations().forEach(x=>x.cancel()));await run(f2)}
+  end();
  };
  const finish=async()=>{
   hud();sv();
