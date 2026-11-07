@@ -837,6 +837,8 @@ body:has(.m3) :is(.m,.tl,.m3m small,.note){color:#fff!important;text-shadow:0 1p
 body:has(.m3) .skw{display:none}
 body:has(.m3)::after{display:none}
 body:has(.m3) #pat,body:has(.pg-quiz) #pat{filter:none}
+body:has(.m3) #pat{display:none}
+body .m3::before{position:fixed;inset:0;border-radius:0;opacity:.6;mask-image:linear-gradient(180deg,#000,transparent 60%);-webkit-mask-image:linear-gradient(180deg,#000,transparent 60%)}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
