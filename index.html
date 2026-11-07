@@ -3580,6 +3580,8 @@ var xmMu={on:false,L:null,T:0,s:0,t:0,
   this.L={out,bus,nb,M}},
  /* célesta / boîte à musique */
  cel(f,t,d,v,bus){const a=AC;[[1,1],[2,.3],[4.01,.09]].forEach(([m,k])=>{const o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.value=f*m;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v*k,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+d/m**.35);o.connect(g);g.connect(bus);o.start(t);o.stop(t+d+.1)})},
+ /* kalimba : une note ronde et courte, pour les touches */
+ kal(f,t,v,bus){const a=AC;[[1,1,.5],[5.4,.07,.09]].forEach(([m,k,d])=>{const o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.value=f*m;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v*k,t+.004);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(bus);o.start(t);o.stop(t+d+.05)})},
  /* harpe douce */
  harp(f,t,v,bus){const a=AC,o=a.createOscillator(),g=a.createGain(),lp=a.createBiquadFilter();o.type='triangle';o.frequency.value=f;lp.type='lowpass';lp.frequency.value=2200;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+1.1);o.connect(lp);lp.connect(g);g.connect(bus);o.start(t);o.stop(t+1.2)},
  /* nappe : s'ouvre et se referme doucement */
@@ -3599,9 +3601,9 @@ var xmMu={on:false,L:null,T:0,s:0,t:0,
  fx(f,d){const a=AC;if(!a||!mg)return;if(!this.F){const bus=a.createGain(),dl=a.createDelay(1),fb=a.createGain(),lp=a.createBiquadFilter(),wet=a.createGain();dl.delayTime.value=.22;fb.gain.value=.28;lp.type='lowpass';lp.frequency.value=3200;wet.gain.value=.38;bus.connect(mg);bus.connect(dl);dl.connect(lp);lp.connect(fb);fb.connect(dl);lp.connect(wet);wet.connect(mg);
    const n=a.sampleRate*.4,nb=a.createBuffer(1,n,a.sampleRate),nd=nb.getChannelData(0);for(let i=0;i<n;i++)nd[i]=Math.random()*2-1;this.F={bus,nb}}
   const F=this.F,t=a.currentTime,n=this.sn(f);
-  if(d<.22){this.cel(this.mf(n-12>=67?n-12:n),t,.5,.05,F.bus)}
+  if(d<.22){this.kal(this.mf(n),t,.07,F.bus)}
   else if(d>=.28&&f>=800){[0,4,7,12].forEach((o,k)=>this.cel(this.mf(this.sn(this.mf(n+o))),t+k*.09,1.4,.14,F.bus));this.jing(t+.3,.05,F.bus,F.nb)}
-  else{this.cel(this.mf(n),t,.7,.06,F.bus);this.cel(this.mf(n+7>88?n-5:n+7),t+.12,.6,.03,F.bus)}},
+  else{this.kal(this.mf(n),t,.09,F.bus);this.kal(this.mf(n+7>88?n-5:n+7),t+.1,.045,F.bus)}},
  loop(){clearTimeout(this.T);if(!this.on)return;if(!this.L&&typeof AC!=='undefined'&&AC){this.build();apply()}if(this.L&&!document.hidden&&prefs().music)this.tick();this.T=setTimeout(()=>this.loop(),120)},
  vol(m){if(!this.L||typeof AC==='undefined'||!AC)return;this.L.out.gain.setTargetAtTime(m&&this.on?.9:0,AC.currentTime,.8)},
  set(v){v=!!v;if(v===this.on)return;this.on=v;if(v){this.t=0;this.s=0;this.build();this.loop()}else clearTimeout(this.T);if(typeof AC!=='undefined'&&AC&&typeof music!=='undefined'&&music)apply()}};
