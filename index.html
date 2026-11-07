@@ -1059,6 +1059,19 @@ body:has(.pg-quiz) .skh,body:has(.m3) .skh{display:none}
 .sck small{display:block;opacity:.8;font-size:12.5px}
 .sck.on{border-color:#ffc83d;background:rgba(255,200,61,.14)}
 .sck:disabled{opacity:.55;cursor:default}
+/* boutique de l'aquarium : carrousel défilant */
+.aqcar{display:flex;gap:10px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;margin:6px -18px 4px;padding:4px 18px 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scroll-padding:0 18px}
+.aqcar::-webkit-scrollbar{display:none}
+.aqcar .ai{flex:0 0 148px;flex-direction:column;align-items:stretch;justify-content:space-between;gap:8px;padding:12px 10px;border:1px solid rgba(255,255,255,.16);border-radius:18px;background:rgba(255,255,255,.07);scroll-snap-align:start;text-align:center}
+.aqcar .ap{width:100%;height:84px}
+.aqcar .ap svg{width:78px;max-height:68px}
+.aqcar .ap.sq svg{width:64px;height:64px}
+.aqcar .atx{flex:1;align-items:center}
+.aqcar .atx small{font-size:11.5px;line-height:1.3}
+.aqcar .sb,.aqcar .aqown{width:100%;box-sizing:border-box;text-align:center}
+/* histoire de Noël : boules rouges autour du sapin */
+.orb.xm .ring u.on{background:#e8434f;box-shadow:0 0 5px rgba(232,67,79,.95)}
+body[data-tx=d] .orb.xm .ring u.on{background:#d8303c;box-shadow:none}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -4211,8 +4224,8 @@ function xHud(Y){
 }
 function xBar(Y){
  const d=xDust(Y),end=(Y.xp||0)>=XMX,fr=Math.floor(d/XDU),rm=d%XDU,
-  pips=`<span class="orb" aria-hidden="true"><i>🎄</i>${UNL()?'':`<span class="ring">${Array.from({length:rm},(_,i)=>`<u class="on" style="--a:${i*360/rm}deg"></u>`).join('')}</span>`}</span>`;
- return`<div class="sbar" id="sbar"><div class="sbi"><span class="sdr">${pips}<b role="img" aria-label="${UNL()?'sapins illimités':fr+' sapin'+(fr>1?'s':'')+', '+rm+' boule'+(rm>1?'s':'')+' de Noël sur '+XDU+' pour le suivant'}">${UNL()?'∞':fr}<em>${UNL()?'':fr>1?'sapins':'sapin'}</em></b></span>${end?'<small>Joyeux Noël</small>':UNL()?'':`<small>🔴 ${rm}/${XDU}</small>`}</div><button class="btn${!end&&d<XDU?' low':''}" data-a="sgo" ${end||sBusy?'disabled':''}>Avancer</button></div>`;
+  pips=`<span class="orb xm" aria-hidden="true"><i>🎄</i>${UNL()?'':`<span class="ring">${Array.from({length:rm},(_,i)=>`<u class="on" style="--a:${i*360/rm}deg"></u>`).join('')}</span>`}</span>`;
+ return`<div class="sbar" id="sbar"><div class="sbi"><span class="sdr">${pips}<b role="img" aria-label="${UNL()?'sapins illimités':fr+' sapin'+(fr>1?'s':'')+', '+rm+' boule'+(rm>1?'s':'')+' de Noël sur '+XDU+' pour le suivant'}">${UNL()?'∞':fr}</b></span>${end?'<small>Joyeux Noël</small>':''}</div><button class="btn${!end&&d<XDU?' low':''}" data-a="sgo" ${end||sBusy?'disabled':''}>Avancer</button></div>`;
 }
 function xGo(){
  if(sBusy)return;const Y=styRead();mt='m';
@@ -4998,6 +5011,11 @@ function aqPanel(){
  /* à la boutique, ce qu’on possède se gère dans l’inventaire */
  el.querySelectorAll('[data-a=aqtg],[data-a=aqdt]').forEach(b=>{const s=document.createElement('span');s.className='aqown';s.textContent='Possédé ✓';b.replaceWith(s)});
  el.querySelectorAll('.aqed,[data-a=aqpr]').forEach(b=>b.remove());
+ /* boutique : les éléments à acheter défilent en carrousel (à acheter d’abord, déjà possédés ensuite) */
+ if(aqTab==='fish'||aqTab==='deco'){
+  let grp=[];const flush=()=>{if(!grp.length)return;const c=document.createElement('div');c.className='aqcar';grp[0].before(c);[...grp.filter(r=>r.querySelector('.buy')),...grp.filter(r=>!r.querySelector('.buy'))].forEach(r=>c.appendChild(r));grp=[]};
+  [...el.children].forEach(ch=>{if(ch.classList.contains('ai'))grp.push(ch);else flush()});flush();
+ }
 }
 
 function aqNear(P,cx,cy){let b=null,bd=1e9;for(const p of P){if(p.state!==1)continue;const d=Math.hypot(p.xs-cx,p.y-cy)+90*p.n;if(d<bd){bd=d;b=p}}return b}
