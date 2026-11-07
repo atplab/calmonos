@@ -944,6 +944,60 @@ body:has(.tank.ed) .aqinv{display:none}
 /* pendant le glissement de page, #app porte un transform : on lui donne la hauteur de l’écran pour que l’aquarium (en position fixe) le remplisse */
 #app:has(>.aqfs){min-height:100vh;min-height:100dvh}
 .bkg:has(.aqfs){padding:0!important;top:0!important;left:0!important;width:100%!important;max-width:none!important;height:100vh!important;height:100dvh!important}
+/* ---------- Cherche et trouve (plein écran) ---------- */
+#app:has(>.hf){padding:0;max-width:none;min-height:100vh;min-height:100dvh}
+body:has(#app>.hf){overflow:hidden;overscroll-behavior:none}
+.bkg:has(.hf){padding:0!important;top:0!important;left:0!important;width:100%!important;max-width:none!important;height:100vh!important;height:100dvh!important}
+.hf{position:fixed;inset:0;z-index:1;overflow:hidden;background:#101433;user-select:none;-webkit-user-select:none}
+.hv{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab}
+.hw{position:absolute;left:0;top:0;transform-origin:0 0}
+.hw.sm{transition:transform .6s cubic-bezier(.3,.8,.3,1)}
+.hbg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.ht{position:absolute;line-height:1;white-space:nowrap;pointer-events:none;font-family:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif}
+.ht.g{transform:translate(-50%,-62%)}
+.ht.g svg{display:block;width:100%;height:auto;overflow:visible}
+.ht.o{transform:translate(-50%,-50%)}
+.ht.f{filter:drop-shadow(0 0 8px #fff) drop-shadow(0 0 3px #ffe27a)}
+.ht.f::after{content:'';position:absolute;left:50%;top:50%;width:155%;aspect-ratio:1;translate:-50% -50%;border:3px solid #fff;border-radius:50%;box-shadow:0 0 16px rgba(255,255,255,.8);animation:hpop .7s ease-out}
+.ht.g.f svg{animation:hjump .8s ease-in-out 2;transform-origin:50% 100%}
+@keyframes hpop{from{scale:.3;opacity:0}60%{opacity:1}to{scale:1;opacity:.9}}
+@keyframes hjump{50%{transform:translateY(-14px) scale(1.08)}}
+@keyframes hrp{from{transform:scale(.4);opacity:.9}to{transform:scale(1.6);opacity:0}}
+@keyframes hrg{from{transform:scale(.9);opacity:.7}to{transform:scale(1.04);opacity:1}}
+.hrp{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;border:2px solid rgba(255,255,255,.85);animation:hrp .5s ease-out forwards;pointer-events:none}
+.hrg{position:absolute;width:230px;height:230px;margin:-115px 0 0 -115px;border-radius:50%;border:5px solid #fff6c8;box-shadow:0 0 30px 6px rgba(255,246,200,.7),inset 0 0 30px rgba(255,246,200,.5);animation:hrg 1.1s ease-in-out infinite alternate;pointer-events:none}
+.hhd{position:absolute;left:0;right:0;top:0;z-index:4;display:flex;align-items:center;gap:8px;padding:calc(12px + env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) 0 max(14px,env(safe-area-inset-left,0px));pointer-events:none}
+.hhd>*{pointer-events:auto}
+.hsp{flex:1}
+.hf .back,.hf .hb,.hf .chip{border-radius:999px;padding:7px 13px;background:rgba(18,22,56,.68);color:#fff;border:1px solid rgba(255,255,255,.22);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.hnm{position:absolute;top:calc(58px + env(safe-area-inset-top,0px));left:50%;translate:-50% 0;z-index:4;pointer-events:none;padding:4px 12px;border-radius:999px;background:rgba(18,22,56,.55);color:#fff;font-size:12.5px;white-space:nowrap}
+.hzm{position:absolute;right:max(12px,env(safe-area-inset-right,0px));top:50%;translate:0 -50%;z-index:4;display:flex;flex-direction:column;gap:8px}
+.hzm button{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(18,22,56,.68);color:#fff;font-size:24px;line-height:1;cursor:pointer;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.htr{position:absolute;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));translate:-50% 0;z-index:4;display:flex;gap:6px;padding:8px 10px;border-radius:22px;background:rgba(18,22,56,.74);border:1px solid rgba(255,255,255,.18);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);max-width:calc(100% - 20px);box-sizing:border-box}
+.hti{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:56px;color:#fff}
+.hte{display:flex;align-items:center;justify-content:center;height:36px;font-size:28px;line-height:1;font-family:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif}
+.hte svg{height:36px;width:auto;display:block;overflow:visible}
+.hti small{font-size:10.5px;opacity:.88;text-align:center;line-height:1.15;max-width:70px}
+.hti:not(.ok) .hte{filter:brightness(0) invert(1);opacity:.42}
+.hti.ok .hte{animation:hjump .6s ease-out}
+.hti.ok b{position:absolute;top:-5px;right:-1px;color:#7dff9b;font-size:15px}
+.hmsg{position:absolute;left:50%;translate:-50% 0;bottom:calc(100px + env(safe-area-inset-bottom,0px));max-width:min(380px,90vw);z-index:4;margin:0;padding:8px 14px;border-radius:999px;background:rgba(18,22,56,.82);color:#fff;font-size:13px;min-height:0;text-align:center}
+.hmsg:empty{display:none}
+.hmsg.big{font-size:16px;font-weight:700;background:rgba(40,120,70,.9)}
+.hsk{position:absolute;left:0;right:0;bottom:calc(152px + env(safe-area-inset-bottom,0px));z-index:3;margin:0;pointer-events:none}
+.hsk>*{pointer-events:auto}
+.hsk .skp{background:rgba(18,22,56,.55)}
+.hsk>span{background:rgba(18,22,56,.85);padding:8px 12px;border-radius:14px;color:#fff;max-width:300px}
+.hov{position:absolute;inset:0;z-index:6;display:grid;place-items:center;padding:20px;background:rgba(10,12,40,.6)}
+.hcd{max-width:360px;padding:20px 20px 18px;text-align:center;color:#fff;background:linear-gradient(180deg,rgba(40,50,112,.97),rgba(24,32,84,.98));border:1px solid rgba(255,255,255,.2);border-radius:24px}
+.hcd small{opacity:.8}
+.hcd p{margin:10px 0 14px;line-height:1.45;font-size:15px}
+.hli{display:flex;flex-wrap:wrap;gap:10px 14px;justify-content:center;margin-bottom:16px}
+.hli span{display:flex;flex-direction:column;align-items:center;gap:3px;width:78px;font-size:11.5px}
+.hli i{font-style:normal;font-size:30px;height:38px;display:flex;align-items:center;font-family:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif}
+.hli .hg svg{height:38px;width:auto;display:block;overflow:visible}
+.hli em{font-style:normal;opacity:.92;line-height:1.2}
+.pt-cherche{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='round'%3E%3Cg opacity='.2'%3E%3Ccircle cx='28' cy='30' r='11'/%3E%3Cpath d='M36 38l9 9'/%3E%3Ccircle cx='88' cy='84' r='9'/%3E%3Cpath d='M94 90l8 8'/%3E%3Cpath d='M82 24l2 5 5 2-5 2-2 5-2-5-5-2 5-2z' fill='%23ffffff' stroke='none'/%3E%3C/g%3E%3C/svg%3E")}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -1325,7 +1379,7 @@ const st={get(k,d){if(k in mem)return mem[k];try{const v=localStorage.getItem(k)
 const sh=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const today=new Date().toLocaleDateString('sv'),di=Math.floor(Date.now()/864e5);
 const dkey=g=>'d:'+g+':'+today,ckey=g=>'c:'+g;
-const NLS={mots:60,memo:20,caches:20,phrase:20,maze:20,match3:20,demenage:10,quiz:1},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
+const NLS={mots:60,memo:20,caches:20,phrase:20,maze:20,match3:20,demenage:10,quiz:1,cherche:12},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
 /* Section temporaire « fêtes » : 10 niveaux spéciaux de plus par jeu (indices nl, nl+1 … nl+9), disponible tout de suite et jusqu’au 11 janvier 2027 inclus ; #noel dans l’adresse force l’affichage.
    Ils ne font pas partie du code de sauvegarde ni de la synchronisation. */
 const NLX=10,xmasOn=()=>{const t=Date.now();return location.hash==='#noel'||t<new Date(2027,0,12).getTime()},isX=(g,l)=>l>=nl(g),xn=(g,l)=>l-nl(g)+1;
@@ -1337,6 +1391,162 @@ const unlToast=()=>{const o=document.getElementById('unlt');if(o)o.remove();cons
 let fl=st.get('fl',0),cur=null,daily=false,lv=0,playing=false,snap=null,rc=false,lvOpen=false,origin='home';
 if(st.get('sync:b',null)===null)st.set('sync:b',st.get('fl',null)===null?0:20);/* base de la synchro : 20 = ancienne sauvegarde, 0 = nouvelle */
 
+/*CHU*//* ---------- Cherche et trouve : retrouver le petit bonhomme et les objets qui l’aideront à rentrer chez lui ----------
+   Un niveau = un univers, une grande scène plein écran qu’on fait glisser et qu’on agrandit (pincer, molette, + / −).
+   Il faut toucher le bonhomme et les objets cachés parmi des dizaines d’éléments. Pas de pénalité, pas de chrono. */
+const CHW=1000,CHH=1400;
+const chRnd=s=>()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+/* n : nom · hz : hauteur de l’horizon · sky / gr : couleurs du ciel et des collines · se / ge : éléments du ciel / du sol · it : objets à trouver [emoji, nom, nom court] */
+const CHU=[
+{n:'La forêt des lucioles',hz:.28,sky:['#232c6b','#4a5aa6'],gr:['#2f6b52','#235642','#173f33'],se:['⭐','✨','🌙','🦇','☁️','🌟'],ge:['🌲','🌲','🌳','🍄','🌿','🪵','🦉','🦊','🐿️','🐇','🌰','🍂','🪨','🌱','🐞','🐛','🦔','🕯️'],
+ it:[['🔦','la lampe de poche','lampe'],['🧭','la boussole','boussole'],['🥾','les bottes','bottes']],
+ s:'Une nuit, le petit bonhomme a glissé de son étoile filante et il est tombé dans la forêt des lucioles. Retrouve-le entre les arbres. Pour rentrer chez lui, il aura aussi besoin de sa lampe de poche, de sa boussole et de ses bottes.',
+ w:'Le bonhomme te serre dans ses petits bras. Avec sa lampe, sa boussole et ses bottes, il repart sur le chemin.'},
+{n:'La plage aux coquillages',hz:.38,sky:['#7fd0f0','#cdeefc'],gr:['#f3dd9f','#ead08a','#dcbf75'],se:['☁️','🐦','⛵','☀️','🕊️','☁️'],ge:['🐚','🦀','⭐','🌴','🏖️','🪣','🐢','🌊','🦩','🍹','🐠','🪼','🏝️','🦞','🐟','🌺'],
+ it:[['🗺️','la carte','carte'],['🔭','la longue-vue','longue-vue'],['🪢','la corde','corde']],
+ s:'Le vent a poussé le petit bonhomme jusqu’à une plage tranquille, où le sable est tiède. Cherche-le parmi les coquillages. Il a perdu sa carte, sa longue-vue et sa corde : retrouve-les aussi.',
+ w:'Avec sa carte et sa longue-vue, le bonhomme sait maintenant dans quelle direction se trouve la maison.'},
+{n:'Le village sous la neige',hz:.35,sky:['#7a8cc8','#dfe8ff'],gr:['#f4f7ff','#e3ebfb','#cfdaf2'],se:['❄️','☁️','⭐','🌨️','🌙','❄️'],ge:['🏠','🏡','🌲','⛄','🎄','🧊','🦌','🐧','🕯️','🍪','☃️','🎁','🪵','🐇','🦊','🍵'],
+ it:[['🧣','l’écharpe','écharpe'],['🧤','les moufles','moufles'],['🛷','la luge','luge']],
+ s:'Le bonhomme a atterri dans un village où il neige doucement. Il a froid ! Retrouve-le au milieu des maisons, puis son écharpe, ses moufles et sa luge pour descendre la colline.',
+ w:'Bien au chaud dans son écharpe, le bonhomme descend la colline en luge, tout content.'},
+{n:'Le jardin des fleurs',hz:.33,sky:['#9ad8ff','#e8f8ff'],gr:['#8fd18a','#6dbb72','#4fa35e'],se:['☁️','🦋','🐝','🌈','🕊️','☀️'],ge:['🌸','🌷','🌻','🌼','🌹','🌺','🪻','🍓','🐛','🐞','🐝','🦋','🍄','🌿','🌱','🥕','🐌'],
+ it:[['🪜','l’échelle','échelle'],['🔑','la clé','clé'],['🧺','le panier','panier']],
+ s:'Le bonhomme s’est caché dans un immense jardin fleuri. Retrouve-le entre les pétales. Il lui faut aussi une échelle, une clé et un panier pour franchir la grande barrière.',
+ w:'L’échelle contre la barrière, la clé dans la serrure : le jardin n’a plus de secrets pour lui.'},
+{n:'Le grand ciel étoilé',hz:.12,sky:['#0b0f2e','#2a2a6e'],gr:['#3a2f7a','#2c2563','#1f1a4d'],se:['⭐','✨','🌟','🪐','☄️','🌙'],ge:['🪐','🌑','🌕','🛸','👽','🚀','☄️','⭐','🌟','🛰️','🌍','💫','✨','🌙'],
+ it:[['🔋','la pile','pile'],['📡','l’antenne','antenne'],['🔧','la clé à molette','clé à molette']],
+ s:'Le bonhomme flotte au milieu des planètes ! Retrouve-le dans le ciel étoilé. Sa fusée a besoin d’une pile, d’une antenne et d’une clé à molette pour repartir.',
+ w:'La fusée ronronne de nouveau. Le bonhomme t’adresse un grand signe de la main.'},
+{n:'La fête foraine',hz:.3,sky:['#ff9ec4','#ffe1a8'],gr:['#f2a25a','#e48a4a','#c96d3c'],se:['🎈','🎈','🎆','🎇','☁️','🎈'],ge:['🎪','🎡','🎠','🎢','🍿','🍭','🤡','🍬','🎨','🧁','🎁','🎈','🧸','🎯','🎲','🍩','🍦'],
+ it:[['🎟️','le billet','billet'],['🪁','le cerf-volant','cerf-volant'],['🥁','le tambour','tambour']],
+ s:'Quelle fête ! Le bonhomme s’est glissé parmi les manèges et les ballons. Retrouve-le, ainsi que son billet, son cerf-volant et son tambour.',
+ w:'Le tambour résonne doucement : le bonhomme défile fièrement jusqu’à la sortie.'},
+{n:'Le désert doré',hz:.36,sky:['#ffcf8a','#ffefc7'],gr:['#f0c27a','#e3b062','#cf9a4c'],se:['☀️','☁️','🦅','🌤️'],ge:['🌵','🐪','🏜️','🦂','🐍','🦎','🪨','🌴','🔥','🏺','🧱','🐫','🌵','🪲'],
+ it:[['🧢','la casquette','casquette'],['🕶️','les lunettes','lunettes'],['🪔','la lampe magique','lampe magique']],
+ s:'Le soleil brille sur les dunes et le bonhomme se repose à l’ombre d’un cactus. Retrouve-le. Il aura besoin de sa casquette, de ses lunettes et d’une lampe magique pour traverser le désert.',
+ w:'Un petit nuage de poussière dorée, et la lampe magique l’emmène de l’autre côté des dunes.'},
+{n:'Les profondeurs',hz:.1,sky:['#0a4a7a','#1a86b5'],gr:['#1d6fa0','#165a8a','#0f4670'],se:['🫧','🫧','🐟','🫧'],ge:['🐠','🐟','🐡','🐙','🦑','🦀','🪸','🐢','🐬','🦈','🪼','🌿','🫧','⭐','🦞','🐋'],
+ it:[['⚓','l’ancre','ancre'],['🐚','le coquillage','coquillage'],['🔱','le trident','trident']],
+ s:'Plouf ! Le bonhomme est tombé dans l’océan. Retrouve-le parmi les poissons. L’ancre, le coquillage et le trident l’aideront à remonter.',
+ w:'Tenu par l’ancre, soufflé par une bulle, le bonhomme remonte lentement vers la lumière.'},
+{n:'Le château endormi',hz:.32,sky:['#6f7ad8','#d3d9ff'],gr:['#9aa0b8','#7f86a2','#636a88'],se:['🏰','☁️','🦅','🐉','⭐','☁️'],ge:['🏰','🛡️','🏹','🐴','🐉','🏇','🦄','🏺','🕯️','🪙','🍷','🦢','🌹','🗡️'],
+ it:[['👑','la couronne','couronne'],['🗝️','la vieille clé','vieille clé'],['📜','le parchemin','parchemin']],
+ s:'Dans un château silencieux, tout le monde dort… sauf le bonhomme. Retrouve-le dans les tours. Pour ouvrir la grande porte, il lui faut la couronne, la vieille clé et le parchemin.',
+ w:'La grande porte s’ouvre sans un bruit, et le bonhomme passe sur la pointe des pieds.'},
+{n:'La jungle',hz:.25,sky:['#2f8f6a','#bff0a0'],gr:['#2e8b4f','#1f7040','#165a33'],se:['🦜','🦋','☁️','🐒','🌤️'],ge:['🌴','🌿','🦜','🐒','🐍','🦎','🐅','🐘','🦧','🌺','🍃','🐸','🦋','🪲','🐜','🍌'],
+ it:[['🥥','la noix de coco','noix de coco'],['🪶','la plume','plume'],['🪵','le tronc','tronc']],
+ s:'Les feuilles sont immenses et le bonhomme joue à cache-cache. Retrouve-le dans la jungle. Une noix de coco, une plume et un tronc l’aideront à traverser la rivière.',
+ w:'Un tronc pour traverser, une plume pour se faire un chapeau : la rivière est derrière lui.'},
+{n:'La ville la nuit',hz:.3,sky:['#141a45','#3a3f86'],gr:['#2a2f5e','#212551','#181c40'],se:['🌙','⭐','✨','☁️','🦇','⭐'],ge:['🏢','🏙️','🚕','🚌','🚦','🚲','🛵','💡','🏪','☕','🍕','🐈','🐀','🚏','⛲'],
+ it:[['🧳','la valise','valise'],['🎫','le ticket','ticket'],['☂️','le parapluie','parapluie']],
+ s:'Les fenêtres s’allument une à une. Le bonhomme se promène dans la ville, perdu. Retrouve-le, ainsi que sa valise, son ticket et son parapluie.',
+ w:'Valise en main, ticket en poche, il monte dans le dernier bus de la nuit.'},
+{n:'La maison des étoiles',hz:.3,sky:['#1a1550','#7a5bb8'],gr:['#5a4a9a','#46397d','#332a63'],se:['⭐','🌟','✨','🌙','💫','☁️'],ge:['🏡','🌲','🛋️','🪑','📚','🧶','🍪','🥛','🐈','🐕','🧦','🖼️','🪟','🌙','⭐','🍲'],
+ it:[['🕯️','la bougie','bougie'],['🛏️','le lit','lit'],['🔑','la clé','clé'],['🧸','l’ourson','ourson']],
+ s:'Le voilà presque chez lui ! La maison des étoiles brille au loin. Retrouve le bonhomme, puis une dernière fois ses affaires : la bougie, le lit, la clé et l’ourson.',
+ w:'La clé tourne, la bougie s’allume, l’ourson l’attend sur le lit. Le petit bonhomme est enfin chez lui. Merci de l’avoir ramené.'}
+];
+function chScene(u,li,sd){
+ const R=chRnd(sd),W=CHW,H=CHH,hz=u.hz*H,TS=Math.round(40-li*.8),N=150+li*14,nt=u.it.length+1;
+ const rr=(a,b)=>a+R()*(b-a),pick=a=>a[Math.floor(R()*a.length)];
+ const bad=new Set(u.it.map(x=>x[0]));
+ const se=u.se.filter(e=>!bad.has(e)),ge=u.ge.filter(e=>!bad.has(e));
+ /* fond : ciel + trois collines */
+ const wave=(y0,amp,ph)=>{let d=`M0 ${H}L0 ${y0.toFixed(1)}`;for(let x=0;x<=W;x+=40)d+=`L${x} ${(y0+Math.sin(x/130+ph)*amp+Math.sin(x/47+ph*2)*amp*.3).toFixed(1)}`;return d+`L${W} ${H}Z`};
+ const gh=H-hz,cx=rr(180,820),cy=rr(60,Math.max(100,hz*.7));
+ const bg=`<svg class="hbg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="chs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${u.sky[0]}"/><stop offset="1" stop-color="${u.sky[1]}"/></linearGradient><radialGradient id="chg"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><rect width="${W}" height="${H}" fill="url(#chs)"/><circle cx="${cx.toFixed(0)}" cy="${cy.toFixed(0)}" r="190" fill="url(#chg)"/>${u.gr.map((c,i)=>`<path d="${wave(hz+i*gh*.22-28,16+i*6,R()*6)}" fill="${c}"/>`).join('')}</svg>`;
+ /* les cibles : le bonhomme d’abord, puis les objets ; bien écartées les unes des autres */
+ const T=[];let guard=0,gap=nt>4?215:250;
+ while(T.length<nt&&guard++<4000){
+  const x=rr(70,W-70),y=rr(130,H-70);
+  if(T.some(t=>Math.hypot(t.x-x,t.y-y)<gap))continue;
+  if(!T.length&&y<hz*.8&&u.hz>.2)continue;/* le bonhomme est sur le sol */
+  T.push({x,y});
+  if(guard>3000&&T.length<nt)gap=150;
+ }
+ while(T.length<nt)T.push({x:rr(70,W-70),y:rr(130,H-70)});
+ T.forEach((t,i)=>{if(!i){t.k='g';t.e='';t.n='le petit bonhomme';t.s='bonhomme';t.r=TS*.85}else{const o=u.it[i-1];t.k='o';t.e=o[0];t.n=o[1];t.s=o[2];t.r=TS*.78}});
+ /* décor : plus bas = plus grand et dessiné plus tard ; rien ne cache une cible en entier */
+ const D=[];
+ const keepClear=(x,y,s)=>T.every(t=>Math.hypot(t.x-x,t.y-y)>=s*.5+TS*.14);
+ let tries=0;
+ while(D.length<N&&tries++<N*8){
+  const sky=hz>240&&R()<.3,y=sky?rr(50,hz-10):rr(hz-10,H-30),x=rr(10,W-10);
+  let s=rr(24,44)*(.72+.5*(y/H));if(R()<.06)s*=1.7;
+  if(!keepClear(x,y,s))continue;
+  D.push({e:pick(sky?se:ge),x,y,s,a:rr(-16,16),f:R()<.5?-1:1});
+ }
+ /* quelques éléments posés en partie devant chaque cible : on la voit, mais il faut chercher */
+ T.forEach(t=>{const k=2+Math.floor(R()*2);for(let j=0;j<k;j++){const an=rr(0,Math.PI*2),d=TS*rr(.6,.82),s=TS*rr(1.05,1.4);D.push({e:pick(t.y<hz-10&&se.length?se:ge),x:t.x+Math.cos(an)*d,y:t.y+Math.abs(Math.sin(an))*d*.6+3,s,a:rr(-10,10),f:R()<.5?-1:1})}});
+ const L=[...D.map(d=>({y:d.y,h:`<span class="ht" style="left:${d.x.toFixed(1)}px;top:${d.y.toFixed(1)}px;font-size:${d.s.toFixed(1)}px;transform:translate(-50%,-50%) rotate(${d.a.toFixed(1)}deg) scaleX(${d.f})">${d.e}</span>`})),
+  ...T.map((t,i)=>({y:t.y,h:t.k==='g'?`<span class="ht g" data-t="${i}" style="left:${t.x.toFixed(1)}px;top:${t.y.toFixed(1)}px;width:${(TS*1.05).toFixed(1)}px">${qzGuy('ask')}</span>`:`<span class="ht o" data-t="${i}" style="left:${t.x.toFixed(1)}px;top:${t.y.toFixed(1)}px;font-size:${TS}px">${t.e}</span>`}))];
+ L.sort((a,b)=>a.y-b.y);
+ return{html:bg+L.map(l=>l.h).join(''),T};
+}
+function pCherche(r){
+ const li=Math.min(lv,CHU.length-1),u=CHU[li],sd=r&&Number.isInteger(r.sd)?r.sd:(Math.random()*1e9|0),S=chScene(u,li,sd),T=S.T;
+ let found=r&&Array.isArray(r.f)?[...new Set(r.f.filter(i=>Number.isInteger(i)&&i>=0&&i<T.length))]:[],intro=!r,fin=false;
+ snap=()=>({sd,f:found});
+ const al=()=>playing&&cur==='cherche'&&document.body.contains($('#hv'));
+ const tray=()=>T.map((t,i)=>{const ok=found.includes(i);return`<div class="hti${ok?' ok':''}" data-t="${i}"><span class="hte">${t.k==='g'?qzGuy(ok?'ok':'ask'):t.e}</span><small>${t.s}</small>${ok?'<b>✓</b>':''}</div>`}).join('');
+ $('#nav').hidden=true;mt='m';keep();
+ app.innerHTML=`<div class="hf" id="hf"><div class="hv" id="hv"><div class="hw" id="hw" style="width:${CHW}px;height:${CHH}px">${S.html}</div></div>
+<div class="hhd"><button class="back" data-a="back" data-v="hub">‹ Retour</button><span class="hsp"></span><button class="hb" data-a="hint">Indice · 1 ❄</button><div class="chip">❄ ${FLX()}</div></div>
+<div class="hnm">${u.n} · ${li+1} / ${CHU.length}</div>
+<div class="hzm"><button data-a="chz" data-v="1" aria-label="Agrandir">+</button><button data-a="chz" data-v="-1" aria-label="Rétrécir">−</button></div>
+<p class="m hmsg" id="m" role="status" aria-live="polite"></p>
+<div class="skw hsk" id="skw"><button class="skp" data-a="skip">Passer ce niveau</button></div>
+<div class="htr" id="htr" aria-label="À trouver">${tray()}</div>
+${intro?`<div class="hov" id="hov"><div class="hcd glass"><small>Niveau ${li+1} · ${u.n}</small><p>${u.s}</p><div class="hli">${T.map(t=>`<span>${t.k==='g'?'<i class="hg">'+qzGuy('ask')+'</i>':'<i>'+t.e+'</i>'}<em>${t.n}</em></span>`).join('')}</div><button class="btn" data-a="chgo">C’est parti</button></div></div>`:''}</div>`;
+ const hv=$('#hv'),hw=$('#hw');
+ let s=1,tx=0,ty=0,vw=0,vh=0,smin=.5,smax=3;
+ const clamp=()=>{s=Math.max(smin,Math.min(smax,s));const w=CHW*s,h=CHH*s;tx=vw>=w?(vw-w)/2:Math.min(0,Math.max(vw-w,tx));ty=vh>=h?(vh-h)/2:Math.min(0,Math.max(vh-h,ty))};
+ const put=()=>{clamp();hw.style.transform=`translate(${tx.toFixed(1)}px,${ty.toFixed(1)}px) scale(${s.toFixed(4)})`};
+ const fit=()=>{const f=s<=smin*1.001;vw=hv.clientWidth||innerWidth;vh=hv.clientHeight||innerHeight;smin=Math.max(vw/CHW,vh/CHH);smax=Math.max(smin*3.2,2.6);if(f||!hw.style.transform)s=smin*1.12;put()};
+ fit();tx=(vw-CHW*s)/2;ty=0;put();
+ const zoomAt=(cx,cy,ns)=>{ns=Math.max(smin,Math.min(smax,ns));const wx=(cx-tx)/s,wy=(cy-ty)/s;s=ns;tx=cx-wx*s;ty=cy-wy*s;put()};
+ const onRs=()=>{if(!document.body.contains(hv))return removeEventListener('resize',onRs);fit()};addEventListener('resize',onRs);
+ /* gestes : un doigt fait glisser la scène, deux doigts la zooment, un appui court cherche sous le doigt */
+ const P=new Map();let g0=null,mv=false;
+ const pt=e=>{const b=hv.getBoundingClientRect();return[e.clientX-b.left,e.clientY-b.top]};
+ hv.addEventListener('pointerdown',e=>{if(intro||fin)return;try{hv.setPointerCapture(e.pointerId)}catch(_){}const[x,y]=pt(e);P.set(e.pointerId,{x,y,sx:x,sy:y,t:Date.now()});mv=false;
+  if(P.size===2){const[a,b]=[...P.values()];g0={d:Math.hypot(a.x-b.x,a.y-b.y)||1,s,mx:(a.x+b.x)/2,my:(a.y+b.y)/2,wx:((a.x+b.x)/2-tx)/s,wy:((a.y+b.y)/2-ty)/s};mv=true}});
+ hv.addEventListener('pointermove',e=>{const p=P.get(e.pointerId);if(!p)return;const[x,y]=pt(e);
+  if(P.size===2&&g0){p.x=x;p.y=y;const[a,b]=[...P.values()],d=Math.hypot(a.x-b.x,a.y-b.y)||1,mx=(a.x+b.x)/2,my=(a.y+b.y)/2;s=Math.max(smin,Math.min(smax,g0.s*d/g0.d));tx=mx-g0.wx*s;ty=my-g0.wy*s;put();return}
+  if(P.size===1){if(!mv&&Math.hypot(x-p.sx,y-p.sy)>8)mv=true;if(mv){tx+=x-p.x;ty+=y-p.y;put()}p.x=x;p.y=y}});
+ const up=e=>{const p=P.get(e.pointerId);if(!p)return;P.delete(e.pointerId);if(P.size<2)g0=null;
+  if(!mv&&P.size===0&&Date.now()-p.t<600)tap(p.x,p.y);if(P.size===1){const q=[...P.values()][0];q.sx=q.x;q.sy=q.y;mv=true}};
+ hv.addEventListener('pointerup',up);hv.addEventListener('pointercancel',up);
+ hv.addEventListener('wheel',e=>{e.preventDefault();const[x,y]=pt(e);zoomAt(x,y,s*(e.deltaY<0?1.18:1/1.18))},{passive:false});
+ const ripple=(x,y)=>{const d=document.createElement('i');d.className='hrp';d.style.left=x+'px';d.style.top=y+'px';hw.appendChild(d);setTimeout(()=>d.remove(),600)};
+ const tap=(cx,cy)=>{
+  const x=(cx-tx)/s,y=(cy-ty)/s;let b=-1,bd=1e9;
+  T.forEach((t,i)=>{if(found.includes(i))return;const d=Math.hypot(t.x-x,t.y-y),rad=Math.max(t.r,26/s);if(d<=rad&&d<bd){bd=d;b=i}});
+  if(b<0){ripple(x,y);sfx(330,.06);return}
+  got(b)};
+ const got=i=>{
+  if(found.includes(i))return;found.push(i);keep();
+  const t=T[i],el=hw.querySelector(`.ht[data-t="${i}"]`);if(el)el.classList.add('f');
+  const tr=$('#htr');if(tr)tr.innerHTML=tray();
+  sfx(i?740:880,.35);setTimeout(()=>sfx(i?988:1175,.45),130);vib(i?20:[20,40,20]);
+  if(found.length>=T.length){fin=true;msg('Tout est trouvé !');const m=$('.hmsg');if(m)m.classList.add('big');setTimeout(()=>{if(al())win()},1700);[523,659,784,1047].forEach((f,k)=>setTimeout(()=>sfx(f,.6),500+k*160));if(el)confetti(el);return}
+  msg(t.k==='g'?'Tu as retrouvé le petit bonhomme ! Cherche encore ses affaires.':'Trouvé : '+t.n+' !');
+ };
+ act.chz=v=>{if(fin)return;hw.classList.add('sm');zoomAt(vw/2,vh/2,s*(+v>0?1.4:1/1.4));setTimeout(()=>hw.classList.remove('sm'),450)};
+ act.chgo=()=>{intro=false;const o=$('#hov');if(o)o.remove();msg('Fais glisser la scène, pince pour agrandir, touche ce que tu trouves.');setTimeout(()=>{const m=$('.hmsg');if(m&&m.textContent.startsWith('Fais'))m.textContent=''},5500)};
+ act.hint=()=>{
+  if(intro||fin)return;const left=T.map((t,i)=>i).filter(i=>!found.includes(i));if(!left.length||!spend(1))return;
+  const i=left[Math.floor(Math.random()*left.length)],t=T[i];
+  hw.classList.add('sm');s=Math.max(s,smin*1.7);tx=vw/2-t.x*s;ty=vh/2-t.y*s;put();setTimeout(()=>hw.classList.remove('sm'),700);
+  const ox=(Math.random()-.5)*60,oy=(Math.random()-.5)*60,d=document.createElement('i');d.className='hrg';d.style.left=(t.x+ox)+'px';d.style.top=(t.y+oy)+'px';hw.appendChild(d);setTimeout(()=>d.remove(),3600);
+  msg('Indice : ce que tu cherches est dans le cercle qui brille.');
+ };
+ if(found.length>=T.length&&r)setTimeout(()=>{if(al())win()},300);
+ found.forEach(i=>{const el=hw.querySelector(`.ht[data-t="${i}"]`);if(el)el.classList.add('f')});
+}
+
+const CHWL=CHU.map(u=>u.w);
 const G=[
 {id:'mots',n:'Jeu de mots',ic:'✦',a:'#a99cf0',b:'#5458AB',t:'Le vent des lettres',s:'Le vent du nord a emporté les lettres du village de Givre. Relie-les sur la roue pour retrouver chaque mot.',w:'Les mots reprennent leur place. Au village de Givre, une fenêtre s’éclaire.'},
 {id:'croises',n:'Mots croisés',ic:'▦',a:'#7fb6e6',b:'#3f6fa3',t:'Le givre sur la vitre',s:'Dans la cabane, le givre dessine une grille sur la vitre. Chaque mot trouvé fait naître un motif.',w:'La grille se remplit, le givre dessine un motif sur la vitre.'},
@@ -1349,11 +1559,12 @@ const G=[
 {id:'maze',n:'Labyrinthe',ic:'❖',a:'#b4cf8e',b:'#4f7a46',t:'Le sentier de la lune',s:'Entre les sapins, un sentier suit la lumière de la lune. Guide le petit renard jusqu’à son terrier.',w:'Le petit renard est rentré au terrier, bien au chaud sous la lune.'},
 {id:'match3',n:'Constellations',ic:'✧',a:'#8fb4f0',b:'#4a5db0',t:'Les constellations',s:'Dans le ciel, des pièces brillantes se mêlent. Aligne-les pour les faire briller : quatre alignées font naître une lune, un carré de quatre une étoile, et cinq alignées un soleil.',w:'Le ciel brille un peu plus fort ce soir.'},
 {id:'demenage',n:'Déménagement',ic:'⌂',a:'#e8b98a',b:'#9a5f3a',t:'Les boîtes du déménagement',s:'Une nouvelle maison, des boîtes partout. Sors les objets un à un et range-les là où ils vont : la brosse à dents sur le lavabo, le toutou sur le lit…',w:'Tout est rangé. La maison sent déjà le chez-soi.'},
-{id:'quiz',n:'Quiz',ic:'?',a:'#8fd6d0',b:'#2f7f87',t:'Le quiz du bonhomme',s:'Le petit bonhomme te pose une question de culture générale, avec quatre réponses possibles. Bonne réponse : il est content et tu gagnes un flocon. Mauvaise réponse : il est déçu, la bonne réponse t’est montrée, et on passe à la suite.',w:'Le bonhomme est ravi.'}
+{id:'quiz',n:'Quiz',ic:'?',a:'#8fd6d0',b:'#2f7f87',t:'Le quiz du bonhomme',s:'Le petit bonhomme te pose une question de culture générale, avec quatre réponses possibles. Bonne réponse : il est content et tu gagnes un flocon. Mauvaise réponse : il est déçu, la bonne réponse t’est montrée, et on passe à la suite.',w:'Le bonhomme est ravi.'},
+{id:'cherche',n:'Cherche et trouve',ic:'◉',a:'#ffd37a',b:'#c9742e',nox:1,t:'Le bonhomme s’est perdu',s:'Le petit bonhomme est tombé de son étoile filante. Dans chaque univers, retrouve-le parmi des dizaines d’éléments, ainsi que les objets qui l’aideront à rentrer chez lui. Fais glisser la scène, pince pour agrandir, touche ce que tu trouves.',w:'Le bonhomme te remercie. Un pas de plus vers la maison.',wl:CHWL}
 ];
 const SP=[{id:'scrabble',n:'Scrabble',ic:'Ⓢ',a:'#e6b86a',b:'#9a6a2e',t:'La partie du soir',s:'Pose des mots sur le plateau avec les sept lettres de ton chevalet. Joue ton tour, ton ami joue le sien quand il le souhaite. Pas d’indices ici.',sp:'Entre amis'},
 {id:'chess',n:'Échecs',ic:'♞',a:'#7fb88a',b:'#2b5f45',t:'La clairière',s:'Une partie d’échecs au calme, sous les sapins : contre l’ordinateur, à deux sur le même appareil, ou à distance contre un ami. Tu choisis la durée au début, ou pas de limite de temps.',sp:'Seul ou à deux'}];
-const ORD=['mots','caches','croises','phrase','tournade','maze','memo','sudoku','match3','demenage','quiz'],GD=[...ORD.map(i=>G.find(g=>g.id===i)),...SP,...G.filter(g=>g.soon)];
+const ORD=['mots','caches','croises','phrase','tournade','maze','memo','sudoku','match3','demenage','quiz','cherche'],GD=[...ORD.map(i=>G.find(g=>g.id===i)),...SP,...G.filter(g=>g.soon)];
 const DL=[
 {id:'wordle',n:'Le mot du jour',ic:'✺',a:'#cfd6ff',b:'#4a5a9a',t:'Le mot du jour',w:'Le mot du jour est trouvé.'}
 ];
@@ -1462,7 +1673,7 @@ function home(){nv('games');
 }
 function hub(id){if(id==='quiz')return home();
  cur=id;nv('games');theme(id);const g=G.find(x=>x.id===id),N=nl(id),dd=st.get(dkey(id),false),ok=i=>st.get(ckey(id)+':'+i,false),sk=i=>!ok(i)&&st.get('k:'+id+':'+i,false),nx=[...Array(N).keys()].findIndex(i=>!ok(i)&&!sk(i)),ns=[...Array(N).keys()].findIndex(sk),nsk=[...Array(N).keys()].filter(sk).length,tg=nx>=0?nx:ns>=0?ns:N-1,dn=[...Array(N).keys()].filter(i=>st.get(ckey(id)+':'+i,false)).length;
- const xon=xmasOn()&&!g.soon,xok=i=>st.get(ckey(id)+':'+(N+i),false),xsk=i=>!xok(i)&&st.get('k:'+id+':'+(N+i),false),xnx=[...Array(NLX).keys()].findIndex(i=>!xok(i)&&!xsk(i)),xdn=[...Array(NLX).keys()].filter(xok).length,xns=[...Array(NLX).keys()].findIndex(xsk),xtg=xnx>=0?xnx:xns>=0?xns:NLX-1,xpr=xdn+[...Array(NLX).keys()].filter(xsk).length;
+ const xon=xmasOn()&&!g.soon&&!g.nox,xok=i=>st.get(ckey(id)+':'+(N+i),false),xsk=i=>!xok(i)&&st.get('k:'+id+':'+(N+i),false),xnx=[...Array(NLX).keys()].findIndex(i=>!xok(i)&&!xsk(i)),xdn=[...Array(NLX).keys()].filter(xok).length,xns=[...Array(NLX).keys()].findIndex(xsk),xtg=xnx>=0?xnx:xns>=0?xns:NLX-1,xpr=xdn+[...Array(NLX).keys()].filter(xsk).length;
  app.innerHTML=`<div class="top stk">${bk('home')}<div class="chip">❄ ${FLX()}</div></div><section class="glass story pt-${id}"><i>${g.ic}</i><h2>${g.t}</h2><p>${g.s}</p></section>`+(g.soon?`<p class="note">Ce jeu arrive dans la prochaine version de la maquette.</p>`:`<div class="opts"><section class="rc pt-${id}" data-g="${g.ic}"><div class="rc-ic">${g.ic}</div><div class="rc-t"><small>${dn?'Continuer':'Commencer'}</small><b>${nx>=0?'Niveau '+(nx+1):ns>=0?'Niveau '+(ns+1)+' (passé)':'Rejouer le niveau '+N}</b><span>${nx>=0?dn+' sur '+N+' terminés · +'+rw(id)+' ❄'+(nsk?' · '+nsk+' passé'+(nsk>1?'s':''):''):ns>=0?'Un niveau passé t’attend · +'+rw(id)+' ❄':'Tous les niveaux sont terminés'}</span></div><button class="rc-go" data-a="play" data-v="${tg}">Jouer<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>${id==='demenage'?`<section class="rc" data-g="📖"><div class="rc-ic">📖</div><div class="rc-t"><small>Le livre</small><b>Revoir l’histoire</b><span>Les pages que tu as déjà écrites</span></div><button class="rc-go" data-a="dbook">Ouvrir<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>`:''}${xon?`<section class="rc xm" data-g="✦"><div class="rc-ic">✦</div><div class="rc-t"><small>Spécial Noël</small><b>${xnx<0&&xns<0?'Rejouer Fêtes '+NLX:'Fêtes '+(xtg+1)+(xnx<0?' (passé)':'')}</b><span>${xdn} / ${NLX} terminés</span></div><button class="rc-go" data-a="play" data-v="${N+xtg}" title="Jusqu’au 11 janvier">${xnx<0&&xns<0?'Rejouer':xpr?'Continuer':'Commencer'}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>`:''}<div class="dd pt-${id}${lvOpen?' open':''}"><button class="dd-h" data-a="dd" aria-expanded="${lvOpen}" aria-controls="lvl"><span><b>Choisir un niveau</b><small>${dn} / ${N} terminés</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="dd-l" id="lvl"><div class="dd-i"><div class="lvg">${Array.from({length:N},(_,i)=>{const o=ok(i),p=sk(i);return`<button class="lv ${o?'d':p?'sk':i===nx?'nx':'far'}" data-a="play" data-v="${i}" aria-label="Niveau ${i+1}${o?', terminé':p?', passé, à refaire pour les flocons':''}">${i+1}</button>`}).join('')}</div></div></div></div></div>`);
 }
 function quote(){
@@ -2481,7 +2692,7 @@ async function socPhoto(inp){
   socSetAv('p',d)
  }catch(e){SO.ms='Cette image n’a pas pu être utilisée : essaie une autre photo.';SO.mse=true;SO.h='';socRefresh()}}
 document.addEventListener('change',e=>{if(e.target&&e.target.id==='soc-ph')socPhoto(e.target)});
-const RWD={mots:5,caches:3,croises:5,phrase:2,tournade:2,maze:2,memo:2,sudoku:5,demenage:4,match3:3,quiz:1},rw=id=>RWD[id]||5;
+const RWD={mots:5,caches:3,croises:5,phrase:2,tournade:2,maze:2,memo:2,sudoku:5,demenage:4,match3:3,quiz:1,cherche:4},rw=id=>RWD[id]||5;
 /* ---------- Quiz : le bonhomme pose une question de culture générale ----------
    Un niveau = une question à 4 réponses. Bonne réponse : +1 ❄ (la première fois) et le bonhomme est content.
    Mauvaise réponse : la bonne est montrée, le bonhomme est déçu, et on passe quand même à la suite. */
@@ -3413,7 +3624,7 @@ act.skip=()=>{const w=$('#skw');if(w)w.innerHTML='<span>Passer ce niveau sans r�
 act.skipn=()=>{const w=$('#skw');if(w)w.innerHTML='<button class="skp" data-a="skip">Passer ce niveau</button>'};
 act.skipy=()=>{const g=cur,l=lv;if(!g||daily)return;st.set('k:'+g+':'+l,true);st.set('last',{g,daily:false,lv:l,date:today,done:1});
  if(isX(g,l)?l<nl(g)+NLX-1:l<nl(g)-1){start(g,false,l+1);msg('Niveau passé, sans flocons : tu pourras y revenir.')}else hub(g)};
-function start(g,d,l,r){if(!d&&l>=nl(g)&&!xmasOn())return hub(g);cur=g;daily=d;lv=l;playing=true;wsG=null;if(!r&&!d&&!st.get(ckey(g)+':'+l,false))r=st.get('p:'+g+':'+l,null)||undefined;theme(g,!d&&l>=nl(g));({mots:pRoue,croises:pCross,phrase:pPhrase,tournade:pTourne,maze:pMaze,memo:pMemo,sudoku:pSudoku,caches:pSearch,match3:pMatch,demenage:pDemen,quiz:pQuiz})[g](r);window.scrollTo(0,0)}
+function start(g,d,l,r){if(!d&&l>=nl(g)&&!xmasOn())return hub(g);cur=g;daily=d;lv=l;playing=true;wsG=null;if(!r&&!d&&!st.get(ckey(g)+':'+l,false))r=st.get('p:'+g+':'+l,null)||undefined;theme(g,!d&&l>=nl(g));({mots:pRoue,croises:pCross,phrase:pPhrase,tournade:pTourne,maze:pMaze,memo:pMemo,sudoku:pSudoku,caches:pSearch,match3:pMatch,demenage:pDemen,quiz:pQuiz,cherche:pCherche})[g](r);window.scrollTo(0,0)}
 function theme(id,x){m3Mus(id==='match3'&&!x);xmMus(!!x);const g=ALL.find(x=>x.id===id),s=document.body.style;s.setProperty('--a',x?'#d9453d':g?g.a:'#a99cf0');s.setProperty('--b',x?'#1f8a52':g?g.b:'#5458AB');$('#tint').classList.toggle('on',!!g);document.body.classList.toggle('g',!!g);document.body.classList.toggle('xm',!!x);const p=$('#pat');if(g)p.className='pt-'+id+' on';else p.classList.remove('on')}
 function nv(t){if(t!=='aqua')['#aqsh','#aqbd'].forEach(q=>{const e=$(q);if(e){e.classList.remove('open');e.style.visibility='hidden';e.style.transition='none'}});playing=false;wsG=null;theme(null);if(t!=='set'){rc=false;Sy.done='';Sy.pv=null;Sy.err=''}const n=$('#nav');n.hidden=false;n.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===t))}
 function resume(){const l=st.get('last',null);if(!l||l.daily||l.g==='melange'||!G.some(g=>g.id===l.g))return;const X=isX(l.g,l.lv);if(X&&!xmasOn())return;if(l.done)return(X?l.lv<nl(l.g)+NLX-1:l.lv<nl(l.g)-1)?start(l.g,false,l.lv+1):hub(l.g);start(l.g,false,l.lv,l.s)}
