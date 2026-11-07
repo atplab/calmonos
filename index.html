@@ -4129,7 +4129,7 @@ function dpos(d,a){const p=a.p&&a.p[d.id];if(p&&typeof p.x==='number'&&typeof p.
 function dcl(d,x,b){const T=100-dH(d);return{x:Math.max(0,Math.min(100-d.w,x)),b:d.k==='ceil'?T:Math.max(0,Math.min(T,b))}}
 function tankHTML(a){
  const w=WATER.find(x=>x.id===a.w)||WATER[0],now=Date.now(),gl=aqHg(a,now),hg=new Set(gl.map(f=>f.id)),gq=aqGain(a,gl).g,gn=Object.fromEntries(gl.map((f,i)=>[f.id,gq[i]])),nmq=aqNames(a);
- return`<div class="tank${aqEd?' ed':''}" id="tank" style="--w1:${w.c1};--w2:${w.c2};--dt:${aqLv(a,now).dt.toFixed(3)};--gr:${aqLv(a,now).gr.toFixed(3)};${aqSkyStyle(now)}" data-ph="${aqSky(now).ph}" data-late="${aqMt(a,now).late?1:0}" data-dirty="${aqLv(a,now).dt>.01?1:0}"><div class="skn" aria-hidden="true"></div><div class="rays"></div><div class="sky" aria-hidden="true"><div class="stars">${[[11,8],[26,22],[38,5],[54,17],[67,9],[80,24],[91,13],[19,32],[46,29]].map(([x,y],i)=>`<i style="left:${x}%;top:${y}%;--dl:${-i*.7}s"></i>`).join('')}</div></div><div class="sand"></div><div class="bubs">${[9,24,43,62,78,91].map((x,i)=>`<i style="left:${x}%;--dl:${-i*1.9}s;--du:${7+i%3*2}s"></i>`).join('')}</div>${DECO.filter(d=>a.d[d.id]).map(d=>{const q=dpos(d,a),mv=aqEd&&!d.fix;return`<svg class="dc ${d.k||''}${mv?' mv':''}" data-id="${d.id}" viewBox="${d.vb||'0 0 100 100'}" style="left:${q.x}%;width:${d.w}%;bottom:${q.b}%;aspect-ratio:${d.ar||1};${d.k==='float'?'animation-delay:'+(-(hs(d.id)%7))+'s':''}" role="img" aria-label="${d.n}"${mv?' tabindex="0"':''}><rect width="100%" height="100%" fill="transparent"/>${d.svg}</svg>`}).join('')}${aqOn(a).map((f,k)=>{const q=hs(f.id),du=16+q%10,y=8+(k*37+q%11)%46;return`<div class="fx ${hg.has(f.id)?'h':''}" data-id="${f.id}" data-a="aqfish" data-v="${f.id}" role="button" tabindex="0" aria-label="${esc(nmq[f.id]||f.n)} (${f.n})" style="--y:${y}%;--w:${(15*f.sz).toFixed(1)}%;--tx:${((96-15*f.sz)/(15*f.sz)*100).toFixed(2)}%;--d:${du}s;--dl:${-(q%du)}s;--p:${(q%100)/100}"><div class="fy"><div class="fr"><div class="fi">${fishSVG(f)}</div></div><span class="hg">+${gn[f.id]??aqGain(a,[f]).g[0]} ❄</span></div></div>`}).join('')}<div class="aqm-haze"></div></div>`;
+ return`<div class="tank${aqEd?' ed':''}" id="tank" style="--w1:${w.c1};--w2:${w.c2};--dt:${aqLv(a,now).dt.toFixed(3)};--gr:${aqLv(a,now).gr.toFixed(3)};${aqSkyStyle(now)}" data-ph="${aqSky(now).ph}" data-late="${aqMt(a,now).late?1:0}" data-dirty="${aqLv(a,now).dt>.01?1:0}"><div class="skn" aria-hidden="true"></div><div class="rays"></div><div class="sky" aria-hidden="true"><div class="stars">${[[11,8],[26,22],[38,5],[54,17],[67,9],[80,24],[91,13],[19,32],[46,29]].map(([x,y],i)=>`<i style="left:${x}%;top:${y}%;--dl:${-i*.7}s"></i>`).join('')}</div></div><div class="sand"></div><div class="bubs">${[9,24,43,62,78,91].map((x,i)=>`<i style="left:${x}%;--dl:${-i*1.9}s;--du:${7+i%3*2}s"></i>`).join('')}</div>${DECO.filter(d=>a.d[d.id]).map(d=>{const q=dpos(d,a),mv=aqEd&&!d.fix;return`<svg class="dc ${d.k||''}${mv?' mv':''}" data-id="${d.id}" viewBox="${d.vb||'0 0 100 100'}" style="left:${q.x}%;width:${d.w}%;bottom:${q.b}%;aspect-ratio:${d.ar||1};${d.k==='float'?'animation-delay:'+(-(hs(d.id)%7))+'s':''}" role="img" aria-label="${d.n}"${mv?' tabindex="0"':''}><rect width="100%" height="100%" fill="transparent"/>${d.svg}</svg>`}).join('')}${aqOn(a).map((f,k)=>{const q=hs(f.id),du=16+q%10,y=8+(k*37+q%11)%46,W=aqWan(f,q,du,k);return`<style>${W.css}</style><div class="fx ${hg.has(f.id)?'h':''}" data-id="${f.id}" data-a="aqfish" data-v="${f.id}" role="button" tabindex="0" aria-label="${esc(nmq[f.id]||f.n)} (${f.n})" style="--y:${y}%;--w:${(15*f.sz).toFixed(1)}%;--tx:${((96-15*f.sz)/(15*f.sz)*100).toFixed(2)}%;--d:${W.D}s;--dl:${W.dl}s;--p:${(q%100)/100}"><div class="fy"><div class="fr"><div class="fi">${fishSVG(f)}</div></div><span class="hg">+${gn[f.id]??aqGain(a,[f]).g[0]} ❄</span></div></div>`}).join('')}<div class="aqm-haze"></div></div>`;
 }
 function aqPanel(){
  const a=aqRead(),el=$('#aql');if(!el)return;
@@ -4223,11 +4223,28 @@ function aqFx(ids,hg){
  if(!S.raf)S.raf=requestAnimationFrame(aqStep);
 }
 /* position naturelle (sans le décalage de la ruée vers les grains) : bord gauche + glissement animé (en % de la largeur du poisson) */
+/* aquarium : chaque animal se promène librement (trajet en boucle, avec des détours en x et en y) */
+function aqWan(f,q,du,k){
+ let s=(q*2654435761+k*40503)>>>0;const R=()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296};
+ const vert=f.id==='hippo'||f.id==='meduse',slow=f.id==='tortue'||f.id==='lune'||f.id==='meduse'||f.id==='hippo',sp=slow?2.8:4.6,wd=96-15*f.sz,n=5+(q%3);
+ const P=[];let x=R(),y=8+R()*48;
+ for(let i=0;i<n;i++){P.push([x,y]);const mx=vert?.28:.75;x=Math.min(1,Math.max(0,x+(R()*2-1)*mx+(R()<.5?-1:1)*.12));y=Math.min(58,Math.max(6,y+(R()*2-1)*(vert?26:20)))}
+ P.push(P[0]);
+ const T=[0];for(let i=1;i<P.length;i++){const dx=(P[i][0]-P[i-1][0])*wd,dy=(P[i][1]-P[i-1][1])*.8;T.push(T[i-1]+Math.max(3.5,Math.hypot(dx,dy)/sp))}
+ const D=T[T.length-1],id=f.id;let dir=1,fl='',kf='';
+ for(let i=0;i<P.length;i++){const p=(T[i]/D*100).toFixed(2);
+  kf+=`${p}%{translate:calc(var(--tx)*${P[i][0].toFixed(3)}) 0;top:${P[i][1].toFixed(1)}%;animation-timing-function:ease-in-out}`;
+  if(i<P.length-1){const dx=(P[i+1][0]-P[i][0])*wd;if(Math.abs(dx)>1.5)dir=dx>0?1:-1;fl+=`${p}%{transform:scaleX(${dir})}`}}
+ fl+=`100%{transform:scaleX(${dir})}`;
+ const sel=`.tank .fx[data-id="${id}"]`;
+ return{D:+D.toFixed(2),dl:-(q%Math.floor(D)),css:`@keyframes swx-${id}{${kf}}@keyframes flp-${id}{${fl}}${sel}{animation:swx-${id} ${D.toFixed(2)}s linear var(--dl) infinite}${sel} .fi{animation:flp-${id} ${D.toFixed(2)}s steps(1,end) var(--dl) infinite}@media(prefers-reduced-motion:reduce){${sel},${sel} .fi{animation:none}}`}
+}
+
 const aqNx=el=>{const c=getComputedStyle(el),q=parseFloat(c.translate);return(parseFloat(c.left)||0)+(q>=0||q<0?q/100*el.getBoundingClientRect().width:0)};
 /* un poisson qu’on touche n’aime pas ça : il prend de l’avance sur sa route, dans le sens où il nage (si un mur est tout près, il fait demi-tour et s’éloigne) */
 function aqDash(el){
  if(wRM||!el||!el.isConnected||el._dsh)return;
- const A=el.getAnimations({subtree:true}).filter(a=>a.animationName==='swx'||a.animationName==='flp'),sw=A.find(a=>a.animationName==='swx');
+ const A=el.getAnimations({subtree:true}).filter(a=>/^(swx|flp)/.test(a.animationName)),sw=A.find(a=>a.animationName.startsWith('swx'));
  if(!sw)return;
  const tm=sw.effect.getComputedTiming(),d=+tm.duration,dl=+tm.delay||0,o=A.map(a=>+a.currentTime),c0=+sw.currentTime;
  if(!(d>0)||!isFinite(c0))return;
