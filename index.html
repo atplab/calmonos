@@ -523,6 +523,30 @@ body.g #pat{filter:blur(2px)}
 .chdn{margin:8px 0 0}
 .chgo{margin-top:20px;width:100%}
 .chres{margin-bottom:14px}
+/* fragments d'étoile : la jauge de poussière */
+.sbi{flex-direction:column;align-items:flex-start;gap:2px}.sdr{display:flex;align-items:center;gap:9px}
+.sbi b em{font-style:normal;font-size:12px;font-weight:600;margin-left:5px;opacity:.9}
+.sdp{display:flex;gap:3px}.sdp i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.28);box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+.sdp i.on{background:#ffd45a;box-shadow:0 0 6px rgba(255,212,90,.8)}
+body[data-tx=d] .sdp i{background:rgba(60,40,0,.18);box-shadow:inset 0 0 0 1px rgba(60,40,0,.25)}
+body[data-tx=d] .sdp i.on{background:#e0a010;box-shadow:0 0 5px rgba(224,160,16,.6)}
+.chp .sn{fill:#eaf6ff;stroke:#7b9db8;stroke-width:1.3}.chp .x1{fill:var(--x1)}.chp .x2{fill:var(--x2)}
+.chp .dt2{fill:none;stroke:var(--x2);stroke-width:1.5}
+.chp .bb{fill:rgba(190,235,248,.65);stroke:#3f98a6;stroke-width:1}
+.chp .gl{fill:rgba(170,220,255,.32);stroke:#8fb6d8;stroke-width:1.6}
+.chp .rg{fill:none;stroke:#e0b04a;stroke-width:2.2}
+.chp .tz{fill:none;stroke:#e0b04a;stroke-width:2.2}
+.chp.sk-h{--x1:#c8453c;--x2:#f7f2e8}
+.chp.sk-o{--x1:#38a0b0;--x2:#f3d9ab}
+.chp.sk-e{--x1:#7a68d4;--x2:#ffd95a}
+.chsk h2{margin-top:0}
+.chski{display:flex;align-items:center;gap:10px;padding:8px;border-radius:14px;margin:6px 0;background:rgba(255,255,255,.1);flex-wrap:wrap}
+.chski.on{background:rgba(255,255,255,.22)}
+.chsp{display:flex;flex:none}
+.chsp .chp{width:34px;height:34px;margin-right:-4px}
+.chst{flex:1;min-width:110px;display:flex;flex-direction:column}
+.chst small{opacity:.75}
+.chski .sb:disabled{opacity:.7}
 
 /* ---- v57 : nouveaux jeux ---- */
 .pt-match3{background-image:radial-gradient(circle at 20% 25%,rgba(255,255,255,.35) 0,rgba(255,255,255,0) 10px),radial-gradient(circle at 70% 55%,rgba(255,255,255,.3) 0,rgba(255,255,255,0) 14px),radial-gradient(circle at 45% 85%,rgba(255,255,255,.28) 0,rgba(255,255,255,0) 8px);background-size:120px 120px}
@@ -1154,7 +1178,7 @@ const st={get(k,d){if(k in mem)return mem[k];try{const v=localStorage.getItem(k)
 const sh=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const today=new Date().toLocaleDateString('sv'),di=Math.floor(Date.now()/864e5);
 const dkey=g=>'d:'+g+':'+today,ckey=g=>'c:'+g;
-const NLS={mots:40,memo:20,caches:20,phrase:20,maze:20,match3:20,demenage:10,quiz:40},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
+const NLS={mots:60,memo:20,caches:20,phrase:20,maze:20,match3:20,demenage:10,quiz:1},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
 /* Section temporaire « fêtes » : 10 niveaux spéciaux de plus par jeu (indices nl, nl+1 … nl+9), disponible tout de suite et jusqu’au 11 janvier 2027 inclus ; #noel dans l’adresse force l’affichage.
    Ils ne font pas partie du code de sauvegarde ni de la synchronisation. */
 const NLX=10,xmasOn=()=>{const t=Date.now();return location.hash==='#noel'||t<new Date(2027,0,12).getTime()},isX=(g,l)=>l>=nl(g),xn=(g,l)=>l-nl(g)+1;
@@ -1196,42 +1220,62 @@ const L=`lits lit lis ils
 nuit unit nui
 ange nage âne âge
 lune une nue nul lue
-givre rive vire vie ire rie gré ver
-nuage aune eau âge une nue âne gnu
-laine lien élan aile âne lin ail île
-pluie plie pile pieu épi lui île peu
-soir rois roi soi ris
-miel mie mil île lié
+givre rive vire vie gré ver
+nuage eau âge une nue âne
+laine lien élan aile lin île
+pluie plie pile lui île peu
+soir roi soi ris
+soleil isolé soie îles loi sol sel
 hiver rive ivre vie ver hier
-sapin pain sain pas pin pis ans
-glace égal cage cale âge lac gel
-fleur leur feu fer rue lue élu
-lampe palme ample lame âme mal pal
-calme lame cale mal âme lac clé
-lapin plan pain pan pin lin ail
-livre lire lier rive ivre vie ver île
-repos poser prose pose rose oser pré
-monde démon mode onde dôme mon nom don
+sapin pain sain pas pis ans
+glace égal cage âge lac gel
+fleur leur feu fer rue élu
+lampe palme ample lame âme mal
+calme lame mal âme lac clé
+lapin plan pain pan pin lin
+livre lire rive ivre vie île
+repos poser pose rose oser pré
+monde démon mode onde mon nom don
 neige génie gêne née nie gin
 ciel île clé lie
-porte trop port pot top ôter prêt
+porte trop port pot top prêt
 luge gel élu lue gué
-sable base sale sel blé bal bas
+sable base sale sel blé bas
 soupe pose peu sou ose use
-route tour outre tuer euro trou roue rue
+route tour outre tuer euro rue
 froid roi foi for
-piano pain pion paon pan pin ion
-tarte état art rat raté
-voile olive voie vélo vol loi vie île
+piano pain pion pan pin ion
+tarte état art rat raté tâter tare
+voile voie vol loi vie île
 note ton ont net
-poire proie pire roi pie oie pré prie
+poire proie pire roi pré prie
 danse dans des âne anse nés
 plage page âge égal pâle
 orage gare rage orge ogre gré
 train riant air art tir rat
-poule loupe loup pôle loue pou peu
+poule loupe loup pôle loue peu
 cidre dire cire ride cri crie
-plume mule ému plu mue lue
+plume mule ému plu mue lue peu
+forêt fort fret ôter
+étang agent ange gant nage
+lueur leur rue
+sommet somme tome mot mes est
+mousse muse mou sou ose
+chalet tâche lâche halte
+bonnet bonne tonne béton note ton
+cabane banc âne
+tricot croit tort toit trio
+étoile toile élite tôle toi loi lit île
+sourire soir rire rose euro
+comète comte météo tome
+braise brise sabre abris base bras
+plaid laid ail
+tisane saint santé saine site
+sentier entier sentir sirène entre tiens
+silence siècle scène lien
+douceur douce odeur coude code
+matin main ami
+lanterne alerte lente arène année rente étale
 fête fée été
 hotte tôt thé hôte
 lutin nuit lui lit nul uni unit
@@ -1242,7 +1286,7 @@ fumée feu fume mue ému fée
 épice pièce pic pie épi
 coupe pouce cou peu écu
 neuf une feu nue nef`.split('\n').map(l=>l.trim().split(' '));
-const LB='aîné lie lié aie pli pie lue lieu élu plu pue sir viré pan cela clé fur près pro ose mâle mec mac nés ils uni ait api are bel eut gale ira las les leu lice naît néo opter opté opus pote péri rit sue tan tri tue tué viole vole volé coup puce émue';
+const LB='abri acte aie aient aies aire aires airs ais aise ait ana are aune aîné bac baie baise baiser bal ban bar bars bec ben bis bon bonté bot cale cela censé ces cet chat ciné clin clés coeur corde cou cour couru cru crue curé côté der doré doué duc due duo dur dure décor déçu dôme entiers entrés etc euros forte gnu géant hâte inter ira ire lent les liens lier lise liée liées liés lot mai man mat mec met mets mie miel mil min mit mots naît nier nièce non néant néo oeil oie olive oui ours pal paon pie pieu pou prose ras rein reine reins rené reste retiens reçu rie rien rires rit roc rois roue roues rude rues réel sainte sait sec sein seine sent senti sera serai sert ses set sic sien sir sire soeur sous sur sénat série sûre tas tee tel tenir tes thé tic tien tiers tire tirs tirée tirés tri trou très télé tôt user vélo ème ère éclat émet épi étais été êtes être êtres api bel clé coup eut fur gale ils las leu lice lie lieu lié lue mac mâle nés opter opté opus ose pan pli plu pote pro près puce pue péri sue tan tue tué uni viole viré vole volé élu émue';
 const MYS=['La neige tombe doucement, le monde entier s’endort enfin.','Respire lentement, laisse la lune éclairer ton chemin et ferme les yeux sans crainte.','Sous sa couverture de neige, la forêt s’endort et rêve déjà du retour du printemps.','Le feu crépite doucement, une tasse de chocolat chaud réchauffe tes mains et ton cœur.','Ce soir, laisse le silence de l’hiver envelopper tes pensées, comme un manteau blanc posé sur tes épaules.','Les étoiles veillent au-dessus des toits endormis, la rivière gelée chante tout bas, et ton cœur peut enfin se reposer.','Ferme les yeux, écoute la neige qui tombe sans bruit, laisse chaque souci se dissoudre dans la nuit claire, et respire profondément.','Ce soir, laisse la douceur de l’hiver envelopper ton cœur, ferme doucement les yeux, respire profondément, et que la lune veille sur ton sommeil\u00a0: bonne nuit, fais de beaux rêves.','Une bougie veille sur la maison, et la nuit s’installe tout doucement sur le village endormi.','Les flocons dansent devant la fenêtre, le chat ronronne près du poêle, et la maison respire la paix.','Au bout du chemin enneigé, une petite lumière attend les voyageurs fatigués et leur promet un lit tout chaud.','Dans le silence de la nuit, les sapins portent la neige comme des lanternes blanches qui veillent sur la vallée endormie.','Chaque flocon raconte une histoire légère, et toutes ces histoires, posées l’une sur l’autre, forment le grand manteau du sommeil.','Quand le vent se calme et que la lune se lève sur les collines, le monde retient son souffle et s’abandonne au repos.','Une écharpe de laine, un livre ouvert, la théière qui fume doucement, et tout le tumulte du jour s’éloigne au fond des bois.','Sur le lac gelé, le reflet des étoiles glisse en silence, et chaque pensée trop pressée finit par s’endormir dans la brume.','Le renard rentre à son terrier, la chouette ferme les yeux, et la forêt entière se couvre d’un silence tendre et profond.','Laisse tes épaules descendre, relâche ton souffle, accueille la douceur de cette nuit d’hiver, et confie tes rêves à la lune paisible.','Dans le lointain, une cloche sonne doucement l’heure du repos, les cheminées fument, les rues s’éteignent, et la neige veille sur chaque toit.','Ce soir, la nuit étend sa couverture bleue sur la montagne, les étoiles murmurent une berceuse lente, et ton cœur se pose enfin comme un flocon sur l’eau tranquille.','Les cloches de Noël sonnent doucement, et la nuit tout entière se remplit de lumière et de paix.','Sous le sapin, les cadeaux attendent en silence, pendant que la neige veille sur la maison endormie.','Une étoile brille au-dessus de la crèche, et chaque cœur fatigué retrouve un peu de chaleur.','Dans la cheminée, le feu crépite tendrement, les chaussettes se balancent, et le monde entier ralentit.','Le traîneau glisse entre les nuages, les rennes respirent la brume, et les enfants rêvent déjà de demain.','Autour de la grande table, les rires se mêlent aux bougies, et la soirée s’étire comme un doux souvenir.','Minuit approche lentement, les flocons suspendent leur danse, et la nouvelle année frappe doucement à la porte.','Ce soir, on trinque à la tendresse, à la santé de ceux qu’on aime, et aux jours calmes qui viennent.','Les feux d’artifice fleurissent dans le ciel d’hiver, puis le silence revient, doux comme une couverture de neige.','Que cette année nouvelle t’apporte du repos, de la joie, des matins lents et mille raisons de sourire.'];
 const CW=[[["LEWIS","Auteur des Chroniques de Narnia",4,0,"h"],["POLE","1929 : l’aviateur Richard Byrd survole le … Sud",1,1,"v"],["NARNIA","1898 : naissance de C. S. Lewis, créateur du monde de …",0,3,"v"],["ALCOTT","1832 : naissance de Louisa May …, autrice des « Quatre Filles du docteur March »",1,3,"h"],["ATARI","Entreprise qui a lancé Pong",0,8,"v"],["PONG","1972 : sortie de ce jeu vidéo de tennis de table",0,6,"v"]],[["LIBAN","1943 : ce pays du Proche-Orient devient indépendant",3,3,"h"],["GIDE","1869 : naissance de l’écrivain André …",2,4,"v"],["LILLE","Ville natale de Charles de Gaulle",5,0,"h"],["GAULLE","1890 : naissance à Lille du général de …",1,0,"v"],["PIXAR","1995 : sortie de « Toy Story », premier long métrage du studio …",0,6,"v"],["GAMA","1497 : Vasco de … double le cap de Bonne-Espérance",1,0,"h"],["CAP","Pointe de terre avancée dans la mer, comme celui de Bonne-Espérance",0,4,"h"]],[["NYMPHEAS","Fleurs aquatiques peintes par Monet",3,1,"h"],["MONET","1840 : naissance du peintre Claude …, père de l’impressionnisme",3,3,"v"],["LUNE","Destination d’Apollo 12",0,6,"v"],["GIVERNY","Village normand où Monet cultivait son jardin",6,0,"h"],["APOLLO","1969 : lancement de la mission … 12 vers la Lune",0,3,"h"],["BLY","1889 : la journaliste Nellie … part faire le tour du monde",1,2,"v"]],[["BATEAU","« Steamboat Willie » se passe sur ce moyen de transport",4,1,"h"],["TRAIN","1883 : les compagnies de … américaines adoptent l’heure standard",4,3,"v"],["HEURE","1883 : les fuseaux horaires unifient l’… aux États-Unis",0,4,"v"],["SOURIS","Animal star de Disney",2,6,"v"],["DISNEY","Walt … crée Mickey",8,0,"h"],["MICKEY","1928 : première apparition de la souris … au cinéma",1,0,"h"]],[["LONDRES","Ville où l’on tire des feux d’artifice chaque 5 novembre",7,0,"h"],["PARLEMENT","Bâtiment londonien visé par Guy Fawkes en 1605",0,2,"v"],["FAWKES","1605 : Guy … tente de faire sauter le Parlement anglais",2,6,"v"],["POUDRE","Le complot de 1605 porte le nom de cette substance explosive",0,2,"h"],["ROI","1605 : le complot visait Jacques Ier, … d’Angleterre",2,2,"h"],["FEUX","Les … d’artifice illuminent la Bonfire Night",4,1,"h"]],[["TELEVISION","1936 : la BBC lance à Londres le premier service régulier de …",4,0,"h"],["DEFUNTS","Le 2 novembre, on se souvient des fidèles …",0,9,"v"],["RADIO","1920 : la station KDKA lance la première émission commerciale de …",1,5,"v"],["DAKOTA","1889 : le Nord et le Sud deviennent deux États américains portant ce nom",2,0,"h"],["STATION","2000 : le premier équipage s’installe dans la … spatiale internationale",0,7,"v"]],[["PHARAON","1922 : Howard Carter trouve l’entrée de la tombe d’un jeune …",4,0,"h"],["OBAMA","2008 : Barack … est élu président des États-Unis",0,2,"v"],["HONGRIE","1956 : l’armée soviétique entre à Budapest, capitale de la …",0,1,"h"],["TOMBE","Ce que Carter découvre dans la Vallée des Rois",3,5,"v"],["CARTER","1922 : l’archéologue Howard … met au jour des marches enfouies",7,1,"h"],["EGYPTE","Pays de Toutânkhamon",1,0,"v"]],[["LUNOKHOD","1970 : premier robot mobile sur la Lune, … 1",6,0,"h"],["CANAL","Voie d’eau qui relie la Méditerranée à la mer Rouge",2,0,"v"],["EUGENIE","L’impératrice … assiste à l’inauguration en 1869",2,2,"v"],["LESSEPS","Ferdinand de …, promoteur français du canal",8,1,"h"],["EGYPTE","Pays du canal de Suez",2,2,"h"],["SUEZ","1869 : inauguration du canal de …",0,7,"v"]],[["ETOILE", "On la pose tout en haut du sapin", 3, 1, "h"], ["CADEAU", "On le trouve au pied du sapin", 0, 6, "v"], ["SAPIN", "Arbre décoré dans le salon", 0, 4, "v"], ["HOTTE", "Le Père Noël y range ses cadeaux", 1, 2, "v"], ["NOEL", "Fête du 25 décembre", 5, 0, "h"]],[["TRAINEAU", "Il glisse dans le ciel, tiré par des rennes", 2, 0, "h"], ["CHEMINEE", "Le Père Noël y descend", 0, 5, "v"], ["CLOCHE", "Elle sonne pour annoncer la fête", 0, 2, "h"], ["RENNE", "Animal qui tire le traîneau du Père Noël", 5, 3, "h"], ["LUTIN", "Petit assistant du Père Noël", 0, 0, "v"]],[["GUIRLANDE", "Elle s’enroule autour du sapin, pleine de lumières", 4, 0, "h"], ["BOUGIE", "Elle éclaire la table et fond doucement", 0, 2, "v"], ["PAPIER", "On le déchire pour ouvrir un cadeau", 0, 8, "v"], ["BOULE", "Décoration ronde et brillante", 1, 4, "v"], ["RUBAN", "Il entoure le paquet cadeau", 0, 6, "v"]],[["MARRON", "On le farcit ou on le glace", 4, 1, "h"], ["TRUFFE", "Chocolat rond ou champignon rare", 3, 4, "v"], ["NOUGAT", "Confiserie blanche aux amandes", 0, 2, "v"], ["BUCHE", "Dessert roulé du réveillon", 8, 0, "h"], ["DINDE", "Volaille rôtie du repas de fête", 2, 6, "v"]],[["CRECHE", "Elle représente la naissance de Jésus", 5, 2, "h"], ["BERGER", "Il garde les moutons près de l’étable", 0, 3, "v"], ["MAGE", "Venu d’Orient avec de l’or", 2, 7, "v"], ["ANGE", "Messager aux ailes blanches", 1, 0, "h"], ["SANTON", "Petit personnage de Provence", 0, 0, "v"]],[["EPIPHANIE", "Fête des Rois, début janvier", 3, 0, "h"], ["GALETTE", "On la partage pour l’Épiphanie", 0, 8, "v"], ["COURONNE", "Elle coiffe le roi de la galette", 6, 1, "h"], ["FEVE", "Petit objet caché dans la galette", 2, 0, "v"], ["ROI", "Il trouve la fève", 1, 2, "v"]],[["REVEILLON", "Repas de la nuit du 31 décembre", 3, 0, "h"], ["MINUIT", "Heure du passage à la nouvelle année", 1, 8, "v"], ["CONFETTI", "Petits morceaux de papier coloré", 5, 1, "h"], ["FETE", "On la célèbre entre amis", 0, 1, "v"], ["PETARD", "Il éclate avec un grand bruit", 1, 0, "h"]],[["CHAMPAGNE", "Vin pétillant du 31 décembre", 2, 0, "h"], ["COUPE", "On y verse le champagne", 2, 0, "v"], ["TOAST", "On le porte en levant son verre", 0, 2, "v"], ["HEURE", "Les douze coups de minuit en sonnent une", 1, 8, "v"], ["BULLE", "Elle monte dans le champagne", 5, 4, "h"]],[["DECEMBRE", "Mois de Noël", 6, 0, "h"], ["HORLOGE", "Elle sonne les douze coups", 0, 7, "v"], ["JANVIER", "Premier mois de l’année", 2, 1, "h"], ["ANNEE", "Elle change à minuit", 0, 3, "v"], ["HIVER", "Saison de la neige", 4, 0, "h"]],[["BONHEUR", "On se le souhaite pour l’année nouvelle", 6, 0, "h"], ["JOIE", "Grand bonheur partagé", 3, 4, "v"], ["ESPOIR", "Il fait attendre demain avec confiance", 4, 1, "h"], ["SANTE", "On la souhaite en trinquant", 0, 1, "v"], ["AMOUR", "Sentiment que l’on offre aux siens", 0, 6, "v"], ["PAIX", "Grande tranquillité, sans conflit", 1, 0, "h"]]];
 const E=['🌲','🌙','⛄','🦊','🔔','🕯️','🧣','🦉','🍄','🦌','🧤','🐻'],EX=['🎄','⭐','🎁','🔔','🕯️','🍪','🧦','🦌','🎅','❄️','🥂','🎆','🍾','🎶','🧸','🕛'];
@@ -1269,10 +1313,10 @@ function home(){nv('games');
  const F=GD.filter(g=>!g.soon&&fv.includes(g.id)),R=GD.filter(g=>!F.includes(g));
  app.innerHTML=`<header class="top"><h1>Nuit de neige</h1><div class="chip" title="Flocons">❄ ${FLX()}</div></header>${wdBlock()}${lastCard()}${F.length?`<h2 class="s">Favoris</h2><div class="grid fgrid">${F.map(tile).join('')}</div>${R.length?'<h2 class="s">Autres jeux</h2>':''}`:`<h2 class="s">Choisis ta veillée</h2>`}${R.length?`<div class="grid">${R.map(tile).join('')}</div>`:''}`;
 }
-function hub(id){
+function hub(id){if(id==='quiz')return home();
  cur=id;nv('games');theme(id);const g=G.find(x=>x.id===id),N=nl(id),dd=st.get(dkey(id),false),ok=i=>st.get(ckey(id)+':'+i,false),sk=i=>!ok(i)&&st.get('k:'+id+':'+i,false),nx=[...Array(N).keys()].findIndex(i=>!ok(i)&&!sk(i)),ns=[...Array(N).keys()].findIndex(sk),nsk=[...Array(N).keys()].filter(sk).length,tg=nx>=0?nx:ns>=0?ns:N-1,dn=[...Array(N).keys()].filter(i=>st.get(ckey(id)+':'+i,false)).length;
  const xon=xmasOn()&&!g.soon,xok=i=>st.get(ckey(id)+':'+(N+i),false),xsk=i=>!xok(i)&&st.get('k:'+id+':'+(N+i),false),xnx=[...Array(NLX).keys()].findIndex(i=>!xok(i)&&!xsk(i)),xdn=[...Array(NLX).keys()].filter(xok).length,xns=[...Array(NLX).keys()].findIndex(xsk),xtg=xnx>=0?xnx:xns>=0?xns:NLX-1,xpr=xdn+[...Array(NLX).keys()].filter(xsk).length;
- app.innerHTML=`<div class="top stk">${bk('home')}<div class="chip">❄ ${FLX()}</div></div><section class="glass story pt-${id}"><i>${g.ic}</i><h2>${g.t}</h2><p>${g.s}</p></section>`+(g.soon?`<p class="note">Ce jeu arrive dans la prochaine version de la maquette.</p>`:`<div class="opts"><section class="rc pt-${id}" data-g="${g.ic}"><div class="rc-ic">${g.ic}</div><div class="rc-t"><small>${dn?'Continuer':'Commencer'}</small><b>${nx>=0?'Niveau '+(nx+1):ns>=0?'Niveau '+(ns+1)+' (passé)':'Rejouer le niveau '+N}</b><span>${nx>=0?dn+' sur '+N+' terminés · +'+rw(id)+' ❄'+(nsk?' · '+nsk+' passé'+(nsk>1?'s':''):''):ns>=0?'Un niveau passé t’attend · +'+rw(id)+' ❄':'Tous les niveaux sont terminés'}</span></div><button class="rc-go" data-a="play" data-v="${tg}">Jouer<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>${xon?`<section class="rc xm" data-g="✦"><div class="rc-ic">✦</div><div class="rc-t"><small>Spécial Noël</small><b>${xnx<0&&xns<0?'Rejouer Fêtes '+NLX:'Fêtes '+(xtg+1)+(xnx<0?' (passé)':'')}</b><span>${xdn} / ${NLX} terminés</span></div><button class="rc-go" data-a="play" data-v="${N+xtg}" title="Jusqu’au 11 janvier">${xnx<0&&xns<0?'Rejouer':xpr?'Continuer':'Commencer'}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>`:''}<div class="dd pt-${id}${lvOpen?' open':''}"><button class="dd-h" data-a="dd" aria-expanded="${lvOpen}" aria-controls="lvl"><span><b>Choisir un niveau</b><small>${dn} / ${N} terminés</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="dd-l" id="lvl"><div class="dd-i"><div class="lvg">${Array.from({length:N},(_,i)=>{const o=ok(i),p=sk(i);return`<button class="lv ${o?'d':p?'sk':i===nx?'nx':'far'}" data-a="play" data-v="${i}" aria-label="Niveau ${i+1}${o?', terminé':p?', passé, à refaire pour les flocons':''}">${i+1}</button>`}).join('')}</div></div></div></div></div>`);
+ app.innerHTML=`<div class="top stk">${bk('home')}<div class="chip">❄ ${FLX()}</div></div><section class="glass story pt-${id}"><i>${g.ic}</i><h2>${g.t}</h2><p>${g.s}</p></section>`+(g.soon?`<p class="note">Ce jeu arrive dans la prochaine version de la maquette.</p>`:`<div class="opts"><section class="rc pt-${id}" data-g="${g.ic}"><div class="rc-ic">${g.ic}</div><div class="rc-t"><small>${dn?'Continuer':'Commencer'}</small><b>${nx>=0?'Niveau '+(nx+1):ns>=0?'Niveau '+(ns+1)+' (passé)':'Rejouer le niveau '+N}</b><span>${nx>=0?dn+' sur '+N+' terminés · +'+rw(id)+' ❄'+(nsk?' · '+nsk+' passé'+(nsk>1?'s':''):''):ns>=0?'Un niveau passé t’attend · +'+rw(id)+' ❄':'Tous les niveaux sont terminés'}</span></div><button class="rc-go" data-a="play" data-v="${tg}">Jouer<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>${id==='demenage'?`<section class="rc" data-g="📖"><div class="rc-ic">📖</div><div class="rc-t"><small>Le livre</small><b>Revoir l’histoire</b><span>Les pages que tu as déjà écrites</span></div><button class="rc-go" data-a="dbook">Ouvrir<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>`:''}${xon?`<section class="rc xm" data-g="✦"><div class="rc-ic">✦</div><div class="rc-t"><small>Spécial Noël</small><b>${xnx<0&&xns<0?'Rejouer Fêtes '+NLX:'Fêtes '+(xtg+1)+(xnx<0?' (passé)':'')}</b><span>${xdn} / ${NLX} terminés</span></div><button class="rc-go" data-a="play" data-v="${N+xtg}" title="Jusqu’au 11 janvier">${xnx<0&&xns<0?'Rejouer':xpr?'Continuer':'Commencer'}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>`:''}<div class="dd pt-${id}${lvOpen?' open':''}"><button class="dd-h" data-a="dd" aria-expanded="${lvOpen}" aria-controls="lvl"><span><b>Choisir un niveau</b><small>${dn} / ${N} terminés</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="dd-l" id="lvl"><div class="dd-i"><div class="lvg">${Array.from({length:N},(_,i)=>{const o=ok(i),p=sk(i);return`<button class="lv ${o?'d':p?'sk':i===nx?'nx':'far'}" data-a="play" data-v="${i}" aria-label="Niveau ${i+1}${o?', terminé':p?', passé, à refaire pour les flocons':''}">${i+1}</button>`}).join('')}</div></div></div></div></div>`);
 }
 function quote(){
  cur='quote';nv('soc');let i=di%Q.length;
@@ -1281,10 +1325,10 @@ function quote(){
 }
 function win(){
  st.set('p:'+cur+':'+lv,null);
- nv('games');theme(cur,isX(cur,lv));const g=ALL.find(x=>x.id===cur),lk=ckey(cur)+':'+lv,first=!st.get(lk,false),r=rw(cur);
- if(first){fl+=r;st.set('fl',fl);styGain()}
+ nv('games');theme(cur,isX(cur,lv));const g=ALL.find(x=>x.id===cur),lk=ckey(cur)+':'+lv,first=!st.get(lk,false),r=first?rw(cur):1;
+ fl+=r;st.set('fl',fl);styGain(r)
  st.set(lk,true);st.set('last',{g:cur,daily:false,lv,date:today,done:1});[523,659,784].forEach((f,i)=>setTimeout(()=>sfx(f,.7),i*200));vib([30,60,30]);
- app.innerHTML=`<div class="top"><span></span><div class="chip">❄ ${FLX()}</div></div><section class="glass story"><h2>Bien joué</h2><p>${(g.wl&&g.wl[lv])||g.w}</p><p class="big">${first?'+'+r+' flocons':'Déjà terminé : pas de flocons cette fois.'}</p>${first?'<p class="sdu">✦ +1 poussière d’étoile</p>':''}${(isX(cur,lv)?lv<nl(cur)+NLX-1:lv<nl(cur)-1)?`<button class="btn" data-a="next" data-v="${lv+1}">Niveau suivant</button>`:''}<button class="btn alt" data-a="pick">Choisir un niveau</button></section>`;
+ app.innerHTML=`<div class="top"><span></span><div class="chip">❄ ${FLX()}</div></div><section class="glass story"><h2>Bien joué</h2><p>${(g.wl&&g.wl[lv])||g.w}</p><p class="big">${first?'+'+r+' flocons':'Niveau refait : +1 flocon'}</p><p class="sdu">✦ +${r} poussière${r>1?'s':''} d’étoile</p>${(isX(cur,lv)?lv<nl(cur)+NLX-1:lv<nl(cur)-1)?`<button class="btn" data-a="next" data-v="${lv+1}">Niveau suivant</button>`:''}<button class="btn alt" data-a="pick">Choisir un niveau</button></section>`;
 }
 
 let msP=null,wsG=null,wsSw=false;
@@ -2340,28 +2384,37 @@ const qzGuy=m=>{
   :`<ellipse cx="-5.8" cy="-23" rx="2.1" ry="2.9" fill="#4a4290"/><ellipse cx="5.8" cy="-23" rx="2.1" ry="2.9" fill="#4a4290"/><circle cx="-5.1" cy="-24.2" r=".85" fill="#fff"/><circle cx="6.5" cy="-24.2" r=".85" fill="#fff"/><path d="M-2.8 -16.4q2.8 2.6 5.6 0" stroke="#7a6cc0" stroke-width="1.5" fill="none" stroke-linecap="round"/>`;
  const spk=ok?`<path class="qzsp" d="M-21 -44l1.2 2.8 2.8 1.2-2.8 1.2-1.2 2.8-1.2-2.8-2.8-1.2 2.8-1.2z" fill="#ffe27a"/><path class="qzsp s2" d="M22 -36l1 2.4 2.4 1-2.4 1-1 2.4-1-2.4-2.4-1 2.4-1z" fill="#ffe27a"/><path class="qzsp s3" d="M20 -8l.9 2 2 .9-2 .9-.9 2-.9-2-2-.9 2-.9z" fill="#fff6c8"/>`:'';
  return`<svg viewBox="-28 -66 56 68" aria-hidden="true"><defs><radialGradient id="qzb" cx=".36" cy=".26" r=".98"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#ece6ff"/><stop offset="1" stop-color="#b9acec"/></radialGradient><radialGradient id="qzs" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#fff6c2"/><stop offset="1" stop-color="#ffc83d"/></radialGradient><radialGradient id="qzg"><stop offset="0" stop-color="#fff3c0" stop-opacity=".85"/><stop offset="1" stop-color="#fff3c0" stop-opacity="0"/></radialGradient></defs><ellipse cx="0" cy="-1" rx="12" ry="2.2" fill="rgba(0,0,0,.2)"/>${ant}<path d="M0 -39C10 -39 15.5 -29 15.5 -19C15.5 -8 9 -2 0 -2C-9 -2 -15.5 -8 -15.5 -19C-15.5 -29 -10 -39 0 -39Z" fill="url(#qzb)"/><ellipse cx="-6.4" cy="-30" rx="3.2" ry="5.4" fill="#fff" opacity=".6" transform="rotate(18 -6.4 -30)"/>${face}<g fill="#efb63e"><circle cx="-11.8" cy="-18.4" r="1.1"/><circle cx="-9.6" cy="-16" r="1.1"/><circle cx="-12.6" cy="-15.2" r=".9"/><circle cx="11.8" cy="-18.4" r="1.1"/><circle cx="9.6" cy="-16" r="1.1"/><circle cx="12.6" cy="-15.2" r=".9"/></g>${hands.map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4.6" fill="#e6defc" stroke="#c7bbf0" stroke-width="1"/>`).join('')}${spk}</svg>`};
+/* questions tirées au hasard, dans un ordre propre à chaque joueur : on ne revoit une question qu’après avoir fait le tour */
+const qzPool=()=>QZ.length+(xmasOn()?QZX.length:0),qzAt=i=>i<QZ.length?QZ[i]:QZX[i-QZ.length];
+function qzDeck(){
+ const n=qzPool();let d=st.get('qz:d',null);
+ if(!d||!Array.isArray(d.o)||d.n!==n||!Number.isInteger(d.i)||d.i<0||d.i>=d.o.length){
+  const prev=d&&Array.isArray(d.o)&&d.o.length?d.o[Math.min(d.o.length-1,Math.max(0,(d.i||0)-1))]:-1;
+  d={n,i:0,o:sh([...Array(n).keys()])};if(n>1&&d.o[0]===prev)d.o.push(d.o.shift());st.set('qz:d',d)}
+ return d}
 function pQuiz(r){
- const X=isX('quiz',lv),q=X?QZX[(xn('quiz',lv)-1)%QZX.length]:QZ[lv%QZ.length],o=r&&Array.isArray(r.o)&&r.o.length===4&&[0,1,2,3].every(i=>r.o.includes(i))?r.o:sh([0,1,2,3]),ci=o.indexOf(0);
- let done=false,good=false,pick=-1,say='',gain=0,first=true;
- snap=()=>({o});
- const L='ABCD',last=X?lv>=nl('quiz')+NLX-1:lv>=nl('quiz')-1;
+ const dk=qzDeck(),qi=r&&Number.isInteger(r.i)&&r.i>=0&&r.i<qzPool()?r.i:dk.o[dk.i],q=qzAt(qi),o=r&&Array.isArray(r.o)&&r.o.length===4&&[0,1,2,3].every(i=>r.o.includes(i))?r.o:sh([0,1,2,3]),ci=o.indexOf(0);
+ let done=false,good=false,pick=-1,say='',gain=0;
+ snap=()=>({o,i:qi});
+ const L='ABCD';
  const d=()=>{
   const mood=!done?'ask':good?'ok':'no';
-  frame(`<div class="qz"><div class="qz-h"><div class="qz-m ${mood}">${qzGuy(mood)}</div><div class="qz-bub"><small>${done?say:X?'Question de fêtes '+xn('quiz',lv):'Question '+(lv+1)}</small><p class="qz-q">${qzFr(q[0])}</p></div></div><div class="qz-ch" role="group" aria-label="Réponses">${o.map((k,i)=>`<button class="qz-b${done?(i===ci?' ok':i===pick?' no':' dim'):''}" data-a="qa" data-v="${i}"${done?' disabled':''}><i>${L[i]}</i><span>${qzFr(q[1][k])}</span></button>`).join('')}</div><p class="qz-fb" id="qzfb" role="status" aria-live="polite">${!done?'':good?(gain?'Bonne réponse ! +1 ❄':'Bonne réponse ! (déjà jouée : pas de flocon cette fois)'):'La bonne réponse : <b>'+qzFr(q[1][0])+'</b>'}${done&&q[2]?`<span class="qz-e">${qzFr(q[2])}</span>`:''}</p>${done?`<button class="btn qz-next" data-a="qn">${last?'Terminer':'Question suivante'}</button>`:''}</div>`);
+  frame(`<div class="qz"><div class="qz-h"><div class="qz-m ${mood}">${qzGuy(mood)}</div><div class="qz-bub"><small>${done?say:qi>=QZ.length?'Question de fêtes':'Question'}</small><p class="qz-q">${qzFr(q[0])}</p></div></div><div class="qz-ch" role="group" aria-label="Réponses">${o.map((k,i)=>`<button class="qz-b${done?(i===ci?' ok':i===pick?' no':' dim'):''}" data-a="qa" data-v="${i}"${done?' disabled':''}><i>${L[i]}</i><span>${qzFr(q[1][k])}</span></button>`).join('')}</div><p class="qz-fb" id="qzfb" role="status" aria-live="polite">${!done?'':good?'Bonne réponse ! +1 ❄':'La bonne réponse : <b>'+qzFr(q[1][0])+'</b>'}${done&&q[2]?`<span class="qz-e">${qzFr(q[2])}</span>`:''}</p>${done?`<button class="btn qz-next" data-a="qn">Question suivante</button>`:''}</div>`);
   if(done){const b=$('.qz-next');if(b)b.focus({preventScroll:true})}
  };
  act.qa=v=>{
   if(done)return;const i=+v;if(!(i>=0&&i<4))return;
   done=true;pick=i;good=i===ci;
-  const lk=ckey('quiz')+':'+lv;first=!st.get(lk,false);gain=0;
-  if(good&&first){fl+=1;st.set('fl',fl);styGain();gain=1}
-  st.set(lk,true);st.set('p:quiz:'+lv,null);st.set('last',{g:'quiz',daily:false,lv,date:today,done:1});snap=null;
+  gain=0;
+  if(good){fl+=1;st.set('fl',fl);styGain(1);gain=1}
+  const k=qzDeck();k.i=Math.min(k.o.length,k.i+1);st.set('qz:d',k);
+  st.set('p:quiz:0',null);st.set('last',{g:'quiz',daily:false,lv:0,date:today,done:0});snap=null;
   const A=good?['Bravo !','Exact !','Bien joué !','Parfait !']:['Oh non…','Dommage…','Aïe…','Presque…'];say=A[Math.floor(Math.random()*A.length)];
   d();
   if(good){[523,659,784].forEach((f,k)=>setTimeout(()=>sfx(f,.5),k*130));vib([20,40,20]);const m=$('.qz-m');if(m)confetti(m)}
   else{sfx(262,.35);setTimeout(()=>sfx(196,.5),180);vib(60)}
  };
- act.qn=()=>{if(!done)return;if(last)hub('quiz');else start('quiz',false,lv+1)};
+ act.qn=()=>{if(!done)return;start('quiz',false,0)};
  d();
 }
 /* ---------- Échecs : la clairière ----------
@@ -2500,7 +2553,7 @@ function chSearch(S,lv){
 /* ---------- Échecs : écrans, parties, amis ----------
    Trois façons de jouer : contre l’ordinateur (trois niveaux), sur le même appareil, ou à distance contre un ami.
    Partie à distance : même collection que le Scrabble (sc/<id1>_<id2>_c), donc aucune règle Firebase de plus.
-   La durée (sans limite ou 1 à 30 minutes par joueur) se choisit à la création. Les pendules démarrent après le premier coup de chaque camp. */
+   La durée (sans limite ou 1 à 30 minutes par joueur) se choisit à la création, sauf contre l’ordinateur (toujours sans limite). Les pendules démarrent après le premier coup de chaque camp. */
 const CHTC=[0,1,3,5,10,15,30],CHLV=[{n:'Lapereau',e:'🐇',d:'Il apprend encore'},{n:'Renard',e:'🦊',d:'Malin et prudent'},{n:'Hibou',e:'🦉',d:'Réfléchit longtemps'}];
 const CH={scr:'',cfg:Object.assign({op:'ai',lv:2,col:0,tc:0},st.get('ch:cfg',{})),g:null,fl:null,sel:-1,lg:[],pr:null,think:false,busy:false,m:'',cf:'',cft:0,t0:0,tick:0,fgT:0,flg:false,subs:{},G:{},got:{},err:{},ec:{},slow:0,fid:'',rc:null,pay:'',nw:false};
 const chGid=f=>scrGid(f)+'_c';
@@ -2515,8 +2568,35 @@ const CHSV=['',
 '<path d="M11 38v-4.6l3.2-2.6V19l-3.2-2.8V8.6h5.8v3.9h3.8V8.6h3.8v3.9h3.8V8.6H34v7.6L30.8 19v11.8l3.2 2.6V38z"/><path class="dt" d="M14.2 21.5h16.6M14.2 30h16.6"/>',
 '<circle cx="9.6" cy="14.2" r="2.3"/><circle cx="16.1" cy="11.4" r="2.3"/><circle cx="22.5" cy="10.4" r="2.3"/><circle cx="28.9" cy="11.4" r="2.3"/><circle cx="35.4" cy="14.2" r="2.3"/><path d="M9.6 16.5l4.8 14L16.1 13.7l4.6 15.6 1.8-17.6 1.8 17.6 4.6-15.6 1.7 16.8 4.8-14-2.6 19.7H12.2z"/><path d="M11.6 38.4h21.8v-3.3H11.6z"/>',
 '<path class="cx" d="M22.5 4.8v8.2M18.7 8.7h7.6"/><path d="M22.5 14c-5.6 0-9.2 3.4-9.2 7.6 0 2.5 1.4 4.3 3.1 5.7-3.6 2-5.8 5.1-5.8 9.7h23.8c0-4.6-2.2-7.7-5.8-9.7 1.7-1.4 3.1-3.2 3.1-5.7 0-4.2-3.6-7.6-9.2-7.6z"/><path class="dt" d="M16.5 27.3h12"/>'];
+const CHSK=[{id:'f',n:'Forêt',p:0,d:'Les pièces de la clairière'},{id:'h',n:'Hiver',p:50,d:'Tuques, écharpes et neige'},{id:'o',n:'Océan',p:350,d:'Coquillages, bulles et trident'},{id:'e',n:'Espace',p:600,d:'Casques, anneaux et étoiles'}];
+const CHSC='<path class="x1" d="M13.2 31.2q9.3 3.2 18.6 0l.5 3.6q-9.8 3.2-19.6 0z"/><path class="dt2" d="M16.4 32.4l.7 3.5M21 33.2l.6 3.6M26 33.2l.5 3.6M30.3 32.4l.5 3.4"/><path class="x1" d="M27.6 35l3.6 5.8-3.8.8-2.2-5.2z"/>';
+const CHSTAR=(x,y,s)=>`<path class="x2" transform="translate(${x} ${y}) scale(${s})" d="M0 -3.2l1 2.1 2.3.3-1.7 1.6.5 2.3L0 2.2l-2.1 1.1.5-2.3-1.7-1.6 2.3-.3z"/>`;
+const CHX={
+h:['',
+ '<path class="x1" d="M16.9 13.2c0-3.8 2.4-6.2 5.6-6.2s5.6 2.4 5.6 6.2z"/><rect class="x2" x="16.2" y="12.2" width="12.6" height="2.6" rx="1.3"/><circle class="x2" cx="22.5" cy="6.2" r="2"/>',
+ '<path class="x1" d="M17.2 15.4c-.8-4.8 1.8-8.6 5.8-9.2 2.2-.2 3.8.6 4.8 2.4l-1.4 7z"/><rect class="x2" x="16.4" y="14.6" width="11.6" height="2.6" rx="1.3" transform="rotate(-6 22 16)"/><circle class="x2" cx="21.4" cy="5.6" r="2"/>',
+ '<path class="x1" d="M17.2 18.4c0-4 2.2-6.8 5.3-8.2 3.1 1.4 5.3 4.2 5.3 8.2z"/><rect class="x2" x="16.4" y="17.4" width="12.2" height="2.6" rx="1.3"/><circle class="x2" cx="22.5" cy="8.6" r="2.2"/>',
+ '<path class="sn" d="M10.4 12.2V8.8q1.2-3 4.6-2.6 2-1.8 4.6-.6 2.6-1.6 5.2-.2 3.6-.6 4.8 2.8v4z"/><circle class="sn" cx="13.8" cy="13.4" r="1.5"/><circle class="sn" cx="22.4" cy="13.8" r="1.3"/><circle class="sn" cx="30.6" cy="13.4" r="1.5"/>',
+ CHSC,
+ CHSC.replace(/M13.2 31.2q9.3 3.2 18.6 0l.5 3.6q-9.8 3.2-19.6 0z/,'M14.2 26.6q8.3 3.2 16.6 0l.5 3.6q-8.8 3.2-17.6 0z').replace('M16.4 32.4l.7 3.5M21 33.2l.6 3.6M26 33.2l.5 3.6M30.3 32.4l.5 3.4','M17 27.8l.6 3.4M21.4 28.6l.5 3.5M25.5 28.6l.4 3.5M29.3 27.8l.4 3.4').replace('M27.6 35l3.6 5.8-3.8.8-2.2-5.2z','M27.4 30.4l3.6 5.4-3.8.8-2.2-4.8z')],
+o:['',
+ '<path class="x1" d="M16.6 12.8q5.9-9.6 11.8 0z"/><path class="dt2" d="M22.5 12.6V6.2M19.4 12.4l-1.5-4.2M25.6 12.4l1.5-4.2"/>',
+ '<path class="x1" d="M33.2 14.2c3.2.8 5.6 2.8 6.8 6-2.6-.8-4.6-.6-6 .4 2.4 1 4 2.6 4.8 5.2-2.8-1-5-.8-7 .4z"/><circle class="bb" cx="15.4" cy="22.6" r="1.4"/>',
+ '<circle class="bb" cx="22.5" cy="6.4" r="3.2"/><circle class="bb" cx="27.2" cy="3.4" r="1.5"/><circle class="bb" cx="21.4" cy="22.4" r="1.5"/><circle class="bb" cx="24.6" cy="19" r="1.1"/>',
+ '<path class="dt2" d="M14 24q2.2-2.6 4.2 0t4.2 0 4.2 0 4.2 0"/><path class="dt2" d="M14 32.4q2.2-2.6 4.2 0t4.2 0 4.2 0 4.2 0"/><path class="x1" d="M12 38.4q-2-3 0-5.6 1 2 .6 3.4 1.2-1.6 2.4-1.8-.2 2.6-1.2 4z"/>',
+ '<circle class="x2" cx="14" cy="32.4" r="1.5"/><circle class="x2" cx="18.1" cy="33.5" r="1.5"/><circle class="x2" cx="22.5" cy="33.9" r="1.5"/><circle class="x2" cx="26.9" cy="33.5" r="1.5"/><circle class="x2" cx="31" cy="32.4" r="1.5"/><path class="x1" d="M22.5 18.4l1.5 3.2 3.5.4-2.6 2.3.8 3.4-3.2-1.9-3.2 1.9.8-3.4-2.6-2.3 3.5-.4z"/>',
+ '<path class="tz" d="M22.5 3.4v10M18.4 4.4v3.6a4.1 4.1 0 0 0 8.2 0V4.4"/><path class="x1" d="M13.6 28.6q4.5-2.4 8.9 0t8.9 0l.4 2.4q-4.8 2.4-9.3 0t-9.3 0z"/>'],
+e:['',
+ '<circle class="gl" cx="22.5" cy="13" r="7.6"/>'+CHSTAR(22.5,30.6,1.2),
+ '<path class="dt2" d="M24.4 8l2.8-3.8"/><circle class="x1" cx="27.6" cy="3.8" r="1.9"/>'+CHSTAR(27.4,29.4,1.2),
+ '<ellipse class="rg" cx="22.5" cy="22.4" rx="12.6" ry="3.4" transform="rotate(-16 22.5 22.4)"/>',
+ '<circle class="gl" cx="22.5" cy="24.6" r="3.2"/><path class="x1" d="M11 33.4l-4.4 6.8 4.4-.8zM34 33.4l4.4 6.8-4.4-.8z"/>',
+ '<ellipse class="rg" cx="22.5" cy="21.4" rx="16.4" ry="4.4" transform="rotate(-7 22.5 21.4)"/>'+CHSTAR(22.5,29.8,1.1),
+ '<ellipse class="rg" cx="22.5" cy="9.2" rx="8.8" ry="2.4"/>'+CHSTAR(22.5,32,1.3)]};
 const CHPN=['','pion','cavalier','fou','tour','dame','roi'];
-const chPc=p=>`<svg class="chp ${p>0?'w':'b'}" viewBox="0 0 45 45" aria-hidden="true">${CHSV[p<0?-p:p]}</svg>`;
+const chPc=(p,k)=>{const a=p<0?-p:p;k=k||CH.sk;return`<svg class="chp ${p>0?'w':'b'}${k!=='f'&&CHX[k]?' sk-'+k:''}" viewBox="0 0 45 45" aria-hidden="true">${CHSV[a]}${k!=='f'&&CHX[k]?CHX[k][a]:''}</svg>`};
+function chSkin(){const s=st.get('ch:sk',null)||{},own=Object.assign({f:1},s.own&&typeof s.own==='object'?s.own:{});return{own,cur:CHSK.some(k=>k.id===s.cur&&own[k.id])?s.cur:'f'}}
+CH.sk=chSkin().cur;
 /* état d’une partie */
 function chD(g){const k=g.id+':'+g.mv.join(' ');if(!CH.rc||CH.rc.k!==k){const R=chReplay(g.mv);R.k=k;R.st=chStatus(R.S,R.keys);CH.rc=R}return CH.rc}
 const chRes=g=>g.r||chD(g).st;
@@ -2540,12 +2620,13 @@ function chMsg(g,r){
  return(t+' '+o).trim()}
 /* flocons : une seule fois par partie, et seulement si elle a duré */
 function chPay(g){
- const r=chRes(g);if(!r||g.k==='loc'||g.mv.length<10||g.paid)return;
+ const r=chRes(g);if(!r||g.mv.length<10||g.paid)return;
  let n=0;
- if(g.k==='ai'){n=r.w===0?[0,1,2,3][g.lv]:r.w===g.me?[0,3,6,10][g.lv]:0}
+ if(g.k==='loc')n=5;
+ else if(g.k==='ai'){const i=Math.max(0,Math.min(2,(g.lv|0)-1));n=r.w===0?[3,6,9][i]:r.w===g.me?[5,8,12][i]:[2,4,6][i]}
  else{const pd=Object.assign({},st.get('ch:paid',{})),k=chGid(g.f)+':'+g.id;if(pd[k])return;pd[k]=1;
   const ks=Object.keys(pd);if(ks.length>60)ks.slice(0,ks.length-60).forEach(x=>delete pd[x]);st.set('ch:paid',pd);
-  n=r.w===0?5:r.w===g.me?10:2}
+  n=r.w===0?7:r.w===g.me?10:5}
  g.paid=1;if(n>0){scrGain(n);CH.pay='+'+n+' ❄'}}
 /* sauvegarde locale (ordinateur et même appareil) */
 function chSave(){const g=CH.g;if(!g||g.k==='net')return;
@@ -2600,7 +2681,7 @@ const chRefresh=()=>{if($('#chh'))chHubDraw()};
 /* ---------- accueil des échecs ---------- */
 function chHub(){
  chInstall();cur='chess';nv('games');theme('chess');CH.scr='hub';CH.fid='';CH.g=null;CH.nw=false;
- app.innerHTML=`<div class="top stk">${bk('home')}<div class="chip">❄ ${FLX()}</div></div><section class="glass story pt-chess"><i>♞</i><h2>La clairière</h2><p>Une partie d’échecs au calme, sous les sapins. Joue contre le Lapereau, le Renard ou le Hibou, à deux sur le même appareil, ou à distance contre un ami. Tu choisis la durée au début : sans limite de temps, ou de 1 à 30 minutes par joueur. Contre l’ordinateur ou un ami, une partie gagnée rapporte des ❄.</p></section><div id="chh"></div>`;
+ app.innerHTML=`<div class="top stk">${bk('home')}<div class="chip">❄ ${FLX()}</div></div><section class="glass story pt-chess"><i>♞</i><h2>La clairière</h2><p>Une partie d’échecs au calme, sous les sapins. Joue contre le Lapereau, le Renard ou le Hibou, à deux sur le même appareil, ou à distance contre un ami. Contre un ami ou sur le même appareil, tu choisis la durée au début : sans limite, ou de 1 à 30 minutes par joueur. Chaque partie un peu longue rapporte des ❄, que tu peux dépenser plus bas en apparences pour tes pièces.</p></section><div id="chh"></div>`;
  if(CH.cfg.op==='net')chNetInit();
  chHubDraw();window.scrollTo(0,0)}
 function chNetInit(){if(!SO.col&&SO.st!=='conn')socInit();chSyncAll()}
@@ -2617,15 +2698,20 @@ function chHubDraw(){
  const root=$('#chh');if(!root)return;const c=CH.cfg,sx=window.scrollX,sy=window.scrollY;
  const sv=chLoad(),M=st.get('soc:me',null);
  let h='';
- if(sv){const d=chReplay(sv.mv);h+=`<section class="glass play chres"><h2>Partie en cours</h2><p class="note" style="margin:0 0 12px">${sv.k==='ai'?'Contre le '+CHLV[sv.lv-1].n:'À deux, même appareil'} · ${Math.ceil(d.ms.length/2)} coup${d.ms.length>2?'s':''} · ${chTcT(sv.tc)}</p><div class="chrow"><button class="btn" data-a="chRes">Reprendre</button><button class="btn alt" data-a="chDrop">Laisser tomber</button></div></section>`}
+ if(sv){const d=chReplay(sv.mv);h+=`<section class="glass play chres"><h2>Partie en cours</h2><p class="note" style="margin:0 0 12px">${sv.k==='ai'?'Contre le '+CHLV[sv.lv-1].n:'À deux, même appareil'} · ${Math.ceil(d.ms.length/2)} coup${d.ms.length>2?'s':''}${sv.k==='ai'?'':' · '+chTcT(sv.tc)}</p><div class="chrow"><button class="btn" data-a="chRes">Reprendre</button><button class="btn alt" data-a="chDrop">Laisser tomber</button></div></section>`}
  h+=`<section class="glass play chnew"><h2>Nouvelle partie</h2>
  <div class="chgr"><div class="chl">Adversaire</div><div class="chq">${chChip('op','ai','L’ordinateur',c.op==='ai')}${chChip('op','net','Un ami',c.op==='net')}${chChip('op','loc','Même appareil',c.op==='loc')}</div></div>
  ${c.op==='ai'?`<div class="chgr"><div class="chl">Niveau</div><div class="chq">${CHLV.map((l,i)=>chChip('lv',i+1,l.n,c.lv===i+1,'<span class="chem">'+l.e+'</span>')).join('')}</div><p class="note chdn">${CHLV[c.lv-1].d}.</p></div>`:''}
  ${c.op!=='loc'?`<div class="chgr"><div class="chl">Ta couleur</div><div class="chq">${chChip('col',1,'Blancs',c.col===1)}${chChip('col',-1,'Noirs',c.col===-1)}${chChip('col',0,'Au hasard',c.col===0)}</div></div>`:''}
- <div class="chgr"><div class="chl">Durée de la partie <span class="chs2">par joueur</span></div><div class="chq">${CHTC.map(n=>chChip('tc',n,chTcT(n),c.tc===n)).join('')}</div></div>
+ ${c.op==='ai'?'':`<div class="chgr"><div class="chl">Durée de la partie <span class="chs2">par joueur</span></div><div class="chq">${CHTC.map(n=>chChip('tc',n,chTcT(n),c.tc===n)).join('')}</div></div>`}
  ${c.op==='net'?'':`<button class="btn chgo" data-a="chStart">Commencer la partie</button>`}</section>`;
  if(c.op==='net')h+=chFriends(M);
+ h+=chSkinUI();
  root.innerHTML=h;window.scrollTo(sx,sy)}
+function chSkinUI(){
+ const S=chSkin();
+ return`<section class="glass play chsk"><h2>Apparence des pièces</h2><p class="note" style="margin:0 0 10px">Les ❄ gagnés en jouant servent à habiller tes pièces.</p>${CHSK.map(k=>{const o=!!S.own[k.id],on=S.cur===k.id;
+  return`<div class="chski${on?' on':''}"><div class="chsp">${chPc(1,k.id)}${chPc(5,k.id)}${chPc(-2,k.id)}${chPc(-6,k.id)}</div><div class="chst"><b>${k.n}</b><small>${k.d}</small></div><button class="sb${o||UNL()?'':' buy'}" data-a="chsk" data-v="${k.id}"${on?' disabled':''}>${on?'Choisi':o?'Choisir':UNL()?'Choisir':k.p+' ❄'}</button></div>`}).join('')}</section>`}
 function chFriends(M){
  const crd=(t,b,btn)=>`<section class="glass play soc-i"><h2>${t}</h2><p class="note" style="margin:0">${b}</p>${btn?`<button class="btn" style="margin-top:14px" data-a="chSoc">${btn}</button>`:''}</section>`;
  if(SO.st==='na')return crd('Une connexion est nécessaire','Jouer contre un ami demande d’être connecté(e) et d’avoir ajouté cet ami : tout se passe dans l’onglet Social.','Ouvrir Social');
@@ -2655,8 +2741,8 @@ function chOpenNet(f){
  const t0=Date.now(),w=setInterval(()=>{if(CH.scr!=='game'||CH.fid!==f||$('#chg')===null){clearInterval(w);return}
   if(CH.G[f]){clearInterval(w);chBegin(CH.G[f],f)}else if(CH.err[f]||Date.now()-t0>9000){clearInterval(w);$('#chg').innerHTML=`<h2 style="margin:0 0 6px">Partie injoignable</h2><p class="note" style="margin:0 0 14px">${esc(CH.ec[f]||'Pas de réponse du serveur.')} Ton ami doit aussi t’avoir ajouté dans Social.</p><button class="btn" data-a="chBk">Retour</button>`}},300)}
 function chNewGame(o){
- const c=CH.cfg,col=c.col||(Math.random()<.5?1:-1),id=Math.random().toString(36).slice(2,10),rm=[c.tc*6e4,c.tc*6e4];
- return Object.assign({id,mv:[],tc:c.tc,rm,r:null,dr:0,paid:0,me:col,lv:c.lv},o)}
+ const c=CH.cfg,col=c.col||(Math.random()<.5?1:-1),id=Math.random().toString(36).slice(2,10),tc=o&&o.k==='ai'?0:c.tc,rm=[tc*6e4,tc*6e4];
+ return Object.assign({id,mv:[],tc,rm,r:null,dr:0,paid:0,me:col,lv:c.lv},o)}
 function chAfter(){
  const g=CH.g;if(!g||CH.scr!=='game')return;
  if(g.k==='ai'&&!chRes(g)&&chTurn(g)!==g.me&&!CH.think){
@@ -2757,6 +2843,9 @@ function chDraw(){
 const chMine=()=>CH.scr==='game'&&CH.g?CH.g:null;
 const CHA={
  chSoc:()=>socScreen(),
+ chsk:v=>{const k=CHSK.find(x=>x.id===v);if(!k)return;const S=chSkin();
+  if(!S.own[k.id]){if(!spend(k.p))return;S.own[k.id]=1}
+  S.cur=k.id;st.set('ch:sk',S);CH.sk=k.id;const c=$('.chip');if(c)c.textContent='❄ '+FLX();chHubDraw()},
  chcfg:v=>{const[k,x]=v.split(':'),n=+x;
   if(k==='op'&&['ai','net','loc'].includes(x))CH.cfg.op=x;
   else if(k==='lv'&&n>=1&&n<=3)CH.cfg.lv=n;
@@ -2841,6 +2930,21 @@ const chDragInit=()=>{if(window.__chd)return;window.__chd=1;
  document.addEventListener('pointerup',up);document.addEventListener('pointercancel',up);
  window.addEventListener('click',e=>{if(Date.now()-CHDt<80){e.stopPropagation();e.preventDefault()}},true);
  document.addEventListener('dragstart',e=>{if(CHD)e.preventDefault()})};
+/* ---------- Déménagement : le livre de l’histoire vécue (même livre que celui du mode Histoire) ---------- */
+const DBT=['La chambre','La salle de bain','La cuisine','Le condo','La chambre des parents','Ta chambre','La salle de bain','La cuisine','Le salon','La cour'];
+function demBook(){
+ const g=G.find(x=>x.id==='demenage'),N0=10,ks=[...Array(N0).keys()].filter(i=>st.get(ckey('demenage')+':'+i,false)),nx=[...Array(N0).keys()].find(i=>!ks.includes(i));
+ const P=[{k:'cov'},{k:'pro'},...ks.map(n=>({k:'fr',n})),nx!==undefined?{k:'lk',n:nx}:{k:'end'}];
+ const hs=`<svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true"><path d="M8 32 32 10l24 22" fill="none" stroke="#ffe9a0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 30v24h36V30" fill="#e8b98a" stroke="#ffe9a0" stroke-width="3" stroke-linejoin="round"/><rect x="26" y="38" width="12" height="16" rx="3" fill="#9a5f3a"/></svg>`;
+ storyBook({ks,P,pg:(q,i,f)=>{
+  if(q.k==='cov')return`<div class="bki">${hs}<h2>Le déménagement</h2><p>l’histoire d’une maison qui se remplit</p><p class="bkh">Fais glisser ou touche un bord pour ouvrir</p></div>`;
+  if(q.k==='pro')return`<div class="bki"><span class="bke">Prologue</span><p class="bkt">${g.s}</p>${f}</div>`;
+  if(q.k==='fr')return`<div class="bki"><span class="bke">Niveau ${q.n+1} · ${DBT[q.n]}</span><p class="bkt">${g.wl[q.n]}</p>${f}</div>`;
+  if(q.k==='lk')return`<div class="bki"><span class="bke">Niveau ${q.n+1}</span><p class="bkt" style="margin-top:34px">Cette page s’écrira quand tu auras rangé cette pièce.</p>${f}</div>`;
+  return`<div class="bki"><span class="bke">La maison est complète</span><p class="bkt" style="margin-top:34px">Tout est rangé. Bonne nuit, et bienvenue chez toi.</p>${f}</div>`}})}
+(()=>{if(st.get('mig72',0))return;st.set('mig72',1);
+ for(let i=0;i<10;i++){const a='c:mots:'+(40+i),b='c:mots:'+(60+i),k='k:mots:'+(40+i);if(st.get(a,false)){st.set(b,true);st.set(a,null)}if(st.get(k,false)){st.set('k:mots:'+(60+i),true);st.set(k,null)}}
+ for(let i=0;i<70;i++)st.set('p:mots:'+i,null)})();
 const sv=keep;
 const chip=()=>{const c=$('.chip');if(c)c.textContent='❄ '+FLX()};
 const nk=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase();
@@ -2923,7 +3027,7 @@ function pPhrase(r){
  d();
 }
 const act={
- open:v=>{lvOpen=false;const r=v==='quote'?quote():v==='scrabble'?scrHub():v==='chess'?chHub():hub(v);window.scrollTo(0,0);return r},
+ dbook:()=>demBook(),dbk:()=>hub('demenage'),open:v=>{lvOpen=false;const r=v==='quiz'?start('quiz',false,0):v==='quote'?quote():v==='scrabble'?scrHub():v==='chess'?chHub():hub(v);window.scrollTo(0,0);return r},
  back:v=>v==='home'?home():v==='day'?dayScreen():v==='soc'?socScreen():hub(cur),
  play:v=>start(cur,false,+v),
  dd:()=>{const d=$('.dd:not(.xm)');lvOpen=d.classList.toggle('open');d.querySelector('.dd-h').setAttribute('aria-expanded',lvOpen)},
@@ -3074,7 +3178,7 @@ function resume(){const l=st.get('last',null);if(!l||l.daily||l.g==='melange'||!
    1 poussière d’étoile par niveau réussi la première fois (dans n’importe quel jeu) ; il en faut 2 pour 1 pas ;
    chaque pas : +1 ❄ · tous les 5 pas : +5 ❄ et un bout d’histoire · tous les 10 pas : un gardien (jeu provisoire), +20 ❄ et un bout d’histoire.
    L’état {e : poussières gagnées, p : pas faits, bw : dernier gardien vaincu} ne fait que grandir : la synchronisation garde le plus grand de chaque. */
-const SDU=2,SMX=80,SMAP=8,SH=1500,SPRE=440;/* SPRE : hauteur ajoutée sous le départ, pour le jardin du crash */
+const SDU=10,SMX=80,SMAP=8,SH=1500,SPRE=440;/* SPRE : hauteur ajoutée sous le départ, pour le jardin du crash */
 /* le ciel change de teinte tout au long du voyage (9 couleurs : bas du chapitre 1 … haut du chapitre 8), de jour comme de nuit */
 const SKD=['#e6e9ff','#f7e1f2','#ffe4d4','#fdebd2','#e0efff','#ece7ff','#d9f3f3','#e2ddff','#d3d8ff'],SKN=['#1b1f58','#281f5e','#2e1f55','#2a1f4e','#1a2658','#1e2160','#14305a','#231f66','#101654'];
 /* L : dessus de l’île · c : feuillages · r : toits, portiques · k : pierres · e : sable zen · p : chemin de lumière · d : poids des décors (îles puis ciel) */
@@ -3117,15 +3221,15 @@ const STORY={
 75:'Là-haut, l’air est fin et clair. Des rubans de lumière dansent au-dessus de la cime. Le petit bonhomme n’a plus besoin de savoir où il va : il y est presque.',
 80:'Le dernier gardien, celui du Vacarme, faisait tout le bruit des pensées du monde. Le petit bonhomme a posé la main sur son cœur, et le tumulte est devenu murmure, puis silence. Il a levé les yeux : la paix intérieure n’était pas au bout du voyage. Elle voyageait avec lui, sur son étoile. Bonne nuit, petit bonhomme.'
 };
-const SPRO='Une nuit, une étoile filante a traversé le ciel et s’est posée sur un jardin au clair de lune. Un petit bonhomme y est monté, le cœur un peu lourd : il cherche la paix intérieure. L’étoile ne bouge que si on lui offre de la poussière d’étoile, et chaque niveau terminé dans un jeu en fait tomber un grain.';
+const SPRO='Une nuit, une étoile filante a traversé le ciel et s’est posée sur un jardin au clair de lune. Un petit bonhomme y est monté, le cœur un peu lourd : il cherche la paix intérieure. L’étoile ne bouge que si on lui offre un fragment d’étoile : dix grains de poussière d’étoile en font un, et chaque niveau terminé dans un jeu en fait tomber autant que de flocons gagnés.';
 const sCh=n=>n<1?0:Math.min(CHP.length-1,Math.floor((n-1)/10));
-const styClean=x=>{if(!x||typeof x!=='object')return null;const n=(v,m)=>Math.max(0,Math.min(m,Math.floor(+v)||0)),p=n(x.p,SMX),bw=Math.floor(Math.min(p,n(x.bw,SMX))/10)*10;return{e:Math.max(n(x.e,1e6),p*SDU),p,bw}};
-const styRead=()=>styClean(st.get('sty',null))||{e:0,p:0,bw:0};
+const styClean=x=>{if(!x||typeof x!=='object')return null;const n=(v,m)=>Math.max(0,Math.min(m,Math.floor(+v)||0)),p=n(x.p,SMX),bw=Math.floor(Math.min(p,n(x.bw,SMX))/10)*10;return{e:Math.max(n(x.e,1e6),p*SDU),p,bw,v:x.v?1:0}};
+const styRead=()=>{const y=styClean(st.get('sty',null));if(!y)return{e:0,p:0,bw:0,v:1};if(!y.v){y.e+=y.p*(SDU-2);y.v=1;st.set('sty',styClean(y))}return y};
 const styWrite=y=>{st.set('sty',styClean(y));try{skyChap()}catch(e){}};
 const styDust=y=>UNL()?1e6:y.e-y.p*SDU;
 const styGate=y=>y.p>0&&y.p%10===0&&y.bw<y.p;
-function styMerge(L,O){const all=[L].concat(O||[]).map(styClean).filter(Boolean);if(!all.length)return null;const m=k=>Math.max(...all.map(x=>x[k]));return styClean({e:m('e'),p:m('p'),bw:m('bw')})}
-const styGain=()=>{const y=styRead();y.e++;styWrite(y);return styDust(y)};
+function styMerge(L,O){const all=[L].concat(O||[]).map(styClean).filter(Boolean);if(!all.length)return null;const m=k=>Math.max(...all.map(x=>x[k]));return styClean({e:m('e'),p:m('p'),bw:m('bw'),v:m('v')})}
+const styGain=(n=1)=>{const y=styRead();y.e+=Math.max(1,n|0);styWrite(y);return styDust(y)};
 /* ---------- décors zen et spatiaux : formes rondes et douces, dégradés, petits reflets ---------- */
 const scHex=h=>{h=h.replace('#','');if(h.length===3)h=h.replace(/./g,'$&$&');return[0,2,4].map(i=>parseInt(h.substr(i,2),16))};
 const scMix=(a,b,t)=>{const A=scHex(a),B=scHex(b);return'#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('')};
@@ -3380,8 +3484,9 @@ function sHud(Y){
  return`<header class="top shud"><div class="shc"><h1>Histoire</h1><small>${C.t} · étape ${Y.p} / ${SMX}</small><span class="sty-bar"><b style="width:${(Y.p/SMX*100).toFixed(1)}%"></b></span></div><div class="sht"><div class="chip" title="Flocons">❄ ${FLX()}</div><button class="shb" data-a="sbook" aria-label="Relire l’histoire"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H19v15H7.5A2.5 2.5 0 0 0 5 20.5z"/><path d="M5 20.5A2.5 2.5 0 0 0 7.5 23H19v-5"/><path d="M9 8h6"/></svg></button></div></header>`;
 }
 function sBar(Y){
- const d=styDust(Y),g=styGate(Y),end=Y.p>=SMX&&!g;
- return`<div class="sbar" id="sbar"><div class="sbi"><b role="img" aria-label="${UNL()?'poussières d’étoile illimitées':d+' poussière'+(d>1?'s':'')+' d’étoile'}">✦ ${UNL()?'∞':d}</b>${end||g?`<small>${end?'Fin du premier voyage':'Un gardien bloque le chemin'}</small>`:''}</div><button class="btn${!g&&!end&&d<SDU?' low':''}" data-a="sgo" ${end||sBusy?'disabled':''}>${g?'Affronter':'Avancer'}</button></div>`;
+ const d=styDust(Y),g=styGate(Y),end=Y.p>=SMX&&!g,fr=Math.floor(d/SDU),rm=d%SDU,
+  pips=UNL()?'':`<span class="sdp" aria-hidden="true">${Array.from({length:SDU},(_,i)=>`<i${i<rm?' class="on"':''}></i>`).join('')}</span>`;
+ return`<div class="sbar" id="sbar"><div class="sbi"><span class="sdr"><b role="img" aria-label="${UNL()?'fragments d’étoile illimités':fr+' fragment'+(fr>1?'s':'')+' d’étoile, '+rm+' poussière'+(rm>1?'s':'')+' sur '+SDU+' pour le suivant'}">✦ ${UNL()?'∞':fr}<em>${UNL()?'':fr>1?'fragments':'fragment'}</em></b>${pips}</span>${end||g?`<small>${end?'Fin du premier voyage':'Un gardien bloque le chemin'}</small>`:UNL()?'':`<small>${rm} / ${SDU} poussières</small>`}</div><button class="btn${!g&&!end&&d<SDU?' low':''}" data-a="sgo" ${end||sBusy?'disabled':''}>${g?'Affronter':'Avancer'}</button></div>`;
 }
 function sOv(h,b){
  const nv0=$('#nav');if(nv0)nv0.hidden=true;
@@ -3417,7 +3522,7 @@ function sGo(){
  if(sBusy)return;const Y=styRead();mt='m';
  if(styGate(Y))return bossScreen();
  if(Y.p>=SMX)return sMsg('Le voyage continue bientôt…');
- if(styDust(Y)<SDU)return sMsg('Termine un niveau dans un jeu pour trouver de la poussière d’étoile.');
+ if(styDust(Y)<SDU){const q=SDU-styDust(Y)%SDU;return sMsg('Il faut un fragment d’étoile (10 poussières) : encore '+q+' poussière'+(q>1?'s':'')+'. Termine des niveaux dans les jeux.')}
  sBusy=true;const a=Y.p;Y.p++;styWrite(Y);
  const b=$('#sbar button');if(b)b.disabled=true;
  sWalk(a,Y.p,()=>sArrive(Y.p));
@@ -3476,12 +3581,12 @@ function bookClose(){
  g.querySelectorAll('.top.stk,.bkn').forEach(e=>e.animate([{opacity:1},{opacity:0,offset:.5},{opacity:0}],{duration:BKMS,easing:BKE,fill:'forwards'}));
  app.animate([{opacity:0},{opacity:1}],{duration:BKMS,easing:BKE,fill:'backwards'});
 }
-function storyBook(){
- cur='book';nv('daily');const Y=styRead();
- const ks=Object.keys(STORY).map(Number).filter(n=>n<=Y.p&&(n%10!==0||Y.bw>=n)),nx=Object.keys(STORY).map(Number).find(n=>!ks.includes(n)),
-  P=[{k:'cov'},{k:'pro'},...ks.map(n=>({k:'fr',n})),nx?{k:'lk',n:nx}:{k:'end'}],N=P.length,last=ks.length+1;
+function storyBook(S){
+ cur=S?'dbook':'book';nv(S?'games':'daily');const Y=S?null:styRead();
+ const ks=S?S.ks:Object.keys(STORY).map(Number).filter(n=>n<=Y.p&&(n%10!==0||Y.bw>=n)),nx=S?0:Object.keys(STORY).map(Number).find(n=>!ks.includes(n)),
+  P=S?S.P:[{k:'cov'},{k:'pro'},...ks.map(n=>({k:'fr',n})),nx?{k:'lk',n:nx}:{k:'end'}],N=P.length,last=ks.length+1;
  let ix=ks.length?last:0;
- const pg=(q,i)=>{
+ const pg=S?(q,i)=>S.pg(q,i,`<span class="bkf">${i} / ${N-1}</span>`):(q,i)=>{
   const f=`<span class="bkf">${i} / ${N-1}</span>`;
   if(q.k==='cov')return`<div class="bki"><svg viewBox="-30 -30 60 60" width="64" height="64" aria-hidden="true"><polygon points="${sStar(0,0,24,11.5)}" fill="#ffd45a" stroke="#ffe9a0" stroke-width="3" stroke-linejoin="round"/></svg><h2>Le voyage du petit bonhomme</h2><p>à la recherche de la paix intérieure</p><p class="bkh">Fais glisser ou touche un bord pour ouvrir</p></div>`;
   if(q.k==='pro')return`<div class="bki"><span class="bke">Prologue</span>${bkVig(0,1)}<p class="bkt">${SPRO}</p>${f}</div>`;
@@ -3491,7 +3596,7 @@ function storyBook(){
  };
  /* signet sur la dernière page lue ; le verso de chaque feuille est vide (une page tournée reste visible au bord de l’écran, sans texte) */
  const bm=q=>q.k==='fr'&&q.n===ks[ks.length-1]?'<i class="bkm"></i>':'',far=i=>i<ix-3||i>ix+3;
- app.innerHTML=`<div class="top stk">${bk('day')}<span class="tl">Le livre</span><div class="tr"><div class="chip">❄ ${FLX()}</div></div></div><div class="bk" id="bk" role="group" aria-label="Livre de l’histoire">${P.map((q,i)=>`<article class="bkp ${q.k}${i<ix?' tn':''}${far(i)?' far':''}" data-i="${i}" style="z-index:${i<ix?i+1:N-i}"${i===ix?'':' aria-hidden="true"'}><div class="bkq bkF">${pg(q,i)}${bm(q)}</div><div class="bkq bkB" aria-hidden="true"></div></article>`).join('')}</div><div class="bkn"><button data-a="bkp" aria-label="Page précédente"${ix?'':' disabled'}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span id="bkc" aria-live="polite"></span><button data-a="bkn" aria-label="Page suivante"${ix<N-1?'':' disabled'}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></div>`;
+ app.innerHTML=`<div class="top stk">${S?'<button class="back" data-a="dbk">‹ Déménagement</button>':bk('day')}<span class="tl">Le livre</span><div class="tr"><div class="chip">❄ ${FLX()}</div></div></div><div class="bk" id="bk" role="group" aria-label="Livre de l’histoire">${P.map((q,i)=>`<article class="bkp ${q.k}${i<ix?' tn':''}${far(i)?' far':''}" data-i="${i}" style="z-index:${i<ix?i+1:N-i}"${i===ix?'':' aria-hidden="true"'}><div class="bkq bkF">${pg(q,i)}${bm(q)}</div><div class="bkq bkB" aria-hidden="true"></div></article>`).join('')}</div><div class="bkn"><button data-a="bkp" aria-label="Page précédente"${ix?'':' disabled'}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span id="bkc" aria-live="polite"></span><button data-a="bkn" aria-label="Page suivante"${ix<N-1?'':' disabled'}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></div>`;
  const bk0=$('#bk'),lab=()=>{const c=$('#bkc');if(c)c.textContent=ix?`Page ${ix} / ${N-1}`:'Couverture'};
  const zs=()=>bk0.querySelectorAll('.bkp').forEach((e,i)=>{e.style.zIndex=i<ix?i+1:N-i}),
  go=d=>{if(!$('#bk'))return;const n=Math.max(0,Math.min(N-1,ix+d));if(n===ix)return;const o=ix;ix=n;
