@@ -1007,6 +1007,11 @@ body:has(.pg-quiz) .skh,body:has(.m3) .skh{display:none}
 @media(max-width:430px){body:not(:has(.m3)) .top.stk:has(.skh):has([data-a=hint]) .tl{display:none}}
 .hf .hhd{gap:6px}.hf .hhd .back,.hf .hhd .hb,.hf .hhd .chip{white-space:nowrap;padding:6px 10px;font-size:12.5px}
 .top .tr .hb,.top .tr .chip{white-space:nowrap}
+.hzb{flex:none;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);color:#fff;font-size:24px;line-height:1;cursor:pointer;padding:0}
+.hbar{gap:6px}
+.htr{overflow:hidden;gap:2px}
+.hti{min-width:0;flex:1 1 0;max-width:62px}
+.hti small{max-width:100%;overflow:hidden;text-overflow:ellipsis;font-size:10px}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -1505,7 +1510,7 @@ function pCherche(r){
 <div class="hnm">${u.n} · ${li+1} / ${CHU.length}</div>
 <p class="m hmsg" id="m" role="status" aria-live="polite"></p>
 <div class="skw" id="skw"></div>
-<div class="hbar"><div class="htr" id="htr" aria-label="À trouver">${tray()}</div><div class="hzm"><button data-a="chz" data-v="-1" aria-label="Rétrécir">−</button><button data-a="chz" data-v="1" aria-label="Agrandir">+</button></div></div>
+<div class="hbar"><button class="hzb" data-a="chz" data-v="-1" aria-label="Rétrécir">−</button><div class="htr" id="htr" aria-label="À trouver">${tray()}</div><button class="hzb" data-a="chz" data-v="1" aria-label="Agrandir">+</button></div>
 ${intro?`<div class="hov" id="hov"><div class="hcd glass"><small>Niveau ${li+1} · ${u.n}</small><p>${u.s}</p><div class="hli">${T.map(t=>`<span>${t.k==='g'?'<i class="hg">'+qzGuy('ask')+'</i>':'<i>'+t.e+'</i>'}<em>${t.n}</em></span>`).join('')}</div><button class="btn" data-a="chgo">C’est parti</button></div></div>`:''}</div>`;
  const hv=$('#hv'),hw=$('#hw');
  let s=1,tx=0,ty=0,vw=0,vh=0,smin=.5,smax=3;
