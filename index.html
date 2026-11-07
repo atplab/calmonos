@@ -701,6 +701,20 @@ body:has(.pg-quiz) .skw{display:none}
 .qz-next{margin-top:14px}
 @media(prefers-reduced-motion:reduce){.qz-m svg,.qzsp{animation:none!important}}
 
+/* catégories repliables de l'écran Jeux */
+.cat{margin:14px 0 0}
+.cat-h{display:flex;align-items:center;gap:10px;width:100%;margin:0;padding:15px 18px;border-radius:20px;color:var(--text);font:inherit;text-align:left;cursor:pointer}
+.cat-h b{flex:1;min-width:0;font-size:18px;font-weight:700}
+.cat-h small{flex:none;opacity:.75;font-size:13px}
+.cat-h svg{flex:none;width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s}
+.cat.open .cat-h svg{transform:rotate(180deg)}
+.cat-h:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.cg{display:grid;grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows .32s ease,visibility 0s .32s}
+.cat.open .cg{grid-template-rows:1fr;visibility:visible;transition:grid-template-rows .32s ease,visibility 0s}
+.cgi{min-height:0;overflow:hidden}
+.cgi .grid{padding:14px 2px 6px}
+@media(prefers-reduced-motion:reduce){.cg,.cat-h svg{transition:none}}
+
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
 .sb.cf{background:linear-gradient(180deg,#ffd18a,#e8944a);color:#3a2310;border:0}
@@ -1190,11 +1204,13 @@ function lastCard(){
  return`<section class="rc xl pt-${g.id}" style="--a:${g.a};--b:${g.b}" data-g="${g.ic}"><div class="rc-ic">${g.ic}</div><div class="rc-t"><small>Dernière partie</small><b>${g.n}</b><span>${sub}</span></div><button class="rc-go" data-a="resume">${btn}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>`;
 }
 const CATS=[{t:'Mots et cie',i:['mots','croises','caches','phrase','quiz','scrabble']},{t:'Casse-tête',i:['tournade','maze','sudoku','puzzle']},{t:'Mémoire et détente',i:['memo','match3','demenage']}];
+const cO=t=>(st.get('catO',[])||[]).includes(t);
 function home(){nv('games');
+ act.cat=v=>{const was=cO(v),o=(st.get('catO',[])||[]).filter(x=>x!==v);if(!was)o.push(v);st.set('catO',o);const s=[...document.querySelectorAll('.cat')].find(e=>e.querySelector('.cat-h').dataset.v===v);if(s){s.classList.toggle('open',!was);s.querySelector('.cat-h').setAttribute('aria-expanded',String(!was))}};
  cur=null;origin='home';wdBuf='';wdPop=-1;wdLock=false;wdM='';
  const fv=favs(),tile=g=>{const on=fv.includes(g.id);return`<div class="tw"><button class="glass tile pt-${g.id}" style="--a:${g.a};--b:${g.b}" data-a="open" data-v="${g.id}"><i>${g.ic}</i><b>${g.n}</b><small>${g.soon?'Bientôt':g.sp?(g.id==='scrabble'?scrTile():g.sp):[...Array(nl(g.id)).keys()].filter(i=>st.get(ckey(g.id)+':'+i,false)).length+' / '+nl(g.id)+' niveaux'+(xmasOn()?'<br><span class="xt">✦ Fêtes '+[...Array(NLX).keys()].filter(i=>st.get(ckey(g.id)+':'+(nl(g.id)+i),false)).length+' / '+NLX+'</span>':'')}</small></button>${g.soon?'':`<button class="fv ${on?'on':''}" data-a="fav" data-v="${g.id}" aria-pressed="${on}" aria-label="${on?'Retirer '+g.n+' des favoris':'Ajouter '+g.n+' aux favoris'}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/></svg></button>`}</div>`};
  const F=GD.filter(g=>!g.soon&&fv.includes(g.id)),R=GD.filter(g=>!F.includes(g));
- app.innerHTML=`<header class="top"><h1>Nuit de neige</h1><div class="chip" title="Flocons">❄ ${FLX()}</div></header>${wdBlock()}${lastCard()}${F.length?`<h2 class="s">Favoris</h2><div class="grid fgrid">${F.map(tile).join('')}</div>`:''}${[...CATS.map(c=>({t:c.t,L:c.i.map(i=>R.find(g=>g.id===i)).filter(Boolean)})),{t:'Autres jeux',L:R.filter(g=>!CATS.some(c=>c.i.includes(g.id)))}].map(c=>c.L.length?`<h2 class="s">${c.t}</h2><div class="grid">${c.L.map(tile).join('')}</div>`:'').join('')}`;
+ app.innerHTML=`<header class="top"><h1>Nuit de neige</h1><div class="chip" title="Flocons">❄ ${FLX()}</div></header>${wdBlock()}${lastCard()}${F.length?`<h2 class="s">Favoris</h2><div class="grid fgrid">${F.map(tile).join('')}</div>`:''}${[...CATS.map(c=>({t:c.t,L:c.i.map(i=>R.find(g=>g.id===i)).filter(Boolean)})),{t:'Autres jeux',L:R.filter(g=>!CATS.some(c=>c.i.includes(g.id)))}].map(c=>c.L.length?`<section class="cat${cO(c.t)?' open':''}"><button class="glass cat-h" data-a="cat" data-v="${c.t}" aria-expanded="${cO(c.t)}"><b>${c.t}</b><small>${c.L.length} jeu${c.L.length>1?'x':''}</small><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="cg"><div class="cgi"><div class="grid">${c.L.map(tile).join('')}</div></div></div></section>`:'').join('')}`;
 }
 function hub(id){
  cur=id;nv('games');theme(id);const g=G.find(x=>x.id===id),N=nl(id),dd=st.get(dkey(id),false),ok=i=>st.get(ckey(id)+':'+i,false),sk=i=>!ok(i)&&st.get('k:'+id+':'+i,false),nx=[...Array(N).keys()].findIndex(i=>!ok(i)&&!sk(i)),ns=[...Array(N).keys()].findIndex(sk),nsk=[...Array(N).keys()].filter(sk).length,tg=nx>=0?nx:ns>=0?ns:N-1,dn=[...Array(N).keys()].filter(i=>st.get(ckey(id)+':'+i,false)).length;
