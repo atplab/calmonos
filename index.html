@@ -4468,11 +4468,13 @@ function skDark(c){/* OKLCH : même teinte, clarté −0,19, chroma ×3 (de 0,06
   o=[4.0767416621*l3-3.3077115913*m3+.2309699292*s3,-1.2684380046*l3+2.6097574011*m3-.3413193965*s3,-.0041960863*l3-.7034186147*m3+1.7076147010*s3];
   if(o.every(x=>x>=-.001&&x<=1.001))return o.map(skL2S);C*=.95}
  return c}
+/* Noël de Zeni : un ciel pâle et bleuté, presque uni, qui glisse doucement de teinte à chaque chapitre (givre, pervenche, lavande, aube) */
+const XSKY=[['#f1f4fb','#e4ebf7'],['#eef3fb','#e0e9f6'],['#ecf3fa','#dce8f4'],['#eaf2f9','#d9e6f2'],['#ebf0fa','#dbe2f5'],['#edeffa','#dedff5'],['#efeefa','#e1ddf3'],['#f0eff9','#e2dff2'],['#eef0fa','#dde1f4'],['#f1f1f9','#e1e3f4'],['#f5f2f7','#e4e6f5']];
 let SKC=-1;
 function skyChap(now){
- let p=0,X=false;try{p=styRead().p|0;X=sxOn()}catch(e){}
- const c=X?-2:sCh(p);if(c===SKC)return;SKC=c;
- const n=SKD.length-1,t=skRGB(X?'#fff2d8':SKD[Math.min(c+1,n)]),u=skRGB(X?'#c3d0ea':SKD[c]),b=document.body,v={'--sk-t':skHEX(t),'--sk-b':skHEX(u),'--dk-t':skHEX(skDark(t)),'--dk-b':skHEX(skDark(u))};
+ let p=0,X=false,xp=0;try{const y=styRead();p=y.p|0;xp=y.xp|0;X=sxOn()}catch(e){}
+ const xc=Math.min(XSKY.length-1,xp>>1),c=X?-10-xc:sCh(p);if(c===SKC)return;SKC=c;
+ const n=SKD.length-1,t=skRGB(X?XSKY[xc][0]:SKD[Math.min(c+1,n)]),u=skRGB(X?XSKY[xc][1]:SKD[c]),b=document.body,v={'--sk-t':skHEX(t),'--sk-b':skHEX(u),'--dk-t':skHEX(skDark(t)),'--dk-b':skHEX(skDark(u))};
  if(now)b.style.transition='none';
  for(const k in v)b.style.setProperty(k,v[k]);
  if(now){void getComputedStyle(b).backgroundColor;b.style.transition=''}
