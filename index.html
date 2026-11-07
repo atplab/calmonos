@@ -1095,6 +1095,7 @@ html:has(#stg),body:has(#stg){overflow:hidden;overscroll-behavior:none}
 .smv{position:absolute;left:0;top:0;width:100%;will-change:transform}
 #smap,#smapn{display:block;width:100%;height:auto}
 .smv .smn{position:absolute;left:0;top:0;opacity:calc(1 - var(--sun,1))}
+body:has(#stg[data-x]) #snow{z-index:1}body:has(#stg[data-x]) #app{z-index:auto}
 #stg[data-ph=day] #smapn{display:none}
 #stg[data-ph=night] #smap{visibility:hidden}
 .gng{opacity:calc(1 - var(--sun,1))}
@@ -4193,20 +4194,36 @@ function xGeo(){
 function xMapSVG(Y,m){
  const n=m==='n',G=xGeo(),{H,NXY,pts,nodeIx}=G,P=Y.xp||0,rn=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s)};
  SGY={pts,nodeIx,NXY,vb0:0,R:XR,cur:[NXY[P][0],NXY[P][1]]};
- const sk=n?['#5a3563','#2b2655','#141840','#0c0f2e']:['#fff2d8','#efdcea','#cbd6ec','#a9b6d6'],snow=n?'#b9c4ee':'#ffffff',snow2=n?'#8f9ddb':'#dbe7f8';
- const xAt=y=>{for(let i=0;i<XMX;i++){const a=NXY[i],b=NXY[i+1];if(y<=a[1]&&y>=b[1])return a[0]+(b[0]-a[0])*(a[1]-y)/(a[1]-b[1])}return 195};
- let s=`<defs><linearGradient id="xsk${m}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sk[0]}"/><stop offset=".38" stop-color="${sk[1]}"/><stop offset=".72" stop-color="${sk[2]}"/><stop offset="1" stop-color="${sk[3]}"/></linearGradient><radialGradient id="xgl${m}"><stop offset="0" stop-color="#ffd27a" stop-opacity="${n?.55:.5}"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient></defs><rect width="390" height="${H}" fill="url(#xsk${m})"/><rect y="${H-1}" width="390" height="520" fill="${sk[3]}"/><ellipse cx="195" cy="${H+60}" rx="300" ry="90" fill="${snow2}" opacity=".6"/><circle cx="${NXY[XMX][0]}" cy="${NXY[XMX][1]-60}" r="340" fill="url(#xgl${m})"/>`;
- if(n){for(let i=0;i<110;i++){const y=rn(i+.3)*H*.7;s+=`<circle cx="${(rn(i)*390).toFixed(0)}" cy="${y.toFixed(0)}" r="${(.8+rn(i+9)*1.5).toFixed(1)}" fill="#fff" opacity="${(.45+rn(i+5)*.5).toFixed(2)}"/>`}s+=`<circle cx="318" cy="150" r="60" fill="#fff6d8" opacity=".12"/><circle cx="318" cy="150" r="30" fill="#fff6d8"/>`}
- else{s+=`<circle cx="316" cy="150" r="26" fill="#fff8dc" opacity=".9"/>`;for(let i=0;i<9;i++)s+=CHK.cloud(rn(i)*390,200+i*210+rn(i+3)*60,50+rn(i+7)*40,'#fff',.55)}
- for(let i=0,y=420;y<H;i++,y+=250){const l=i%2===0;s+=`<ellipse cx="${l?-30:420}" cy="${y}" rx="190" ry="70" fill="${snow2}" opacity=".55"/><ellipse cx="${l?-10:400}" cy="${y+20}" rx="150" ry="52" fill="${snow}" opacity=".75"/>`}
+ const sk=n?['#5a3563','#2b2655','#141840','#0c0f2e']:['#fff2d8','#efdcea','#cbd6ec','#a9b6d6'],snow=n?'#b9c4ee':'#ffffff',snow2=n?'#8f9ddb':'#dbe7f8',
+  L=n?[scMix('#eef5ff','#232a68',.58),scMix('#cfe0f6','#232a68',.58)]:['#f4f9ff','#cfe0f6'],und=n?'#1d2150':'#6f5f98';
+ let s=`<defs>${SDEFS(m)}<linearGradient id="xsk${m}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sk[0]}"/><stop offset=".38" stop-color="${sk[1]}"/><stop offset=".72" stop-color="${sk[2]}"/><stop offset="1" stop-color="${sk[3]}"/></linearGradient><radialGradient id="xgl${m}"><stop offset="0" stop-color="#ffd27a" stop-opacity="${n?.55:.5}"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient><linearGradient id="xit${m}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${L[0]}"/><stop offset="1" stop-color="${L[1]}"/></linearGradient><linearGradient id="xun${m}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${scMix(L[1],und,.34)}"/><stop offset="1" stop-color="${scMix(L[1],und,.7)}"/></linearGradient></defs><rect width="390" height="${H}" fill="url(#xsk${m})"/><rect y="${H-1}" width="390" height="520" fill="${sk[3]}"/><ellipse cx="195" cy="${H+60}" rx="300" ry="90" fill="${snow2}" opacity=".6"/><circle cx="${NXY[XMX][0]}" cy="${NXY[XMX][1]-60}" r="340" fill="url(#xgl${m})"/>`;
+ /* le ciel, comme dans le voyage : nébuleuses et aurores la nuit, étoiles qui scintillent, brume et nuages de jour */
+ if(n){
+  for(let i=0;i<10;i++)s+=`<ellipse cx="${(rn(i+90)*390).toFixed(0)}" cy="${(150+i*(H-420)/10+rn(i+95)*120).toFixed(0)}" rx="${(140+rn(i+99)*110).toFixed(0)}" ry="${(80+rn(i+103)*70).toFixed(0)}" fill="url(#synb${i%3}n)" transform="rotate(${(rn(i+107)*60-30).toFixed(0)} 195 ${(H/2).toFixed(0)})"/>`;
+  for(const y of[430,820,1210])s+=`<path d="M-10 ${y}Q100 ${y-90} 200 ${y-30}T400 ${y-60}V${y-150}Q300 ${y-190} 190 ${y-130}T-10 ${y-170}Z" fill="url(#syaun)" opacity=".2"/>`;
+  let q='';for(let i=0;i<150;i++){q+=`<circle cx="${(rn(i)*390).toFixed(0)}" cy="${(rn(i+.3)*H*.85).toFixed(0)}" r="${(.8+rn(i+9)*1.5).toFixed(1)}" opacity="${(.45+rn(i+5)*.5).toFixed(2)}"${i%7===0?` class="stw" style="animation-delay:-${(rn(i+13)*3).toFixed(1)}s"`:''}/>`}
+  s+=`<g fill="#fff">${q}</g><circle cx="318" cy="150" r="60" fill="#fff6d8" opacity=".12"/><circle cx="318" cy="150" r="30" fill="#fff6d8"/>`;
+ }else s+=`<circle cx="316" cy="150" r="26" fill="#fff8dc" opacity=".9"/>`;
+ for(let i=0;i<10;i++)s+=CHK.cloud(rn(i)*390,200+i*(H-500)/10+rn(i+3)*60,50+rn(i+7)*40,n?'#8f9ddb':'#fff',n?.2:.55);
+ /* îles flottantes enneigées : une par étape, plus larges pour les chapitres, avec leur dessous de roche gelée */
+ const isl=NXY.map(([x,y],i)=>{const big=i===0||i===XMX,ch=i>0&&i%2===0;return{x:x+(rn(i+50)-.5)*16,y:y+6,rx:big?150:ch?108:84+rn(i+60)*14,ry:big?70:ch?50:42+rn(i+70)*8,a:(rn(i+80)-.5)*7,big,ch}});
+ let u='',t='';
+ isl.forEach((o,i)=>{const{x,y,rx,ry,a,big}=o,q=rng(3000+i),h=ry*(big?1.8:1.65),l=(q()-.5)*rx*.3,tr=`translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${a.toFixed(1)})`;
+  u+=`<g transform="${tr}">${n?`<ellipse cy="${(ry*.2).toFixed(0)}" rx="${(rx*1.25).toFixed(0)}" ry="${(ry*1.5).toFixed(0)}" fill="url(#sygl${m})" opacity=".14"/>`:''}<path d="M${-rx} 0C${(-rx*.95).toFixed(1)} ${(ry*.9).toFixed(1)} ${(-rx*.45+l).toFixed(1)} ${(h*.78).toFixed(1)} ${l.toFixed(1)} ${h.toFixed(1)}C${(rx*.45+l).toFixed(1)} ${(h*.78).toFixed(1)} ${(rx*.95).toFixed(1)} ${(ry*.9).toFixed(1)} ${rx} 0Z" fill="url(#xun${m})"/>`;
+  for(let k=0;k<2;k++){const sg=k?1:-1,px=sg*rx*(.55+q()*.25),py=h*(.5+q()*.3),pr=3.5+q()*3.5;u+=`<ellipse cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" rx="${pr.toFixed(1)}" ry="${(pr*.8).toFixed(1)}" fill="url(#xun${m})" opacity=".85"/>`}
+  u+=`</g>`;
+  t+=`<g transform="${tr}"><ellipse cy="7" rx="${rx}" ry="${ry}" fill="url(#xun${m})"/><ellipse rx="${rx}" ry="${ry}" fill="url(#xit${m})"/><ellipse cy="${(-ry*.12).toFixed(1)}" rx="${(rx*.88).toFixed(1)}" ry="${(ry*.8).toFixed(1)}" fill="#fff" opacity="${n?.1:.35}"/><ellipse rx="${rx}" ry="${ry}" fill="none" stroke="${n?'#a9b5f5':'#fff'}" stroke-width="2" opacity=".5"/></g>`});
+ s+=u+t;
  const d=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join('');
  s+=sRibbon(d,{p:n?['#aab6ea','#7684c8','#cfd8f8']:['#ffffff','#cfe0f5','#f6faff']},n);
  if(P>0)s+=`<path d="${pts.slice(0,nodeIx[P]+1).map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join('')}" fill="none" stroke="${n?'#ffd86b':'#ffc83d'}" stroke-width="5.5" stroke-dasharray="0.1 12" stroke-linecap="round"/>`;
- /* décor posé le long de la rue : plus bas = devant */
- const it=[];
- for(let k=0,y=H-110;y>120;k++,y-=62+rn(k)*34){const px=xAt(y),sd=rn(k+2)<.5?-1:1;let x=px+sd*(105+rn(k+4)*55);if(x<18||x>372)x=px-sd*(105+rn(k+4)*55);x=Math.max(16,Math.min(374,x));const sz=82+rn(k+6)*52;it.push({y,h:CHK.pine(x,y,sz,n?'#143a3a':'#2f6d5e',n?'#1c4a46':'#3d8470',1)})}
- for(let k=0,y=H-330;y>300;k++,y-=300){const px=xAt(y),sd=k%2?-1:1;let x=px+sd*(120+rn(k+11)*20);x=Math.max(46,Math.min(344,x));const w=64+rn(k+13)*18;it.push({y:y+4,h:CHK.chalet(x,y,w,{body:n?'#4b3a6a':'#c79a78',roof:n?'#2a2a55':'#8a5a6a',lit:'#ffd36b'})})}
- for(let k=0,y=H-250;y>200;k++,y-=190){const px=xAt(y),sd=k%2?1:-1,x=Math.max(14,Math.min(376,px+sd*58));it.push({y,h:CHK.lamp(x,y,74)})}
+ /* décor posé sur les îles : sapins, chalets aux fenêtres allumées, lampadaires ; plus bas = devant */
+ const it=[],cx=x=>Math.max(16,Math.min(374,x)),pc=[n?'#143a3a':'#2f6d5e',n?'#1c4a46':'#3d8470'];
+ isl.forEach((o,i)=>{const sd=i%2?-1:1,r=rn(i+120),y0=o.y+o.ry*.16;
+  if(i===XMX){[-1,1].forEach(g=>it.push({y:y0,h:CHK.lamp(cx(o.x+g*o.rx*.8),y0,74)}));return}
+  if(o.ch){it.push({y:y0+4,h:CHK.chalet(cx(o.x+sd*o.rx*.68),y0+4,56,{body:n?'#4b3a6a':'#c79a78',roof:n?'#2a2a55':'#8a5a6a',lit:'#ffd36b'})});it.push({y:y0,h:CHK.lamp(cx(o.x-sd*o.rx*.74),y0,66)})}
+  else{it.push({y:y0,h:CHK.pine(cx(o.x+sd*o.rx*.7),y0,66+r*26,pc[0],pc[1],1)});if(i>0||o.big)it.push({y:y0+3,h:CHK.pine(cx(o.x-sd*o.rx*.76),y0+3,46+r*18,pc[0],pc[1],1)})}
+ });
  it.sort((a,b)=>a.y-b.y);s+=it.map(q=>q.h).join('');
  /* le grand sapin tout en haut, décoré */
  {const [tx,ty]=NXY[XMX],c=['#e8434f','#f2b632','#3b9be0','#ffffff','#e8434f','#f2b632'];let b='';for(let i=0;i<18;i++){const lv=i%3,t=.2+rn(i+20)*.5,yy=-12-lv*31.2-52.8*t,hw=(30-lv*6.6)*(1-t)*.8;b+=`<circle cx="${((rn(i+40)*2-1)*hw).toFixed(1)}" cy="${yy.toFixed(1)}" r="4.2" fill="${c[i%6]}"/>`}
@@ -4218,7 +4235,6 @@ function xMapSVG(Y,m){
  for(let i=0;i<=XMX;i++){const [x,y]=NXY[i],done=i<=P,cur=i===P,ch=i>0&&i%2===0,r=ch?17:13,cy=y-r-8,col=done?COL[i%5]:(n?'#4d5690':'#aab4d4');
   s+=`<g><ellipse cx="${x}" cy="${y+3}" rx="${r+6}" ry="5" fill="#000" opacity=".16"/>${cur?`<circle cx="${x}" cy="${cy}" r="${r+17}" fill="#fff3b0" opacity="${n?.5:.42}" class="spulse"/>`:''}${ch?`<circle cx="${x}" cy="${cy}" r="${r+8}" fill="none" stroke="#fff" stroke-width="2.4" stroke-dasharray="0.1 6.4" stroke-linecap="round" opacity=".95"/>`:''}<path d="M${x} ${cy-r-1}v-6" stroke="#caa648" stroke-width="2"/><rect x="${x-5}" y="${cy-r-6}" width="10" height="7" rx="2" fill="#e3c25a"/><circle cx="${x}" cy="${cy}" r="${r}" fill="${col}" stroke="${done?'#fff':(n?'#7e8bd0':'#8f9bc6')}" stroke-width="2.2" stroke-opacity=".7"/>${done?`<path d="M${x-r+1} ${cy+2}Q${x} ${cy+r*.55} ${x+r-1} ${cy+2}" fill="none" stroke="#fff" stroke-width="2.4" opacity=".55"/>`:''}<ellipse cx="${x-r*.34}" cy="${cy-r*.4}" rx="${r*.3}" ry="${r*.18}" fill="#fff" opacity=".6" transform="rotate(-30 ${x-r*.34} ${cy-r*.4})"/>${sPill(x,y+5,i?i:'Départ',done,i?22:50,m)}</g>`;
   if(ch){const t=done?XCH[i/2-1]:'Chapitre '+i/2,w=Math.round(t.length*6.1+18),sd=x<195?1:-1,x0=sd>0?x+r+12:x-r-12-w;s+=`<g><rect x="${x0}" y="${cy-9}" width="${w}" height="18" rx="9" fill="${n?'#161a4a':'#fff'}" opacity="${n?.82:.93}"/><text x="${x0+w/2}" y="${cy+4}" text-anchor="middle" font-size="10" font-weight="700" fill="${done?(n?'#ffd86b':'#9a6200'):(n?'#aab6f0':'#6a74a6')}">${t}</text></g>`}}
- s+='';
  return`<svg id="${n?'smapn':'smap'}" class="${n?'smn':'smd'}" viewBox="0 0 390 ${H}" style="overflow:visible"${n?' aria-hidden="true"':` role="img" aria-label="Carte de Noël : étape ${P} sur ${XMX}"`}>${s}</svg>`;
 }
 function xHud(Y){
@@ -4269,8 +4285,8 @@ function xBookS(){
 
 function dayScreen(){
  cur=null;origin='day';nv('daily');mt='m';sBusy=false;clearTimeout(sMT);
- const Y=styRead(),X=sxOn();xmMus(X);
- app.innerHTML=`<div class="stg" id="stg" data-ph="day"><div class="smv" id="smv">${X?xMapSVG(Y,'d'):sMapSVG(Y,'d')}${X?xMapSVG(Y,'n'):sMapSVG(Y,'n')}<div class="sgy" id="guy"><svg viewBox="-100 -68 130 100" aria-hidden="true">${GUYSVG}</svg></div></div></div>${X?xHud(Y):sHud(Y)}${aquaRemind()}<p class="m shm" id="m" role="status" aria-live="polite"></p>${X?xBar(Y):sBar(Y)}`;
+ const Y=styRead(),X=sxOn();xmMus(X);try{skyChap()}catch(e){}
+ app.innerHTML=`<div class="stg" id="stg" data-ph="day"${X?' data-x="1"':''}><div class="smv" id="smv">${X?xMapSVG(Y,'d'):sMapSVG(Y,'d')}${X?xMapSVG(Y,'n'):sMapSVG(Y,'n')}<div class="sgy" id="guy"><svg viewBox="-100 -68 130 100" aria-hidden="true">${GUYSVG}</svg></div></div></div>${X?xHud(Y):sHud(Y)}${aquaRemind()}<p class="m shm" id="m" role="status" aria-live="polite"></p>${X?xBar(Y):sBar(Y)}`;
  const stg=$('#stg'),qq=SGY.NXY[X?(Y.xp||0):Y.p];
  ['touchmove','wheel','gesturestart'].forEach(ev=>stg.addEventListener(ev,e=>e.preventDefault(),{passive:false}));
  sSky();sHudPos();sPlace(qq[0],qq[1]);
@@ -4444,9 +4460,9 @@ function skDark(c){/* OKLCH : même teinte, clarté −0,19, chroma ×3 (de 0,06
  return c}
 let SKC=-1;
 function skyChap(now){
- let p=0;try{p=styRead().p|0}catch(e){}
- const c=sCh(p);if(c===SKC)return;SKC=c;
- const n=SKD.length-1,t=skRGB(SKD[Math.min(c+1,n)]),u=skRGB(SKD[c]),b=document.body,v={'--sk-t':skHEX(t),'--sk-b':skHEX(u),'--dk-t':skHEX(skDark(t)),'--dk-b':skHEX(skDark(u))};
+ let p=0,X=false;try{p=styRead().p|0;X=sxOn()}catch(e){}
+ const c=X?-2:sCh(p);if(c===SKC)return;SKC=c;
+ const n=SKD.length-1,t=skRGB(X?'#fff2d8':SKD[Math.min(c+1,n)]),u=skRGB(X?'#c3d0ea':SKD[c]),b=document.body,v={'--sk-t':skHEX(t),'--sk-b':skHEX(u),'--dk-t':skHEX(skDark(t)),'--dk-b':skHEX(skDark(u))};
  if(now)b.style.transition='none';
  for(const k in v)b.style.setProperty(k,v[k]);
  if(now){void getComputedStyle(b).backgroundColor;b.style.transition=''}
@@ -5529,9 +5545,9 @@ if(st.get('soc:on',false)||st.get('sync:acc',false))setTimeout(socInit,0);
 
 const cv=$('#snow'),x=cv.getContext('2d');let W,H;const P=[];
 const rs=()=>{W=cv.width=innerWidth;H=cv.height=innerHeight};rs();addEventListener('resize',rs);
-for(let i=0;i<45;i++)P.push({x:Math.random()*W,y:Math.random()*H,r:1+Math.random()*2.5,v:.15+Math.random()*.35,d:Math.random()*6});
+for(let i=0;i<130;i++)P.push({x:Math.random()*W,y:Math.random()*H,r:1+Math.random()*2.5,v:.15+Math.random()*.35,d:Math.random()*6});
 let sOn=0,sT=0;
-const snow=ts=>{if(!prefs().snow||document.hidden){if(sOn){x.clearRect(0,0,W,H);sOn=0}sT=0;return setTimeout(snow,300)}if(sT&&ts-sT<32)return requestAnimationFrame(snow);const k=sT?Math.min(3,(ts-sT)/16.67)||1:1;sT=ts||0;sOn=1;x.clearRect(0,0,W,H);x.fillStyle=`rgba(${Math.round(120+135*(1-GS))},${Math.round(110+145*(1-GS))},${Math.round(200+55*(1-GS))},${(.5+.2*(1-GS)).toFixed(2)})`;x.beginPath();let qn=0;for(const p of P){if(playing&&++qn>22)break;p.y+=p.v*k;p.d+=.004*k;p.x+=Math.sin(p.d)*.25*k;if(p.y>H+5){p.y=-5;p.x=Math.random()*W}x.moveTo(p.x+p.r,p.y);x.arc(p.x,p.y,p.r,0,7)}x.fill();requestAnimationFrame(snow)};
+const snow=ts=>{if(!prefs().snow||document.hidden){if(sOn){x.clearRect(0,0,W,H);sOn=0}sT=0;return setTimeout(snow,300)}if(sT&&ts-sT<32)return requestAnimationFrame(snow);const k=sT?Math.min(3,(ts-sT)/16.67)||1:1;sT=ts||0;sOn=1;x.clearRect(0,0,W,H);x.fillStyle=`rgba(${Math.round(120+135*(1-GS))},${Math.round(110+145*(1-GS))},${Math.round(200+55*(1-GS))},${(.5+.2*(1-GS)).toFixed(2)})`;x.beginPath();const xs=!!document.querySelector('#stg[data-x]');if(xs)x.fillStyle=`rgba(255,255,255,${(.92-.1*GS).toFixed(2)})`;let qn=0;for(let pi=0,pl=xs?P.length:45;pi<pl;pi++){const p=P[pi];if(playing&&++qn>22)break;p.y+=p.v*k;p.d+=.004*k;p.x+=Math.sin(p.d)*.25*k;if(p.y>H+5){p.y=-5;p.x=Math.random()*W}x.moveTo(p.x+(xs?p.r*1.3:p.r),p.y);x.arc(p.x,p.y,xs?p.r*1.3:p.r,0,7)}x.fill();if(xs){x.strokeStyle=`rgba(110,130,190,${(.55*GS).toFixed(2)})`;x.lineWidth=1;x.stroke()}requestAnimationFrame(snow)};
 if(!matchMedia('(prefers-reduced-motion: reduce)').matches)snow();
 /* Bouton retour du téléphone : remonte d’un écran dans le jeu au lieu de quitter l’application */
 (()=>{
