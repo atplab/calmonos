@@ -938,6 +938,9 @@ body:has(.m3){background:radial-gradient(70% 38% at 25% 0,rgba(255,255,255,calc(
 body:has(.tank.ed) .aqinv{display:none}
 .aqsh[data-tab=inv] .seg{display:none}.aqsh[data-tab=inv] .aqtc{display:block}
 .aqown{flex:none;font-size:12.5px;font-weight:700;color:rgba(255,255,255,.7);padding:0 6px}
+/* la fenêtre et son fond ne sont visibles que lorsqu’elles sont ouvertes (sinon elles apparaissent pendant la transition de page) */
+.aqsh:not(.open){visibility:hidden;transition:translate .38s cubic-bezier(.3,.9,.3,1),visibility 0s .4s}
+.aqbd:not(.open){visibility:hidden;transition:opacity .3s,visibility 0s .3s}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -3409,7 +3412,7 @@ act.skipy=()=>{const g=cur,l=lv;if(!g||daily)return;st.set('k:'+g+':'+l,true);st
  if(isX(g,l)?l<nl(g)+NLX-1:l<nl(g)-1){start(g,false,l+1);msg('Niveau passé, sans flocons : tu pourras y revenir.')}else hub(g)};
 function start(g,d,l,r){if(!d&&l>=nl(g)&&!xmasOn())return hub(g);cur=g;daily=d;lv=l;playing=true;wsG=null;if(!r&&!d&&!st.get(ckey(g)+':'+l,false))r=st.get('p:'+g+':'+l,null)||undefined;theme(g,!d&&l>=nl(g));({mots:pRoue,croises:pCross,phrase:pPhrase,tournade:pTourne,maze:pMaze,memo:pMemo,sudoku:pSudoku,caches:pSearch,match3:pMatch,demenage:pDemen,quiz:pQuiz})[g](r);window.scrollTo(0,0)}
 function theme(id,x){m3Mus(id==='match3'&&!x);xmMus(!!x);const g=ALL.find(x=>x.id===id),s=document.body.style;s.setProperty('--a',x?'#d9453d':g?g.a:'#a99cf0');s.setProperty('--b',x?'#1f8a52':g?g.b:'#5458AB');$('#tint').classList.toggle('on',!!g);document.body.classList.toggle('g',!!g);document.body.classList.toggle('xm',!!x);const p=$('#pat');if(g)p.className='pt-'+id+' on';else p.classList.remove('on')}
-function nv(t){playing=false;wsG=null;theme(null);if(t!=='set'){rc=false;Sy.done='';Sy.pv=null;Sy.err=''}const n=$('#nav');n.hidden=false;n.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===t))}
+function nv(t){if(t!=='aqua')['#aqsh','#aqbd'].forEach(q=>{const e=$(q);if(e){e.classList.remove('open');e.style.visibility='hidden';e.style.transition='none'}});playing=false;wsG=null;theme(null);if(t!=='set'){rc=false;Sy.done='';Sy.pv=null;Sy.err=''}const n=$('#nav');n.hidden=false;n.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===t))}
 function resume(){const l=st.get('last',null);if(!l||l.daily||l.g==='melange'||!G.some(g=>g.id===l.g))return;const X=isX(l.g,l.lv);if(X&&!xmasOn())return;if(l.done)return(X?l.lv<nl(l.g)+NLX-1:l.lv<nl(l.g)-1)?start(l.g,false,l.lv+1):hub(l.g);start(l.g,false,l.lv,l.s)}
 /* ---------- Histoire : le petit bonhomme sur son étoile filante ----------
    1 poussière d’étoile par niveau réussi la première fois (dans n’importe quel jeu) ; il en faut 2 pour 1 pas ;
