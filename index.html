@@ -872,6 +872,18 @@ body .m3::before{position:fixed;inset:0;border-radius:0;opacity:.6;mask-image:li
 .tank.ed .dc.lgo{display:none}
 .tank .dc[data-id=lanterne],.tank .dc[data-id=meduse],.tank .dc[data-id=cristal],.tank .dc[data-id=lampions],.tank .dc[data-id=guirlande]{filter:none}
 .tank .fx svg{filter:brightness(calc(var(--br,1) + (1.06 - var(--br,1))*var(--lit,0))) saturate(calc(.7 + .3*var(--sun,1) + (.45 - .3*var(--sun,1))*var(--lit,0))) drop-shadow(0 0 calc(var(--lit,0)*7px) var(--litc,transparent));transition:filter .3s linear}
+.m3sh{position:absolute;left:50%;top:50%;translate:-50% -50%;z-index:9;display:flex;align-items:center;gap:10px;padding:11px 20px;border-radius:999px;background:rgba(16,40,84,.86);color:#fff;font:700 15px/1.2 system-ui,sans-serif;white-space:nowrap;pointer-events:none;box-shadow:0 8px 26px rgba(0,20,60,.4);animation:m3shb .45s cubic-bezier(.3,1.4,.5,1) both}
+.m3sh i{font-style:normal;color:#ffd96b;animation:m3spn 1.1s linear infinite}
+@keyframes m3shb{from{opacity:0;scale:.6}to{opacity:1;scale:1}}
+@keyframes m3spn{to{rotate:360deg}}
+.m3.shw .m3b,.shw{position:relative}
+.shw::after{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.4),rgba(255,255,255,0) 68%);animation:m3shp 1.2s ease-out both;pointer-events:none;z-index:8}
+@keyframes m3shp{0%{opacity:0}30%{opacity:1}100%{opacity:0}}
+.m3t.shk{animation:m3shk .48s ease-in-out}
+@keyframes m3shk{0%,100%{rotate:0deg;scale:1}25%{rotate:-9deg;scale:.88}50%{rotate:9deg;scale:.7;opacity:.55}75%{rotate:-5deg;scale:.9}}
+.m3t.shin{animation:m3sin .55s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes m3sin{from{scale:.3;opacity:0;rotate:-120deg}to{scale:1;opacity:1;rotate:0deg}}
+@media(prefers-reduced-motion:reduce){.m3t.shk,.m3t.shin,.shw::after{animation:none}}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -1718,8 +1730,12 @@ function pMatch(r){
  };
  const shuffle=async()=>{
   const ts=g.filter(t=>t&&!t.s);let ok=false;
+  const bn=document.createElement('div');bn.className='m3sh';bn.innerHTML='<i>✦</i><b>Les pièces se mélangent…</b><i>✦</i>';bd.appendChild(bn);bd.classList.add('shw');
+  ts.forEach(t=>t.el.classList.add('shk'));sfx(520,.3);
+  await wt(480);if(!alive()){bn.remove();bd.classList.remove('shw');return}
   for(let k=0;k<80&&!ok;k++){const a=sh(ts.map(t=>t.t));ts.forEach((t,i)=>{t.t=a[i]});const T=types();ok=!m3Has(T)&&!!m3Swap(T)}
-  ts.forEach(t=>look(t));msg('Les pièces se mélangent doucement…');await wt(500);
+  ts.forEach(t=>{look(t);t.el.classList.add('shin')});sfx(780,.3);
+  await wt(750);bn.remove();bd.classList.remove('shw');ts.forEach(t=>t.el.classList.remove('shin'));
  };
  const finish=async()=>{
   hud();sv();
