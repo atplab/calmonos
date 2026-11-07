@@ -1095,7 +1095,6 @@ html:has(#stg),body:has(#stg){overflow:hidden;overscroll-behavior:none}
 .smv{position:absolute;left:0;top:0;width:100%;will-change:transform}
 #smap,#smapn{display:block;width:100%;height:auto}
 .smv .smn{position:absolute;left:0;top:0;opacity:calc(1 - var(--sun,1))}
-body:has(#stg[data-x]) #snow{z-index:1}body:has(#stg[data-x]) #app{z-index:auto}
 #stg[data-ph=day] #smapn{display:none}
 #stg[data-ph=night] #smap{visibility:hidden}
 .gng{opacity:calc(1 - var(--sun,1))}
@@ -4213,7 +4212,7 @@ function xMapSVG(Y,m){
   +lg('xwl0',D('#f7dcc0'),D('#d9a882'))+lg('xwl1',D('#f4e6d2'),D('#c9b298'))+lg('xrf0',D('#e0645a'),D('#a8383a'))+lg('xrf1',D('#4f9a7a'),D('#2a6a56'))
   +lg('xpo','#6a6a92','#3a3a5e','x1="0" y1="0" x2="1" y2="0"')+rg('xmn',n?'#c3ccf2':'#ffffff',n?'#7a86c8':'#d4e0f4')+lg('xmd',n?'#5a64a6':'#b9c6e4',n?'#3a4280':'#9aa8d0')
   +rg('xbl',n?'#9aa6e0':'#ffffff',n?'#5a64a6':'#c7d4ee')
-  +`</defs><rect width="390" height="${H}" fill="url(#xsk${m})"/><rect y="${H-1}" width="390" height="520" fill="${sk[3]}"/><ellipse cx="195" cy="${H+60}" rx="300" ry="90" fill="${snow2}" opacity=".6"/><circle cx="${NXY[XMX][0]}" cy="${NXY[XMX][1]-60}" r="340" fill="url(#xgl${m})"/>`;
+  +`</defs><ellipse cx="195" cy="${H+60}" rx="300" ry="90" fill="${snow2}" opacity=".6"/><circle cx="${NXY[XMX][0]}" cy="${NXY[XMX][1]-60}" r="340" fill="url(#xgl${m})"/>`;
  /* le ciel, comme dans le voyage */
  if(n){for(let i=0;i<7;i++)s+=`<ellipse cx="${(rn(i+90)*390).toFixed(0)}" cy="${(150+i*(H*.7)/7+rn(i+95)*120).toFixed(0)}" rx="${(140+rn(i+99)*110).toFixed(0)}" ry="${(80+rn(i+103)*70).toFixed(0)}" fill="url(#synb${i%3}n)"/>`;
   let q='';for(let i=0;i<110;i++)q+=`<circle cx="${(rn(i)*390).toFixed(0)}" cy="${(rn(i+.3)*H*.7).toFixed(0)}" r="${(.8+rn(i+9)*1.5).toFixed(1)}" opacity="${(.45+rn(i+5)*.5).toFixed(2)}"${i%7===0?` class="stw" style="animation-delay:-${(rn(i+13)*3).toFixed(1)}s"`:''}/>`;
