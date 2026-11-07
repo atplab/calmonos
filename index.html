@@ -839,6 +839,30 @@ body:has(.m3)::after{display:none}
 body:has(.m3) #pat,body:has(.pg-quiz) #pat{filter:none}
 body:has(.m3) #pat{display:none}
 body .m3::before{position:fixed;inset:0;border-radius:0;opacity:.6;mask-image:linear-gradient(180deg,#000,transparent 60%);-webkit-mask-image:linear-gradient(180deg,#000,transparent 60%)}
+/* aquarium : chaque animal spécial nage à sa manière */
+.tank .fx[data-id=tortue] .fy{animation:mtg 8s ease-in-out infinite alternate;transform-origin:50% 50%}
+.tank .fx[data-id=tortue] .fi svg{animation:mtp 3.8s ease-in-out infinite;transform-origin:50% 50%}
+.tank .fx[data-id=hippo] .fy{animation:mhb 5.2s ease-in-out infinite alternate;transform-origin:50% 85%}
+.tank .fx[data-id=hippo] .fi svg{animation:mhf .5s ease-in-out infinite alternate;transform-origin:50% 50%}
+.tank .fx[data-id=raie] .fy{animation:mrg 6.5s ease-in-out infinite alternate;transform-origin:50% 50%}
+.tank .fx[data-id=raie] .fi svg{animation:mrf 2.6s ease-in-out infinite alternate;transform-origin:50% 50%}
+.tank .fx[data-id=meduse] .fy{animation:mmj 3.4s linear infinite;transform-origin:50% 30%}
+.tank .fx[data-id=meduse] .fi svg{animation:mmp 3.4s linear infinite;transform-origin:50% 25%}
+.tank .fx[data-id=globe] .fy{animation:mgw 2.4s ease-in-out infinite alternate}
+.tank .fx[data-id=globe] .fi svg{animation:mgp 6s ease-in-out infinite;transform-origin:50% 55%}
+.tank .fx[data-id=lune] .fy{animation:mtg 10s ease-in-out infinite alternate}
+.tank .fx[data-id=ange] .fy{animation:mrg 7s ease-in-out infinite alternate}
+@keyframes mtg{from{transform:translateY(-9px) rotate(-3deg)}to{transform:translateY(9px) rotate(3deg)}}
+@keyframes mtp{0%,100%{scale:1 1}50%{scale:1.03 .94}}
+@keyframes mhb{from{transform:translateY(-17px) rotate(-6deg)}to{transform:translateY(15px) rotate(6deg)}}
+@keyframes mhf{from{scale:1 1}to{scale:.96 1.02}}
+@keyframes mrg{from{transform:translateY(-14px) rotate(-3.5deg)}to{transform:translateY(14px) rotate(3.5deg)}}
+@keyframes mrf{from{scale:1 1}to{scale:1 .85}}
+@keyframes mmj{0%{transform:translateY(9px);animation-timing-function:cubic-bezier(.15,.85,.3,1)}30%{transform:translateY(-15px);animation-timing-function:ease-in-out}100%{transform:translateY(9px)}}
+@keyframes mmp{0%{scale:1 1}12%{scale:.86 1.12}34%{scale:1.06 .94}100%{scale:1 1}}
+@keyframes mgw{from{transform:translateY(-2px) rotate(-3deg)}to{transform:translateY(3px) rotate(3deg)}}
+@keyframes mgp{0%,72%,100%{scale:1 1}86%{scale:1.08 1.08}}
+@media(prefers-reduced-motion:reduce){.tank .fx[data-id] .fy,.tank .fx[data-id] .fi svg{animation:none}}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
