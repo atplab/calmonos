@@ -884,6 +884,47 @@ body .m3::before{position:fixed;inset:0;border-radius:0;opacity:.6;mask-image:li
 .m3t.shin{animation:m3sin .55s cubic-bezier(.3,1.5,.5,1) both}
 @keyframes m3sin{from{scale:.3;opacity:0;rotate:-120deg}to{scale:1;opacity:1;rotate:0deg}}
 @media(prefers-reduced-motion:reduce){.m3t.shk,.m3t.shin,.shw::after{animation:none}}
+/* ---------- Aquarium plein écran ---------- */
+@property --z{syntax:'<number>';inherits:true;initial-value:.7}
+.tank .fx{z-index:calc(2 + var(--z)*10)}
+.tank .fx .fy{opacity:calc(.62 + .38*var(--z));filter:blur(calc((1 - var(--z))*1.3px))}
+.tank .dc{z-index:5}.tank .dc.lgo{z-index:6}
+.tank .fp{z-index:30}.tank .aqq{z-index:20}.tank .aqb{z-index:21}
+body:has(.aqfs){overflow:hidden}
+body:has(.aqfs) #app{padding:0;max-width:none}
+.aqfs{position:fixed;inset:0;z-index:1}
+.aqfs .tank{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;border-radius:0;box-shadow:none;margin:0}
+.aqhd{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));left:0;right:0;width:min(440px,100%);margin:0 auto;padding:0 18px;z-index:9}
+.aqhd h1{color:#fff;text-shadow:0 2px 12px rgba(0,20,60,.55)}
+.aqst{position:fixed;top:calc(66px + env(safe-area-inset-top,0px));left:max(18px,calc(50% - 202px));z-index:9;display:flex;flex-direction:column;gap:2px;max-width:min(270px,62vw);padding:9px 14px;border-radius:16px;background:rgba(14,36,82,.62);color:#fff;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 6px 18px rgba(0,20,60,.28)}
+.aqst b{font-size:14px}.aqst small{font-size:12px;opacity:.85}
+.aqfs .m{position:fixed;left:50%;bottom:calc(190px + env(safe-area-inset-bottom,0px));translate:-50% 0;z-index:9;max-width:min(380px,90vw);margin:0;padding:8px 14px;border-radius:999px;background:rgba(14,36,82,.82);color:#fff;font-size:13px;min-height:0}
+.aqfs .m:empty{display:none}
+.aqbar{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom,0px));translate:-50% 0;z-index:9;display:flex;align-items:flex-end;justify-content:center;gap:16px;width:min(440px,100%);padding:0 18px}
+.aqrb{display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:0;color:#fff;font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.aqrb b{font-size:12.5px;padding:2px 10px;border-radius:999px;background:rgba(14,36,82,.7)}
+.aqri{position:relative;display:grid;place-items:center;width:62px;height:62px;border-radius:50%;background:radial-gradient(circle at 35% 28%,#ffd987,#f09a2c);border:3px solid #fff;box-shadow:0 6px 16px rgba(0,20,60,.4);color:#7a3d00}
+.aqrb:nth-child(3) .aqri{background:radial-gradient(circle at 35% 28%,#a8e6ff,#2c93d6);color:#073a66}
+.aqri svg{width:30px;height:30px}
+.aqrb:active .aqri,.aqfeedb:active{transform:scale(.94)}
+.aqri .aqm-pt{position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:#ff5a4f;border:2px solid #fff}
+.aqfeedb{min-width:150px;padding:16px 24px;border-radius:28px;border:3px solid #fff;background:linear-gradient(180deg,#5fe06b,#1fae3e);color:#fff;font:800 19px/1.1 system-ui,sans-serif;text-shadow:0 2px 0 rgba(0,70,20,.45);box-shadow:0 7px 0 #138030,0 12px 22px rgba(0,30,60,.35);cursor:pointer}
+.aqfeedb:disabled{background:linear-gradient(180deg,#9fb8cc,#7894ab);box-shadow:0 7px 0 #5d7489,0 12px 22px rgba(0,30,60,.3);text-shadow:none;cursor:default}
+.aqbd{position:fixed;inset:0;z-index:12;background:rgba(5,15,40,.4);opacity:0;pointer-events:none;transition:opacity .3s}
+.aqbd.open{opacity:1;pointer-events:auto}
+.aqsh{position:fixed;left:50%;bottom:0;translate:-50% 108%;z-index:13;width:min(440px,100%);max-height:76vh;overflow:auto;box-sizing:border-box;border-radius:26px 26px 0 0;padding:14px 18px calc(22px + env(safe-area-inset-bottom,0px));transition:translate .38s cubic-bezier(.3,.9,.3,1);overscroll-behavior:contain}
+.aqsh.open{translate:-50% 0}
+.aqsht{position:sticky;top:-14px;z-index:2;display:flex;align-items:center;gap:10px;padding:4px 0 10px;margin-top:-4px}
+.aqsht .seg{flex:1}
+.aqtc{display:none;flex:1;margin:0;font-size:20px}
+.aqsh[data-tab=care] .seg{display:none}.aqsh[data-tab=care] .aqtc{display:block}
+.aqx{flex:none;width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.2);color:inherit;font-size:24px;line-height:1;cursor:pointer}
+.aqedb{position:fixed;left:50%;bottom:calc(112px + env(safe-area-inset-bottom,0px));translate:-50% 0;z-index:10;display:none}
+body:has(.tank.ed) .aqedb{display:block}
+body:has(.tank.ed) .aqbar,body:has(.tank.ed) .aqst{display:none}
+.aqsh{background:linear-gradient(180deg,rgba(30,52,112,.98),rgba(18,32,82,.99));color:#fff;border:1px solid rgba(255,255,255,.18)}
+.aqsh .aqc,.aqsh small,.aqsh .atx small{color:rgba(255,255,255,.78)}
+body:has(.aqsh.open) #nav{opacity:0;pointer-events:none}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -4180,7 +4221,7 @@ function aqPlay(kind){
 const aqFmtD=ms=>{const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5);return d?d+' j'+(h?' '+h+' h':''):aqFmt(ms)};
 const aqFmt=ms=>{const m=Math.max(1,Math.ceil(ms/6e4)),h=Math.floor(m/60),r=m%60;return h?(r?h+' h '+String(r).padStart(2,'0'):h+' h'):m+' min'};
 let aqTab='fish',aqEd=false;
-const dH=d=>d.w*4/3/(d.ar||1);
+let AQR=4/3;const dH=d=>d.w*AQR/(d.ar||1);
 function dpos(d,a){const p=a.p&&a.p[d.id];if(p&&typeof p.x==='number'&&typeof p.b==='number')return{x:p.x,b:p.b};return{x:d.x,b:d.k==='ceil'?100-dH(d):(d.b===undefined?7:d.b)}}
 function dcl(d,x,b){const T=100-dH(d);return{x:Math.max(0,Math.min(100-d.w,x)),b:d.k==='ceil'?T:Math.max(0,Math.min(T,b))}}
 function tankHTML(a){
@@ -4238,7 +4279,7 @@ function aquaRefresh(){const t=$('#tank');if(!t)return;
  aqPanel();aqStatus();chip()}
 /* onglets de l’aquarium : seul le panneau du bas change, l’aquarium (poissons, bulles, repas en cours) continue sans se recharger */
 function aqTabTo(v){
- const was=aqEd,bs=document.querySelectorAll('[data-a=aqtab]');aqTab=v;aqEd=false;
+ const was=aqEd,bs=document.querySelectorAll('[data-a=aqtab]');aqTab=v;aqEd=false;aqOpenSh(v);
  if(!$('#tank')||!bs.length)return aquaScreen();
  bs.forEach(b=>b.classList.toggle('on',b.dataset.v===v));
  const m=$('#m-aq');if(m)m.textContent='';
@@ -4246,7 +4287,7 @@ function aqTabTo(v){
 }
 function aquaScreen(){
  cur=null;origin='home';nv('aqua');mt='m-aq';aqEd=false;aqBusy=0;
- app.innerHTML=`<header class="top"><h1>Aquarium</h1><div class="chip">❄ ${FLX()}</div></header>${tankHTML(aqRead())}<section class="glass play" style="--a:#6fc3e8;--b:#2a6f9a"><div class="aqf"><div><b id="aqs"></b><small id="aqn"></small></div><button class="btn" id="aqb" data-a="aqfeed"></button></div><p class="m" id="m-aq" role="status" aria-live="polite"></p><div class="seg"><button class="${aqTab==='fish'?'on':''}" data-a="aqtab" data-v="fish">Poissons</button><button class="${aqTab==='deco'?'on':''}" data-a="aqtab" data-v="deco">Décors</button><button class="${aqTab==='care'?'on':''}" data-a="aqtab" data-v="care">Entretien<i class="aqm-pt" id="aqm-pt" hidden></i></button></div><div id="aql"></div></section>`;
+ AQR=innerWidth/innerHeight;app.innerHTML=`<div class="aqfs"><header class="top aqhd"><h1>Aquarium</h1><div class="chip">❄ ${FLX()}</div></header>${tankHTML(aqRead())}<div class="aqst"><b id="aqs"></b><small id="aqn"></small></div><p class="m" id="m-aq" role="status" aria-live="polite"></p><div class="aqbar"><button class="aqrb" data-a="aqshop"><span class="aqri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg></span><b>Boutique</b></button><button class="aqfeedb" id="aqb" data-a="aqfeed"></button><button class="aqrb" data-a="aqcare"><span class="aqri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c3.6 4.6 6 7.6 6 11a6 6 0 0 1-12 0c0-3.4 2.4-6.4 6-11Z"/><path d="M9 14.5a3 3 0 0 0 3 3"/></svg><i class="aqm-pt" id="aqm-pt" hidden></i></span><b>Entretien</b></button></div><button class="btn aqedb" data-a="aqed">Terminer le placement</button><div class="aqbd" id="aqbd" data-a="aqclose"></div><section class="aqsh glass" id="aqsh" data-tab="${aqTab}" aria-label="Boutique et entretien"><div class="aqsht"><div class="seg"><button class="${aqTab==='fish'?'on':''}" data-a="aqtab" data-v="fish">Poissons</button><button class="${aqTab==='deco'?'on':''}" data-a="aqtab" data-v="deco">Décors</button></div><h2 class="aqtc">Entretien</h2><button class="aqx" data-a="aqclose" aria-label="Fermer">×</button></div><div id="aql"></div></section></div>`;
  aqPanel();aqStatus();window.scrollTo(0,0);
 }
 /* Nourrir : des grains tombent, les poissons nourris foncent dessus (bien plus vite que d’habitude), mangent, puis reprennent leur nage */
@@ -4283,13 +4324,13 @@ function aqFx(ids,hg){
 function aqWan(f,q,du,k){
  let s=(q*2654435761+k*40503)>>>0;const R=()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296};
  const vert=f.id==='hippo'||f.id==='meduse',slow=f.id==='tortue'||f.id==='lune'||f.id==='meduse'||f.id==='hippo',sp=slow?2.8:4.6,wd=96-15*f.sz,n=5+(q%3);
- const P=[];let x=.3+R()*.4,y=14+R()*34;
- for(let i=0;i<n;i++){P.push([x,y]);const mx=vert?.22:.5;let nx=x+(R()*2-1)*mx,ny=y+(R()*2-1)*(vert?22:16);if(Math.abs(nx-x)<.12)nx+=(nx<.5?.14:-.14);x=Math.min(.86,Math.max(.14,nx));y=Math.min(50,Math.max(10,ny))}
+ const P=[];let x=.3+R()*.4,y=14+R()*50,z=R();
+ for(let i=0;i<n;i++){P.push([x,y,z]);const mx=vert?.22:.5;let nx=x+(R()*2-1)*mx,ny=y+(R()*2-1)*(vert?26:22);if(Math.abs(nx-x)<.12)nx+=(nx<.5?.14:-.14);x=Math.min(.86,Math.max(.14,nx));y=Math.min(72,Math.max(8,ny));z=Math.min(1,Math.max(0,z+(R()*2-1)*.7))}
  P.push(P[0]);
- const T=[0];for(let i=1;i<P.length;i++){const dx=(P[i][0]-P[i-1][0])*wd,dy=(P[i][1]-P[i-1][1])*.8;T.push(T[i-1]+Math.max(3.5,Math.hypot(dx,dy)/sp))}
+ const T=[0];for(let i=1;i<P.length;i++){const dx=(P[i][0]-P[i-1][0])*wd,dy=(P[i][1]-P[i-1][1])*.8;T.push(T[i-1]+Math.max(3.5,Math.hypot(dx,dy,(P[i][2]-P[i-1][2])*22)/sp))}
  const D=T[T.length-1],id=f.id;let dir=1,fl='',kf='';
  for(let i=0;i<P.length;i++){const p=(T[i]/D*100).toFixed(2);
-  kf+=`${p}%{translate:calc(var(--tx)*${P[i][0].toFixed(3)}) 0;top:${P[i][1].toFixed(1)}%;animation-timing-function:ease-in-out}`;
+  kf+=`${p}%{translate:calc(var(--tx)*${P[i][0].toFixed(3)}) 0;top:${(P[i][1]+(P[i][2]-.5)*16).toFixed(1)}%;scale:${(.78+P[i][2]*.9).toFixed(2)};--z:${P[i][2].toFixed(2)};animation-timing-function:ease-in-out}`;
   if(i<P.length-1){const dx=(P[i+1][0]-P[i][0])*wd;if(Math.abs(dx)>1.5)dir=dx>0?1:-1;fl+=`${p}%{transform:scaleX(${dir})}`}}
  fl+=`100%{transform:scaleX(${dir})}`;
  const sel=`.tank .fx[data-id="${id}"]`;
@@ -4385,6 +4426,8 @@ function aqLit(){
 }
 setInterval(aqLit,140);
 
+function aqOpenSh(v){const s=$('#aqsh'),b=$('#aqbd');if(s){s.dataset.tab=v;s.classList.add('open');s.scrollTop=0}if(b)b.classList.add('open')}
+function aqShut(){const s=$('#aqsh'),b=$('#aqbd');if(s)s.classList.remove('open');if(b)b.classList.remove('open')}
 function aqNear(P,cx,cy){let b=null,bd=1e9;for(const p of P){if(p.state!==1)continue;const d=Math.hypot(p.xs-cx,p.y-cy)+90*p.n;if(d<bd){bd=d;b=p}}return b}
 function aqStep(ts){
  const S=AQS;if(!S)return;S.raf=0;
@@ -4459,7 +4502,8 @@ function aqBuy(v){
 }
 Object.assign(act,{
  aqtab:v=>aqTabTo(v),
- aqed:()=>{aqEd=!aqEd;aquaRefresh()},
+ aqshop:()=>aqTabTo(aqTab==='care'?'fish':aqTab),aqclose:()=>aqShut(),
+ aqed:()=>{aqEd=!aqEd;if(aqEd)aqShut();aquaRefresh()},
  aqpr:()=>{const a=aqRead();Object.keys(a.p).forEach(id=>{const d=DECO.find(x=>x.id===id);if(d){const q=dpos(d,{p:{}});a.p[id]={x:q.x,b:q.b,t:Date.now()}}});aqSave(a);aquaRefresh()},
  aqfeed:()=>{const a=aqRead();if(aqMt(a).late&&aqOn(a).length){aqTabTo('care');return}aqFeed(null)},
  aqcare:()=>aqTabTo('care'),
@@ -4774,7 +4818,7 @@ const socAq=()=>{const a=aqRead(),nm=aqNames(a),p={};DECO.forEach(d=>{const o=a.
 function socTank(q){
  const n=Date.now(),a={f:{},d:{},p:{},ws:[q.w],w:q.w,fc:n,wc:n,at:n};
  q.f.forEach(([i,nm])=>{a.f[i]={on:1,t:n,n:nm}});q.d.forEach(i=>{a.d[i]=1});Object.entries(q.p).forEach(([i,v])=>{a.p[i]={x:v[0],b:v[1],t:n}});
- const ed=aqEd;aqEd=false;let h;try{h=tankHTML(a)}finally{aqEd=ed}
+ const ed=aqEd,ar0=AQR;aqEd=false;AQR=4/3;let h;try{h=tankHTML(a)}finally{aqEd=ed;AQR=ar0}
  return h.replace('id="tank"','id="ftank"').replace(/ data-a="aqfish" data-v="[^"]*" role="button" tabindex="0"/g,' role="img"').replace(/<span class="hg">[^<]*<\/span>/g,'')}
 const socWord=()=>{const x=wdRead(),k=wKey(x.d);return x.g.length?{d:x.d,r:x.r,n:x.g.length,p:x.g.map(q=>wdEval(q,k).join(''))}:{d:x.d,r:0,n:0,p:[]}};
 function socProfile(id,M,p,av,nameOf){
