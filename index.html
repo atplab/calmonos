@@ -890,8 +890,8 @@ body .m3::before{position:fixed;inset:0;border-radius:0;opacity:.6;mask-image:li
 .tank .fx .fy{opacity:calc(.62 + .38*var(--z));filter:blur(calc((1 - var(--z))*1.3px))}
 .tank .dc{z-index:5}.tank .dc.lgo{z-index:6}
 .tank .fp{z-index:30}.tank .aqq{z-index:20}.tank .aqb{z-index:21}
-body:has(.aqfs){overflow:hidden}
-body:has(.aqfs) #app{padding:0;max-width:none}
+body:has(#app>.aqfs){overflow:hidden}
+#app:has(>.aqfs){padding:0;max-width:none}
 .aqfs{position:fixed;inset:0;z-index:1}
 .aqfs .tank{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;border-radius:0;box-shadow:none;margin:0}
 .aqhd{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));left:0;right:0;width:min(440px,100%);margin:0 auto;padding:0 18px;z-index:9}
@@ -942,7 +942,7 @@ body:has(.tank.ed) .aqinv{display:none}
 .aqsh:not(.open){visibility:hidden;transition:translate .38s cubic-bezier(.3,.9,.3,1),visibility 0s .4s}
 .aqbd:not(.open){visibility:hidden;transition:opacity .3s,visibility 0s .3s}
 /* pendant le glissement de page, #app porte un transform : on lui donne la hauteur de l’écran pour que l’aquarium (en position fixe) le remplisse */
-body:has(.aqfs) #app{min-height:100vh;min-height:100dvh}
+#app:has(>.aqfs){min-height:100vh;min-height:100dvh}
 .bkg:has(.aqfs){padding:0!important;top:0!important;left:0!important;width:100%!important;max-width:none!important;height:100vh!important;height:100dvh!important}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
