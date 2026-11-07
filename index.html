@@ -1021,6 +1021,13 @@ body:has(.pg-quiz) .skh,body:has(.m3) .skh{display:none}
 .hmsg{top:calc(var(--ht) + 10px + env(safe-area-inset-top,0px));bottom:auto}
 .hf .skw:not(:empty){top:calc(var(--ht) + 10px + env(safe-area-inset-top,0px))}
 
+/* barres translucides : on voit la scène dessous */
+.hv{top:0;bottom:0}
+.htb{background:linear-gradient(0deg,rgba(24,30,78,.5),rgba(14,18,52,.62));-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.hbar{background:linear-gradient(180deg,rgba(24,30,78,.5),rgba(14,18,52,.66));-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.ht.far{opacity:.5}
+.hcd h2{margin:2px 0 0;font-size:30px;line-height:1.1;font-weight:700;text-wrap:balance}
+
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
 .sb.cf{background:linear-gradient(180deg,#ffd18a,#e8944a);color:#3a2310;border:0}
@@ -1470,7 +1477,7 @@ const CHU=[
  w:'La clé tourne, la bougie s’allume, l’ourson l’attend sur le lit. Le petit bonhomme est enfin chez lui. Merci de l’avoir ramené.'}
 ];
 function chScene(u,li,sd){
- const R=chRnd(sd),W=CHW,H=CHH,hz=u.hz*H,TS=Math.round(40-li*.8),N=150+li*14,nt=u.it.length+1;
+ const R=chRnd(sd),W=CHW,H=CHH,hz=u.hz*H,TS=Math.round(40-li*.8),N=215+li*8,nt=u.it.length+1;
  const rr=(a,b)=>a+R()*(b-a),pick=a=>a[Math.floor(R()*a.length)];
  const bad=new Set(u.it.map(x=>x[0]));
  const se=u.se.filter(e=>!bad.has(e)),ge=u.ge.filter(e=>!bad.has(e));
@@ -1501,7 +1508,10 @@ function chScene(u,li,sd){
  }
  /* quelques éléments posés en partie devant chaque cible : on la voit, mais il faut chercher */
  T.forEach(t=>{const k=2+Math.floor(R()*2);for(let j=0;j<k;j++){const an=rr(0,Math.PI*2),d=TS*rr(.6,.82),s=TS*rr(1.05,1.4);D.push({e:pick(t.y<hz-10&&se.length?se:ge),x:t.x+Math.cos(an)*d,y:t.y+Math.abs(Math.sin(an))*d*.6+3,s,a:rr(-10,10),f:R()<.5?-1:1})}});
- const L=[...D.map(d=>({y:d.y,h:`<span class="ht" style="left:${d.x.toFixed(1)}px;top:${d.y.toFixed(1)}px;font-size:${d.s.toFixed(1)}px;transform:translate(-50%,-50%) rotate(${d.a.toFixed(1)}deg) scaleX(${d.f})">${d.e}</span>`})),
+ /* décor lointain : grandes silhouettes pâles au fond, et mille petits détails au sol */
+ const FAR=[];for(let j=0;j<16;j++){const sky=hz>240&&R()<.3,y=sky?rr(80,hz-20):rr(hz-70,hz+60),s=rr(70,130);FAR.push({e:pick(sky?se:ge),x:rr(0,W),y,s,a:rr(-8,8),f:R()<.5?-1:1})}
+ for(let j=0,k=0;j<110&&k<900;k++){const y=rr(hz+10,H-20),x=rr(10,W-10),s=rr(13,20);if(!keepClear(x,y,s))continue;D.push({e:pick(ge),x,y,s,a:rr(-25,25),f:R()<.5?-1:1});j++}
+ const L=[...FAR.map(d=>({y:-1000+d.y,h:`<span class="ht far" style="left:${d.x.toFixed(1)}px;top:${d.y.toFixed(1)}px;font-size:${d.s.toFixed(1)}px;transform:translate(-50%,-50%) rotate(${d.a.toFixed(1)}deg) scaleX(${d.f})">${d.e}</span>`})),...D.map(d=>({y:d.y,h:`<span class="ht" style="left:${d.x.toFixed(1)}px;top:${d.y.toFixed(1)}px;font-size:${d.s.toFixed(1)}px;transform:translate(-50%,-50%) rotate(${d.a.toFixed(1)}deg) scaleX(${d.f})">${d.e}</span>`})),
   ...T.map((t,i)=>({y:t.y,h:t.k==='g'?`<span class="ht g" data-t="${i}" style="left:${t.x.toFixed(1)}px;top:${t.y.toFixed(1)}px;width:${(TS*1.05).toFixed(1)}px">${qzGuy('ask')}</span>`:`<span class="ht o" data-t="${i}" style="left:${t.x.toFixed(1)}px;top:${t.y.toFixed(1)}px;font-size:${TS}px">${t.e}</span>`}))];
  L.sort((a,b)=>a.y-b.y);
  return{html:bg+L.map(l=>l.h).join(''),T};
@@ -1516,11 +1526,10 @@ function pCherche(r){
  app.innerHTML=`<div class="hf" id="hf"><div class="hv" id="hv"><div class="hw" id="hw" style="width:${CHW}px;height:${CHH}px">${S.html}</div></div>
 <div class="htb"></div>
 <div class="hhd"><button class="back" data-a="back" data-v="hub">‹ Retour</button><span class="hsp"></span><button class="hb skh" data-a="skip">Passer</button><button class="hb" data-a="hint">Indice · 1 ❄</button><div class="chip">❄ ${FLX()}</div></div>
-<div class="hnm">${u.n}</div>
 <p class="m hmsg" id="m" role="status" aria-live="polite"></p>
 <div class="skw" id="skw"></div>
 <div class="hbar"><button class="hzb" data-a="chz" data-v="-1" aria-label="Rétrécir">−</button><div class="htr" id="htr" aria-label="À trouver">${tray()}</div><button class="hzb" data-a="chz" data-v="1" aria-label="Agrandir">+</button></div>
-${intro?`<div class="hov" id="hov"><div class="hcd glass"><small>Niveau ${li+1} · ${u.n}</small><p>${u.s}</p><div class="hli">${T.map(t=>`<span>${t.k==='g'?'<i class="hg">'+qzGuy('ask')+'</i>':'<i>'+t.e+'</i>'}<em>${t.n}</em></span>`).join('')}</div><button class="btn" data-a="chgo">C’est parti</button></div></div>`:''}</div>`;
+${intro?`<div class="hov" id="hov"><div class="hcd glass"><h2>${u.n}</h2><p>${u.s}</p><div class="hli">${T.map(t=>`<span>${t.k==='g'?'<i class="hg">'+qzGuy('ask')+'</i>':'<i>'+t.e+'</i>'}<em>${t.n}</em></span>`).join('')}</div><button class="btn" data-a="chgo">C’est parti</button></div></div>`:''}</div>`;
  const hv=$('#hv'),hw=$('#hw');
  let s=1,tx=0,ty=0,vw=0,vh=0,smin=.5,smax=3;
  const clamp=()=>{s=Math.max(smin,Math.min(smax,s));const w=CHW*s,h=CHH*s;tx=vw>=w?(vw-w)/2:Math.min(0,Math.max(vw-w,tx));ty=vh>=h?(vh-h)/2:Math.min(0,Math.max(vh-h,ty))};
