@@ -701,6 +701,11 @@ body:has(.pg-quiz) .skw{display:none}
 .qz-next{margin-top:14px}
 @media(prefers-reduced-motion:reduce){.qz-m svg,.qzsp{animation:none!important}}
 
+/* écran Jeux : tuiles un peu moins hautes */
+.grid:has(>.tw) .tile{padding:13px 14px 14px;min-height:112px;gap:8px}
+.grid:has(>.tw) .tile i{width:40px;height:40px;border-radius:14px;font-size:20px}
+.grid:has(>.tw) .fv{top:5px;right:6px}
+
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
 .sb.cf{background:linear-gradient(180deg,#ffd18a,#e8944a);color:#3a2310;border:0}
