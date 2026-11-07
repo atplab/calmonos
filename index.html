@@ -816,6 +816,13 @@ body:has(.pg-quiz) .skw{display:none}
 /* écran Jeux : bas des tuiles légèrement réduit, icône multijoueur du Scrabble */
 .grid:has(>.tw) .tile{min-height:116px}
 .tile b .mp{display:inline-block;width:20px;height:20px;vertical-align:-4px;margin-right:7px;fill:currentColor}
+/* Match-3 : tout l’écran devient l’océan */
+body:has(.m3){background:radial-gradient(70% 38% at 25% 0,rgba(255,255,255,.3),transparent 72%),radial-gradient(55% 32% at 85% 0,rgba(255,255,255,.2),transparent 72%),linear-gradient(0deg,rgba(226,200,140,.28),transparent 10%),linear-gradient(180deg,#2fb0d2 0%,#1c84b8 34%,#13539b 66%,#0a2b69 100%) fixed!important}
+body:has(.m3) #tint,body:has(.m3) #pat{opacity:0!important}
+body:has(.m3) #snow{display:none}
+body .m3{background:none;overflow:visible;border-radius:0}
+body .m3sea{position:fixed}
+body:has(.m3) :is(.m,.tl,.m3m small,.note){color:#fff!important;text-shadow:0 1px 3px rgba(4,36,78,.6)}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
