@@ -885,9 +885,9 @@ body .m3::before{position:fixed;inset:0;border-radius:0;opacity:.6;mask-image:li
 @keyframes m3sin{from{scale:.3;opacity:0;rotate:-120deg}to{scale:1;opacity:1;rotate:0deg}}
 @media(prefers-reduced-motion:reduce){.m3t.shk,.m3t.shin,.shw::after{animation:none}}
 /* ---------- Aquarium plein écran ---------- */
-@property --z{syntax:'<number>';inherits:true;initial-value:.7}
-.tank .fx{z-index:calc(2 + var(--z)*10)}
-.tank .fx .fy{opacity:calc(.62 + .38*var(--z));filter:blur(calc((1 - var(--z))*1.3px))}
+@property --aqz{syntax:'<number>';inherits:true;initial-value:.7}
+.tank .fx{z-index:calc(2 + var(--aqz)*10)}
+.tank .fx .fy{opacity:calc(.62 + .38*var(--aqz));filter:blur(calc((1 - var(--aqz))*1.3px))}
 .tank .dc{z-index:5}.tank .dc.lgo{z-index:6}
 .tank .fp{z-index:30}.tank .aqq{z-index:20}.tank .aqb{z-index:21}
 body:has(#app>.aqfs){overflow:hidden}
@@ -949,7 +949,7 @@ body:has(.tank.ed) .aqinv{display:none}
 body:has(#app>.hf){overflow:hidden;overscroll-behavior:none}
 .bkg:has(.hf){padding:0!important;top:0!important;left:0!important;width:100%!important;max-width:none!important;height:100vh!important;height:100dvh!important}
 .hf{position:fixed;inset:0;z-index:1;overflow:hidden;background:#101433;user-select:none;-webkit-user-select:none}
-.hv{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab}
+.hv{position:absolute;left:0;right:0;top:0;bottom:calc(var(--hb,92px) + env(safe-area-inset-bottom,0px));overflow:hidden;touch-action:none;cursor:grab}
 .hw{position:absolute;left:0;top:0;transform-origin:0 0}
 .hw.sm{transition:transform .6s cubic-bezier(.3,.8,.3,1)}
 .hbg{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -971,9 +971,6 @@ body:has(#app>.hf){overflow:hidden;overscroll-behavior:none}
 .hsp{flex:1}
 .hf .back,.hf .hb,.hf .chip{border-radius:999px;padding:7px 13px;background:rgba(18,22,56,.68);color:#fff;border:1px solid rgba(255,255,255,.22);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .hnm{position:absolute;top:calc(58px + env(safe-area-inset-top,0px));left:50%;translate:-50% 0;z-index:4;pointer-events:none;padding:4px 12px;border-radius:999px;background:rgba(18,22,56,.55);color:#fff;font-size:12.5px;white-space:nowrap}
-.hzm{position:absolute;right:max(12px,env(safe-area-inset-right,0px));top:50%;translate:0 -50%;z-index:4;display:flex;flex-direction:column;gap:8px}
-.hzm button{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(18,22,56,.68);color:#fff;font-size:24px;line-height:1;cursor:pointer;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-.htr{position:absolute;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));translate:-50% 0;z-index:4;display:flex;gap:6px;padding:8px 10px;border-radius:22px;background:rgba(18,22,56,.74);border:1px solid rgba(255,255,255,.18);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);max-width:calc(100% - 20px);box-sizing:border-box}
 .hti{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:56px;color:#fff}
 .hte{display:flex;align-items:center;justify-content:center;height:36px;font-size:28px;line-height:1;font-family:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif}
 .hte svg{height:36px;width:auto;display:block;overflow:visible}
@@ -981,13 +978,9 @@ body:has(#app>.hf){overflow:hidden;overscroll-behavior:none}
 .hti:not(.ok) .hte{filter:brightness(0) invert(1);opacity:.42}
 .hti.ok .hte{animation:hjump .6s ease-out}
 .hti.ok b{position:absolute;top:-5px;right:-1px;color:#7dff9b;font-size:15px}
-.hmsg{position:absolute;left:50%;translate:-50% 0;bottom:calc(100px + env(safe-area-inset-bottom,0px));max-width:min(380px,90vw);z-index:4;margin:0;padding:8px 14px;border-radius:999px;background:rgba(18,22,56,.82);color:#fff;font-size:13px;min-height:0;text-align:center}
+.hmsg{position:absolute;left:50%;translate:-50% 0;bottom:calc(var(--hb,92px) + 10px + env(safe-area-inset-bottom,0px));max-width:min(380px,90vw);z-index:4;margin:0;padding:8px 14px;border-radius:999px;background:rgba(18,22,56,.82);color:#fff;font-size:13px;min-height:0;text-align:center}
 .hmsg:empty{display:none}
 .hmsg.big{font-size:16px;font-weight:700;background:rgba(40,120,70,.9)}
-.hsk{position:absolute;left:0;right:0;bottom:calc(152px + env(safe-area-inset-bottom,0px));z-index:3;margin:0;pointer-events:none}
-.hsk>*{pointer-events:auto}
-.hsk .skp{background:rgba(18,22,56,.55)}
-.hsk>span{background:rgba(18,22,56,.85);padding:8px 12px;border-radius:14px;color:#fff;max-width:300px}
 .hov{position:absolute;inset:0;z-index:6;display:grid;place-items:center;padding:20px;background:rgba(10,12,40,.6)}
 .hcd{max-width:360px;padding:20px 20px 18px;text-align:center;color:#fff;background:linear-gradient(180deg,rgba(40,50,112,.97),rgba(24,32,84,.98));border:1px solid rgba(255,255,255,.2);border-radius:24px}
 .hcd small{opacity:.8}
@@ -998,6 +991,22 @@ body:has(#app>.hf){overflow:hidden;overscroll-behavior:none}
 .hli .hg svg{height:38px;width:auto;display:block;overflow:visible}
 .hli em{font-style:normal;opacity:.92;line-height:1.2}
 .pt-cherche{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='round'%3E%3Cg opacity='.2'%3E%3Ccircle cx='28' cy='30' r='11'/%3E%3Cpath d='M36 38l9 9'/%3E%3Ccircle cx='88' cy='84' r='9'/%3E%3Cpath d='M94 90l8 8'/%3E%3Cpath d='M82 24l2 5 5 2-5 2-2 5-2-5-5-2 5-2z' fill='%23ffffff' stroke='none'/%3E%3C/g%3E%3C/svg%3E")}
+
+/* barre du bas : objets à trouver + zoom ; la scène s’arrête au-dessus */
+.hf{--hb:92px}
+.hbar{position:absolute;left:0;right:0;bottom:0;z-index:4;height:calc(var(--hb) + env(safe-area-inset-bottom,0px));box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:10px;padding:8px max(12px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));background:linear-gradient(180deg,#1d2358,#12163f);border-top:1px solid rgba(255,255,255,.2);box-shadow:0 -6px 18px rgba(5,8,30,.45)}
+.htr{display:flex;gap:6px;flex:1 1 auto;justify-content:center;min-width:0}
+.hzm{display:flex;flex-direction:column;gap:6px;flex:none}
+.hzm button{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);color:#fff;font-size:22px;line-height:1;cursor:pointer;padding:0}
+.hmsg{z-index:5}
+/* « Passer » : dans l’en-tête ; la confirmation s’affiche sous l’en-tête */
+.top .tr{gap:6px}.top .tr .hb{padding:6px 10px;font-size:13px}
+.hf .hhd .hb{padding:7px 11px;font-size:13px}
+body:has(.pg-quiz) .skh,body:has(.m3) .skh{display:none}
+.skw:not(:empty){position:fixed;top:calc(66px + env(safe-area-inset-top,0px));left:50%;translate:-50% 0;z-index:30;width:min(320px,88vw);box-sizing:border-box;margin:0;padding:12px 14px;border-radius:16px;background:rgba(18,22,56,.94);color:#fff;box-shadow:0 10px 30px rgba(5,8,30,.5)}
+@media(max-width:430px){body:not(:has(.m3)) .top.stk:has(.skh):has([data-a=hint]) .tl{display:none}}
+.hf .hhd{gap:6px}.hf .hhd .back,.hf .hhd .hb,.hf .hhd .chip{white-space:nowrap;padding:6px 10px;font-size:12.5px}
+.top .tr .hb,.top .tr .chip{white-space:nowrap}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -1492,12 +1501,11 @@ function pCherche(r){
  const tray=()=>T.map((t,i)=>{const ok=found.includes(i);return`<div class="hti${ok?' ok':''}" data-t="${i}"><span class="hte">${t.k==='g'?qzGuy(ok?'ok':'ask'):t.e}</span><small>${t.s}</small>${ok?'<b>✓</b>':''}</div>`}).join('');
  $('#nav').hidden=true;mt='m';keep();
  app.innerHTML=`<div class="hf" id="hf"><div class="hv" id="hv"><div class="hw" id="hw" style="width:${CHW}px;height:${CHH}px">${S.html}</div></div>
-<div class="hhd"><button class="back" data-a="back" data-v="hub">‹ Retour</button><span class="hsp"></span><button class="hb" data-a="hint">Indice · 1 ❄</button><div class="chip">❄ ${FLX()}</div></div>
+<div class="hhd"><button class="back" data-a="back" data-v="hub">‹ Retour</button><span class="hsp"></span><button class="hb skh" data-a="skip">Passer</button><button class="hb" data-a="hint">Indice · 1 ❄</button><div class="chip">❄ ${FLX()}</div></div>
 <div class="hnm">${u.n} · ${li+1} / ${CHU.length}</div>
-<div class="hzm"><button data-a="chz" data-v="1" aria-label="Agrandir">+</button><button data-a="chz" data-v="-1" aria-label="Rétrécir">−</button></div>
 <p class="m hmsg" id="m" role="status" aria-live="polite"></p>
-<div class="skw hsk" id="skw"><button class="skp" data-a="skip">Passer ce niveau</button></div>
-<div class="htr" id="htr" aria-label="À trouver">${tray()}</div>
+<div class="skw" id="skw"></div>
+<div class="hbar"><div class="htr" id="htr" aria-label="À trouver">${tray()}</div><div class="hzm"><button data-a="chz" data-v="-1" aria-label="Rétrécir">−</button><button data-a="chz" data-v="1" aria-label="Agrandir">+</button></div></div>
 ${intro?`<div class="hov" id="hov"><div class="hcd glass"><small>Niveau ${li+1} · ${u.n}</small><p>${u.s}</p><div class="hli">${T.map(t=>`<span>${t.k==='g'?'<i class="hg">'+qzGuy('ask')+'</i>':'<i>'+t.e+'</i>'}<em>${t.n}</em></span>`).join('')}</div><button class="btn" data-a="chgo">C’est parti</button></div></div>`:''}</div>`;
  const hv=$('#hv'),hw=$('#hw');
  let s=1,tx=0,ty=0,vw=0,vh=0,smin=.5,smax=3;
@@ -1656,7 +1664,7 @@ const spend=n=>{if(UNL())return true;if(fl<n){msg('Il te manque quelques flocons
 /* progression par niveau : on retrouve sa partie en revenant */
 const pkey=()=>'p:'+cur+':'+lv;
 const keep=()=>{if(!playing||!snap)return;const s=snap();st.set('last',{g:cur,daily,lv,date:today,s});st.set(pkey(),s)};
-const frame=(h,hint)=>{if(!playing)return;mt='m';$('#nav').hidden=true;keep();app.innerHTML=`<div class="top stk">${bk('hub')}<span class="tl">${isX(cur,lv)?'Fêtes '+xn(cur,lv):'Niveau '+(lv+1)}</span><div class="tr">${hint?`<button class="hb" data-a="hint">Indice · ${hint} ❄</button>`:''}<div class="chip">❄ ${FLX()}</div></div></div><section class="glass play pg-${cur}" aria-label="${ALL.find(g=>g.id===cur).n}"><p class="m" id="m" role="status" aria-live="polite"></p>${h}</section>${daily?'':'<div class="skw" id="skw"><button class="skp" data-a="skip">Passer ce niveau</button></div>'}`};
+const frame=(h,hint)=>{if(!playing)return;mt='m';$('#nav').hidden=true;keep();app.innerHTML=`<div class="top stk">${bk('hub')}<span class="tl">${isX(cur,lv)?'Fêtes '+xn(cur,lv):'Niveau '+(lv+1)}</span><div class="tr">${daily?'':'<button class="hb skh" data-a="skip">Passer</button>'}${hint?`<button class="hb" data-a="hint">Indice · ${hint} ❄</button>`:''}<div class="chip">❄ ${FLX()}</div></div></div><section class="glass play pg-${cur}" aria-label="${ALL.find(g=>g.id===cur).n}"><p class="m" id="m" role="status" aria-live="polite"></p>${h}</section>${daily?'':'<div class="skw" id="skw"></div>'}`};
 
 /* favoris : une étoile sur chaque jeu */
 const favs=()=>{const f=st.get('fav',null);return f&&Array.isArray(f.l)?f.l:[]};
@@ -3621,7 +3629,7 @@ function pMaze(r){
 }
 /* passer un niveau trop difficile : aucune récompense, le niveau reste à faire (repère « ↷ » dans la liste) */
 act.skip=()=>{const w=$('#skw');if(w)w.innerHTML='<span>Passer ce niveau sans récompense ? Tu pourras y revenir plus tard.</span><div><button class="skp y" data-a="skipy">Passer</button><button class="skp" data-a="skipn">Rester</button></div>'};
-act.skipn=()=>{const w=$('#skw');if(w)w.innerHTML='<button class="skp" data-a="skip">Passer ce niveau</button>'};
+act.skipn=()=>{const w=$('#skw');if(w)w.innerHTML=''};
 act.skipy=()=>{const g=cur,l=lv;if(!g||daily)return;st.set('k:'+g+':'+l,true);st.set('last',{g,daily:false,lv:l,date:today,done:1});
  if(isX(g,l)?l<nl(g)+NLX-1:l<nl(g)-1){start(g,false,l+1);msg('Niveau passé, sans flocons : tu pourras y revenir.')}else hub(g)};
 function start(g,d,l,r){if(!d&&l>=nl(g)&&!xmasOn())return hub(g);cur=g;daily=d;lv=l;playing=true;wsG=null;if(!r&&!d&&!st.get(ckey(g)+':'+l,false))r=st.get('p:'+g+':'+l,null)||undefined;theme(g,!d&&l>=nl(g));({mots:pRoue,croises:pCross,phrase:pPhrase,tournade:pTourne,maze:pMaze,memo:pMemo,sudoku:pSudoku,caches:pSearch,match3:pMatch,demenage:pDemen,quiz:pQuiz,cherche:pCherche})[g](r);window.scrollTo(0,0)}
@@ -4560,7 +4568,7 @@ function aqWan(f,q,du,k){
  const T=[0];for(let i=1;i<P.length;i++){const dx=(P[i][0]-P[i-1][0])*wd,dy=(P[i][1]-P[i-1][1])*.8;T.push(T[i-1]+Math.max(3.5,Math.hypot(dx,dy,(P[i][2]-P[i-1][2])*22)/sp))}
  const D=T[T.length-1],id=f.id;let dir=1,fl='',kf='';
  for(let i=0;i<P.length;i++){const p=(T[i]/D*100).toFixed(2);
-  kf+=`${p}%{translate:calc(var(--tx)*${P[i][0].toFixed(3)}) 0;top:${(P[i][1]+(P[i][2]-.5)*16).toFixed(1)}%;scale:${(.78+P[i][2]*.9).toFixed(2)};--z:${P[i][2].toFixed(2)};animation-timing-function:ease-in-out}`;
+  kf+=`${p}%{translate:calc(var(--tx)*${P[i][0].toFixed(3)}) 0;top:${(P[i][1]+(P[i][2]-.5)*16).toFixed(1)}%;scale:${(.78+P[i][2]*.9).toFixed(2)};--aqz:${P[i][2].toFixed(2)};animation-timing-function:ease-in-out}`;
   if(i<P.length-1){const dx=(P[i+1][0]-P[i][0])*wd;if(Math.abs(dx)>1.5)dir=dx>0?1:-1;fl+=`${p}%{transform:scaleX(${dir})}`}}
  fl+=`100%{transform:scaleX(${dir})}`;
  const sel=`.tank .fx[data-id="${id}"]`;
