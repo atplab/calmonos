@@ -865,8 +865,9 @@ body .m3::before{position:fixed;inset:0;border-radius:0;opacity:.6;mask-image:li
 @media(prefers-reduced-motion:reduce){.tank .fx[data-id] .fy,.tank .fx[data-id] .fi svg{animation:none}}
 .tank .aqq{position:absolute;z-index:7;pointer-events:none;filter:drop-shadow(0 6px 10px rgba(0,20,60,.35))}
 .tank .aqq svg{display:block;width:100%;height:auto;overflow:visible}
-.tank .aqb{position:absolute;z-index:8;left:50%;top:6%;translate:-50% 0;width:min(88%,330px);box-sizing:border-box;padding:10px 14px;border-radius:16px;background:rgba(255,255,255,.93);color:#243064;font:600 14px/1.35 Fraunces,Georgia,serif;text-align:center;box-shadow:0 6px 22px rgba(0,0,0,.28);opacity:0;scale:.92;transition:opacity .4s,scale .4s;pointer-events:none}
+.tank .aqb{position:absolute;z-index:8;left:50%;top:auto;translate:-50% 0;width:min(86%,320px);box-sizing:border-box;padding:10px 14px;border-radius:16px;background:rgba(255,255,255,.93);color:#243064;font:600 14px/1.35 Fraunces,Georgia,serif;text-align:center;box-shadow:0 6px 22px rgba(0,0,0,.28);opacity:0;scale:.92;transition:opacity .4s,scale .4s;pointer-events:none}
 .tank .aqb.on{opacity:1;scale:1}
+.tank .aqb::after{content:'';position:absolute;top:100%;left:calc(50% + var(--tl,0px));margin-left:-9px;border:9px solid transparent;border-top:12px solid rgba(255,255,255,.93);border-bottom:0}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -4231,8 +4232,8 @@ function aqFx(ids,hg){
 function aqWan(f,q,du,k){
  let s=(q*2654435761+k*40503)>>>0;const R=()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296};
  const vert=f.id==='hippo'||f.id==='meduse',slow=f.id==='tortue'||f.id==='lune'||f.id==='meduse'||f.id==='hippo',sp=slow?2.8:4.6,wd=96-15*f.sz,n=5+(q%3);
- const P=[];let x=R(),y=8+R()*48;
- for(let i=0;i<n;i++){P.push([x,y]);const mx=vert?.28:.75;x=Math.min(1,Math.max(0,x+(R()*2-1)*mx+(R()<.5?-1:1)*.12));y=Math.min(58,Math.max(6,y+(R()*2-1)*(vert?26:20)))}
+ const P=[];let x=.3+R()*.4,y=14+R()*34;
+ for(let i=0;i<n;i++){P.push([x,y]);const mx=vert?.22:.5;let nx=x+(R()*2-1)*mx,ny=y+(R()*2-1)*(vert?22:16);if(Math.abs(nx-x)<.12)nx+=(nx<.5?.14:-.14);x=Math.min(.86,Math.max(.14,nx));y=Math.min(50,Math.max(10,ny))}
  P.push(P[0]);
  const T=[0];for(let i=1;i<P.length;i++){const dx=(P[i][0]-P[i-1][0])*wd,dy=(P[i][1]-P[i-1][1])*.8;T.push(T[i-1]+Math.max(3.5,Math.hypot(dx,dy)/sp))}
  const D=T[T.length-1],id=f.id;let dir=1,fl='',kf='';
@@ -4281,12 +4282,13 @@ async function aqQuoteGo(){
  const fs=[...t.querySelectorAll('.fx')].filter(e=>!e._dsh&&e.querySelector('.fi svg'));if(!fs.length)return;
  const el=fs[Math.floor(Math.random()*fs.length)],tb=t.getBoundingClientRect(),r=el.getBoundingClientRect(),fr=el.querySelector('.fr'),fi=el.querySelector('.fi'),
   m=getComputedStyle(fi).transform,nat=m&&m!=='none'?Math.sign(parseFloat(m.slice(m.indexOf('(')+1)))||1:1,face=nat*(fr&&fr.classList.contains('x')?-1:1),
-  S=Math.min(3.4,tb.width*.46/r.width),dx=tb.width/2-(r.left-tb.left+r.width/2),dy=tb.height*.68-(r.top-tb.top+r.height/2),
+  S=Math.min(2.3,tb.width*.3/r.width),dx=tb.width/2-(r.left-tb.left+r.width/2),dy=tb.height*.68-(r.top-tb.top+r.height/2),
   c=document.createElement('div'),b=document.createElement('div'),sl=ms=>new Promise(o=>setTimeout(o,ms)),
   qt=Q[Math.floor(Math.random()*Q.length)];
  c.className='aqq';c.style.cssText=`left:${r.left-tb.left}px;top:${r.top-tb.top}px;width:${r.width}px;height:${r.height}px`;
  c.innerHTML=`<div style="transform:scaleX(${face})">${el.querySelector('.fi svg').outerHTML}</div>`;
- b.className='aqb';b.textContent='« '+qt+' »';if(qt.length>90)b.style.fontSize='13px';
+ b.className='aqb';b.textContent=qt;if(qt.length>90)b.style.fontSize='13px';
+ const fh=r.height*S,ft=tb.height*.68-fh/2;b.style.bottom=(tb.height-ft+12)+'px';b.style.setProperty('--tl',face*r.width*S*.22+'px');
  t.appendChild(c);t.appendChild(b);el._qt=1;el.style.visibility='hidden';
  const ok=()=>t.isConnected&&c.isConnected;
  try{
@@ -4294,6 +4296,7 @@ async function aqQuoteGo(){
   if(!ok())throw 0;
   b.classList.add('on');
   c.firstChild.animate([{translate:'0 -3px'},{translate:'0 3px'}],{duration:1300,iterations:Infinity,direction:'alternate',easing:'ease-in-out'});
+  c.firstChild.firstChild.animate([{scale:'1 1'},{scale:'1.05 .96'}],{duration:340,iterations:14,direction:'alternate',easing:'ease-in-out'});
   await sl(5000);if(!ok())throw 0;
   b.classList.remove('on');
   const r2=el.getBoundingClientRect(),t2=t.getBoundingClientRect(),ex=(r2.left-t2.left+r2.width/2)-(r.left-tb.left+r.width/2),ey=(r2.top-t2.top+r2.height/2)-(r.top-tb.top+r.height/2);
