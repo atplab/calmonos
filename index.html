@@ -1013,6 +1013,14 @@ body:has(.pg-quiz) .skh,body:has(.m3) .skh{display:none}
 .hti{min-width:0;flex:1 1 0;max-width:62px}
 .hti small{max-width:100%;overflow:hidden;text-overflow:ellipsis;font-size:10px}
 
+/* barre du haut, comme celle du bas : la scène commence en dessous */
+.hf{--ht:78px}
+.htb{position:absolute;left:0;right:0;top:0;z-index:3;height:calc(var(--ht) + env(safe-area-inset-top,0px));background:linear-gradient(0deg,#1d2358,#12163f);border-bottom:1px solid rgba(255,255,255,.2);box-shadow:0 6px 18px rgba(5,8,30,.45)}
+.hv{top:calc(var(--ht) + env(safe-area-inset-top,0px))}
+.hnm{top:calc(54px + env(safe-area-inset-top,0px));background:none;padding:0;font-size:12.5px;opacity:.9}
+.hmsg{top:calc(var(--ht) + 10px + env(safe-area-inset-top,0px));bottom:auto}
+.hf .skw:not(:empty){top:calc(var(--ht) + 10px + env(safe-area-inset-top,0px))}
+
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
 .sb.cf{background:linear-gradient(180deg,#ffd18a,#e8944a);color:#3a2310;border:0}
@@ -1506,8 +1514,9 @@ function pCherche(r){
  const tray=()=>T.map((t,i)=>{const ok=found.includes(i);return`<div class="hti${ok?' ok':''}" data-t="${i}"><span class="hte">${t.k==='g'?qzGuy(ok?'ok':'ask'):t.e}</span><small>${t.s}</small>${ok?'<b>✓</b>':''}</div>`}).join('');
  $('#nav').hidden=true;mt='m';keep();
  app.innerHTML=`<div class="hf" id="hf"><div class="hv" id="hv"><div class="hw" id="hw" style="width:${CHW}px;height:${CHH}px">${S.html}</div></div>
+<div class="htb"></div>
 <div class="hhd"><button class="back" data-a="back" data-v="hub">‹ Retour</button><span class="hsp"></span><button class="hb skh" data-a="skip">Passer</button><button class="hb" data-a="hint">Indice · 1 ❄</button><div class="chip">❄ ${FLX()}</div></div>
-<div class="hnm">${u.n} · ${li+1} / ${CHU.length}</div>
+<div class="hnm">${u.n}</div>
 <p class="m hmsg" id="m" role="status" aria-live="polite"></p>
 <div class="skw" id="skw"></div>
 <div class="hbar"><button class="hzb" data-a="chz" data-v="-1" aria-label="Rétrécir">−</button><div class="htr" id="htr" aria-label="À trouver">${tray()}</div><button class="hzb" data-a="chz" data-v="1" aria-label="Agrandir">+</button></div>
@@ -1546,8 +1555,10 @@ ${intro?`<div class="hov" id="hov"><div class="hcd glass"><small>Niveau ${li+1} 
   if(found.length>=T.length){fin=true;msg('Tout est trouvé !');const m=$('.hmsg');if(m)m.classList.add('big');setTimeout(()=>{if(al())win()},1700);[523,659,784,1047].forEach((f,k)=>setTimeout(()=>sfx(f,.6),500+k*160));if(el)confetti(el);return}
   msg(t.k==='g'?'Tu as retrouvé le petit bonhomme ! Cherche encore ses affaires.':'Trouvé : '+t.n+' !');
  };
+ /* les messages s’effacent seuls après 5 secondes */
+ {const hm=$('.hmsg');let to=0;if(hm)new MutationObserver(()=>{clearTimeout(to);if(hm.textContent&&!fin)to=setTimeout(()=>{hm.textContent=''},5000)}).observe(hm,{childList:true,characterData:true,subtree:true})}
  act.chz=v=>{if(fin)return;hw.classList.add('sm');zoomAt(vw/2,vh/2,s*(+v>0?1.4:1/1.4));setTimeout(()=>hw.classList.remove('sm'),450)};
- act.chgo=()=>{intro=false;const o=$('#hov');if(o)o.remove();msg('Fais glisser la scène, pince pour agrandir, touche ce que tu trouves.');setTimeout(()=>{const m=$('.hmsg');if(m&&m.textContent.startsWith('Fais'))m.textContent=''},5500)};
+ act.chgo=()=>{intro=false;const o=$('#hov');if(o)o.remove();msg('Fais glisser la scène, pince pour agrandir, touche ce que tu trouves.');};
  act.hint=()=>{
   if(intro||fin)return;const left=T.map((t,i)=>i).filter(i=>!found.includes(i));if(!left.length||!spend(1))return;
   const i=left[Math.floor(Math.random()*left.length)],t=T[i];
