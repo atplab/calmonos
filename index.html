@@ -929,6 +929,15 @@ body:has(.aqsh.open) #nav{opacity:0;pointer-events:none}
 body:has(.m3){background:radial-gradient(70% 38% at 25% 0,rgba(255,255,255,calc(.04 + var(--gs,1)*.26)),transparent 72%),radial-gradient(55% 32% at 85% 0,rgba(255,255,255,calc(.03 + var(--gs,1)*.17)),transparent 72%),linear-gradient(0deg,rgba(226,200,140,calc(.08 + var(--gs,1)*.2)),transparent 10%),linear-gradient(180deg,color-mix(in srgb,#2fb0d2 calc(var(--gs,1)*100%),#0b3f66) 0%,color-mix(in srgb,#1c84b8 calc(var(--gs,1)*100%),#07335c) 34%,color-mix(in srgb,#13539b calc(var(--gs,1)*100%),#04204a) 66%,color-mix(in srgb,#0a2b69 calc(var(--gs,1)*100%),#020c25) 100%) fixed!important}
 .m3bu{opacity:calc(.45 + var(--gs,1)*.55)}
 .m3fi{opacity:calc(.22 + var(--gs,1)*.28)}
+/* inventaire */
+.aqinv{position:fixed;right:max(14px,env(safe-area-inset-right,0px));top:calc(70px + env(safe-area-inset-top,0px));z-index:9}
+.aqinv .aqri{width:54px;height:54px;background:radial-gradient(circle at 35% 28%,#d9c4ff,#7d55d6);color:#2a1262}
+.aqinv b{font-size:11.5px}
+.aqrb[data-a=aqcare] .aqri{background:radial-gradient(circle at 35% 28%,#a8e6ff,#2c93d6);color:#073a66}
+.aqrb:nth-child(3) .aqri{background:radial-gradient(circle at 35% 28%,#a8e6ff,#2c93d6)}
+body:has(.tank.ed) .aqinv{display:none}
+.aqsh[data-tab=inv] .seg{display:none}.aqsh[data-tab=inv] .aqtc{display:block}
+.aqown{flex:none;font-size:12.5px;font-weight:700;color:rgba(255,255,255,.7);padding:0 6px}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -4232,7 +4241,7 @@ function tankHTML(a){
  const w=WATER.find(x=>x.id===a.w)||WATER[0],now=Date.now(),gl=aqHg(a,now),hg=new Set(gl.map(f=>f.id)),gq=aqGain(a,gl).g,gn=Object.fromEntries(gl.map((f,i)=>[f.id,gq[i]])),nmq=aqNames(a);
  return`<div class="tank${aqEd?' ed':''}" id="tank" style="--w1:${w.c1};--w2:${w.c2};--dt:${aqLv(a,now).dt.toFixed(3)};--gr:${aqLv(a,now).gr.toFixed(3)};${aqSkyStyle(now)}" data-ph="${aqSky(now).ph}" data-late="${aqMt(a,now).late?1:0}" data-dirty="${aqLv(a,now).dt>.01?1:0}"><div class="skn" aria-hidden="true"></div><div class="rays"></div><div class="sky" aria-hidden="true"><div class="stars">${[[11,8],[26,22],[38,5],[54,17],[67,9],[80,24],[91,13],[19,32],[46,29]].map(([x,y],i)=>`<i style="left:${x}%;top:${y}%;--dl:${-i*.7}s"></i>`).join('')}</div></div><div class="sand"></div><div class="bubs">${[9,24,43,62,78,91].map((x,i)=>`<i style="left:${x}%;--dl:${-i*1.9}s;--du:${7+i%3*2}s"></i>`).join('')}</div>${DECO.filter(d=>a.d[d.id]).map(d=>{const q=dpos(d,a),mv=aqEd&&!d.fix;return`<svg class="dc ${d.k||''}${mv?' mv':''}" data-id="${d.id}" viewBox="${d.vb||'0 0 100 100'}" style="left:${q.x}%;width:${d.w}%;bottom:${q.b}%;aspect-ratio:${d.ar||1};${d.k==='float'?'animation-delay:'+(-(hs(d.id)%7))+'s':''}" role="img" aria-label="${d.n}"${mv?' tabindex="0"':''}><rect width="100%" height="100%" fill="transparent"/>${d.svg}</svg>${aqGlowEl(d,q)}`}).join('')}${aqOn(a).map((f,k)=>{const q=hs(f.id),du=16+q%10,y=8+(k*37+q%11)%46,W=aqWan(f,q,du,k);return`<style>${W.css}</style><div class="fx ${hg.has(f.id)?'h':''}" data-id="${f.id}" data-a="aqfish" data-v="${f.id}" role="button" tabindex="0" aria-label="${esc(nmq[f.id]||f.n)} (${f.n})" style="--y:${y}%;--w:${(15*f.sz).toFixed(1)}%;--tx:${((96-15*f.sz)/(15*f.sz)*100).toFixed(2)}%;--d:${W.D}s;--dl:${W.dl}s;--p:${(q%100)/100}"><div class="fy"><div class="fr"><div class="fi">${fishSVG(f)}</div></div><span class="hg">+${gn[f.id]??aqGain(a,[f]).g[0]} ❄</span></div></div>`}).join('')}<div class="aqm-haze"></div></div>`;
 }
-function aqPanel(){
+function aqPanel0(){
  const a=aqRead(),el=$('#aql');if(!el)return;
  if(aqTab==='fish'){
   const n=aqOn(a).length,own=FISH.filter(f=>a.f[f.id]).length,nm=aqNames(a);
@@ -4290,8 +4299,8 @@ function aqTabTo(v){
  if(was)aquaRefresh();else{aqPanel();aqStatus()}
 }
 function aquaScreen(){
- cur=null;origin='home';nv('aqua');mt='m-aq';aqEd=false;aqBusy=0;
- AQR=innerWidth/innerHeight;app.innerHTML=`<div class="aqfs"><header class="top aqhd"><h1>Aquarium</h1><div class="chip">❄ ${FLX()}</div></header>${tankHTML(aqRead())}<div class="aqst"><b id="aqs"></b><small id="aqn"></small></div><p class="m" id="m-aq" role="status" aria-live="polite"></p><div class="aqbar"><button class="aqrb" data-a="aqshop"><span class="aqri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg></span><b>Boutique</b></button><button class="aqfeedb" id="aqb" data-a="aqfeed"></button><button class="aqrb" data-a="aqcare"><span class="aqri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c3.6 4.6 6 7.6 6 11a6 6 0 0 1-12 0c0-3.4 2.4-6.4 6-11Z"/><path d="M9 14.5a3 3 0 0 0 3 3"/></svg><i class="aqm-pt" id="aqm-pt" hidden></i></span><b>Entretien</b></button></div><button class="btn aqedb" data-a="aqed">Terminer le placement</button><div class="aqbd" id="aqbd" data-a="aqclose"></div><section class="aqsh glass" id="aqsh" data-tab="${aqTab}" aria-label="Boutique et entretien"><div class="aqsht"><div class="seg"><button class="${aqTab==='fish'?'on':''}" data-a="aqtab" data-v="fish">Poissons</button><button class="${aqTab==='deco'?'on':''}" data-a="aqtab" data-v="deco">Décors</button></div><h2 class="aqtc">Entretien</h2><button class="aqx" data-a="aqclose" aria-label="Fermer">×</button></div><div id="aql"></div></section></div>`;
+ cur=null;origin='home';nv('aqua');mt='m-aq';aqEd=false;aqBusy=0;aqTab='fish';
+ AQR=innerWidth/innerHeight;app.innerHTML=`<div class="aqfs"><header class="top aqhd"><h1>Aquarium</h1><div class="chip">❄ ${FLX()}</div></header>${tankHTML(aqRead())}<div class="aqst"><b id="aqs"></b><small id="aqn"></small></div><p class="m" id="m-aq" role="status" aria-live="polite"></p><button class="aqrb aqinv" data-a="aqinv"><span class="aqri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8l8-4 8 4v9l-8 4-8-4V8Z"/><path d="M4 8l8 4 8-4M12 12v9"/></svg></span><b>Inventaire</b></button><div class="aqbar"><button class="aqrb" data-a="aqshop"><span class="aqri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg></span><b>Boutique</b></button><button class="aqfeedb" id="aqb" data-a="aqfeed"></button><button class="aqrb" data-a="aqcare"><span class="aqri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c3.6 4.6 6 7.6 6 11a6 6 0 0 1-12 0c0-3.4 2.4-6.4 6-11Z"/><path d="M9 14.5a3 3 0 0 0 3 3"/></svg><i class="aqm-pt" id="aqm-pt" hidden></i></span><b>Entretien</b></button></div><button class="btn aqedb" data-a="aqed">Terminer le placement</button><div class="aqbd" id="aqbd" data-a="aqclose"></div><section class="aqsh glass" id="aqsh" data-tab="${aqTab}" aria-label="Boutique et entretien"><div class="aqsht"><div class="seg"><button class="${aqTab==='fish'?'on':''}" data-a="aqtab" data-v="fish">Poissons</button><button class="${aqTab==='deco'?'on':''}" data-a="aqtab" data-v="deco">Décors</button></div><h2 class="aqtc">Entretien</h2><button class="aqx" data-a="aqclose" aria-label="Fermer">×</button></div><div id="aql"></div></section></div>`;
  aqPanel();aqStatus();window.scrollTo(0,0);
 }
 /* Nourrir : des grains tombent, les poissons nourris foncent dessus (bien plus vite que d’habitude), mangent, puis reprennent leur nage */
@@ -4395,8 +4404,20 @@ async function aqQuoteGo(){
   c.firstChild.firstChild.animate([{scale:'1 1'},{scale:'1.05 .96'}],{duration:340,iterations:14,direction:'alternate',easing:'ease-in-out'});
   await sl(5000);if(!ok())throw 0;
   b.classList.remove('on');
-  const r2=el.getBoundingClientRect(),t2=t.getBoundingClientRect(),ex=(r2.left-t2.left+r2.width/2)-(r.left-tb.left+r.width/2),ey=(r2.top-t2.top+r2.height/2)-(r.top-tb.top+r.height/2);
-  await c.animate([{transform:`translate(${dx}px,${dy}px) scale(${S})`},{transform:`translate(${ex}px,${ey}px) scale(1)`}],{duration:1000,easing:'cubic-bezier(.5,0,.3,1)',fill:'forwards'}).finished;
+  /* retour : on vise la position, la taille et le sens ACTUELS du poisson (il continue de nager) */
+  const cx0=r.left-tb.left+r.width/2,cy0=r.top-tb.top+r.height/2,a1=c.getAnimations()[0];
+  c.style.transform=`translate(${dx}px,${dy}px) scale(${S})`;if(a1)a1.cancel();
+  const faceNow=()=>{const m=getComputedStyle(fi).transform,n=m&&m!=='none'?Math.sign(parseFloat(m.slice(m.indexOf('(')+1)))||1:1;return n*(fr&&fr.classList.contains('x')?-1:1)};
+  await new Promise(res=>{const t0=performance.now(),D=1100;
+   const tick=()=>{if(!ok())return res();
+    const p=Math.min(1,(performance.now()-t0)/D),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2,
+     r2=el.getBoundingClientRect(),t2=t.getBoundingClientRect(),
+     tx=r2.left-t2.left+r2.width/2-cx0,ty=r2.top-t2.top+r2.height/2-cy0,ts=r2.width/r.width||1,
+     px=dx+(tx-dx)*e,py=dy+(ty-dy)*e,sc=S+(ts-S)*e;
+    c.style.transform=`translate(${px}px,${py}px) scale(${sc})`;
+    if(p>.6)c.firstChild.style.transform=`scaleX(${faceNow()})`;
+    p<1?requestAnimationFrame(tick):res()};
+   requestAnimationFrame(tick)});
  }catch(e){}
  el.style.visibility='';el._qt=0;c.remove();b.remove();
 }
@@ -4432,6 +4453,28 @@ setInterval(aqLit,140);
 
 function aqOpenSh(v){const s=$('#aqsh'),b=$('#aqbd');if(s){s.dataset.tab=v;s.classList.add('open');s.scrollTop=0}if(b)b.classList.add('open')}
 function aqShut(){const s=$('#aqsh'),b=$('#aqbd');if(s)s.classList.remove('open');if(b)b.classList.remove('open')}
+/* Inventaire : ranger / sortir poissons et décors, placer les décors */
+function aqInv(){
+ const a=aqRead(),el=$('#aql');if(!el)return;
+ const nm=aqNames(a),fo=FISH.filter(f=>a.f[f.id]),dO=DECO.filter(d=>a.d[d.id]!==undefined);
+ const fr=fo.map(f=>{const on=a.f[f.id].on;return`<div class="ai"><div class="ap">${fishSVG(f)}</div><div class="atx"><b>${esc(nm[f.id])}</b><small>${esc(f.n)} · ${on?'Dans l’aquarium':'Rangé'}</small></div><button class="sb" data-a="aqtg" data-v="${f.id}">${on?'Ranger':'Sortir'}</button></div>`}).join('');
+ const dr=dO.map(d=>{const on=a.d[d.id];return`<div class="ai"><div class="ap sq"><svg viewBox="${d.vb||'0 0 100 100'}" aria-hidden="true">${d.svg}</svg></div><div class="atx"><b>${d.n}</b><small>${on?'Dans l’aquarium':'Rangé'}</small></div><button class="sb" data-a="aqdt" data-v="${d.id}">${on?'Ranger':'Sortir'}</button></div>`}).join('');
+ el.innerHTML=`<p class="aqc">Poissons dans l’aquarium : <b>${aqOn(a).length} / ${MAXF}</b> · décors : <b>${dO.filter(d=>a.d[d.id]).length} / ${dO.length}</b></p>`
+ +`<div class="aqf aqed"><div><b>Placer les décors</b><small>Déplace tes décors où tu veux dans l’aquarium.</small></div><button class="btn" data-a="aqed">Déplacer</button></div>`
+ +(Object.keys(a.p).length?'<button class="lnk" data-a="aqpr">Remettre les décors à leur place</button>':'')
+ +`<h3 class="aqh">Poissons</h3>`+(fr||'<p class="aqc">Aucun poisson pour l’instant : va faire un tour à la boutique.</p>')
+ +`<h3 class="aqh">Décors</h3>`+(dr||'<p class="aqc">Aucun décor pour l’instant : va faire un tour à la boutique.</p>');
+}
+function aqPanel(){
+ const tc=$('.aqtc');if(tc)tc.textContent=aqTab==='inv'?'Inventaire':'Entretien';
+ if(aqTab==='inv')return aqInv();
+ aqPanel0();
+ const el=$('#aql');if(!el)return;
+ /* à la boutique, ce qu’on possède se gère dans l’inventaire */
+ el.querySelectorAll('[data-a=aqtg],[data-a=aqdt]').forEach(b=>{const s=document.createElement('span');s.className='aqown';s.textContent='Possédé ✓';b.replaceWith(s)});
+ el.querySelectorAll('.aqed,[data-a=aqpr]').forEach(b=>b.remove());
+}
+
 function aqNear(P,cx,cy){let b=null,bd=1e9;for(const p of P){if(p.state!==1)continue;const d=Math.hypot(p.xs-cx,p.y-cy)+90*p.n;if(d<bd){bd=d;b=p}}return b}
 function aqStep(ts){
  const S=AQS;if(!S)return;S.raf=0;
@@ -4506,8 +4549,8 @@ function aqBuy(v){
 }
 Object.assign(act,{
  aqtab:v=>aqTabTo(v),
- aqshop:()=>aqTabTo(aqTab==='care'?'fish':aqTab),aqclose:()=>aqShut(),
- aqed:()=>{aqEd=!aqEd;if(aqEd)aqShut();aquaRefresh()},
+ aqshop:()=>aqTabTo(aqTab==='care'||aqTab==='inv'?'fish':aqTab),aqinv:()=>aqTabTo('inv'),aqclose:()=>aqShut(),
+ aqed:()=>{aqEd=!aqEd;if(aqEd)aqShut();aquaRefresh();if(!aqEd)aqTabTo('inv')},
  aqpr:()=>{const a=aqRead();Object.keys(a.p).forEach(id=>{const d=DECO.find(x=>x.id===id);if(d){const q=dpos(d,{p:{}});a.p[id]={x:q.x,b:q.b,t:Date.now()}}});aqSave(a);aquaRefresh()},
  aqfeed:()=>{const a=aqRead();if(aqMt(a).late&&aqOn(a).length){aqTabTo('care');return}aqFeed(null)},
  aqcare:()=>aqTabTo('care'),
