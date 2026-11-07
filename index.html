@@ -3577,7 +3577,7 @@ function sHud(Y){
 }
 function sBar(Y){
  const d=styDust(Y),g=styGate(Y),end=Y.p>=SMX&&!g,fr=Math.floor(d/SDU),rm=d%SDU,
-  pips=`<span class="orb" aria-hidden="true"><i>✦</i>${UNL()?'':`<span class="ring">${Array.from({length:SDU},(_,i)=>`<u${i<rm?' class="on"':''} style="--a:${i*360/SDU}deg"></u>`).join('')}</span>`}</span>`;
+  pips=`<span class="orb" aria-hidden="true"><i>✦</i>${UNL()?'':`<span class="ring">${Array.from({length:rm},(_,i)=>`<u class="on" style="--a:${i*360/rm}deg"></u>`).join('')}</span>`}</span>`;
  return`<div class="sbar" id="sbar"><div class="sbi"><span class="sdr">${pips}<b role="img" aria-label="${UNL()?'fragments d’étoile illimités':fr+' fragment'+(fr>1?'s':'')+' d’étoile, '+rm+' poussière'+(rm>1?'s':'')+' sur '+SDU+' pour le suivant'}">${UNL()?'∞':fr}<em>${UNL()?'':fr>1?'fragments':'fragment'}</em></b></span>${end||g?`<small>${end?'Fin du premier voyage':'Un gardien bloque le chemin'}</small>`:''}</div><button class="btn${!g&&!end&&d<SDU?' low':''}" data-a="sgo" ${end||sBusy?'disabled':''}>${g?'Affronter':'Avancer'}</button></div>`;
 }
 function sOv(h,b){
