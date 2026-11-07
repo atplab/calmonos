@@ -701,10 +701,9 @@ body:has(.pg-quiz) .skw{display:none}
 .qz-next{margin-top:14px}
 @media(prefers-reduced-motion:reduce){.qz-m svg,.qzsp{animation:none!important}}
 
-/* écran Jeux : tuiles un peu moins hautes */
-.grid:has(>.tw) .tile{padding:13px 14px 14px;min-height:112px;gap:8px}
-.grid:has(>.tw) .tile i{width:40px;height:40px;border-radius:14px;font-size:20px}
-.grid:has(>.tw) .fv{top:5px;right:6px}
+/* écran Jeux : bas des tuiles légèrement réduit, icône multijoueur du Scrabble */
+.grid:has(>.tw) .tile{min-height:116px}
+.tile b .mp{display:inline-block;width:20px;height:20px;vertical-align:-4px;margin-right:7px;fill:currentColor}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -1196,7 +1195,7 @@ function lastCard(){
 }
 function home(){nv('games');
  cur=null;origin='home';wdBuf='';wdPop=-1;wdLock=false;wdM='';
- const fv=favs(),tile=g=>{const on=fv.includes(g.id);return`<div class="tw"><button class="glass tile pt-${g.id}" style="--a:${g.a};--b:${g.b}" data-a="open" data-v="${g.id}"><i>${g.ic}</i><b>${g.n}</b><small>${g.soon?'Bientôt':g.sp?(g.id==='scrabble'?scrTile():g.sp):''}</small></button>${g.soon?'':`<button class="fv ${on?'on':''}" data-a="fav" data-v="${g.id}" aria-pressed="${on}" aria-label="${on?'Retirer '+g.n+' des favoris':'Ajouter '+g.n+' aux favoris'}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/></svg></button>`}</div>`};
+ const fv=favs(),tile=g=>{const on=fv.includes(g.id);return`<div class="tw"><button class="glass tile pt-${g.id}" style="--a:${g.a};--b:${g.b}" data-a="open" data-v="${g.id}"><i>${g.ic}</i><b>${g.id==='scrabble'?'<svg class="mp" viewBox="0 0 24 24" role="img" aria-label="Multijoueur"><circle cx="12" cy="8" r="3.2"/><circle cx="5" cy="9.6" r="2.3"/><circle cx="19" cy="9.6" r="2.3"/><path d="M6.2 19.5c0-3.3 2.6-5.4 5.8-5.4s5.8 2.1 5.8 5.4z"/><path d="M1.3 18.6c0-2.5 1.7-4.2 4.1-4.2.7 0 1.3.1 1.9.4-1 .9-1.7 2.2-1.9 3.8z"/><path d="M22.7 18.6c0-2.5-1.7-4.2-4.1-4.2-.7 0-1.3.1-1.9.4 1 .9 1.7 2.2 1.9 3.8z"/></svg>':''}${g.n}</b><small>${g.soon?'Bientôt':g.sp?(g.id==='scrabble'?scrTile():g.sp):''}</small></button>${g.soon?'':`<button class="fv ${on?'on':''}" data-a="fav" data-v="${g.id}" aria-pressed="${on}" aria-label="${on?'Retirer '+g.n+' des favoris':'Ajouter '+g.n+' aux favoris'}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/></svg></button>`}</div>`};
  const F=GD.filter(g=>!g.soon&&fv.includes(g.id)),R=GD.filter(g=>!F.includes(g));
  app.innerHTML=`<header class="top"><h1>Nuit de neige</h1><div class="chip" title="Flocons">❄ ${FLX()}</div></header>${wdBlock()}${lastCard()}${F.length?`<h2 class="s">Favoris</h2><div class="grid fgrid">${F.map(tile).join('')}</div>${R.length?'<h2 class="s">Autres jeux</h2>':''}`:`<h2 class="s">Choisis ta veillée</h2>`}${R.length?`<div class="grid">${R.map(tile).join('')}</div>`:''}`;
 }
@@ -1986,7 +1985,7 @@ function scrPend(){
   if(S)n+=!S.e&&S.t===S.p.indexOf(SO.uid)?1:0;
   else if(mk&&!SC.got[id]){const s=sn[id];if(!s||s[0]!==mk[0]||s[1]<mk[1])n++}});
  return n}
-const scrTile=()=>{const n=scrPend();return n?n+(n>1?' parties t’attendent':' partie t’attend'):'Entre amis'};
+const scrTile=()=>{const n=scrPend();return n?n+(n>1?' parties t’attendent':' partie t’attend'):''};
 function scrTileUp(){const t=$('.tile.pt-scrabble small');if(t)t.textContent=scrTile()}
 function scrOnProfiles(){scrSync();scrTileUp();scrRefresh()}
 const scrRefresh=()=>{if($('#scg'))scrDraw();else if($('#scrh'))scrHub2()};
