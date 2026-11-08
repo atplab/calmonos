@@ -1128,6 +1128,25 @@ body[data-tx=d] .orb.xm .ring u.on{background:#d8303c;box-shadow:none}
 .unpc{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 10px}
 .unpc button{height:74px;border-radius:18px;border:3px solid #fff;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.25)}
 .unrg{display:flex;gap:8px;flex-wrap:wrap}
+/* ---------- notifications ---------- */
+.sht{display:grid;grid-template-columns:auto auto;justify-items:end;align-items:center;column-gap:8px;row-gap:8px}
+.sht .chip{grid-column:1/-1}
+.ntb{position:relative}
+.ntc{position:absolute;top:-3px;right:-3px;min-width:18px;height:18px;padding:0 5px;box-sizing:border-box;border-radius:9px;background:#ff7a6b;color:#fff;font-size:11px;line-height:18px;font-weight:700;text-align:center;box-shadow:0 0 0 2px rgba(40,40,90,.6)}
+.ntt{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 10px);z-index:200;display:flex;align-items:center;gap:10px;width:min(360px,calc(100% - 32px));padding:10px 14px;border-radius:18px;border:1px solid rgba(255,255,255,.25);background:rgba(36,34,84,.94);color:#fff;font:inherit;text-align:left;box-shadow:0 10px 30px rgba(0,0,0,.3);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);cursor:pointer;transform:translate(-50%,-140%);opacity:0;transition:transform .45s cubic-bezier(.2,.9,.3,1.2),opacity .3s;pointer-events:none}
+.ntt.on{transform:translate(-50%,0);opacity:1;pointer-events:auto}
+.ntt i,.nti i{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-style:normal;font-size:20px;background:rgba(255,255,255,.12)}
+.ntt span,.nti span{display:flex;flex-direction:column;min-width:0}
+.ntt b,.nti b{font-size:14px}.ntt small,.nti small{font-size:13px;opacity:.85;line-height:1.3}
+.ntp{position:fixed;inset:0;z-index:150;display:flex;align-items:flex-start;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 14px) 14px 110px;background:rgba(10,10,30,.4);overflow:auto}
+.ntps{width:min(420px,100%);padding:16px 14px 10px}
+.ntph{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.ntph h2{flex:1;margin:0}
+.ntl{display:flex;flex-direction:column}
+.nti{display:flex;align-items:center;gap:12px;padding:11px 6px;border:0;border-top:1px solid rgba(255,255,255,.1);background:none;color:inherit;font:inherit;text-align:left;cursor:pointer;border-radius:12px}
+.nti em{font-style:normal;font-size:11.5px;opacity:.6;margin-top:2px}
+.nti.nw{background:rgba(255,216,107,.1)}
+.nti.nw b::after{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:#ff7a6b;margin-left:7px;vertical-align:middle}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -4512,7 +4531,7 @@ function sWalk(a,b,end){
 const sMsg=t=>{const m=$('#m');if(!m)return;m.textContent=t;clearTimeout(sMT);sMT=setTimeout(()=>{const e=$('#m');if(e&&e.textContent===t)e.textContent=''},4200)};
 function sHud(Y){
  const C=CHP[sCh(Y.p)];
- return`<header class="top shud"><div class="shc" data-a="sstory" role="button" tabindex="0" aria-label="Changer d’histoire"><h1>Histoire</h1><small>${C.t} · étape ${Y.p} / ${SMX} ▾</small><span class="sty-bar"><b style="width:${(Y.p/SMX*100).toFixed(1)}%"></b></span></div><div class="sht"><div class="chip" title="Flocons">❄ ${FLX()}</div><button class="shb" data-a="sbook" aria-label="Relire l’histoire"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H19v15H7.5A2.5 2.5 0 0 0 5 20.5z"/><path d="M5 20.5A2.5 2.5 0 0 0 7.5 23H19v-5"/><path d="M9 8h6"/></svg></button></div></header>`;
+ return`<header class="top shud"><div class="shc" data-a="sstory" role="button" tabindex="0" aria-label="Changer d’histoire"><h1>Histoire</h1><small>${C.t} · étape ${Y.p} / ${SMX} ▾</small><span class="sty-bar"><b style="width:${(Y.p/SMX*100).toFixed(1)}%"></b></span></div><div class="sht"><div class="chip" title="Flocons">❄ ${FLX()}</div>${ntBell()}<button class="shb" data-a="sbook" aria-label="Relire l’histoire"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H19v15H7.5A2.5 2.5 0 0 0 5 20.5z"/><path d="M5 20.5A2.5 2.5 0 0 0 7.5 23H19v-5"/><path d="M9 8h6"/></svg></button></div></header>`;
 }
 function sBar(Y){
  const d=styDust(Y),g=styGate(Y),end=Y.p>=SMX&&!g,fr=Math.floor(d/SDU),rm=d%SDU,
@@ -4634,7 +4653,7 @@ function xMapSVG(Y,m){
 }
 function xHud(Y){
  const p=Y.xp||0;
- return`<header class="top shud"><div class="shc" data-a="sstory" role="button" tabindex="0" aria-label="Changer d’histoire"><h1>Histoire</h1><small>Un noël pour Zeni · étape ${p} / ${XMX} ▾</small><span class="sty-bar"><b style="width:${(p/XMX*100).toFixed(1)}%"></b></span></div><div class="sht"><div class="chip" title="Flocons">❄ ${FLX()}</div><button class="shb" data-a="sbook" aria-label="Relire l’histoire"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H19v15H7.5A2.5 2.5 0 0 0 5 20.5z"/><path d="M5 20.5A2.5 2.5 0 0 0 7.5 23H19v-5"/><path d="M9 8h6"/></svg></button></div></header>`;
+ return`<header class="top shud"><div class="shc" data-a="sstory" role="button" tabindex="0" aria-label="Changer d’histoire"><h1>Histoire</h1><small>Un noël pour Zeni · étape ${p} / ${XMX} ▾</small><span class="sty-bar"><b style="width:${(p/XMX*100).toFixed(1)}%"></b></span></div><div class="sht"><div class="chip" title="Flocons">❄ ${FLX()}</div>${ntBell()}<button class="shb" data-a="sbook" aria-label="Relire l’histoire"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H19v15H7.5A2.5 2.5 0 0 0 5 20.5z"/><path d="M5 20.5A2.5 2.5 0 0 0 7.5 23H19v-5"/><path d="M9 8h6"/></svg></button></div></header>`;
 }
 function xBar(Y){
  const d=xDust(Y),end=(Y.xp||0)>=XMX,fr=Math.floor(d/XDU),rm=d%XDU,
@@ -5965,6 +5984,65 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches)snow();
   toast('Appuie encore sur retour pour quitter');
   setTimeout(push,2400);
  });
+})();
+
+/* ---------- Notifications : un centre dans l’Histoire (cloche), un point sur l’onglet, un aperçu bref à l’arrivée ---------- */
+(()=>{
+ const q=s=>document.querySelector(s),LOGK='nt:log',MAX=50;
+ const log=()=>{const l=st.get(LOGK,[]);return Array.isArray(l)?l:[]};
+ /* conditions « tout ou rien » (faim, entretien, histoire) : une nouvelle notification à chaque fois qu’elles redeviennent vraies */
+ const edge=(k,on)=>{const E=st.get('nt:e',{});if(on){if(!E[k]){E[k]=k+':'+Date.now();st.set('nt:e',E)}return E[k]}if(E[k]){E[k]='';st.set('nt:e',E)}return''};
+ function items(){
+  const L=[],add=(id,ic,t,x,a,v)=>{if(id)L.push({id,ic,t,x,a,v:v||''})};
+  try{const a=aqRead(),late=aqMt(a).late&&aqOn(a).length,n=aqHg(a).length;
+   add(edge('aqc',!!late),'🫧','Aquarium','Ton aquarium a besoin d’entretien','aqua');
+   add(edge('aqf',n>0),'🐟','Aquarium',n>1?'Tes poissons ont faim':'Ton poisson a faim','aqua')}catch(e){}
+  try{const Y=styRead();add(edge('sty',Y.p<SMX&&styDust(Y)>=SDU&&!UNL()),'✦','Histoire','Tu as assez de poussière d’étoile pour avancer','day');
+   if(Y.p>=3)add(edge('stx',(Y.xp||0)<XMX&&xDust(Y)>=XDU&&!UNL()),'🎄','Un noël pour Zeni','Un sapin est prêt : Zeni peut avancer','day')}catch(e){}
+  try{const s=st.get('soc:seen',{});Object.entries(SO.rec||{}).forEach(([id,n])=>{if(n>(+s[id]||0))add('gift:'+id+':'+n,'🎁','Cadeau',((SO.P[id]&&SO.P[id].name)||'Un ami')+' t’a offert des ❄','soc')})}catch(e){}
+  try{Object.entries(SC.G||{}).forEach(([f,S])=>{if(S&&!S.e&&S.t===S.p.indexOf(SO.uid))add('scr:'+S.id+':'+S.n,'Ⓢ','Scrabble','À toi de jouer contre '+scrNm(f),'scr')})}catch(e){}
+  try{Object.keys(CH.G||{}).forEach(f=>{const S=CH.G[f];if(S&&chStat(f).k==='me')add('ch:'+S.id+':'+S.mv.length,'♞','Échecs','À toi de jouer contre '+chNm(f),'chess')})}catch(e){}
+  try{unMine().forEach(([g,S])=>{const hn=(S.nms&&S.nms[S.h])||scrNm(S.h);
+   if(S.st==='lobby'&&S.h!==SO.uid&&!unJoined(S,g,SO.uid))add('uno:inv:'+S.id,'🃏','Uno',hn+' t’invite à une partie','uno',g);
+   else if(S.st==='play'&&S.S.some(s=>s.u===SO.uid)&&!(UN.scr==='room'&&UN.room===g))add('uno:go:'+S.id,'🃏','Uno','La partie de Uno a commencé','uno',g)})}catch(e){}
+  return L}
+ const ago=t=>{const m=Math.round((Date.now()-t)/6e4);return m<1?'à l’instant':m<60?'il y a '+m+' min':m<1440?'il y a '+Math.round(m/60)+' h':'il y a '+Math.round(m/1440)+' j'};
+ const unread=()=>log().filter(x=>!x.r).length;
+ window.ntBell=()=>{const n=unread();return`<button class="shb ntb" data-a="ntOpen" aria-label="Notifications${n?' : '+n+' nouvelle'+(n>1?'s':''):''}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>${n?`<b class="ntc">${n>9?'9+':n}</b>`:''}</button>`};
+ function marks(){
+  const n=unread(),tab=q('#nav [data-v=daily]');
+  if(tab){let d=tab.querySelector('.ntdot');if(!d){tab.insertAdjacentHTML('beforeend','<i class="ndot ntdot" hidden></i>');d=tab.querySelector('.ntdot')}d.hidden=!n}
+  const b=q('.ntb');if(b)b.outerHTML=ntBell()}
+ function toast(x){
+  let d=q('#ntt');if(!d){d=document.createElement('button');d.id='ntt';d.className='ntt';d.type='button';document.body.appendChild(d);d.addEventListener('click',()=>{d.classList.remove('on');go(d.dataset.a,d.dataset.v)})}
+  d.dataset.a=x.a;d.dataset.v=x.v||'';d.innerHTML=`<i>${x.ic}</i><span><b>${esc(x.t)}</b><small>${esc(x.x)}</small></span>`;
+  d.classList.remove('on');void d.offsetWidth;d.classList.add('on');clearTimeout(d._t);d._t=setTimeout(()=>d.classList.remove('on'),4800);
+  try{sfx(880,.12)}catch(e){}}
+ function go(a,v){
+  closeP();
+  if(a==='aqua'){const t=q('#nav [data-v=aqua]');if(t)t.click()}
+  else if(a==='day')dayScreen();
+  else if(a==='soc')socScreen();
+  else if(a==='scr')scrHub();
+  else if(a==='chess')chHub();
+  else if(a==='uno'){if(v)unRoom(v);else unHub()}}
+ function poll(){
+  const L=log(),ids=new Set(L.map(x=>x.id)),fresh=items().filter(x=>!ids.has(x.id));
+  if(fresh.length){const now=Date.now();fresh.forEach(x=>{x.at=now;x.r=0});st.set(LOGK,[...fresh.reverse(),...L].slice(0,MAX));toast(fresh[0]);if(q('#ntp'))drawP()}
+  marks()}
+ function drawP(){
+  const p=q('#ntp');if(!p)return;const L=log();
+  p.innerHTML=`<section class="glass ntps" role="dialog" aria-label="Notifications"><div class="ntph"><h2>Notifications</h2><button class="lnk" data-a="ntClr"${L.length?'':' hidden'}>Tout effacer</button><button class="shb" data-a="ntClose" aria-label="Fermer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="ntl">${L.length?L.map((x,i)=>`<button class="nti${x.r?'':' nw'}" data-a="ntGo" data-v="${i}"><i>${x.ic}</i><span><b>${esc(x.t)}</b><small>${esc(x.x)}</small><em>${ago(x.at)}</em></span></button>`).join(''):'<p class="note" style="text-align:center;margin:24px 0">Aucune notification pour l’instant.<br>Les invitations, les poissons qui ont faim et les cadeaux arriveront ici.</p>'}</div></section>`}
+ function closeP(){const p=q('#ntp');if(p)p.remove()}
+ Object.assign(act,{
+  ntOpen:()=>{closeP();const p=document.createElement('div');p.id='ntp';p.className='ntp';p.addEventListener('click',e=>{if(e.target===p)closeP()});document.body.appendChild(p);drawP();
+   const L=log();if(L.some(x=>!x.r)){setTimeout(()=>{st.set(LOGK,log().map(x=>Object.assign(x,{r:1})));marks()},1200)}},
+  ntClose:closeP,
+  ntClr:()=>{st.set(LOGK,[]);drawP();marks()},
+  ntGo:v=>{const x=log()[+v];if(x)go(x.a,x.v)}
+ });
+ setTimeout(poll,2500);setInterval(poll,4000);
 })();
 
 </script>
