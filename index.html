@@ -1383,6 +1383,8 @@ body .top.stk>.tl.tlk i{opacity:1;border-color:rgba(255,255,255,.7);color:#fff}
 .dmwin b{white-space:nowrap}
 .dmit.meh>svg{animation:dmmeh .9s ease-in-out infinite alternate}
 @keyframes dmmeh{from{filter:drop-shadow(0 0 2px #ffd25a)}to{filter:drop-shadow(0 0 3px #ffd25a) drop-shadow(0 0 7px #ffc23a)}}
+.dmdrag{pointer-events:none}.dmdrag svg{filter:drop-shadow(0 6px 5px rgba(30,20,10,.35));overflow:visible}
+.dmtop.lift,.dmit.lift{opacity:.0}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -2965,7 +2967,7 @@ const dCen=a=>[a.reduce((s,p)=>s+p[0],0)/a.length,a.reduce((s,p)=>s+p[1],0)/a.le
 const dClamp=(p,a)=>{if(dIn(p,a))return p;const c=dCen(a);let q=p;for(let i=0;i<24&&!dIn(q,a);i++)q=[q[0]+(c[0]-q[0])*.15,q[1]+(c[1]-q[1])*.15];return q};
 function dNew(W,D,Hh,wl,wr,fl,fl2){
  const OX=D*DU+18,OY=Hh*DZ+18,P=(x,y,z=0)=>[OX+(x-y)*DU,OY+(x+y)*DU/2-z*DZ],f1=a=>a.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
- const o={P,W,D,Hh,s:'',zs:[],st:[],vw:Math.round((W+D)*DU+36),vh:Math.round(Hh*DZ+(W+D)*DU/2+44)};
+ const o={P,OX,OY,ch:[],W,D,Hh,s:'',zs:[],st:[],vw:Math.round((W+D)*DU+36),vh:Math.round(Hh*DZ+(W+D)*DU/2+44)};
  o.pg=(a,f,st,w)=>{o.s+=`<polygon points="${f1(a)}" fill="${f}"${st?` stroke="${st}" stroke-width="${w||.8}" stroke-linejoin="round"`:''}/>`};
  o.ln=(a,b,c,w)=>{o.s+=`<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" stroke="${c}" stroke-width="${w||1}" stroke-linecap="round"/>`};
  /* socle du décor et sol */
@@ -2978,17 +2980,17 @@ function dNew(W,D,Hh,wl,wr,fl,fl2){
  o.ln(P(0,0,0),P(0,0,Hh),dSh(wl,.6),1.4);
  o.qL=(y0,y1,z0,z1)=>[P(0,y0,z0),P(0,y1,z0),P(0,y1,z1),P(0,y0,z1)];
  o.qR=(x0,x1,z0,z1)=>[P(x0,0,z0),P(x1,0,z0),P(x1,0,z1),P(x0,0,z1)];
- o.zone=(k,top,hull,anchor)=>{o.zs.push({k,top,hull:hull||top,a:anchor||'b'})};
+ o.zone=(k,top,hull,anchor)=>{o.zs.push({k,top,hull:hull||top,a:anchor||'b',ci:o.ch.length-1})};
  o.zone('floor',[P(0,0),P(W,0),P(W,D),P(0,D)],null,'b');
  o.zone('wall',o.qL(0,D,.2,Hh-.2),null,'c');o.zone('wall',o.qR(0,W,.2,Hh-.2),null,'c');
  /* un pavé : dessus, face gauche (côté +y), face droite (côté +x) */
- o.box=(x,y,z,w,d,h,c,opt={})=>{
+ o.box=(x,y,z,w,d,h,c,opt={})=>{if(w>.05||d>.05)o.ch.push({at:o.s.length,x,y,z,w,d,h});
   const T=[P(x,y,z+h),P(x+w,y,z+h),P(x+w,y+d,z+h),P(x,y+d,z+h)],Lf=[P(x,y+d,z),P(x+w,y+d,z),P(x+w,y+d,z+h),P(x,y+d,z+h)],Rf=[P(x+w,y,z),P(x+w,y+d,z),P(x+w,y+d,z+h),P(x+w,y,z+h)],st=opt.st||dSh(c,.62);
   if(!opt.noL)o.pg(Lf,opt.l||c,st);if(!opt.noR)o.pg(Rf,opt.r||dSh(c,.8),st);o.pg(T,opt.t||dSh(c,1.12),st);
   return{top:T,hull:dHull([...T,...Lf,...Rf]),L:Lf,R:Rf};
  };
  /* un cylindre (pot, cuvette) vu de dessus */
- o.cyl=(x,y,z,r,h,c)=>{const[cx,cy]=P(x,y,z),rx=r*DU*1.41,ry=rx/2,hh=h*DZ;o.s+=`<path d="M${(cx-rx).toFixed(1)} ${cy.toFixed(1)}v${-hh.toFixed(1)}a${rx.toFixed(1)} ${ry.toFixed(1)} 0 0 1 ${(2*rx).toFixed(1)} 0v${hh.toFixed(1)}a${rx.toFixed(1)} ${ry.toFixed(1)} 0 0 1 ${(-2*rx).toFixed(1)} 0z" fill="${c}" stroke="${dSh(c,.62)}" stroke-width=".8"/><ellipse cx="${cx.toFixed(1)}" cy="${(cy-hh).toFixed(1)}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}" fill="${dSh(c,1.12)}" stroke="${dSh(c,.62)}" stroke-width=".8"/>`};
+ o.cyl=(x,y,z,r,h,c)=>{o.ch.push({at:o.s.length,x:x-r,y:y-r,z,w:2*r,d:2*r,h});const[cx,cy]=P(x,y,z),rx=r*DU*1.41,ry=rx/2,hh=h*DZ;o.s+=`<path d="M${(cx-rx).toFixed(1)} ${cy.toFixed(1)}v${-hh.toFixed(1)}a${rx.toFixed(1)} ${ry.toFixed(1)} 0 0 1 ${(2*rx).toFixed(1)} 0v${hh.toFixed(1)}a${rx.toFixed(1)} ${ry.toFixed(1)} 0 0 1 ${(-2*rx).toFixed(1)} 0z" fill="${c}" stroke="${dSh(c,.62)}" stroke-width=".8"/><ellipse cx="${cx.toFixed(1)}" cy="${(cy-hh).toFixed(1)}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}" fill="${dSh(c,1.12)}" stroke="${dSh(c,.62)}" stroke-width=".8"/>`};
  return o;
 }
 /* ---- les objets : 32 × 32, sans contour, couleurs douces ---- */
@@ -5009,8 +5011,13 @@ function pDemen2(r){
  const isP=id=>placed.some(q=>q.id===id),left=()=>ids.filter(id=>!isP(id)),stk=k=>bx[k].filter(id=>!isP(id));
  const okA=id=>(DOK[id]&&DOK[id].a)||[],stOf=q=>DIT[q.id][2].includes(q.k)?2:okA(q.id).includes(q.k)?1:0;
  /* ---- dessin ---- */
- let html='',at=0;sc.st.forEach((S,si)=>{html+=sc.s.slice(at,S.at)+`<g id="dmst${si}"></g>`;at=S.at});html+=sc.s.slice(at);
- frame(`<div class="dm2"><div class="dmhud"><div class="dmhn"><b>${X?'Fêtes · ':''}${R.n}</b><div class="dmbar" aria-hidden="true"><i id="dmpb"></i></div><small id="dmbn"></small></div><span class="dmpc" id="dmpc"></span><div class="dmbt"><button class="dmib" data-a="dmz" data-v="-1" aria-label="Dézoomer">−</button><button class="dmib" data-a="dmz" data-v="1" aria-label="Zoomer">+</button><button class="dmib" data-a="dmpause" aria-label="Pause"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="5" y="4" width="3.4" height="12" rx="1.4"/><rect x="11.6" y="4" width="3.4" height="12" rx="1.4"/></svg></button></div></div><div class="dmw2" id="dmw"><svg id="dmr" viewBox="0 0 ${VW} ${VH}" role="img" aria-label="${R.n}">${html}<g id="dmbx"></g><g id="dml"></g><g id="dmh"></g><g id="dmfx"></g></svg></div></div>`,3);
+ const CH=sc.ch,NS=CH.length;let html='',at=0;[...sc.st.map((S,si)=>({at:S.at,t:0,g:`<g id="dmst${si}"></g>`})),...CH.map((c,j)=>({at:c.at,t:1,g:`<g id="dmc${j}"></g>`}))].sort((a,b)=>a.at-b.at||a.t-b.t).forEach(m=>{html+=sc.s.slice(at,m.at)+m.g;at=m.at});html+=sc.s.slice(at)+`<g id="dmc${NS}"></g>`;
+ /* profondeur : un objet au sol se dessine juste avant le premier meuble qui est devant lui */
+ const fr=(C,O)=>{const e=.02,sx=C.x>=O.x+O.w-e,sy=C.y>=O.y+O.d-e,bx=C.x+C.w<=O.x+e,by=C.y+C.d<=O.y+e;if(sx&&!by)return true;if(sy&&!bx)return true;if((sx&&by)||(sy&&bx))return C.x+C.w/2+C.y+C.d/2>O.x+O.w/2+O.y+O.d/2;return false};
+ const slotF=(fx,fy,fw,fd)=>{const O={x:fx,y:fy,w:fw,d:fd};let j=NS-1;while(j>=0&&!fr(O,CH[j]))j--;return j+1};
+ const w2=(sx,sy)=>{const a=(sx-sc.OX)/DU,b=2*(sy-sc.OY)/DU;return[(a+b)/2,(b-a)/2]};
+ const slotQ=q=>{const z=q.zi!=null?sc.zs[q.zi]:zAt([q.x,q.y-1]);if(!z||z.k==='floor'){const[x,y]=w2(q.x,q.y);return slotF(x-.3,y-.3,.6,.6)}if(z.k==='wall')return 0;return Math.min(NS,z.ci+1)};
+ frame(`<div class="dm2"><div class="dmhud"><div class="dmhn"><b>${X?'Fêtes · ':''}${R.n}</b><div class="dmbar" aria-hidden="true"><i id="dmpb"></i></div><small id="dmbn"></small></div><span class="dmpc" id="dmpc"></span><div class="dmbt"><button class="dmib" data-a="dmz" data-v="-1" aria-label="Dézoomer">−</button><button class="dmib" data-a="dmz" data-v="1" aria-label="Zoomer">+</button><button class="dmib" data-a="dmpause" aria-label="Pause"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="5" y="4" width="3.4" height="12" rx="1.4"/><rect x="11.6" y="4" width="3.4" height="12" rx="1.4"/></svg></button></div></div><div class="dmw2" id="dmw"><svg id="dmr" viewBox="0 0 ${VW} ${VH}" role="img" aria-label="${R.n}">${html}<g id="dmh"></g><g id="dmdg"></g><g id="dmfx"></g></svg></div></div>`,3);
  const svg=$('#dmr'),alive=()=>$('#dmr')===svg&&playing,ptr=e=>{const m=svg.getScreenCTM();if(!m)return null;const p=new DOMPoint(e.clientX,e.clientY).matrixTransform(m.inverse());return[p.x,p.y]};
  const it=(id,x,y,an,z,cls='')=>`<g class="dmit ${cls}" data-id="${id}">${an==='b'?`<ellipse cx="${x.toFixed(1)}" cy="${(y-.5).toFixed(1)}" rx="${(z*.34).toFixed(1)}" ry="${(z*.1).toFixed(1)}" fill="rgba(50,30,10,.2)"/>`:''}<rect class="dmhit" x="${(x-z*.4).toFixed(1)}" y="${(y-(an==='c'?z*.45:z*.9)).toFixed(1)}" width="${(z*.8).toFixed(1)}" height="${(z*.85).toFixed(1)}" fill="transparent"/><svg x="${(x-z/2).toFixed(1)}" y="${(y-(an==='c'?z/2:z*.94)).toFixed(1)}" width="${z}" height="${z}" viewBox="0 0 32 32"><title>${DIT[id][0]}</title>${DIT[id][1]}</svg></g>`;
  const cls=q=>(q.pop?'pop ':'')+(sel===q.id?'sel ':'')+(checked&&stOf(q)===0?'bad ':'')+(checked&&stOf(q)===1?'meh ':'')+(drag&&drag.mv&&drag.id===q.id?'lift':'');
@@ -5027,8 +5034,8 @@ function pDemen2(r){
     o+=its+`<polygon class="dmd o" data-c="${c.id}" points="${f2(g.panel)}" fill="${dSh(col,1.05)}" stroke="${dSh(col,.55)}" stroke-width=".9" stroke-linejoin="round"/>`}
    else{o+=`<polygon points="${f2(g.front)}" fill="#2e2018"/><polygon points="${f2(g.sl)}" fill="${dSh(col,.7)}" stroke="${dSh(col,.5)}" stroke-width=".6"/><polygon points="${f2(g.floor)}" fill="#5a4030" stroke="${dSh(col,.5)}" stroke-width=".6"/>`+its+`<polygon points="${f2(g.sr)}" fill="${dSh(col,.8)}" stroke="${dSh(col,.5)}" stroke-width=".6"/><polygon class="dmd o" data-c="${c.id}" points="${f2(g.fr)}" fill="${dSh(col,.95)}" stroke="${dSh(col,.55)}" stroke-width=".9" stroke-linejoin="round"/>`+ln(mid(mid(g.fr[0],g.fr[3],.5),mid(g.fr[1],g.fr[2],.5),.4),mid(mid(g.fr[0],g.fr[3],.5),mid(g.fr[1],g.fr[2],.5),.6),'#e8d9a8',1.8)}});
   h.innerHTML=o});
- const boxes=()=>{const h=$('#dmbx');if(!h)return;let o='';const cb='#c8955a';
-  BX.forEach(([x,y],k)=>{const S=stk(k);if(!S.length)return;const T=[P(x,y,BH),P(x+BW,y,BH),P(x+BW,y+BW,BH),P(x,y+BW,BH)],Lf=[P(x,y+BW),P(x+BW,y+BW),P(x+BW,y+BW,BH),P(x,y+BW,BH)],Rf=[P(x+BW,y),P(x+BW,y+BW),P(x+BW,y+BW,BH),P(x+BW,y,BH)],pg=(a,f)=>`<polygon points="${f2(a)}" fill="${f}" stroke="${dSh(cb,.6)}" stroke-width=".8" stroke-linejoin="round"/>`,O=bop.has(k);
+ const boxes=()=>{const out=[];const cb='#c8955a';
+  BX.forEach(([x,y],k)=>{const S=stk(k);if(!S.length)return;let o='';const T=[P(x,y,BH),P(x+BW,y,BH),P(x+BW,y+BW,BH),P(x,y+BW,BH)],Lf=[P(x,y+BW),P(x+BW,y+BW),P(x+BW,y+BW,BH),P(x,y+BW,BH)],Rf=[P(x+BW,y),P(x+BW,y+BW),P(x+BW,y+BW,BH),P(x+BW,y,BH)],pg=(a,f)=>`<polygon points="${f2(a)}" fill="${f}" stroke="${dSh(cb,.6)}" stroke-width=".8" stroke-linejoin="round"/>`,O=bop.has(k);
    const sh=P(x+BW/2,y+BW/2,0);o+=`<g class="dmbx${O?' op':''}${fresh===k?' fresh':''}" data-bx="${k}"><ellipse cx="${sh[0].toFixed(1)}" cy="${(sh[1]+3).toFixed(1)}" rx="${(BW*DU*1.3).toFixed(1)}" ry="${(BW*DU*.55).toFixed(1)}" fill="rgba(50,30,10,.16)"/>`;
    if(!O){o+=pg(Lf,cb)+pg(Rf,dSh(cb,.82))+pg(T,dSh(cb,1.12))+ln(P(x+BW/2,y,BH),P(x+BW/2,y+BW,BH),'#e8d2a2',3)+ln(P(x+BW/2,y+BW,BH),P(x+BW/2,y+BW,BH-.32),'#e8d2a2',3);const lb=mid(Rf[0],Rf[2],.5);o+=`<rect x="${(lb[0]-4).toFixed(1)}" y="${(lb[1]-3).toFixed(1)}" width="8" height="5" rx="1" fill="#f4ead2" transform="skewY(-26.6)" transform-origin="${lb[0].toFixed(1)} ${lb[1].toFixed(1)}"/>`}
    else{const fb=(e1,e2,dx,dy)=>[e1,e2,[e2[0]+dx,e2[1]+dy],[e1[0]+dx,e1[1]+dy]];
@@ -5036,9 +5043,12 @@ function pDemen2(r){
     const c0=P(x+BW/2,y+BW/2,BH),vis=S.slice(-1);vis.forEach((id,j)=>{const top=j===vis.length-1,z=top?Math.min(32,dSz(id)+4):22,cy=c0[1]+6-j*9;
      o+=`<g class="${top?'dmtop':'dmsk'}${top&&sel===id?' sel':''}${fresh===k?' rise':''}" data-id="${id}" style="${fresh===k?`animation-delay:${j*140+120}ms`:''}"><rect x="${(c0[0]-z*.45).toFixed(1)}" y="${(cy-z*.94).toFixed(1)}" width="${(z*.9).toFixed(1)}" height="${(z*.94).toFixed(1)}" fill="transparent"/><svg x="${(c0[0]-z/2).toFixed(1)}" y="${(cy-z*.94).toFixed(1)}" width="${z}" height="${z}" viewBox="0 0 32 32"><title>${DIT[id][0]}</title>${DIT[id][1]}</svg></g>`});
     o+=`<g class="fl">${pg(fb(T[3],T[0],-9,-3),dSh(cb,1.1))+pg(fb(T[2],T[3],-2,10),dSh(cb,1.15))}</g>`}
-   o+='</g>'});h.innerHTML=o;fresh=-1};
+   o+='</g>';out.push([k,o])});fresh=-1;return out};
  const hud=()=>{const n=ids.length,ok=placed.length,lb=left().length,b=$('#dmpb'),c=$('#dmpc'),bn=$('#dmbn');if(b)b.style.width=(ok/n*100).toFixed(1)+'%';if(c)c.textContent=ok+' / '+n;if(bn)bn.textContent=lb?'📦 '+lb+' dans les cartons':'Cartons vides'};
- const layer=()=>{stores();boxes();const g=$('#dml');if(g)g.innerHTML=placed.filter(q=>!q.c).sort((a,b)=>a.y-b.y).map(q=>it(q.id,q.x,q.y,q.a,dSz(q.id),cls(q))).join('');hud()};
+ let slotH=[];const layer=()=>{stores();const S=[];const add=(j,y,h)=>{(S[j]=S[j]||[]).push([y,h])};
+  boxes().forEach(([k,h])=>{const[x,y]=BX[k];add(slotF(x,y,BW,BW),P(x+BW,y+BW)[1],h)});
+  placed.filter(q=>!q.c).forEach(q=>add(slotQ(q),q.y,it(q.id,q.x,q.y,q.a,dSz(q.id),cls(q))));
+  for(let j=0;j<=NS;j++){const h=(S[j]||[]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]).join('');if(slotH[j]!==h){const e=$('#dmc'+j);if(e)e.innerHTML=h;slotH[j]=h}}hud()};
  /* ---- placer ---- */
  const hitOrd=()=>sc.st.map((S,si)=>si).reverse().flatMap(si=>{const cs=CP.filter(c=>c.si===si);return[...cs.filter(c=>op.has(c.id)).sort((a,b)=>b.z0-a.z0),...cs.filter(c=>!op.has(c.id))]});
  const cAt=pt=>{for(const c of hitOrd()){const g=c.g,O=op.has(c.id);if(O&&dIn(pt,g.panel))return{c,panel:1};if(O&&dIn(pt,g.zone))return{c,inside:1};if(!O&&dIn(pt,g.front))return{c,closed:1}}return null};
@@ -5051,13 +5061,13 @@ function pDemen2(r){
    if(k===undefined){const tw=CP.find(o=>o.S===c.S&&o!==c&&o.t==='door'&&c.t==='door'&&!op.has(o.id));msg(tw?'Plus de place de ce côté : ouvre l’autre porte.':'Plus de place ici.');sfx(260,.2);return null}
    const s0=c.g.slots[k];q={id,x:+s0[0].toFixed(1),y:+s0[1].toFixed(1),a:c.g.an,k:c.k,c:c.id,s:k}}
   else if(h&&h.closed&&(DIT[id][2].includes(h.c.k)||okA(id).includes(h.c.k))){msg(h.c.t==='door'?'C’est fermé : touche la porte pour l’ouvrir.':'Touche le tiroir pour l’ouvrir.');return null}
-  else{const z=zAt(pt);if(!z){msg('Pose-le dans la pièce.');return null}const a=dClamp(pt,z.top);q={id,x:+a[0].toFixed(1),y:+a[1].toFixed(1),a:z.a,k:z.k,c:'',s:0}}
+  else{const z=zAt(pt);if(!z){msg('Pose-le dans la pièce.');return null}const a=dClamp(pt,z.top);q={id,x:+a[0].toFixed(1),y:+a[1].toFixed(1),a:z.a,k:z.k,c:'',s:0,zi:sc.zs.indexOf(z)}}
   placed=placed.filter(o=>o.id!==id);q.pop=1;placed.push(q);sel=null;msg('');
   sfx(560,.2);vib(8);layer();placed.forEach(o=>delete o.pop);sv();check();return q};
  /* ---- fin de pièce ---- */
  const check=()=>{if(done)return;if(left().length){if(checked){checked=false;layer()}return}
   const bad=placed.filter(q=>stOf(q)===0),meh=placed.filter(q=>stOf(q)===1);checked=true;layer();
-  if(bad.length||meh.length){[...bad,...meh].forEach(q=>{if(q.c)op.add(q.c)});layer();const t=[];if(bad.length)t.push(bad.length+(bad.length>1?' objets ne sont pas à leur place (en rouge)':' objet n’est pas à sa place (en rouge)'));if(meh.length)t.push(meh.length+(meh.length>1?' pourraient être mieux rangés (en jaune)':' pourrait être mieux rangé (en jaune)'));msg(t.join(' et ')+' : déplace-les.');sfx(300,.25);return}
+  if(bad.length||meh.length){[...bad,...meh].forEach(q=>{if(q.c)op.add(q.c)});layer();const t=[];if(bad.length)t.push(bad.length+(bad.length>1?' objets ne sont pas à leur place (en rouge)':' objet n’est pas à sa place (en rouge)'));if(meh.length)t.push(meh.length+(meh.length>1?' pourraient être mieux rangés (en jaune)':' pourrait être mieux rangé (en jaune)'));msg(t.join(' et ')+(bad.length+meh.length>1?' : déplace-les.':' : déplace-le.'));sfx(300,.25);return}
   done=true;success()};
  const success=()=>{const fx=$('#dmfx');placed.forEach((q,k)=>setTimeout(()=>{if(!alive()||!fx)return;for(let j=0;j<5;j++){const e=document.createElementNS('http://www.w3.org/2000/svg','circle'),a=j*1.257+k,d=9+(j%2)*5;e.setAttribute('cx',q.x);e.setAttribute('cy',q.y-(q.a==='c'?0:dSz(q.id)/2));e.setAttribute('r',1.6);e.setAttribute('class','dmspk');e.style.setProperty('--dx',(Math.cos(a)*d).toFixed(1)+'px');e.style.setProperty('--dy',(Math.sin(a)*d).toFixed(1)+'px');fx.appendChild(e);setTimeout(()=>e.remove(),900)}sfx(660+k%5*90,.12)},k*90));
   const ex=placed.length,ac=0,w=$('#dmw');
@@ -5071,17 +5081,19 @@ function pDemen2(r){
  svg.addEventListener('wheel',e=>{e.preventDefault();const p=ptr(e);if(p)zoomAt(e.deltaY<0?1.15:1/1.15,p[0],p[1])},{passive:false});
  /* ---- doigts : objet (glisser / toucher), fond (toucher, déplacer la vue, pincer) ---- */
  let drag=null;const pts=new Map();let bg=null;
- const ghost=(id,x,y)=>{let g=$('#dmg');const s=svg.getBoundingClientRect().width/vb.w,z=Math.round(dSz(id)*s*1.12);if(!g){g=document.createElement('div');g.id='dmg';g.className='dmg dmg2';document.body.appendChild(g)}g.innerHTML=`<svg viewBox="0 0 32 32" width="${z}" height="${z}" aria-hidden="true">${DIT[id][1]}</svg>`;g.style.left=x+'px';g.style.top=y+'px'};
- const noGhost=()=>{const g=$('#dmg');if(g)g.remove()};
+ /* l’objet suit le doigt, dans la pièce (même taille, même zoom) */
+ const ghost=(id,e)=>{const g=$('#dmdg'),p=ptr(e);if(!g||!p)return;const z=Math.round(dSz(id)*1.12);let s=g.firstChild;if(!s||s.dataset.id!==id){g.innerHTML=`<g class="dmdrag" data-id="${id}"><ellipse class="dmds" rx="${(z*.3).toFixed(1)}" ry="${(z*.09).toFixed(1)}" fill="rgba(40,25,10,.22)"/><svg width="${z}" height="${z}" viewBox="0 0 32 32">${DIT[id][1]}</svg></g>`;s=g.firstChild}
+  const sv=s.querySelector('svg'),sh=s.querySelector('ellipse'),lift=z*.35;sv.setAttribute('x',(p[0]-z/2).toFixed(1));sv.setAttribute('y',(p[1]-z*.94-lift).toFixed(1));sh.setAttribute('cx',p[0].toFixed(1));sh.setAttribute('cy',p[1].toFixed(1))};
+ const noGhost=()=>{const g=$('#dmdg');if(g)g.innerHTML='';const o=$('#dmg');if(o)o.remove()};
  let hvT=0;const hover=e=>{cancelAnimationFrame(hvT);hvT=requestAnimationFrame(()=>{const h=$('#dmh');if(!h||!drag)return;const p=ptr(e);if(!p)return;const c=cAt(p);let a=null;if(c&&c.inside)a=c.c.g.zone;else if(c&&c.closed)a=c.c.g.front;else{const z=zAt(p);if(z&&z.k!=='floor'&&z.k!=='wall')a=z.hull}h.innerHTML=a?`<polygon class="dmhv" points="${f2(a)}"/>`:''})};
- const dmv=e=>{if(!drag)return;if(!drag.mv&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>7){drag.mv=true;sel=null;layer()}if(drag.mv){ghost(drag.id,e.clientX,e.clientY);hover(e)}};
- const dup=e=>{document.removeEventListener('pointermove',dmv);document.removeEventListener('pointerup',dup);document.removeEventListener('pointercancel',dcn);const d=drag;drag=null;noGhost();const h=$('#dmh');if(h)h.innerHTML='';if(!d)return;
+ const dmv=e=>{if(!drag)return;if(!drag.mv&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>6){drag.mv=true;sel=null;svg.querySelectorAll('.dmit.sel,.dmtop.sel').forEach(x=>x.classList.remove('sel'));svg.querySelectorAll(`[data-id="${drag.id}"]`).forEach(x=>{if(!x.classList.contains('dmdrag'))x.classList.add('lift')});sfx(480,.08)}if(drag.mv){e.preventDefault();ghost(drag.id,e);hover(e)}};
+ const dup=e=>{document.removeEventListener('pointermove',dmv);document.removeEventListener('pointerup',dup);document.removeEventListener('pointercancel',dcn);const d=drag;drag=null;noGhost();slotH=[];const h=$('#dmh');if(h)h.innerHTML='';if(!d)return;
   if(d.mv){const r0=svg.getBoundingClientRect();if(e.clientX>=r0.left&&e.clientX<=r0.right&&e.clientY>=r0.top&&e.clientY<=r0.bottom){const p=ptr(e);if(p)put(d.id,p)}layer()}
   else{sel=sel===d.id?null:d.id;layer();msg(sel?'Touche l’endroit où poser « '+DIT[sel][0]+' ».':'');sfx(500,.1)}};
- const dcn=()=>{document.removeEventListener('pointermove',dmv);document.removeEventListener('pointerup',dup);document.removeEventListener('pointercancel',dcn);drag=null;noGhost();layer()};
+ const dcn=()=>{document.removeEventListener('pointermove',dmv);document.removeEventListener('pointerup',dup);document.removeEventListener('pointercancel',dcn);drag=null;noGhost();slotH=[];layer()};
  svg.addEventListener('pointerdown',e=>{
   let t=e.target.closest&&e.target.closest('.dmtop,.dmit');if(!t){const ob=e.target.closest&&e.target.closest('.dmbx.op');if(ob)t=ob.querySelector('.dmtop')}
-  if(t&&!pts.size&&!done){e.preventDefault();e.stopPropagation();drag={id:t.dataset.id,x:e.clientX,y:e.clientY,mv:false};document.addEventListener('pointermove',dmv);document.addEventListener('pointerup',dup);document.addEventListener('pointercancel',dcn);return}
+  if(t&&!pts.size&&!done){e.preventDefault();e.stopPropagation();try{svg.setPointerCapture(e.pointerId)}catch(_){}drag={id:t.dataset.id,x:e.clientX,y:e.clientY,mv:false};document.addEventListener('pointermove',dmv);document.addEventListener('pointerup',dup);document.addEventListener('pointercancel',dcn);return}
   pts.set(e.pointerId,{x:e.clientX,y:e.clientY});try{svg.setPointerCapture(e.pointerId)}catch(_){}
   if(pts.size===1)bg={x:e.clientX,y:e.clientY,vx:vb.x,vy:vb.y,mv:false,tg:e.target};
   else if(pts.size===2){const[a,b]=[...pts.values()];bg={pinch:1,d0:Math.hypot(a.x-b.x,a.y-b.y),w0:vb.w,mv:true}}});
