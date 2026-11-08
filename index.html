@@ -1605,7 +1605,7 @@ const st={get(k,d){if(k in mem)return mem[k];try{const v=localStorage.getItem(k)
 const sh=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const today=new Date().toLocaleDateString('sv'),di=Math.floor(Date.now()/864e5);
 const dkey=g=>'d:'+g+':'+today,ckey=g=>'c:'+g;
-const NLS={mots:60,memo:20,caches:40,phrase:20,maze:20,match3:20,demenage:10,quiz:1,cherche:12},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
+const NLS={mots:60,memo:20,caches:60,phrase:20,maze:20,match3:20,demenage:10,quiz:1,cherche:12},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
 /* Section temporaire « fêtes » : 10 niveaux spéciaux de plus par jeu (indices nl, nl+1 … nl+9), disponible tout de suite et jusqu’au 11 janvier 2027 inclus ; #noel dans l’adresse force l’affichage.
    Ils ne font pas partie du code de sauvegarde ni de la synchronisation. */
 const NLX=10,xmasOn=()=>{const t=Date.now();return location.hash==='#noel'||t<new Date(2027,0,12).getTime()},isX=(g,l)=>l>=nl(g),xn=(g,l)=>l-nl(g)+1;
@@ -2070,7 +2070,7 @@ function confetti(el){
  requestAnimationFrame(f);
 }
 /* ---------- Mots cachés : 8 niveaux, 4 directions, mots qui partagent des lettres ---------- */
-const MSN=[6,6,7,7,8,8,9,9,7,8,8,8,9,8,9,9,8,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,10,10,10,10,10,10,7,7,9,8,8,9,9,9,9,9];
+const MSN=[6,6,7,7,8,8,9,9,7,8,8,8,9,8,9,9,8,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,10,10,10,11,10,10,10,10,10,10,11,7,7,9,8,8,9,9,9,9,9];
 /* mots de chaque niveau : aucun mot n’est utilisé deux fois (vocabulaire élargi, uniquement des lettres du remplissage) */
 const MSL=[
  ['AURORE','PLAID','ASTRE','REVE'],
@@ -2113,6 +2113,26 @@ const MSL=[
  ['BUCHERON','COPEAU','RABOT','ERABLE','NOYER','CABANE','SCIURE'],
  ['PRINTEMPS','AUTOMNE','SOLSTICE','EQUINOXE','FEUILLE','RECOLTE','SAISON'],
  ['SERENITE','GRATITUDE','PATIENCE','HARMONIE','SOURIRE','LUMINEUX','PAISIBLE'],
+ ['PATINOIRE','BOURRASQUE','CONGERE','VERGLAS','GIBOULEE','FRIMAS','BLIZZARD'],
+ ['LOUVETEAU','FAON','OURSON','CHATON','POUSSIN','CANETON','AGNEAU'],
+ ['MARMITE','LOUCHE','FOUET','RAPE','PASSOIRE','ROULEAU','TAMIS'],
+ ['CATHEDRALE','CLOCHER','VITRAIL','ARCADE','PORCHE','CLOITRE','DONJON'],
+ ['ALBATROS','PELICAN','HERON','MESANGE','ROUGEGORGE','PINSON','HIRONDELLE'],
+ ['TOPAZE','RUBIS','EMERAUDE','QUARTZ','AGATE','OPALE','JADE'],
+ ['CERCEAU','TOUPIE','MARELLE','CERFVOLANT','BILLE','DOMINO','PUZZLE'],
+ ['DUNE','OASIS','MIRAGE','CARAVANE','SABLIER','PALMIER','CHAMEAU'],
+ ['FROMAGE','RACLETTE','TARTIFLETTE','COMTE','REBLOCHON','BEAUFORT','TOMME'],
+ ['ATELIER','ENCLUME','MARTEAU','TENAILLE','ETABLI','SOUFFLET','LIME'],
+ ['NUAGE','ARCENCIEL','ECLAIR','TONNERRE','GRELE','BROUILLARD','AVERSE'],
+ ['VIOLETTE','PIVOINE','LILAS','GLYCINE','CAPUCINE','DAHLIA','LAVANDE'],
+ ['MARIONNETTE','THEATRE','RIDEAU','COULISSE','ACTEUR','DECOR','APPLAUDIR'],
+ ['COQUELICOT','BLEUET','PRAIRIE','MEULE','EPI','MOISSON','GRANGE'],
+ ['ARCHIPEL','ATOLL','LAGON','RECIF','ILOT','CRIQUE','PRESQUILE'],
+ ['CARROSSE','CHATEAU','PRINCESSE','DRAGON','FEE','SORCIER','LICORNE'],
+ ['GOELAND','FALAISE','EMBRUN','BALISE','CHALUTIER','FILET','QUAI'],
+ ['CONFITURE','TARTINE','BEURRE','CROISSANT','PAIN','JUS','BOL'],
+ ['BOUGEOIR','CHANDELLE','MECHE','CIRE','FLAMBEAU','LUEUR','ETINCELLE'],
+ ['BONTE','GENTILLESSE','CONFIANCE','ECOUTE','PARTAGE','ACCUEIL','ENTRAIDE'],
  /* niveaux de fêtes */
  ['NOEL','HOTTE','ANGE','CRECHE','BERGER'],
  ['CADEAU','RUBAN','PAPIER','BOULE','CLOCHE'],
@@ -6299,6 +6319,10 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches)snow();
 (()=>{try{if(st.get('mig:cach40',0))return;const P=[ckey('caches')+':','p:caches:','k:caches:'];
  for(let i=9;i>=0;i--)P.forEach(pf=>{const o=st.get(pf+(20+i),null);if(o){st.set(pf+(40+i),o);st.set(pf+(20+i),null)}});
  st.set('mig:cach40',1)}catch(e){}})();
+/* Mots cachés passe de 40 à 60 niveaux : les niveaux de fêtes (41 à 50) glissent vers 61 à 70, une seule fois */
+(()=>{try{if(st.get('mig:cach60',0))return;const P=[ckey('caches')+':','p:caches:','k:caches:'];
+ for(let i=9;i>=0;i--)P.forEach(pf=>{const o=st.get(pf+(40+i),null);if(o){st.set(pf+(60+i),o);st.set(pf+(40+i),null)}});
+ st.set('mig:cach60',1)}catch(e){}})();
 
 /* ---------- Notifications : un centre dans l’Histoire (cloche), un point sur l’onglet, un aperçu bref à l’arrivée ---------- */
 (()=>{
