@@ -1308,6 +1308,18 @@ body[data-tx=d] .sd-c.pc.pk{color:#2a2550}
  radial-gradient(circle at 90% 62%,#3e2a14 0 2.5%,transparent 3.5%),
  linear-gradient(160deg,#a87a42,#7a5226);box-shadow:inset 0 0 0 2px rgba(60,35,10,.7)}
 .m3r[data-n="0"]::after{opacity:0}
+.m3vx{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none;z-index:3}
+.m3vx i{position:absolute;left:-90px;top:-90px;width:180px;height:180px;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 12%,rgba(170,225,255,.55) 20%,transparent 30% 45%,rgba(120,200,255,.45) 55%,transparent 65% 78%,rgba(200,240,255,.5) 88%,transparent 96%);-webkit-mask:radial-gradient(circle,transparent 0 12%,#000 30% 62%,transparent 72%);mask:radial-gradient(circle,transparent 0 12%,#000 30% 62%,transparent 72%);animation:m3vx 1s linear infinite;opacity:0;transition:opacity .3s}
+.m3vx i:nth-child(2){transform:scale(.62);animation-duration:.7s;animation-direction:normal}.m3vx i:nth-child(3){transform:scale(1.35);animation-duration:1.4s}
+.shw .m3vx i{opacity:1}
+.m3vx.out i{opacity:0;transition:opacity .25s}
+@keyframes m3vx{to{rotate:360deg}}
+.m3gu{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none;z-index:4}
+.m3gu b{position:absolute;left:-40px;top:-40px;width:80px;height:80px;border-radius:50%;border:5px solid rgba(190,235,255,.8);animation:m3gur .7s ease-out forwards}
+.m3gu b.b2{animation-delay:.12s;border-width:3px}
+@keyframes m3gur{from{transform:scale(.2);opacity:1}to{transform:scale(3.4);opacity:0}}
+.m3gu i{position:absolute;left:calc(var(--s)/-2);top:calc(var(--s)/-2);width:var(--s);height:calc(var(--s)*1.25);border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:radial-gradient(circle at 35% 30%,#fff 0 18%,rgba(170,225,255,.9) 22%,rgba(90,170,230,.75));opacity:0;animation:m3gud 1.05s cubic-bezier(.2,.7,.4,1) forwards}
+@keyframes m3gud{0%{transform:translate(0,0) scale(.4);opacity:1}45%{transform:translate(calc(var(--x)*.75),var(--y)) scale(1);opacity:1;animation-timing-function:cubic-bezier(.5,0,.8,.5)}100%{transform:translate(var(--x),calc(var(--y)*.1 + 60px)) scale(.7);opacity:0}}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -2809,14 +2821,17 @@ function pMatch(r){
   const ts=g.filter(t=>t&&!t.s);let ok=false;
   const bn=document.createElement('div');bn.className='m3sh';bn.innerHTML='<i>✦</i><b>Les pièces se mélangent…</b><i>✦</i>';bd.appendChild(bn);bd.classList.add('shw');
   const T=(t,a,s,f)=>`translate(350%,350%) rotate(${a}deg) translate(${(t.c-3.5)*100*f}%,${(t.r-3.5)*100*f}%) scale(${s})`,dl=t=>Math.hypot(t.c-3.5,t.r-3.5)*38,A=[];
-  const run=(fn)=>Promise.all(ts.map(t=>{const an=t.el.animate(fn(t),{duration:620,delay:fn.d(t),easing:fn.e,fill:'both'});A.push(an);return an.finished.catch(()=>{})}));
-  const end=()=>{A.forEach(x=>{try{x.cancel()}catch(e){}});bn.remove();bd.classList.remove('shw')};
+  const run=(fn,du)=>Promise.all(ts.map(t=>{const an=t.el.animate(fn(t),{duration:du||620,delay:fn.d(t),easing:fn.e,fill:'both'});A.push(an);return an.finished.catch(()=>{})}));
+  const vx=document.createElement('div');vx.className='m3vx';vx.innerHTML='<i></i><i></i><i></i>';bd.appendChild(vx);
+  const end=()=>{A.forEach(x=>{try{x.cancel()}catch(e){}});bn.remove();vx.remove();bd.classList.remove('shw')};
+  /* comme un bouchon qu’on enlève : l’eau jaillit du trou et retombe en pluie de pièces */
+  const gush=()=>{vx.classList.add('out');const sp=document.createElement('div');sp.className='m3gu';let h='<b></b><b class="b2"></b>';const W=bd.getBoundingClientRect().width;for(let k=0;k<26;k++){const a=-90+(Math.random()-.5)*130,d=W*(.18+Math.random()*.32);h+=`<i style="--x:${(Math.cos(a*Math.PI/180)*d).toFixed(0)}px;--y:${(Math.sin(a*Math.PI/180)*d).toFixed(0)}px;--s:${(4+Math.random()*8).toFixed(1)}px;animation-delay:${(Math.random()*160).toFixed(0)}ms"></i>`}sp.innerHTML=h;bd.appendChild(sp);setTimeout(()=>sp.remove(),1400)};
   sfx(520,.3);
   if(!wRM){const f1=t=>[{transform:T(t,0,1,1)},{transform:T(t,440,.2,0),opacity:.85}];f1.d=dl;f1.e='cubic-bezier(.5,0,.85,.45)';await run(f1)}else await wt(500);
   if(!alive()){end();return}
   for(let k=0;k<80&&!ok;k++){const a=sh(ts.map(t=>t.t));ts.forEach((t,i)=>{t.t=a[i]});const Y=types();ok=!m3Has(Y)&&!!m3Swap(Y,lk())}
   ts.forEach(t=>look(t));sfx(780,.3);
-  if(!wRM){const f2=t=>[{transform:T(t,-440,.2,0),opacity:.85},{transform:T(t,0,1,1),opacity:1}];f2.d=dl;f2.e='cubic-bezier(.15,.6,.3,1.25)';A.length=0;ts.forEach(t=>t.el.getAnimations().forEach(x=>x.cancel()));await run(f2)}
+  if(!wRM){gush();const f2=t=>{const hx=(t.c-3.5)*55+(Math.random()-.5)*60,hy=-120-Math.random()*110-(7-t.r)*14,sp=(Math.random()-.5)*540;return[{transform:`translate(350%,350%) rotate(-200deg) scale(.2)`,opacity:.85,easing:'cubic-bezier(.15,.75,.35,1)'},{offset:.42,transform:`translate(calc(350% + ${hx.toFixed(0)}%),calc(350% + ${hy.toFixed(0)}%)) rotate(${sp.toFixed(0)}deg) scale(.95)`,opacity:1,easing:'cubic-bezier(.55,0,.75,.4)'},{transform:T(t,0,1,1),opacity:1}]};f2.d=t=>Math.random()*140;f2.e='linear';A.length=0;ts.forEach(t=>t.el.getAnimations().forEach(x=>x.cancel()));await run(f2,1050)}
   end();
  };
  const finish=async()=>{
@@ -2869,7 +2884,7 @@ function pMatch(r){
  act.m3r=()=>{st.set(pkey(),null);start('match3',false,lv)};
  act.hint=()=>{if(busy||over)return;let h=null;const T=types();const s=m3Swap(T,lk());if(s)h=s;else{const k=g.findIndex(t=>t&&t.s);if(k>=0)h=[k]}
   if(!h||!spend(1))return;h.forEach(i=>g[i]&&g[i].el.classList.add('hint'));clearTimeout(hintT);hintT=setTimeout(()=>g.forEach(t=>t&&t.el.classList.remove('hint')),2200)};
- if(window.__M3DBG)window.__M3DBG({g:()=>g,look,swap,types,tap});
+ if(window.__M3DBG)window.__M3DBG({g:()=>g,look,swap,types,tap,shuffle});
  hud();
  if(!r&&lv===0&&!X)msg('Fais glisser une pièce vers sa voisine pour aligner 3 pièces identiques.');
  else if(!r&&!X&&L.al)msg('Des pièces sont prises dans les algues : aligne-les une fois pour les libérer, puis encore pour les faire disparaître.');
