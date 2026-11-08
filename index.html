@@ -1634,7 +1634,7 @@ const st={get(k,d){if(k in mem)return mem[k];try{const v=localStorage.getItem(k)
 const sh=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const today=new Date().toLocaleDateString('sv'),di=Math.floor(Date.now()/864e5);
 const dkey=g=>'d:'+g+':'+today,ckey=g=>'c:'+g;
-const NLS={mots:60,memo:20,caches:60,phrase:40,maze:20,match3:20,demenage:10,quiz:1,cherche:12,tournade:40,sudoku:40},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
+const NLS={mots:60,memo:20,caches:60,phrase:40,maze:20,match3:20,demenage:10,quiz:1,cherche:20,tournade:40,sudoku:40},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
 /* Section temporaire « fêtes » : 10 niveaux spéciaux de plus par jeu (indices nl, nl+1 … nl+9), disponible tout de suite et jusqu’au 11 janvier 2027 inclus ; #noel dans l’adresse force l’affichage.
    Ils ne font pas partie du code de sauvegarde ni de la synchronisation. */
 const NLX=10,xmasOn=()=>{const t=Date.now();return location.hash==='#noel'||t<new Date(2027,0,12).getTime()},isX=(g,l)=>l>=nl(g),xn=(g,l)=>l-nl(g)+1;
@@ -1700,10 +1700,83 @@ const CHU=[
 {n:'La maison des étoiles',bc:['#e7d8ff','#cdb6f2','#3d2a85'],hz:.3,sky:['#1a1550','#7a5bb8'],gr:['#5a4a9a','#46397d','#332a63'],se:['⭐','🌟','✨','🌙','💫','☁️'],ge:['🏡','🌲','🛋️','🪑','📚','🧶','🍪','🥛','🐈','🐕','🧦','🖼️','🪟','🌙','⭐','🍲'],
  it:[['🕯️','la bougie','bougie'],['🛏️','le lit','lit'],['🔑','la clé','clé'],['🧸','l’ourson','ourson']],
  s:'Le voilà presque chez lui ! La maison des étoiles brille au loin. Retrouve le bonhomme, puis une dernière fois ses affaires : la bougie, le lit, la clé et l’ourson.',
- w:'La clé tourne, la bougie s’allume, l’ourson l’attend sur le lit. Le petit bonhomme est enfin chez lui. Merci de l’avoir ramené.'}
+ w:'La clé tourne, la bougie s’allume, l’ourson l’attend sur le lit. Le petit bonhomme est enfin chez lui. Merci de l’avoir ramené.'},
+{n:'La ferme du matin',ar:3,bc:['#fff0c7','#cde8a8','#6a4a1a'],hz:.32,sky:['#ffd9a8','#cfeefc'],gr:['#9fd17a','#86bd63','#6fa64e'],se:['☁️','🐦','☀️','🕊️'],ge:['🐄','🐖','🐑','🐓','🐥','🌾','🚜','🌻','🥕','🥚','🪣','🐴','🐐','🌽','🍎','🐈'],
+ it:[['🧺','le panier','panier'],['🪵','le bâton','bâton'],['🥖','la baguette','baguette']],
+ s:'Le petit bonhomme s’est réveillé dans une ferme, au milieu des poules. Retrouve-le entre les animaux, puis son panier, son bâton et sa baguette de pain pour la route.',
+ w:'Le coq chante, le bonhomme rit : panier au bras, il reprend son chemin avec du bon pain.'},
+{n:'La banquise',bc:['#eef8ff','#b8def2','#1d4f7a'],hz:.3,sky:['#8fc9ef','#e6f6ff'],gr:['#f2f9ff','#dceefb','#c4e2f6'],se:['☁️','❄️','🌨️','🕊️'],ge:['🐧','🐻‍❄️','🦭','🐟','🧊','❄️','⛄','🐋','🦊','🐾','🎣','⛺','🪨','🐳'],
+ it:[['🧤','les moufles','moufles'],['🛶','le kayak','kayak'],['🎣','la canne à pêche','canne']],
+ s:'Une banquise immense, toute blanche. Le bonhomme y joue à cache-cache avec les pingouins. Trouve-le, ainsi que ses moufles, son kayak et sa canne à pêche.',
+ w:'Bien au chaud dans ses moufles, le bonhomme pagaie vers la suite du voyage.'},
+{n:'La savane',ar:6,bc:['#ffe6ad','#e8c070','#7a4a14'],hz:.34,sky:['#ffb978','#ffe7b0'],gr:['#e8c779','#d9b463','#c79e4c'],se:['☀️','🦅','☁️'],ge:['🦁','🦒','🐘','🦓','🦏','🌳','🌿','🪨','🐆','🦛','🐊','🦩','🌾','🐃'],
+ it:[['🎒','le sac à dos','sac'],['📷','l’appareil photo','appareil'],['👒','le chapeau','chapeau']],
+ s:'Sous le soleil doré de la savane, le bonhomme observe les girafes. Retrouve-le, puis son sac à dos, son appareil photo et son chapeau.',
+ w:'Clic ! Le bonhomme garde une photo des éléphants et repart, le chapeau bien vissé.'},
+{n:'Le verger d’automne',bc:['#ffe0bf','#f2b77a','#7a3a14'],hz:.3,sky:['#f5a96b','#fde2b8'],gr:['#c98f4c','#b47a3a','#9a652c'],se:['🍂','🐦','☁️','🍁'],ge:['🍎','🍐','🍂','🍁','🌰','🐿️','🦔','🍄','🧺','🪵','🎃','🦉','🌳','🐛'],
+ it:[['🪜','l’échelle','échelle'],['🧥','le manteau','manteau'],['🍯','le pot de miel','miel']],
+ s:'Les feuilles rousses tombent dans le verger. Le bonhomme ramasse des pommes. Trouve-le, avec son échelle, son manteau et son pot de miel.',
+ w:'Les poches pleines de pommes, le bonhomme enfile son manteau et file sous les feuilles.'},
+{n:'Le port de pêche',bc:['#d9f1ff','#9fd0ea','#1f4f6e'],hz:.36,sky:['#86c9ef','#e2f5ff'],gr:['#5a9cc8','#4a8ab6','#3d78a2'],se:['☁️','🐦','☀️'],ge:['⛵','🚤','🐟','🦀','⚓','🛟','🐙','🦐','🪝','🐚','🐠','🦑','🏝️','🌊'],
+ it:[['⚓','l’ancre','ancre'],['🧭','la boussole marine','boussole'],['🛟','la bouée','bouée']],
+ s:'Au port, les bateaux dansent sur l’eau. Le bonhomme veut embarquer. Trouve-le, puis son ancre, sa boussole marine et sa bouée.',
+ w:'Larguez les amarres ! Le bonhomme salue les mouettes depuis le pont.'},
+{n:'La planète lointaine',ar:4,bc:['#d6ccff','#9f8af0','#2a1e6e'],hz:.14,sky:['#120c3a','#3a2a8a'],gr:['#5a3fa8','#4a3192','#3a257a'],se:['⭐','🪐','🌟','☄️','✨'],ge:['👽','🛸','🪐','🌑','🚀','🛰️','💫','🌌','🔭','🧑‍🚀','🌕','⭐','🌠','🪨'],
+ it:[['🔭','le télescope','télescope'],['🧑‍🚀','le casque','casque'],['📡','l’antenne','antenne']],
+ s:'Une fusée a déposé le bonhomme sur une planète lointaine. Retrouve-le parmi les étoiles, puis son télescope, son casque et son antenne.',
+ w:'Bip bip ! L’antenne capte la maison : le bonhomme reprend la route des étoiles.'},
+{n:'Le récif de corail',ar:7,bc:['#c9f3f0','#7fd6d0','#0b4e5e'],hz:.1,sky:['#0f6b8a','#3ab5c8'],gr:['#1d8aa8','#167594','#106280'],se:['🫧','🐠','🫧'],ge:['🐠','🐡','🪸','🐢','🦈','🐙','🦑','🐚','⭐','🪼','🐬','🦀','🐟','🐋'],
+ it:[['🤿','le masque','masque'],['🧜','la nageoire','nageoire'],['💎','la perle','perle']],
+ s:'Sous la mer, le récif brille de mille couleurs. Le bonhomme nage avec les tortues. Trouve-le, avec son masque, sa nageoire et une perle brillante.',
+ w:'Une bulle, deux bulles : le bonhomme remonte à la surface avec sa perle.'},
+{n:'Le champ de lavande',ar:3,bc:['#ecdcff','#c6a8f0','#4a2a7a'],hz:.33,sky:['#c9a3f2','#fde7ff'],gr:['#9a7ad8','#8466c4','#6f52ae'],se:['☀️','🦋','☁️','🐝'],ge:['🪻','🌸','🐝','🦋','🌼','🧺','🏡','🌻','🐞','🌳','🐌','🍯','🌷','🪨'],
+ it:[['🧺','le panier de fleurs','panier'],['🎨','la palette','palette'],['🍯','le miel de lavande','miel']],
+ s:'Un champ de lavande parfumé s’étend jusqu’à l’horizon. Le bonhomme y peint les abeilles. Trouve-le, puis son panier, sa palette et son miel.',
+ w:'Le bonhomme range ses pinceaux : ce champ violet restera dans son carnet pour toujours.'},
+{n:'Le départ vers le Nord',x:1,ar:2,bc:['#eef6ff','#bcd6f0','#2a4a7a'],hz:.35,sky:['#1f2f6a','#6a86c8'],gr:['#eef5ff','#d6e6f8','#bed4ee'],se:['❄️','⭐','🌙','✨'],ge:['🎄','⛄','🏠','❄️','🦌','🕯️','🧣','🧤','🛷','🔔','🍪','🌟','🐿️','🌲'],
+ it:[['🗺️','la carte du Nord','carte'],['🏮','la lanterne','lanterne'],['🧣','l’écharpe','écharpe']],
+ s:'Zeni a pris une grande décision : il ira jusqu’au pôle Nord pour trouver le cadeau parfait pour ses deux enfants et sa compagne. Il les leur offrira, s’il les revoit un jour. Retrouve Zeni dans le village, puis sa carte du Nord, sa lanterne et son écharpe.',
+ w:'La carte dépliée, la lanterne allumée : Zeni prend la route du grand Nord, le cœur plein d’espoir.'},
+{n:'La toundra glacée',x:1,bc:['#e8f4ff','#b0cfe8','#23476e'],hz:.32,sky:['#5f86c0','#cfe3f6'],gr:['#e3eefa','#cddcee','#b5c9e2'],se:['❄️','🌨️','☁️','🦅'],ge:['🦌','🐺','❄️','🌲','🪨','🦊','🐾','⛺','🔥','🐇','🧊','🌨️','🦉','🌬️'],
+ it:[['🔥','le feu de camp','feu'],['🥾','les bottes fourrées','bottes'],['🫖','la gourde chaude','gourde']],
+ s:'La route traverse la toundra, où souffle un vent glacé. Zeni avance à petits pas. Retrouve-le, puis le feu de camp, ses bottes fourrées et sa gourde chaude.',
+ w:'Réchauffé près du feu, Zeni pense au sourire de ses enfants et repart vers le Nord.'},
+{n:'Le pôle Nord',x:1,bc:['#f2fbff','#c4e4f6','#1b4a74'],hz:.3,sky:['#9ccdee','#eef9ff'],gr:['#f6fbff','#e3f0fb','#cfe4f6'],se:['❄️','☁️','🌨️'],ge:['🐻‍❄️','🐧','🧊','❄️','⛄','🦭','🐾','🚩','🛷','🌨️','🦊','🐋','⛺','🧭'],
+ it:[['🚩','le drapeau','drapeau'],['🧭','la boussole du pôle','boussole'],['🛷','la luge','luge']],
+ s:'Le voici au pôle Nord ! Tout est blanc et silencieux. Zeni cherche déjà des idées de cadeaux. Retrouve-le, puis un drapeau, la boussole du pôle et une luge.',
+ w:'Sur sa luge, Zeni suit la boussole : on raconte qu’un village se cache derrière les collines.'},
+{n:'Les aurores boréales',x:1,ar:4,bc:['#d8f7ec','#8fd8c4','#173a5a'],hz:.2,sky:['#0f1f4a','#2f8f86'],gr:['#dbe9f6','#c3d6ea','#a9c2de'],se:['✨','🌟','⭐','🌌','💫'],ge:['🦌','❄️','🌲','⛄','🦉','🐺','🌨️','🦊','🪨','🐾','🏔️','🔭','🕯️','🌙'],
+ it:[['🔭','la longue-vue','longue-vue'],['🌟','l’étoile polaire','étoile'],['🕯️','la bougie','bougie']],
+ s:'Le ciel s’illumine de vert et de rose : ce sont les aurores boréales. Zeni s’arrête pour les admirer. Retrouve-le, puis sa longue-vue, l’étoile polaire et une bougie.',
+ w:'Guidé par l’étoile polaire, Zeni aperçoit enfin des lumières : le village du Père Noël !'},
+{n:'Le village du Père Noël',x:1,ar:2,bc:['#fff1f1','#f2c6c6','#7a1f2a'],hz:.35,sky:['#2a2f6e','#8a7ac8'],gr:['#f5f9ff','#e2ecf8','#ccdcf0'],se:['❄️','⭐','🌙','✨'],ge:['🎅','🤶','🧝','🎄','🏠','🎁','🍪','🔔','🦌','⛄','🍬','🕯️','🧦','🛷'],
+ it:[['🔔','la cloche','cloche'],['🍪','le biscuit','biscuit'],['🧦','la chaussette','chaussette']],
+ s:'Des maisons en pain d’épices, des lutins pressés, des guirlandes partout : Zeni est arrivé au village du Père Noël. Retrouve-le dans la foule, puis une cloche, un biscuit et une chaussette.',
+ w:'Un lutin chuchote à Zeni : « Les plus beaux cadeaux naissent à l’usine à jouets. » Il y court.'},
+{n:'La boulangerie des lutins',x:1,ar:2,bc:['#fff3dc','#f2d2a0','#7a4a1a'],hz:.35,sky:['#3a2f6e','#b08ac8'],gr:['#f4ecdf','#e6d8c2','#d6c2a4'],se:['❄️','⭐','✨'],ge:['🧝','🍪','🥐','🧁','🍰','🥛','🍫','🍭','🍬','🎂','🥨','☕','🧇','🍩'],
+ it:[['🥛','le verre de lait','lait'],['🧁','le petit gâteau','gâteau'],['🍫','le chocolat','chocolat']],
+ s:'Avant l’usine, Zeni passe par la boulangerie des lutins, qui sent le chocolat chaud. Retrouve-le, puis un verre de lait, un petit gâteau et du chocolat.',
+ w:'Le ventre plein et les mains chaudes, Zeni remercie les lutins et file vers l’usine.'},
+{n:'L’usine à jouets',x:1,ar:5,bc:['#ffe3ec','#ffc8a8','#7a2a3a'],hz:.3,sky:['#6a2f5e','#f09ab8'],gr:['#f2d0c0','#e6b9a6','#d49f8a'],se:['⭐','✨','🎈'],ge:['🧸','🪀','🪁','🚂','🎲','🧩','🪆','🤖','🎨','🪅','🛴','⚽','🎺','🧝','🚁','🎮'],
+ it:[['🔧','la clé à molette','clé'],['🎨','le pot de peinture','peinture'],['🧵','la bobine de fil','bobine']],
+ s:'Dans l’usine à jouets, les machines chantent et les jouets défilent sur les tapis. Zeni cherche le cadeau parfait. Retrouve-le, puis une clé à molette, un pot de peinture et une bobine de fil.',
+ w:'Les jouets sont beaux, mais aucun n’est encore « le » bon. Zeni continue vers l’atelier d’emballage.'},
+{n:'L’atelier d’emballage',x:1,ar:5,bc:['#fff0f6','#f6c4dc','#7a1f4a'],hz:.3,sky:['#4a2a6e','#d08ac8'],gr:['#f6dbe8','#ecc6d8','#dcaec4'],se:['⭐','✨','🎀'],ge:['🎁','🎀','📦','✂️','🧝','🏷️','🎄','🧸','🪀','🎊','🔔','🧦','🍬','🪅'],
+ it:[['🎀','le ruban','ruban'],['✂️','les ciseaux','ciseaux'],['🏷️','l’étiquette','étiquette']],
+ s:'Des montagnes de paquets, des rubans de toutes les couleurs : c’est l’atelier d’emballage. Retrouve Zeni, puis un ruban, des ciseaux et une étiquette.',
+ w:'Un vieux lutin sourit : « Les cadeaux les plus précieux attendent dans le traîneau. » Zeni rejoint l’écurie.'},
+{n:'L’écurie des rennes',x:1,ar:2,bc:['#f6efe6','#d9c3a6','#5a3a1a'],hz:.34,sky:['#26306a','#7a6ab0'],gr:['#efe6d8','#dccfb8','#c6b496'],se:['❄️','⭐','🌙'],ge:['🦌','🥕','🌾','🪵','🔔','🛷','❄️','🏠','🧝','🍎','🪣','🐴','⛄','🎄'],
+ it:[['🥕','la carotte','carotte'],['🔔','le grelot','grelot'],['🌾','la botte de foin','foin']],
+ s:'À l’écurie, les rennes se reposent avant la grande nuit. Zeni leur apporte des carottes. Retrouve-le, puis une carotte, un grelot et une botte de foin.',
+ w:'Le renne au nez rouge pousse Zeni du museau vers le traîneau, qui brille au fond de l’écurie.'},
+{n:'Le traîneau du Père Noël',x:1,ar:11,bc:['#ffe9e9','#f2b8b8','#7a1a24'],hz:.3,sky:['#141a4a','#4a3a8a'],gr:['#e8eefa','#d2dcf0','#b9c8e6'],se:['⭐','🌟','✨','🌙','💫'],ge:['🛷','🎁','🦌','🎅','🔔','🎄','⭐','🧸','🍪','🕯️','🎀','❄️','🧦','🌙'],
+ it:[['🧸','l’ourson pour sa fille','ourson'],['🚂','le petit train pour son fils','train'],['🧣','l’écharpe brodée pour sa compagne','écharpe']],
+ s:'Le voici devant le traîneau du Père Noël, chargé de paquets. Au milieu, trois cadeaux semblent l’attendre. Retrouve Zeni, puis l’ourson pour sa fille, le petit train pour son fils et l’écharpe brodée pour sa compagne.',
+ w:'Zeni serre ses trois cadeaux contre lui. Il est tellement heureux : il a trouvé le cadeau parfait pour chacun. Il a hâte de revoir sa famille pour les leur offrir, et cette pensée le réchauffe plus que tous les feux du Nord.'}
+
 ];
 function chScene(u,li,sd){
- const R=chRnd(sd),W=CHW,H=CHH,hz=u.hz*H,A=chArt(li,sd,W,H,hz),gy=A.gy||0,av=(x,y)=>A.avoid.some(a=>((x-a[0])/a[2])**2+((y-a[1])/a[3])**2<1),TS=Math.round(40-li*.8),N=215+li*8,nt=u.it.length+1;
+ const R=chRnd(sd),W=CHW,H=CHH,hz=u.hz*H,A=chArt(u.ar!=null?u.ar:(li<12?li:-1),sd,W,H,hz),gy=A.gy||0,av=(x,y)=>A.avoid.some(a=>((x-a[0])/a[2])**2+((y-a[1])/a[3])**2<1),dif=u.x?4+(li-20)*1.1:Math.min(li,19),TS=Math.round(40-dif*.8),N=215+dif*8,nt=u.it.length+1;
  const rr=(a,b)=>a+R()*(b-a),pick=a=>a[Math.floor(R()*a.length)];
  const bad=new Set(u.it.map(x=>x[0]));
  const se=u.se.filter(e=>!bad.has(e)),ge=u.ge.filter(e=>!bad.has(e));
@@ -1721,7 +1794,7 @@ function chScene(u,li,sd){
   if(guard>3000&&T.length<nt)gap=150;
  }
  while(T.length<nt)T.push({x:rr(70,W-70),y:rr(Math.max(130,gy),H-70)});
- T.forEach((t,i)=>{if(!i){t.k='g';t.e='';t.n='le petit bonhomme';t.s='bonhomme';t.r=TS*.85}else{const o=u.it[i-1];t.k='o';t.e=o[0];t.n=o[1];t.s=o[2];t.r=TS*.78}});
+ T.forEach((t,i)=>{if(!i){t.k='g';t.e='';t.n=u.x?'Zeni':'le petit bonhomme';t.s=u.x?'Zeni':'bonhomme';t.r=TS*.85}else{const o=u.it[i-1];t.k='o';t.e=o[0];t.n=o[1];t.s=o[2];t.r=TS*.78}});
  /* décor : plus bas = plus grand et dessiné plus tard ; rien ne cache une cible en entier */
  const D=[];
  const keepClear=(x,y,s)=>T.every(t=>Math.hypot(t.x-x,t.y-y)>=s*.5+TS*.14);
@@ -1789,7 +1862,7 @@ ${intro?`<div class="hov" id="hov"><div class="hcd glass"><h2>${u.n}</h2><p>${u.
   const tr=$('#htr');if(tr)tr.innerHTML=tray();
   sfx(i?740:880,.35);setTimeout(()=>sfx(i?988:1175,.45),130);vib(i?20:[20,40,20]);
   if(found.length>=T.length){fin=true;msg('Tout est trouvé !');const m=$('.hmsg');if(m)m.classList.add('big');setTimeout(()=>{if(al())win()},1700);[523,659,784,1047].forEach((f,k)=>setTimeout(()=>sfx(f,.6),500+k*160));if(el)confetti(el);return}
-  msg(t.k==='g'?'Tu as retrouvé le petit bonhomme ! Cherche encore ses affaires.':'Trouvé : '+t.n+' !');
+  msg(t.k==='g'?(u.x?'Tu as retrouvé Zeni ! Cherche encore les objets.':'Tu as retrouvé le petit bonhomme ! Cherche encore ses affaires.'):'Trouvé : '+t.n+' !');
  };
  /* les messages s’effacent seuls après 5 secondes */
  {const hm=$('.hmsg');let to=0;if(hm)new MutationObserver(()=>{clearTimeout(to);if(hm.textContent&&!fin)to=setTimeout(()=>{hm.textContent=''},5000)}).observe(hm,{childList:true,characterData:true,subtree:true})}
@@ -1948,7 +2021,7 @@ const G=[
 {id:'match3',n:'Constellations',ic:'✧',a:'#8fb4f0',b:'#4a5db0',t:'Les constellations',s:'Dans le ciel, des pièces brillantes se mêlent. Aligne-les pour les faire briller : quatre alignées font naître une lune, un carré de quatre une étoile, et cinq alignées un soleil.',w:'Le ciel brille un peu plus fort ce soir.'},
 {id:'demenage',n:'Déménagement',ic:'⌂',a:'#e8b98a',b:'#9a5f3a',t:'Les boîtes du déménagement',s:'Une nouvelle maison, des boîtes partout. Sors les objets un à un et range-les là où ils vont : la brosse à dents sur le lavabo, le toutou sur le lit…',w:'Tout est rangé. La maison sent déjà le chez-soi.'},
 {id:'quiz',n:'Quiz',ic:'?',a:'#8fd6d0',b:'#2f7f87',t:'Le quiz du bonhomme',s:'Le petit bonhomme te pose une question de culture générale, avec quatre réponses possibles. Bonne réponse : il est content et tu gagnes un flocon. Mauvaise réponse : il est déçu, la bonne réponse t’est montrée, et on passe à la suite.',w:'Le bonhomme est ravi.'},
-{id:'cherche',n:'Cherche et trouve',ic:'◉',a:'#ffd37a',b:'#c9742e',nox:1,t:'Le bonhomme s’est perdu',s:'Le petit bonhomme est tombé de son étoile filante. Dans chaque univers, retrouve-le parmi des dizaines d’éléments, ainsi que les objets qui l’aideront à rentrer chez lui. Fais glisser la scène, pince pour agrandir, touche ce que tu trouves.',w:'Le bonhomme te remercie. Un pas de plus vers la maison.',wl:CHWL}
+{id:'cherche',n:'Cherche et trouve',ic:'◉',a:'#ffd37a',b:'#c9742e',t:'Le bonhomme s’est perdu',s:'Le petit bonhomme est tombé de son étoile filante. Dans chaque univers, retrouve-le parmi des dizaines d’éléments, ainsi que les objets qui l’aideront à rentrer chez lui. Fais glisser la scène, pince pour agrandir, touche ce que tu trouves.',w:'Le bonhomme te remercie. Un pas de plus vers la maison.',wl:CHWL}
 ];
 const SP=[{id:'scrabble',n:'Scrabble',ic:'Ⓢ',a:'#e6b86a',b:'#9a6a2e',t:'La partie du soir',s:'Pose des mots sur le plateau avec les sept lettres de ton chevalet. Joue ton tour, ton ami joue le sien quand il le souhaite. Pas d’indices ici.',sp:'Entre amis'},
 {id:'chess',n:'Échecs',ic:'♞',a:'#7fb88a',b:'#2b5f45',t:'La clairière',s:'Une partie d’échecs au calme, sous les sapins : contre l’ordinateur, à deux sur le même appareil, ou à distance contre un ami. Tu choisis la durée au début, ou pas de limite de temps.',sp:'Seul ou à deux'},
