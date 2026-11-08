@@ -1249,6 +1249,8 @@ body[data-tx=d] .sd-c.pc.pk{color:#2a2550}
 .sd.sdpxr .sd-c{color:transparent!important;text-shadow:none!important;border-radius:0;margin:0!important;box-shadow:none!important;filter:none!important;transition:all .6s}
 .sd.sdview{pointer-events:none;border-radius:10px;overflow:hidden;width:fit-content;margin-left:auto;margin-right:auto}
 .sd.sdview .sd-c{display:grid;place-items:center}
+/* les cases colorées gardent toujours leur couleur (même données, liées à la case choisie ou au même chiffre) */
+.sd .sd-c.pc.pc,.sd .sd-c.pc.gv.rel,.sd .sd-c.pc.same,body.xm .sd .sd-c.pc.sel{background:var(--pc)}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
