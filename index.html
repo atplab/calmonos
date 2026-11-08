@@ -3120,7 +3120,10 @@ const dVanity=(o,x,y,w,d,c='#9a7050',top='#f1f2f7')=>{const b=o.box(x,y,0,w,d,1.
 const dRail=(o,y0,y1,z)=>{o.ln(o.P(.08,y0,z),o.P(.08,y1,z),'#aab4c4',2.2);o.zone('rail',o.qL(y0-.1,y1+.1,z-1.2,z+.3),null,'c')};
 const dRailR=(o,x0,x1,z)=>{o.ln(o.P(x0,.08,z),o.P(x1,.08,z),'#aab4c4',2.2);o.zone('rail',o.qR(x0-.1,x1+.1,z-1.2,z+.3),null,'c')};
 const dUpper=(o,x0,x1,c='#e8e4da')=>{const b=o.box(x0,0,3.2,x1-x0,.8,1.4,c);const F=b.L,mx=(p,q,t)=>[p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t];const n=Math.max(1,Math.round((x1-x0)/1.3));for(let k=1;k<n;k++)o.ln(mx(F[0],F[1],k/n),mx(F[3],F[2],k/n),dSh(c,.6),1)};
-const dCrib=(o,x,y,w,d)=>{const f=o.box(x,y,0,w,d,.6,'#f4efe6'),m=o.box(x+.1,y+.2,.6,w-.2,d-.3,.4,'#dfeaf6');const b=o.box(x+.06,y+d*.45,.98,w-.12,d*.55-.08,.14,'#a9d6c8',{t:'#bfe6da'});o.box(x,y-.1,0,w,.25,1.5,'#f4efe6');o.zone('bed',m.top,dHull([...f.hull,...m.hull,...b.hull]))};
+const dCrib=(o,x,y,w,d)=>{o.box(x,y-.1,0,w,.25,1.6,'#f4efe6');const f=o.box(x,y,0,w,d,.6,'#f4efe6'),m=o.box(x+.1,y+.2,.6,w-.2,d-.3,.4,'#dfeaf6');const b=o.box(x+.06,y+d*.45,.98,w-.12,d*.55-.08,.14,'#a9d6c8',{t:'#bfe6da'});
+ for(let k=0;k<=10;k++){const u=y+.15+k*(d-.3)/10;o.ln(o.P(x+w,u,.6),o.P(x+w,u,1.4),'#e6dccb',1.4)}for(let k=0;k<=5;k++){const u=x+.1+k*(w-.2)/5;o.ln(o.P(u,y+d,.6),o.P(u,y+d,1.4),'#e6dccb',1.4)}
+ o.ln(o.P(x+w,y,1.4),o.P(x+w,y+d,1.4),'#f4efe6',2.6);o.ln(o.P(x,y+d,1.4),o.P(x+w,y+d,1.4),'#f4efe6',2.6);o.box(x,y+d-.12,0,w,.12,.02,'#f4efe6',{noL:1,noR:1});
+ o.zone('bed',m.top,dHull([...f.hull,...m.hull,...b.hull,o.P(x,y+d,1.4),o.P(x+w,y,1.4)]))};
 const dChest=(o,x,y,w,d,c='#5fa9e0')=>{const b=o.box(x,y,0,w,d,.9,c);o.zone('shelf',b.top,b.hull)};
 /* ---- les dix pièces : quatre au condo, six dans la petite maison ---- */
 const dBath=p=>o=>{dWinR(o,3.3,5.5,2.3,4.5);dVanity(o,0,.3,1.6,2.2,p.cab);dTub(o,2.2,0,4.6,2.2);dRailAt(o);dToilet(o,0,3.6);};
@@ -4940,7 +4943,7 @@ const dHamper=(o,x,y,c='#d9c08a')=>{const b=o.box(x,y,0,.9,.9,1.3,c);for(let k=1
 const dBase=(o,c)=>{o.ln(o.P(0,0,.12),o.P(0,o.D,.12),dSh(c,.8),2.2);o.ln(o.P(0,0,.12),o.P(o.W,0,.12),dSh(c,.8),2.2)};
 const dArtR=(o,x0,x1,z0,z1,cs)=>{o.pg(o.qR(x0-.1,x1+.1,z0-.1,z1+.1),'#f4efe6','#c9bfae');o.pg(o.qR(x0,x1,z0,z1),cs[0]);o.pg([o.P(x0,0,z0),o.P(x1,0,z0),o.P(x1,0,z0+(z1-z0)*.45),o.P((x0+x1)/2,0,z0+(z1-z0)*.7),o.P(x0,0,z0+(z1-z0)*.4)],cs[1]);const s=o.P(x0+(x1-x0)*.72,0,z0+(z1-z0)*.75);o.s+=`<circle cx="${s[0].toFixed(1)}" cy="${s[1].toFixed(1)}" r="2.4" fill="${cs[2]}"/>`};
 const dArtL=(o,y0,y1,z0,z1,cs)=>{o.pg(o.qL(y0-.1,y1+.1,z0-.1,z1+.1),'#f4efe6','#c9bfae');o.pg(o.qL(y0,y1,z0,z1),cs[0]);o.pg([o.P(0,y0,z0),o.P(0,y1,z0),o.P(0,y1,z0+(z1-z0)*.4),o.P(0,(y0+y1)/2,z0+(z1-z0)*.7),o.P(0,y0,z0+(z1-z0)*.45)],cs[1]);const s=o.P(0,y0+(y1-y0)*.3,z0+(z1-z0)*.75);o.s+=`<circle cx="${s[0].toFixed(1)}" cy="${s[1].toFixed(1)}" r="2.4" fill="${cs[2]}"/>`};
-const dPotPlant=(o,x,y,s=1,c='#d98c63')=>{o.cyl(x,y,0,.32*s,.7*s,c);const q=o.P(x,y,.7*s);o.s+=`<g transform="translate(${q[0].toFixed(1)} ${q[1].toFixed(1)}) scale(${s})"><path d="M0 0C-12 -6-14-22-4-30C-6-18 0-10 0 0Z" fill="#5fae6a"/><path d="M0 0C12 -6 16-20 6-30C8-18 2-10 0 0Z" fill="#4f9a5a"/><path d="M0 0C-3-12 0-24 2-36C6-24 4-10 0 0Z" fill="#6fc07a"/></g>`};
+const dPotPlant=(o,x,y,s=1,c='#d98c63')=>{o.cyl(x,y,0,.32*s,.7*s,c);o.ch[o.ch.length-1].h=2.2*s;const q=o.P(x,y,.7*s);o.s+=`<g transform="translate(${q[0].toFixed(1)} ${q[1].toFixed(1)}) scale(${s})"><path d="M0 0C-12 -6-14-22-4-30C-6-18 0-10 0 0Z" fill="#5fae6a"/><path d="M0 0C12 -6 16-20 6-30C8-18 2-10 0 0Z" fill="#4f9a5a"/><path d="M0 0C-3-12 0-24 2-36C6-24 4-10 0 0Z" fill="#6fc07a"/></g>`};
 const dCurtR=(o,x0,x1,z0,z1,c)=>{[[x0-.45,x0+.05],[x1-.05,x1+.45]].forEach(([a,b])=>{o.pg(o.qR(a,b,z0-.6,z1+.25),c,dSh(c,.8));o.ln(o.P((a+b)/2,0,z0-.5),o.P((a+b)/2,0,z1+.2),dSh(c,.85),1)});o.ln(o.P(x0-.6,.04,z1+.35),o.P(x1+.6,.04,z1+.35),'#8a6a4a',2)};
 const dCurtL=(o,y0,y1,z0,z1,c)=>{[[y0-.45,y0+.05],[y1-.05,y1+.45]].forEach(([a,b])=>{o.pg(o.qL(a,b,z0-.6,z1+.25),c,dSh(c,.8));o.ln(o.P(0,(a+b)/2,z0-.5),o.P(0,(a+b)/2,z1+.2),dSh(c,.85),1)});o.ln(o.P(.04,y0-.6,z1+.35),o.P(.04,y1+.6,z1+.35),'#8a6a4a',2)};
 const dLampF=(o,x,y)=>{o.box(x+.15,y+.15,0,.3,.3,.08,'#7a6a5a');o.box(x+.27,y+.27,.08,.06,.06,3.1,'#8a7a6a',{noL:0});o.cyl(x+.3,y+.3,3.0,.38,.6,'#ffe2a8')};
@@ -5000,9 +5003,19 @@ function pDemen2(r){
  const rng=(q=>()=>{q=(q*1103515245+12345)&0x7fffffff;return q/0x7fffffff})(lv*7919+(X?77:13)),BW=1.05,BH=.8;
  const bHull=(x,y)=>dHull([P(x,y),P(x+BW,y),P(x+BW,y+BW),P(x,y+BW),P(x,y,BH),P(x+BW,y,BH),P(x+BW,y+BW,BH),P(x,y+BW,BH)]);
  const xH=(a,b)=>a.some(q=>dIn(q,b))||b.some(q=>dIn(q,a))||dIn(dCen(a),b);
- const BX=(()=>{const nb=Math.max(2,Math.ceil(ids.length/4)),zh=sc.zs.filter(z=>z.k!=='floor'&&z.k!=='wall').map(z=>z.hull).concat(CP.map(c=>dHull([...c.g.front,...c.g.panel,...(c.g.floor||[])]))),cand=[];
-  for(let x=.25;x<=R.W-BW-.2;x+=.3)for(let y=.25;y<=R.D-BW-.2;y+=.3)cand.push([x,y,x+y+rng()*3]);cand.sort((a,b)=>b[2]-a[2]);
-  const ch=[];for(const pass of[0,1])for(const[x,y]of cand){if(ch.length>=nb)break;if(ch.some(([u,v])=>Math.abs(u-x)<1.4&&Math.abs(v-y)<1.4))continue;if(!pass&&(zh.some(h=>xH(bHull(x,y),h))||sc.ch.some(c=>c.z<.3&&c.x<x+BW&&c.x+c.w>x&&c.y<y+BW&&c.y+c.d>y)))continue;ch.push([x,y])}
+ /* cartons : au sol, sans chevaucher les meubles, et rien devant qui cache le carton ou l’objet qui en sort */
+ const frB=(C,O)=>{const e=.02,sx=C.x>=O.x+O.w-e,sy=C.y>=O.y+O.d-e,bx=C.x+C.w<=O.x+e,by=C.y+C.d<=O.y+e;if(sx&&!by)return true;if(sy&&!bx)return true;if((sx&&by)||(sy&&bx))return C.x+C.w/2+C.y+C.d/2>O.x+O.w/2+O.y+O.d/2;return false};
+ const cH=c=>dHull([P(c.x,c.y,c.z),P(c.x+c.w,c.y,c.z),P(c.x+c.w,c.y+c.d,c.z),P(c.x,c.y+c.d,c.z),P(c.x,c.y,c.z+c.h),P(c.x+c.w,c.y,c.z+c.h),P(c.x+c.w,c.y+c.d,c.z+c.h),P(c.x,c.y+c.d,c.z+c.h)]);
+ const iRect=(x,y,z0=0)=>{const c=P(x+BW/2,y+BW/2,BH+z0);return[[c[0]-17,c[1]-40],[c[0]+17,c[1]-40],[c[0]+17,c[1]+2],[c[0]-17,c[1]+2]]};
+ const CHH=sc.ch.map(cH);
+ const hidden=(x,y,others)=>{const O={x,y,w:BW,d:BW},bh=bHull(x,y),ir=iRect(x,y);
+  if(sc.ch.some((c,j)=>frB(c,O)&&(xH(CHH[j],ir)||xH(CHH[j],bh))))return true;
+  return others.some(([u,v])=>{const Q={x:u,y:v,w:BW,d:BW};return(frB(Q,O)&&(xH(bHull(u,v),ir)||xH(bHull(u,v),bh)))||(frB(O,Q)&&xH(bh,iRect(u,v)))})};
+ const BX=(()=>{const nb=Math.min(3,Math.max(2,Math.ceil(ids.length/4))),zh=sc.zs.filter(z=>z.k!=='floor'&&z.k!=='wall').map(z=>z.hull).concat(CP.map(c=>dHull([...c.g.front,...c.g.panel,...(c.g.floor||[])]))),cand=[];
+  for(let x=.2;x<=R.W-BW-.15;x+=.25)for(let y=.2;y<=R.D-BW-.15;y+=.25)cand.push([x,y,x+y+rng()*3]);cand.sort((a,b)=>b[2]-a[2]);
+  const onF=(x,y)=>sc.ch.some(c=>c.z<.3&&c.x<x+BW&&c.x+c.w>x&&c.y<y+BW&&c.y+c.d>y);
+  const ch=[];for(const pass of[0,1,2,3])for(const[x,y]of cand){if(ch.length>=nb)break;if(ch.some(([u,v])=>Math.abs(u-x)<1.3&&Math.abs(v-y)<1.3))continue;
+   if(pass<3&&onF(x,y))continue;if(pass<2&&zh.some(h=>xH(bHull(x,y),h)))continue;if(pass<3&&hidden(x,y,ch))continue;if(pass===0&&ch.some(([u,v])=>Math.abs(u-x)<1.6&&Math.abs(v-y)<1.6))continue;ch.push([x,y])}
   return ch.sort((a,b)=>(a[0]+a[1])-(b[0]+b[1]))})();
  /* option de pièce : le carton le plus à droite est posé sur celui le plus à gauche */
  const BZ=BX.map(()=>0),ON={};if(R.stk&&BX.length>=2){const sx=k=>P(BX[k][0]+BW/2,BX[k][1]+BW/2)[0],ks=BX.map((_,k)=>k).sort((a,b)=>sx(a)-sx(b)),lo=ks[0],hi=ks[ks.length-1];BX[hi]=BX[lo].slice();BZ[hi]=BH;ON[lo]=hi}
