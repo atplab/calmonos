@@ -1256,6 +1256,8 @@ body[data-tx=d] .sd-c.pc.pk{color:#2a2550}
 
 .rc.xlk{opacity:.72;filter:saturate(.6)}.rc.xlk .rc-ic{font-size:20px}
 
+.aqfs .tank{--sb:14vh}.aqfs .tank .dc:not(.ceil){margin-bottom:var(--sb)}.aqfs .tank .sand{height:calc(16% + var(--sb))}
+
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
 .sb.cf{background:linear-gradient(180deg,#ffd18a,#e8944a);color:#3a2310;border:0}
@@ -6190,7 +6192,7 @@ Object.assign(act,{
 /* Déplacer les décors : en mode placement, on les glisse (souris, doigt) ou on utilise les flèches */
 let DR=null;
 document.addEventListener('pointerdown',e=>{const d=e.target.closest&&e.target.closest('.tank.ed .dc.mv');if(!d)return;const r=d.closest('.tank').getBoundingClientRect(),b=d.getBoundingClientRect();DR={d,r,id:d.dataset.id,gx:e.clientX-b.left,gy:b.bottom-e.clientY};try{d.setPointerCapture(e.pointerId)}catch(_){}d.classList.add('drag');e.preventDefault()});
-document.addEventListener('pointermove',e=>{if(!DR)return;const m=DECO.find(x=>x.id===DR.id),c=dcl(m,(e.clientX-DR.gx-DR.r.left)/DR.r.width*100,(DR.r.bottom-e.clientY-DR.gy)/DR.r.height*100);DR.x=c.x;DR.b=c.b;DR.d.style.left=c.x+'%';DR.d.style.bottom=c.b+'%'});
+document.addEventListener('pointermove',e=>{if(!DR)return;const m=DECO.find(x=>x.id===DR.id),c=dcl(m,(e.clientX-DR.gx-DR.r.left)/DR.r.width*100,(DR.r.bottom-e.clientY-DR.gy-(parseFloat(getComputedStyle(DR.d).marginBottom)||0))/DR.r.height*100);DR.x=c.x;DR.b=c.b;DR.d.style.left=c.x+'%';DR.d.style.bottom=c.b+'%'});
 const drEnd=()=>{if(!DR)return;const D=DR;DR=null;D.d.classList.remove('drag');if(D.x===undefined)return;const a=aqRead();a.p[D.id]={x:+D.x.toFixed(2),b:+D.b.toFixed(2),t:Date.now()};aqSave(a);aqPanel()};
 document.addEventListener('pointerup',drEnd);document.addEventListener('pointercancel',drEnd);
 document.addEventListener('keydown',e=>{const d=e.target.closest&&e.target.closest('.tank.ed .dc.mv'),k={ArrowLeft:[-2,0],ArrowRight:[2,0],ArrowUp:[0,2],ArrowDown:[0,-2]}[e.key];if(!d||!k)return;e.preventDefault();const a=aqRead(),m=DECO.find(x=>x.id===d.dataset.id),q=dpos(m,a),c=dcl(m,q.x+k[0],q.b+k[1]);a.p[m.id]={x:+c.x.toFixed(2),b:+c.b.toFixed(2),t:Date.now()};aqSave(a);aqPanel();d.style.left=c.x+'%';d.style.bottom=c.b+'%'});
