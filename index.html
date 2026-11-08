@@ -2284,7 +2284,7 @@ function pSudoku(r){
 function pMemo(r){
  const X=isX('memo',lv),n=X?[3,4,4,5,6,6,7,8,9,10][xn('memo',lv)-1]:3+(lv>>1),S=sh([...(X?EX:E)]).slice(0,n);let C=r?r.C:sh([...S,...S]),op=[],ok=r?r.ok:[],lock=false;snap=()=>({C,ok});
  const d=()=>frame(`<p class="lit">${ok.length/2} / ${n} lanternes allumées</p><div class="cards">${C.map((c,i)=>{const o=op.includes(i)||ok.includes(i);return`<button class="card ${o?'open':''} ${ok.includes(i)?'done':''}" data-a="flip" data-v="${i}" aria-label="Carte">${o?c:''}</button>`}).join('')}</div>`,1);
- act.flip=v=>{const i=+v;if(lock||op.includes(i)||ok.includes(i))return;op.push(i);d();if(op.length===2){lock=true;setTimeout(()=>{if(C[op[0]]===C[op[1]])ok.push(...op);op=[];lock=false;d();if(ok.length===C.length)win()},800)}};
+ act.flip=v=>{const i=+v;if(lock||op.includes(i)||ok.includes(i))return;op.push(i);d();if(op.length===2){if(C[op[0]]===C[op[1]]){ok.push(...op);op=[];d();if(ok.length===C.length)setTimeout(win,600)}else{lock=true;setTimeout(()=>{op=[];lock=false;d()},800)}}};
  act.hint=()=>{if(lock||!spend(1))return;lock=true;op=C.map((_,i)=>i);d();setTimeout(()=>{op=[];lock=false;d()},1400)};
  d();
 }
