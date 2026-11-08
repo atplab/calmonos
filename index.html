@@ -1224,6 +1224,13 @@ body[data-tx=d] .orb.xm .ring u.on{background:#d8303c;box-shadow:none}
 @media(prefers-reduced-motion:reduce){.xms{animation:none}}
 .xmbg{background:radial-gradient(ellipse 70% 22% at 28% 10%,rgba(122,255,200,.22),transparent 70%),radial-gradient(ellipse 60% 18% at 76% 16%,rgba(255,138,176,.16),transparent 70%)}
 .xmbg svg{top:auto;bottom:16%;height:auto;max-height:45%}
+/* en-tête des niveaux : « Niveau N ⏭ » se touche pour passer le niveau */
+.top.stk>.tl.tlk{pointer-events:auto;background:none;border:0;font:inherit;font-size:13px;display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;color:var(--soft);padding:6px 8px}
+.tl.tlk i{font-style:normal;font-size:10px;line-height:1;padding:3px 6px;border-radius:99px;border:1px solid currentColor;opacity:.75}
+.tl.tlk:active{opacity:.7}
+@media(max-width:359px){.top.stk>.tl.tlk{display:inline-flex}}
+.tl.tlk .tls{display:none}
+@media(max-width:390px){.tl.tlk .tlf{display:none}.tl.tlk .tls{display:inline}.top.stk>.tl.tlk{padding:6px 2px;gap:4px}}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -2017,7 +2024,7 @@ const spend=n=>{if(UNL())return true;if(fl<n){msg('Il te manque quelques flocons
 /* progression par niveau : on retrouve sa partie en revenant */
 const pkey=()=>'p:'+cur+':'+lv;
 const keep=()=>{if(!playing||!snap)return;const s=snap();st.set('last',{g:cur,daily,lv,date:today,s});st.set(pkey(),s)};
-const frame=(h,hint)=>{if(!playing)return;mt='m';$('#nav').hidden=true;keep();app.innerHTML=`<div class="top stk">${bk('hub')}<span class="tl">${isX(cur,lv)?'Fêtes '+xn(cur,lv):'Niveau '+(lv+1)}</span><div class="tr">${daily?'':'<button class="hb skh" data-a="skip">Passer</button>'}${hint?`<button class="hb" data-a="hint">Indice · ${hint} ❄</button>`:''}<div class="chip">❄ ${FLX()}</div></div></div><section class="glass play pg-${cur}" aria-label="${ALL.find(g=>g.id===cur).n}"><p class="m" id="m" role="status" aria-live="polite"></p>${h}</section>${daily?'':'<div class="skw" id="skw"></div>'}`};
+const frame=(h,hint)=>{if(!playing)return;mt='m';$('#nav').hidden=true;keep();app.innerHTML=`<div class="top stk">${bk('hub')}${(()=>{const t=isX(cur,lv)?'Fêtes '+xn(cur,lv):'Niveau '+(lv+1);return daily||cur==='quiz'||cur==='match3'?`<span class="tl">${t}</span>`:`<button class="tl tlk" data-a="skip" aria-label="${t} : toucher pour passer ce niveau">${isX(cur,lv)?t:'<span class="tlf">Niveau</span><span class="tls">Niv.</span>&nbsp;'+(lv+1)}<i aria-hidden="true">⏭</i></button>`})()}<div class="tr">${hint?`<button class="hb" data-a="hint">Indice · ${hint} ❄</button>`:''}<div class="chip">❄ ${FLX()}</div></div></div><section class="glass play pg-${cur}" aria-label="${ALL.find(g=>g.id===cur).n}"><p class="m" id="m" role="status" aria-live="polite"></p>${h}</section>${daily?'':'<div class="skw" id="skw"></div>'}`};
 
 /* favoris : une étoile sur chaque jeu */
 const favs=()=>{const f=st.get('fav',null);return f&&Array.isArray(f.l)?f.l:[]};
