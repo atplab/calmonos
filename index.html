@@ -6770,7 +6770,7 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches)snow();
   try{const a=aqRead(),late=aqMt(a).late&&aqOn(a).length,n=aqHg(a).length;
    add(edge('aqc',!!late),'🫧','Aquarium','Ton aquarium a besoin d’entretien','aqua');
    add(edge('aqf',n>0),'🐟','Aquarium',n>1?'Tes poissons ont faim':'Ton poisson a faim','aqua')}catch(e){}
-  try{const Y=styRead();add(edge('sty',Y.p<SMX&&styDust(Y)>=SDU&&!UNL()),'✦','Histoire','Tu as assez de poussière d’étoile pour avancer','day');
+  try{const Y=styRead();
    [[10,'Les décorations de Noël sont débloquées dans l’aquarium'],[20,'Le Poisson Père Noël est débloqué dans l’aquarium'],[30,'Le fond « Nuit de Noël » est débloqué dans l’aquarium']].forEach(([n,t])=>add(edge('xu'+n,(Y.xp|0)>=n),'🎄','Aquarium de Noël',t,'aqua'));
    if(sxOk(Y))add(edge('stx',(Y.xp||0)<XMX&&xDust(Y)>=XDU&&!UNL()),'🎄','Un noël pour Zeni','Un sapin est prêt : Zeni peut avancer','day')}catch(e){}
   try{const s=st.get('soc:seen',{});Object.entries(SO.rec||{}).forEach(([id,n])=>{if(n>(+s[id]||0))add('gift:'+id+':'+n,'🎁','Cadeau',((SO.P[id]&&SO.P[id].name)||'Un ami')+' t’a offert des ❄','soc')})}catch(e){}
