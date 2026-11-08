@@ -1147,6 +1147,32 @@ body[data-tx=d] .orb.xm .ring u.on{background:#d8303c;box-shadow:none}
 .nti em{font-style:normal;font-size:11.5px;opacity:.6;margin-top:2px}
 .nti.nw{background:rgba(255,216,107,.1)}
 .nti.nw b::after{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:#ff7a6b;margin-left:7px;vertical-align:middle}
+/* Uno : cartes « Nuit de neige » */
+.ucard{--w:58px;--uc:#2b2a3d;--ul:#4a4766;--ud:#1b1a2b;position:relative;display:inline-block;flex:none;width:var(--w);height:calc(var(--w)*1.48);border-radius:calc(var(--w)*.17);background:linear-gradient(155deg,var(--ul) 0%,var(--uc) 46%,var(--ud) 100%);border:calc(var(--w)*.04) solid rgba(255,255,255,.92);box-shadow:0 3px 9px rgba(10,10,40,.3),inset 0 0 0 calc(var(--w)*.03) rgba(255,255,255,.18);overflow:hidden;color:#fff;font:800 14px/1 system-ui,sans-serif;vertical-align:middle;box-sizing:border-box}
+.ucard::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 78% 18%,rgba(255,255,255,.55) 0 1.2px,transparent 2px),radial-gradient(circle at 22% 78%,rgba(255,255,255,.45) 0 1px,transparent 1.8px),radial-gradient(circle at 64% 88%,rgba(255,255,255,.4) 0 .9px,transparent 1.6px),linear-gradient(115deg,transparent 30%,rgba(255,255,255,.16) 45%,transparent 60%);pointer-events:none}
+.u-r{--uc:#e2615c;--ul:#f59a8a;--ud:#b23e4a}
+.u-y{--uc:#efb53f;--ul:#ffd98a;--ud:#c98624}
+.u-g{--uc:#43a873;--ul:#86d6a6;--ud:#2a7a55}
+.u-b{--uc:#4a86dc;--ul:#8dbcf3;--ud:#2f5cb0}
+.u-k{--uc:#33305a;--ul:#5d5a8f;--ud:#1a1838}
+.ucard .ucn{position:absolute;top:6%;left:8%;height:calc(var(--w)*.22);display:flex;align-items:center;font-size:calc(var(--w)*.2);text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.ucard .ucn svg{width:calc(var(--w)*.22);height:calc(var(--w)*.22)}
+.ucard .ucn b{font-weight:800}
+.ucard .usf{position:absolute;right:7%;bottom:5%;font-size:calc(var(--w)*.17);opacity:.7}
+.ucard .uem{position:absolute;left:50%;top:52%;width:calc(var(--w)*.62);height:calc(var(--w)*.62);translate:-50% -50%;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#eef3ff 70%,#dfe7fb);box-shadow:0 2px 6px rgba(0,0,0,.22),0 0 0 calc(var(--w)*.035) rgba(255,255,255,.35);display:grid;place-items:center;color:var(--uc)}
+.ucard .uem>*{grid-area:1/1}
+.ucard .uem b{font-size:calc(var(--w)*.34);letter-spacing:-.03em;text-shadow:0 1px 0 rgba(0,0,0,.08)}
+.ucard .uem svg{width:62%;height:62%}
+.u-k .uem{background:radial-gradient(circle at 35% 30%,#3b386a,#24224a)}
+.u-k .uem svg{width:78%;height:78%}
+.ucard .uem b.u4{font-size:calc(var(--w)*.2);color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+.ucard.uback{background:linear-gradient(160deg,#4b3f9e,#2a2368 60%,#1c1650)}
+.ucard.uback .ubk{position:absolute;inset:12%;border-radius:calc(var(--w)*.12);border:1.5px solid rgba(255,255,255,.35);display:grid;place-items:center}
+.ucard.uback .ubk svg{width:70%}
+.unhr{display:flex;justify-content:center}
+.unhr+.unhr{margin-top:-34px}
+.unh{flex-direction:column;align-items:stretch;overflow:visible;justify-content:flex-start}
+.ucd{margin-left:var(--ov)}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -3380,7 +3406,7 @@ const unTop=S=>S.X[S.X.length-1];
 const unOk=(S,c)=>c[0]==='k'||c[0]===S.c||c[1]===unTop(S)[1];
 const unNx=(S,k=1)=>((S.t+S.d*k)%S.S.length+S.S.length)%S.S.length;
 const unCp=S=>JSON.parse(JSON.stringify(S));
-const unNm=(S,i)=>S.S[i].nm;
+const unNm=(S,i)=>S.S[i].nm,unNmD=(S,i)=>unDN(S.S[i]);
 const unCn=c=>{const v=c[1];return v==='s'?'Passe':v==='v'?'Inversion':v==='d'?'+2':v==='w'?'Joker':v==='f'?'+4':v};
 const unCnf=c=>unCn(c)+(c[0]!=='k'?' '+UNNM[c[0]]:'');
 function unNew(seats,extra){
@@ -3428,24 +3454,39 @@ function unArm(S,prev,net){
  if(prev&&prev.id===S.id&&prev.t===S.t&&S.dr&&prev.dl){S.dl=prev.dl;return S}
  const b=S.S[S.t].b;S.dl=b?Date.now()+(net?1300:900+Math.random()*700):net?Date.now()+UNT:0;return S}
 /* ---------- dessin ---------- */
+/* cartes « Nuit de neige » : dégradé givré, emblème rond, symboles dessinés, flocon dans le coin */
+const UNFLW='<svg viewBox="-12 -12 24 24" aria-hidden="true"><ellipse cy="-5.6" rx="4.1" ry="5.6" fill="#e8605a"/><ellipse cx="5.6" rx="5.6" ry="4.1" fill="#4a8be0"/><ellipse cy="5.6" rx="4.1" ry="5.6" fill="#45ad72"/><ellipse cx="-5.6" rx="5.6" ry="4.1" fill="#f0bd3e"/><circle r="2.7" fill="#fff"/></svg>';
+const UNSK='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.3" fill="none" stroke="currentColor" stroke-width="3.2"/><path d="M6.3 17.7L17.7 6.3" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>';
+const UNRV='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 9.5h12.5l-3.4-3.4M19.5 14.5H7l3.4 3.4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function unSym(c){const v=c[1];return v==='s'?UNSK:v==='v'?UNRV:v==='d'?'<b>+2</b>':v==='w'?UNFLW:v==='f'?UNFLW+'<b class="u4">+4</b>':'<b>'+v+'</b>'}
 function unCard(c,cls){
- const col=c[0],v=c[1],sym=unCn(c).replace('Passe','⊘').replace('Inversion','⇄').replace('Joker','');
- const mid=col==='k'?`<span class="uq"><b></b><b></b><b></b><b></b></span>${v==='f'?'<em class="u4">+4</em>':''}`:`<em>${sym}</em>`;
- return`<span class="ucard u-${col}${cls?' '+cls:''}"><i class="uco">${sym||'★'}</i><span class="uov">${mid}</span><i class="uco b">${sym||'★'}</i></span>`}
-const unBack=cls=>`<span class="ucard uback${cls?' '+cls:''}"><span class="uov"><em>❄</em></span></span>`;
+ const col=c[0],v=c[1],sm=v==='w'||v==='f'?UNFLW:unSym(c);
+ return`<span class="ucard u-${col}${cls?' '+cls:''}"><span class="ucn">${v==='f'?'<b>+4</b>':sm}</span><span class="uem">${unSym(c)}</span><span class="usf" aria-hidden="true">❄</span></span>`}
+const unBack=cls=>`<span class="ucard uback${cls?' '+cls:''}"><span class="ubk"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M26 8a13 13 0 1 0 6 21A11 11 0 0 1 26 8z" fill="#fff4cf"/><circle cx="31" cy="10" r="1.2" fill="#fff"/><circle cx="9" cy="30" r="1" fill="#fff"/><circle cx="33" cy="33" r=".9" fill="#fff"/></svg></span></span>`;
+/* vrais joueurs : leur nom et leur photo de profil (profil d’ami, ou lu une fois depuis la base) */
+UN.pf={};
+function unProf(u){
+ if(!u||u===SO.uid)return st.get('soc:me',null);
+ if(SO.P&&SO.P[u])return SO.P[u];
+ if(!(u in UN.pf)){UN.pf[u]=null;(async()=>{try{const db=await scrDb();if(!db)return;const d=await db.collection('profiles').doc(u).get();if(d&&d.exists){const v=d.data();UN.pf[u]=typeof socMerge==='function'?socMerge(v,null):v;if($('#ung'))UN.g?unDraw():unRoomDraw()}}catch(e){}})()}
+ return UN.pf[u]}
+const unDN=s=>{if(!s)return'';if(s.b&&!s.ab)return s.nm;const p=s.u&&unProf(s.u);return(p&&p.name)||s.nm};
 function unAv(s){
  if(s.b&&!s.ab)return`<span class="fr-av em" style="--h:${s.nm.length*47%360}" aria-hidden="true">${s.e||'🤖'}</span>`;
- if(s.u&&typeof socAv==='function'&&(s.u===SO.uid||SO.P[s.u]))return socAv(s.u);
- let h=0;for(const ch of s.nm)h=(h*31+ch.charCodeAt(0))%360;
- return`<span class="fr-av" style="--h:${h}" aria-hidden="true">${esc(([...s.nm][0]||'?').toUpperCase())}</span>`}
+ const p=s.u&&unProf(s.u),a=p&&p.av,nm=unDN(s);let h=0;for(const ch of (s.u||nm))h=(h*31+ch.charCodeAt(0))%360;
+ if(a&&a.k==='p'&&a.v)return`<span class="fr-av ph" aria-hidden="true"><img src="${a.v}" alt=""></span>`;
+ if(a&&a.k==='e'&&a.v)return`<span class="fr-av em" style="--h:${h}" aria-hidden="true">${a.v}</span>`;
+ return`<span class="fr-av" style="--h:${h}" aria-hidden="true">${esc(([...nm][0]||'?').toUpperCase())}</span>`}
 function unDraw(){
  const root=$('#ung');if(!root||!UN.g)return;
  const S=UN.g,me=UN.me,n=S.S.length,my=S.H[me]||[],live=S.st==='play',myT=live&&S.t===me&&!S.S[me].b,net=!UN.loc;
  const hs=$('#unh'),sl=hs?hs.scrollLeft:0;
  let op='';for(let r=1;r<n;r++){const i=(me+r)%n,s=S.S[i],h=S.H[i].length;
-  op+=`<div class="unp${live&&S.t===i?' on':''}" data-i="${i}"><span class="unav">${unAv(s)}</span><b>${esc(s.nm)}${s.ab?' <small>(bot)</small>':''}</b><span class="unbk">${'<i></i>'.repeat(Math.min(h,8))}</span><span class="unn">${h} carte${h>1?'s':''}${S.uc[i]&&h===1?' · <em>Uno !</em>':''}</span></div>`}
- const W=Math.min(innerWidth,480)-62,cw=58,ov=my.length>1?Math.max(-40,Math.min(6,Math.floor((W-cw)/(my.length-1))-cw)):0;
- const turn=!live?'':myT?'À toi de jouer':S.S[me].b&&S.S[me].ab?'Un bot joue à ta place':'Au tour de '+esc(unNm(S,S.t));
+  op+=`<div class="unp${live&&S.t===i?' on':''}" data-i="${i}"><span class="unav">${unAv(s)}</span><b>${esc(unDN(s))}${s.ab?' <small>(bot)</small>':''}</b><span class="unbk">${'<i></i>'.repeat(Math.min(h,8))}</span><span class="unn">${h} carte${h>1?'s':''}${S.uc[i]&&h===1?' · <em>Uno !</em>':''}</span></div>`}
+ /* la main : toujours entière à l’écran (chevauchement selon la largeur réelle, sur deux rangées si besoin) */
+ const W=Math.max(200,(root.clientWidth||Math.min(innerWidth,440)-36)-16),cw=58,cap=1+Math.floor((W-cw)/17),rows=my.length>cap?[my.slice(0,Math.ceil(my.length/2)),my.slice(Math.ceil(my.length/2))]:[my];
+ const ovOf=m=>m>1?Math.min(6,Math.floor((W-cw)/(m-1))-cw):0;
+ const turn=!live?'':myT?'À toi de jouer':S.S[me].b&&S.S[me].ab?'Un bot joue à ta place':'Au tour de '+esc(unNmD(S,S.t));
  const w=S.st==='end'?S.w:-1,rw=w<0?'':UN.loc?(w===me?'+'+(2+2*(n-1))+' ❄':'+1 ❄'):(S.S[me]&&S.S[me].u===SO.uid?(w===me?'+10 ❄':'+2 ❄'):'');
  const host=!UN.loc&&S.h===SO.uid;
  root.innerHTML=`<div class="top stk"><button class="back" data-a="unBk">‹ Uno</button><div class="chip">❄ ${FLX()}</div></div>
@@ -3453,16 +3494,16 @@ function unDraw(){
  <div class="unc"><button class="unk" data-a="unDraw" aria-label="Piocher" ${myT&&!S.dr?'':'disabled'}>${unBack()}<small>${S.D.length}</small></button><div class="untop" style="--cc:${UNHX[S.c]}"><span class="${S.X.length!==UN.lastX?'unpop':''}">${unCard(unTop(S),'big')}</span><span class="undir" aria-label="${S.d>0?'Sens horaire':'Sens inverse'}">${S.d>0?'↻':'↺'}</span></div></div>
  <p class="unlg" role="status" aria-live="polite">${esc(unLg(S,me))}</p>
  <div class="unme${myT?' on':''}"><div class="unt"><b>${turn}</b>${net&&myT?'<span class="untb"><i id="untm"></i></span>':''}</div>
- <div class="unh" id="unh" style="--ov:${ov}px">${my.map((c,k)=>{const ok=myT&&(S.dr?k===my.length-1&&unOk(S,c):unOk(S,c));return`<button class="ucd${ok?' ok':''}${myT&&!ok?' no':''}" data-a="unPlay" data-v="${k}" aria-label="${unCnf(c)}"${ok?'':' aria-disabled="true"'}>${unCard(c)}</button>`}).join('')}</div>
+ <div class="unh" id="unh">${(()=>{let base=0;return rows.map(R=>{const b0=base;base+=R.length;return`<div class="unhr" style="--ov:${ovOf(R.length)}px">${R.map((c,j)=>{const k=b0+j;const ok=myT&&(S.dr?k===my.length-1&&unOk(S,c):unOk(S,c));return`<button class="ucd${ok?' ok':''}${myT&&!ok?' no':''}" data-a="unPlay" data-v="${k}" aria-label="${unCnf(c)}"${ok?'':' aria-disabled="true"'}>${unCard(c)}</button>`}).join('')}</div>`}).join('')})()}</div>
  <div class="unbt">${myT&&S.dr?'<button class="btn alt" data-a="unPass">Garder et passer</button>':`<button class="btn alt" data-a="unDraw" ${myT?'':'disabled'}>Piocher</button>`}<button class="btn ununo${UN.uc?' on':''}" data-a="unUno" ${myT&&my.length===2?'':'disabled'} aria-pressed="${UN.uc}">Uno !</button></div>
  ${S.S[me]&&S.S[me].ab&&S.S[me].u===SO.uid&&live?'<button class="btn" style="margin-top:10px" data-a="unBackIn">Reprendre ma place</button>':''}
  ${UN.m?`<p class="note" style="text-align:center">${esc(UN.m)}</p>`:''}</div>
- ${w>=0?`<div class="unend"><section class="glass play"><h2>${w===me?'Tu as gagné !':esc(unNm(S,w))+' a gagné'}</h2>${rw?`<p class="unrw">${rw}</p>`:''}<div class="chrow">${UN.loc||host?'<button class="btn" data-a="unAgain">Rejouer</button>':'<p class="note">L’hôte peut relancer une partie.</p>'}<button class="btn alt" data-a="unBk">Retour</button></div></section></div>`:''}
+ ${w>=0?`<div class="unend"><section class="glass play"><h2>${w===me?'Tu as gagné !':esc(unNmD(S,w))+' a gagné'}</h2>${rw?`<p class="unrw">${rw}</p>`:''}<div class="chrow">${UN.loc||host?'<button class="btn" data-a="unAgain">Rejouer</button>':'<p class="note">L’hôte peut relancer une partie.</p>'}<button class="btn alt" data-a="unBk">Retour</button></div></section></div>`:''}
  ${UN.pk>=0?`<div class="unpk"><section class="glass play"><h2>Choisis une couleur</h2><div class="unpc">${UNCL.map(c=>`<button data-a="unCol" data-v="${c}" style="background:${UNHX[c]}" aria-label="${UNNM[c]}"></button>`).join('')}</div><button class="lnk" data-a="unCol" data-v="">Annuler</button></section></div>`:''}`;
  UN.lastX=S.X.length;
  const h2=$('#unh');if(h2)h2.scrollLeft=sl;
  unTimers()}
-const unLg=(S,me)=>String(S.lg||'').replace(/\^(\d)/g,(m,i)=>+i===me?'Tu':unNm(S,+i)).replace(/\{(\d):([^|}]*)\|([^}]*)\}/g,(m,i,a,b)=>+i===me?b:a);
+const unLg=(S,me)=>String(S.lg||'').replace(/\^(\d)/g,(m,i)=>+i===me?'Tu':unNmD(S,+i)).replace(/\{(\d):([^|}]*)\|([^}]*)\}/g,(m,i,a,b)=>+i===me?b:a);
 function unTimers(){
  const S=UN.g;if(!S||UN.loc)return;const now=Date.now(),f=S.st==='play'&&S.dl&&!S.S[S.t].b?Math.max(0,Math.min(1,(S.dl-now)/UNT)):0;
  document.querySelectorAll('.unp').forEach(p=>{p.style.setProperty('--p',+p.dataset.i===S.t?f:0)});
@@ -3542,10 +3583,10 @@ function unMine(){
 function unJoined(S,g,u){if(u===S.h)return true;const p=u===SO.uid?st.get('soc:me',null):SO.P[u];return!!(p&&p.un&&p.un.g===g&&(+p.un.t||0)>=(S.at||0)-2000)}
 function unRooms(){
  const L=unMine();if(!L.length)return'';
- return`<section class="glass play soc-i"><h2>Parties entre amis</h2>${L.map(([g,S])=>{const hn=S.nms&&S.nms[S.h]||scrNm(S.h),me=S.h===SO.uid,j=unJoined(S,g,SO.uid);
+ return`<section class="glass play soc-i"><h2>Parties entre amis</h2>${L.map(([g,S])=>{const hn=unDN({u:S.h,nm:S.nms&&S.nms[S.h]||scrNm(S.h)}),me=S.h===SO.uid,j=unJoined(S,g,SO.uid);
   let t,b,a;
   if(S.st==='lobby'){t=me?'Ton salon':'Invitation de '+hn;b=me?'En attente des joueurs':j?'Tu as rejoint le salon':'Te propose une partie';a=me||j?['unOpen','Ouvrir']:['unJoin','Rejoindre']}
-  else{const mi=S.S.findIndex(s=>s.u===SO.uid);t='Partie avec '+S.S.filter(s=>s.u!==SO.uid).map(s=>s.nm).join(', ');b=mi<0?'Tu regardes la partie':S.t===mi?'À toi de jouer':'En cours';a=['unOpen',mi===S.t?'Jouer':'Ouvrir']}
+  else{const mi=S.S.findIndex(s=>s.u===SO.uid);t='Partie avec '+S.S.filter(s=>s.u!==SO.uid).map(unDN).join(', ');b=mi<0?'Tu regardes la partie':S.t===mi?'À toi de jouer':'En cours';a=['unOpen',mi===S.t?'Jouer':'Ouvrir']}
   return`<div class="fr-i"><button class="fr-o" data-a="${a[0]}" data-v="${esc(g)}"><span class="fr-av em" style="--h:10" aria-hidden="true">🃏</span><span class="fr-t"><b>${esc(t)}</b><small>${esc(b)}</small></span></button><div class="fr-b"><button class="sb buy" data-a="${a[0]}" data-v="${esc(g)}">${a[1]}</button></div></div>`}).join('')}</section>`}
 const unTile=()=>{if(!SO.uid)return'Seul ou entre amis';const L=unMine().filter(([g,S])=>S.st==='lobby'?S.h!==SO.uid&&!unJoined(S,g,SO.uid):S.t===S.S.findIndex(s=>s.u===SO.uid));return L.length?(L[0][1].st==='lobby'?'Invitation au Uno':'À toi de jouer'):'Seul ou entre amis'};
 function unTileUp(){const t=$('.tile.pt-uno small');if(t)t.textContent=unTile()}
@@ -3602,7 +3643,7 @@ function unRoomDraw(){
  const top=`<div class="top stk"><button class="back" data-a="unBk">‹ Uno</button><div class="chip">❄ ${FLX()}</div></div>`;
  if(!S){root.innerHTML=top+`<section class="glass play"><h2>${UN.err[g]?'Salon injoignable':'Connexion au salon…'}</h2><p class="note" style="margin:0">${esc(UN.err[g]||'Un instant.')}</p></section>`;return}
  if(S.st==='off'){root.innerHTML=top+`<section class="glass play"><h2>Salon fermé</h2><p class="note" style="margin:0">L’hôte a fermé ce salon.</p><button class="btn" style="margin-top:14px" data-a="unBk">Retour</button></section>`;return}
- const host=S.h===SO.uid,nm=u=>(S.nms&&S.nms[u])||scrNm(u),j=u=>unJoined(S,g,u),ok=S.p.filter(j),nb=S.bt?Math.max(0,4-ok.length):0,tot=ok.length+nb;
+ const host=S.h===SO.uid,nm=u=>unDN({u,nm:(S.nms&&S.nms[u])||scrNm(u)}),j=u=>unJoined(S,g,u),ok=S.p.filter(j),nb=S.bt?Math.max(0,4-ok.length):0,tot=ok.length+nb;
  const row=u=>`<div class="fr-i"><span class="fr-o">${unAv({u,nm:nm(u)})}<span class="fr-t"><b>${esc(nm(u))}${u===S.h?' · hôte':''}</b><small>${j(u)?'✓ Dans le salon':'En attente…'}</small></span></span></div>`;
  root.innerHTML=top+`<section class="glass play soc-i"><h2>Salon de Uno</h2><p class="note" style="margin:0 0 6px">${host?'Lance la partie quand tes amis sont là. Ceux qui ne sont pas arrivés ne joueront pas.':'En attente que '+esc(nm(S.h))+' lance la partie.'}</p>${S.p.map(row).join('')}${nb?`<div class="fr-i"><span class="fr-o"><span class="fr-av em" style="--h:200" aria-hidden="true">🤖</span><span class="fr-t"><b>${nb} bot${nb>1?'s':''}</b><small>Complètent la table</small></span></span></div>`:''}
  ${host?`<div class="chrow" style="margin-top:14px"><button class="btn" data-a="unLaunch" ${tot>=2?'':'disabled'}>Lancer la partie (${tot} joueurs)</button><button class="btn alt" data-a="unClose">Fermer le salon</button></div>`:`<div class="chrow" style="margin-top:14px">${j(SO.uid)?'':'<button class="btn" data-a="unJoin" data-v="'+esc(g)+'">Rejoindre</button>'}<button class="btn alt" data-a="unBk">Retour</button></div>`}
