@@ -1387,7 +1387,9 @@ body .top.stk>.tl.tlk i{opacity:1;border-color:rgba(255,255,255,.7);color:#fff}
 .dmtop.lift,.dmit.lift{opacity:.0}
 .tile{position:relative}.tile .tdot{top:8px;right:8px;left:auto;width:12px;height:12px}
 
-.tank .fx.glow svg{filter:brightness(1.04) saturate(1.05) drop-shadow(0 0 4px #ffc2ec) drop-shadow(0 0 12px #c9a3ff);animation:aqglw 2.4s ease-in-out infinite alternate}
+.tank .fx.glow svg{filter:brightness(1) saturate(1) drop-shadow(0 0 2px #ffc2ec);transition:filter .6s}
+.tank .fx.glow[data-gl="2"] svg{filter:brightness(1.02) saturate(1.03) drop-shadow(0 0 3px #ffc2ec) drop-shadow(0 0 8px #c9a3ff)}
+.tank .fx.glow[data-gl="3"] svg{filter:brightness(1.04) saturate(1.05) drop-shadow(0 0 4px #ffc2ec) drop-shadow(0 0 12px #c9a3ff);animation:aqglw 2.4s ease-in-out infinite alternate}
 @keyframes aqglw{from{filter:brightness(1) saturate(1) drop-shadow(0 0 3px #ffc2ec) drop-shadow(0 0 9px #c9a3ff)}to{filter:brightness(1.08) saturate(1.1) drop-shadow(0 0 6px #ffd6f2) drop-shadow(0 0 18px #c9a3ff) drop-shadow(0 0 28px rgba(255,154,213,.7))}}
 /* parties multijoueurs en cours : lien à droite du titre */
 h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
@@ -6522,7 +6524,7 @@ function aqFx(ids,hg){
  fs.forEach((el,k)=>{const id=el.dataset.id;if(S.F[id])return;
   const r=el.getBoundingClientRect(),fr=el.querySelector('.fr'),fi=el.querySelector('.fi'),du=parseFloat(getComputedStyle(el).animationDuration)||20,
    vN=Math.max(8,(tw-r.width)*.94/du);
-  S.F[id]={el,fr,fi,px:r.left-tb.left,py:r.top-tb.top,fw:r.width,fh:r.height,mode:'rush',tg:null,eaten:0,max:3,dir:1,face:0,rt:0,et:0,lab:!(hg||ids).includes(id),k,vmax:Math.max(125,Math.min(230,vN*9))};
+  S.F[id]={el,fr,fi,px:r.left-tb.left,py:r.top-tb.top,fw:r.width,fh:r.height,mode:'rush',tg:null,eaten:0,max:3,dir:1,face:0,rt:0,et:0,lab:!(hg||ids).includes(id),fed:(hg||ids).includes(id),k,vmax:Math.max(125,Math.min(230,vN*9))};
  });
  if(!S.raf)S.raf=requestAnimationFrame(aqStep);
 }
@@ -6717,11 +6719,13 @@ function aqLvHTML(a){const t=aqTier(a),s=aqSpent(a),mx=t>AQT.length,lim=AQT[Math
 const aqStatus0=aqStatus;
 aqStatus=function(){aqStatus0();const a=aqRead();aqRewards(a);
  /* la méduse nourrie s’illumine quelques minutes */
- try{const m=a.f.meduse,on=!!(m&&m.on&&Date.now()-m.t<3*6e4&&Date.now()-m.t>=0);document.querySelectorAll('.tank .fx[data-id=meduse]').forEach(e=>e.classList.toggle('glow',on))}catch(e){}
+ try{const m=a.f.meduse,g=m&&m.on&&m.gl&&Date.now()-m.gt<3*6e4&&Date.now()-m.gt>=0?Math.min(3,m.gl):0;document.querySelectorAll('.tank .fx[data-id=meduse]').forEach(e=>{e.classList.toggle('glow',g>0);if(g)e.dataset.gl=g;else delete e.dataset.gl})}catch(e){}
 const st0=$('.aqst');if(!st0)return;let l=st0.querySelector('.aqlv');if(!l){l=document.createElement('div');l.className='aqlv';st0.appendChild(l)}const h=aqLvHTML(a);if(l.dataset.h!==h){l.innerHTML=h;l.dataset.h=h}};
 const aqBuy0=aqBuy;
 aqBuy=function(v){const[k,id]=v.split(':'),a=aqRead(),L=(k==='f'?FISH:k==='d'?DECO:WATER).find(x=>x.id===id);mt='m-aq';
  if(L&&aqHid(L,k,a))return;const n=L&&aqTL(L,k,a);if(n)return msg('Se débloque avec l’aquarium '+n+'.');aqBuy0(v)};
+
+window.aqMedGl=n=>{try{const a=aqRead(),m=a.f.meduse;if(!m)return;m.gl=Math.min(3,n);m.gt=Date.now();aqSave(a);aqStatus()}catch(e){}};
 
 function aqNear(P,cx,cy){let b=null,bd=1e9;for(const p of P){if(p.state!==1)continue;const d=Math.hypot(p.xs-cx,p.y-cy)+90*p.n;if(d<bd){bd=d;b=p}}return b}
 function aqStep(ts){
@@ -6752,7 +6756,7 @@ function aqStep(ts){
     f.rt+=dt;const v=f.vmax*Math.min(1,.3+f.rt/.35);
     if(de<=Math.max(8,v*dt)){
      p.state=2;p.n--;f.tg=null;p.e.classList.add('x');setTimeout(()=>p.e.remove(),320);
-     f.eaten++;f.mode='eat';f.et=0;
+     f.eaten++;f.mode='eat';f.et=0;if(f.fed&&el.dataset.id==='meduse'&&window.aqMedGl)aqMedGl(f.eaten);
      if(f.fr){f.fr.classList.remove('nom');void f.fr.offsetWidth;f.fr.classList.add('nom');setTimeout(()=>f.fr.classList.remove('nom'),380)}
      if(!f.lab){f.lab=true;aqLab(t,el,0);sfx(700+f.k*18,.1)}
     }else if(d>.5){const m=Math.min(d,v*dt);vx=dx/d*m;f.px+=vx;f.py+=dy/d*m}
