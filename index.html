@@ -6753,6 +6753,11 @@ window.aqMedEat=el=>{try{
  requestAnimationFrame(st);
 }catch(e){}};
 
+/* position réelle de la bouche (ou du bout des tentacules pour la méduse), en tenant compte des retournements et du balancement */
+const AQMO={std:[67,25],tall:[59,27],round:[65,25],long:[71,24],neon:[76,25],danio:[78,25],cardinal:[77,25],betta:[76,26],gourami:[70,26],globe:[64,25],hippo:[72,8],manta:[83,25],tortue:[83,29],meduse:[8,27],veil:[71,24]};
+window.aqMouth=(el,t)=>{try{const f=FISH.find(x=>x.id===el.dataset.id),a=AQMO[f&&f.sh]||AQMO.std,s=el.querySelector('.fi svg')||el.querySelector('svg'),m=s.getScreenCTM();if(!m)return null;
+ const q=new DOMPoint(a[0],a[1]).matrixTransform(m),r=t.getBoundingClientRect();return{x:q.x-r.left-t.clientLeft,y:q.y-r.top-t.clientTop}}catch(e){return null}};
+
 function aqNear(P,cx,cy){let b=null,bd=1e9;for(const p of P){if(p.state!==1)continue;const d=Math.hypot(p.xs-cx,p.y-cy)+90*p.n;if(d<bd){bd=d;b=p}}return b}
 function aqStep(ts){
  const S=AQS;if(!S)return;S.raf=0;
@@ -6778,9 +6783,9 @@ function aqStep(ts){
     if(Math.abs(p.xs-cx)>f.fw*.45)f.dir=p.xs>cx?1:-1;
     {const nd=q=>p.xs-q*f.fw*.4-f.fw/2;if(nd(f.dir)<-1||nd(f.dir)>tw-f.fw+1)f.dir=-f.dir}
     /* le poisson attend sous le grain (jamais tout en haut) et l’attrape quand il passe devant sa bouche */
-    const mx=cx+(el.dataset.id==='meduse'?-.42:.4)*f.dir*f.fw,dx=p.xs-mx,dy=Math.max(p.y,th*.2)-cy,d=Math.hypot(dx,dy),de=Math.hypot(dx,p.y-cy);
+    const MO=window.aqMouth&&aqMouth(el,t),mx=MO?MO.x:cx+.4*f.dir*f.fw,my=MO?MO.y:cy,dx=p.xs-mx,dy=Math.max(p.y,th*.2)-my,d=Math.hypot(dx,dy),de=Math.hypot(dx,p.y-my);
     f.rt+=dt;const v=f.vmax*Math.min(1,.3+f.rt/.35);
-    if(de<=Math.max(8,v*dt)){
+    if(de<=Math.max(5,v*dt)){
      p.state=2;p.n--;f.tg=null;p.e.classList.add('x');if(el.dataset.id==='meduse'&&window.aqMedEat){p.e.style.opacity=0;aqMedEat(el)}setTimeout(()=>p.e.remove(),320);
      f.eaten++;f.mode='eat';f.et=0;if(f.fed&&el.dataset.id==='meduse'&&window.aqMedGl)aqMedGl(f.eaten);
      if(f.fr){f.fr.classList.remove('nom');void f.fr.offsetWidth;f.fr.classList.add('nom');setTimeout(()=>f.fr.classList.remove('nom'),380)}
