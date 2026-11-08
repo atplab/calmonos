@@ -1231,6 +1231,22 @@ body[data-tx=d] .orb.xm .ring u.on{background:#d8303c;box-shadow:none}
 @media(max-width:359px){.top.stk>.tl.tlk{display:inline-flex}}
 .tl.tlk .tls{display:none}
 @media(max-width:390px){.tl.tlk .tlf{display:none}.tl.tlk .tls{display:inline}.top.stk>.tl.tlk{padding:6px 2px;gap:4px}}
+/* Sudoku : cases colorées qui forment une image */
+.sd-c.pc{background:var(--pc);transition:background .35s}
+.sd-c.pc.pl{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.45)}
+.sd-c.pc.pk{color:#2a2550;text-shadow:none}
+.sd-c.pc.gv{font-weight:800}
+.sd-c.pc:not(.gv){font-style:italic}
+.sd-c.pc.rel{filter:brightness(1.1)}
+.sd-c.pc.same{box-shadow:inset 0 0 0 2px rgba(255,255,255,.85)}
+.sd-c.pc.sel{background:var(--pc);box-shadow:inset 0 0 0 3px #fff,0 0 0 2px var(--a)}
+.sd-c.pc.bad{box-shadow:inset 0 0 0 3px #ff6a5a}
+body.xm .sd-c.pc.sel{background:var(--pc);color:inherit}
+body[data-tx=d] .sd-c.pc.pl{color:#fff}
+body[data-tx=d] .sd-c.pc.pk{color:#2a2550}
+.sd{transition:gap .6s}
+.sd.sdpxr{gap:0}
+.sd.sdpxr .sd-c{color:transparent!important;text-shadow:none!important;border-radius:0;margin:0!important;box-shadow:none!important;filter:none!important;transition:all .6s}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -2240,6 +2256,9 @@ function sdkPuzzle(l){
  for(const i of sf([...Array(81).keys()])){if(left<=goal)break;const v=g[i];g[i]=0;if(sdkSolve(g,2).n!==1)g[i]=v;else left--}
  return SDK[l]={g,sol};
 }
+/* Sudoku : chaque case a sa couleur ; une fois remplie, la grille dessine une image (un objet, un animal, un décor) */
+const SDPAL={"p": "#f7c6d5", "r": "#e04f5f", "w": "#ffffff", "g": "#4caf6e", "G": "#c4ebc0", "s": "#a9d8f5", "b": "#4a86dc", "o": "#f39c3d", "k": "#3a3550", "y": "#ffd45a", "Y": "#fff1b8", "d": "#9a6a3e", "c": "#9aa3b5", "e": "#5fd38a", "n": "#26306a", "m": "#fff2c2", "l": "#2f8a54"},SDPX=[["un cœur", ["prrppprrp", "rrrrprrrr", "rwrrrrrrr", "rrrrrrrrr", "prrrrrrrp", "pprrrrrpp", "ppprrrppp", "pppprpppp", "ppppppppp"]], ["un champignon", ["GGGrrrGGG", "GGrwrrrGG", "GrrrrwrrG", "rwrrrrrrr", "rrrrwrrwr", "GGwwwwwGG", "GGGwwwGGG", "GGGwwwGGG", "ggggggggg"]], ["un poisson", ["bbbbbbbsb", "bbbooobbb", "bbooooobo", "bokooooob", "booooooob", "bboooooob", "bbbooobbo", "bsbbbbbbb", "bbbbbsbbb"]], ["un chat", ["cYYYYYYYc", "ccYYYYYcc", "ccccccccc", "ceeccccee", "ccccccccc", "ccccpcccc", "YcckcckcY", "YYcccccYY", "YYYcccYYY"]], ["une fleur", ["ssspppsss", "sppppppps", "pppyyyppp", "pppyyyppp", "pppyyyppp", "sppppppss", "ssssgssss", "sslggglss", "ggggggggg"]], ["une maison", ["ssssrssss", "sssrrrsss", "ssrrrrrss", "srrrrrrrs", "swwwwwwws", "swywwwyws", "swwwdwwws", "swwwdwwws", "ggggggggg"]], ["une lune étoilée", ["nnmmmnnyn", "nmmnnnnnn", "mmnnnnynn", "mmnnnnnnn", "mmnnnnnny", "mmnnnnnnn", "nmmnnnynn", "nnmmmnnnn", "nnnnnnnnn"]], ["un voilier", ["sssskssyy", "sssskwsyy", "sssskwwss", "sssskwwws", "sssskssss", "dddddddds", "bbdddddbb", "bbbbbbbbb", "bwbbbwbbb"]], ["un sapin", ["nnnnynnnn", "nnnngnnnn", "nnngrgnnn", "nngggggnn", "ngggrgggn", "ngrgggggn", "gggggrggg", "nnnndnnnn", "wwwwwwwww"]], ["un bonhomme de neige", ["ssskkksss", "ssskkksss", "sskkkkkss", "ssswwwsss", "sswkwkwss", "sswwowwss", "ssrrrrrss", "swwwwwwws", "swwwwwwws"]], ["un cadeau", ["GGyyGyyGG", "GGGyyyGGG", "rrrryrrrr", "rrrryrrrr", "yyyyyyyyy", "rrrryrrrr", "rrrryrrrr", "rrrryrrrr", "rrrryrrrr"]], ["une étoile", ["nnnnynnnn", "nnnnynnnn", "nnnyyynnn", "yyyyyyyyy", "nyyyyyyyn", "nnyyyyynn", "nnyyyyynn", "nyynnnyyn", "ynnnnnnny"]], ["une bougie", ["nnnnonnnn", "nnnoyonnn", "nnnnknnnn", "nnnrrrnnn", "nnnrrrnnn", "nnnrwrnnn", "nnnrrrnnn", "ngrgrgrgn", "ggggggggg"]], ["une boule de Noël", ["GGGyyyGGG", "GGGGyGGGG", "GGrrrrrGG", "GrwrrrrrG", "yyyyyyyyy", "GrrrrrrrG", "GrrrrrrrG", "GGrrrrrGG", "GGGrrrGGG"]], ["une chaussette", ["sswwwwsss", "sswwwwsss", "ssrrrrsss", "ssrrrrsss", "ssrrrrsss", "ssrrrrrss", "srrrrrrrs", "srrrrrggs", "sssssssss"]], ["un bonnet", ["sssssssww", "ssssssrww", "sssssrrss", "ssssrrrss", "sssrrrrss", "ssrrrrrrs", "srrrrrrrs", "wwwwwwwww", "sssssssss"]], ["une cloche", ["GGrrGrrGG", "GGGrrrGGG", "GGGyyyGGG", "GGyyyyyGG", "GGyyyyyGG", "GyyyyyyyG", "yyyyyyyyy", "GGGGoGGGG", "GGGGGGGGG"]], ["une couronne", ["sssgggsss", "sgggggggs", "ggsssssgg", "grsssssgg", "ggsssssgg", "ggssssslg", "sggsssggs", "ssgrrrgss", "sssrsrsss"]]];
+const sdPxI=l=>SDPX[((l%SDPX.length)+SDPX.length)%SDPX.length],sdPx=(l,i)=>SDPAL[sdPxI(l)[1][(i/9)|0][i%9]],sdPxN=l=>sdPxI(l)[0],sdPxC=(l,i)=>{const h=sdPx(l,i),n=parseInt(h.slice(1),16),L=(.299*(n>>16)+.587*(n>>8&255)+.114*(n&255))/255;return L>.62?'pk':'pl'};
 function pSudoku(r){
  const {g,sol}=sdkPuzzle(lv),v=r&&Array.isArray(r.v)&&r.v.length===81?r.v.slice():g.slice();let sel=-1;snap=()=>({v});
  const bx=i=>((i/27)|0)*3+(((i%9)/3)|0),conf=()=>{const bad=new Set(),us=[];for(let k=0;k<9;k++){us.push([...Array(9)].map((_,j)=>k*9+j),[...Array(9)].map((_,j)=>j*9+k),[...Array(9)].map((_,j)=>((k/3)|0)*27+(k%3)*3+((j/3)|0)*9+(j%3)))}
@@ -2247,8 +2266,8 @@ function pSudoku(r){
  const done=()=>v.every((x,i)=>x===sol[i]);
  const d=()=>{const bad=conf(),cn=Array(10).fill(0),sv=sel>=0?v[sel]:0;v.forEach(x=>cn[x]++);
   frame(`<div class="sd" role="grid" aria-label="Grille de sudoku">${v.map((x,i)=>{const rr=(i/9)|0,c=i%9,rel=sel>=0&&i!==sel&&(rr===((sel/9)|0)||c===sel%9||bx(i)===bx(sel));
-   return`<button class="sd-c ${g[i]?'gv':''} ${i===sel?'sel':''} ${rel?'rel':''} ${sv&&x===sv&&i!==sel?'same':''} ${bad.has(i)?'bad':''} ${c%3===2&&c<8?'rb':''} ${rr%3===2&&rr<8?'bb':''}" data-a="sdc" data-v="${i}" aria-label="Ligne ${rr+1}, colonne ${c+1}${x?', '+x:', vide'}">${x||''}</button>`}).join('')}</div><div class="np">${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-a="sdn" data-v="${n}" ${cn[n]>=9?'disabled':''}>${n}</button>`).join('')}<button data-a="sde" aria-label="Effacer la case">⌫</button></div>`,1)};
- const fin=()=>{if(done())setTimeout(win,900);else if(v.every(x=>x)&&!conf().size)msg('Presque… une case est à revoir.')};
+   return`<button style="${x?'--pc:'+sdPx(lv,i):''}" class="sd-c ${x?'pc '+sdPxC(lv,i):''} ${g[i]?'gv':''} ${i===sel?'sel':''} ${rel?'rel':''} ${sv&&x===sv&&i!==sel?'same':''} ${bad.has(i)?'bad':''} ${c%3===2&&c<8?'rb':''} ${rr%3===2&&rr<8?'bb':''}" data-a="sdc" data-v="${i}" aria-label="Ligne ${rr+1}, colonne ${c+1}${x?', '+x:', vide'}">${x||''}</button>`}).join('')}</div><div class="np">${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-a="sdn" data-v="${n}" ${cn[n]>=9?'disabled':''}>${n}</button>`).join('')}<button data-a="sde" aria-label="Effacer la case">⌫</button></div>`,1)};
+ const fin=()=>{if(done()){msg('Tu as fait apparaître '+sdPxN(lv)+' !');const G=document.querySelector('.sd');if(G)requestAnimationFrame(()=>G.classList.add('sdpxr'));setTimeout(win,2600)}else if(v.every(x=>x)&&!conf().size)msg('Presque… une case est à revoir.')};
  act.sdc=k=>{sel=sel===+k?-1:+k;d()};
  act.sdn=n=>{if(sel<0||g[sel])return msg(sel<0?'Touche d’abord une case.':'Cette case est déjà donnée.');v[sel]=v[sel]===+n?0:+n;d();fin()};
  act.sde=()=>{if(sel<0||g[sel])return;v[sel]=0;d()};
