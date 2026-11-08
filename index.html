@@ -1605,7 +1605,7 @@ const st={get(k,d){if(k in mem)return mem[k];try{const v=localStorage.getItem(k)
 const sh=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const today=new Date().toLocaleDateString('sv'),di=Math.floor(Date.now()/864e5);
 const dkey=g=>'d:'+g+':'+today,ckey=g=>'c:'+g;
-const NLS={mots:60,memo:20,caches:20,phrase:20,maze:20,match3:20,demenage:10,quiz:1,cherche:12},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
+const NLS={mots:60,memo:20,caches:40,phrase:20,maze:20,match3:20,demenage:10,quiz:1,cherche:12},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
 /* Section temporaire « fêtes » : 10 niveaux spéciaux de plus par jeu (indices nl, nl+1 … nl+9), disponible tout de suite et jusqu’au 11 janvier 2027 inclus ; #noel dans l’adresse force l’affichage.
    Ils ne font pas partie du code de sauvegarde ni de la synchronisation. */
 const NLX=10,xmasOn=()=>{const t=Date.now();return location.hash==='#noel'||t<new Date(2027,0,12).getTime()},isX=(g,l)=>l>=nl(g),xn=(g,l)=>l-nl(g)+1;
@@ -2070,7 +2070,7 @@ function confetti(el){
  requestAnimationFrame(f);
 }
 /* ---------- Mots cachés : 8 niveaux, 4 directions, mots qui partagent des lettres ---------- */
-const MSN=[6,6,7,7,8,8,9,9,7,8,8,8,9,8,9,9,8,9,9,9,7,7,9,8,8,9,9,9,9,9];
+const MSN=[6,6,7,7,8,8,9,9,7,8,8,8,9,8,9,9,8,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,10,10,10,10,10,10,7,7,9,8,8,9,9,9,9,9];
 /* mots de chaque niveau : aucun mot n’est utilisé deux fois (vocabulaire élargi, uniquement des lettres du remplissage) */
 const MSL=[
  ['AURORE','PLAID','ASTRE','REVE'],
@@ -2093,6 +2093,26 @@ const MSL=[
  ['NOISETTE','VENT','MUGUET','BRIOCHE','BASILIC','GUITARE','CANNELLE'],
  ['ABRICOT','BONBON','CERISE','PECHEUR','PLAGE','POIRE','PLUME'],
  ['VOLCAN','SAGESSE','HARPE','SALADE','GROTTE','LIVRE','TENDRESSE'],
+ ['MONTAGNE','REFUGE','SENTIER','BOUSSOLE','CHAMOIS','CORDEE','SOMMET'],
+ ['PHARE','MOUETTE','GALET','MAREE','ECUME','VOILIER','PORT'],
+ ['GRATIN','FONDUE','RAGOUT','POTAGE','CREPE','BEIGNET','COMPOTE'],
+ ['ROMAN','POEME','CONTE','PAGE','SIGNET','RECIT','GRIMOIRE'],
+ ['COMETE','GALAXIE','ORBITE','PLANETE','NEBULEUSE','ECLIPSE','SATURNE'],
+ ['CHENE','BOULEAU','FOUGERE','MOUSSE','LICHEN','HERISSON','BLAIREAU'],
+ ['PIANO','MELODIE','ACCORD','TAMBOUR','CANON','REFRAIN','BERCEUSE'],
+ ['SERRE','BULBE','GRAINE','TERREAU','ARROSOIR','JACINTHE','AMARYLLIS'],
+ ['GRENIER','ESCALIER','PARQUET','VERANDA','BUFFET','HORLOGE','FAUTEUIL'],
+ ['THEIERE','INFUSION','VERVEINE','TILLEUL','JASMIN','SUCRE','TASSE'],
+ ['PHOQUE','MORSE','PINGOUIN','RENARD','LAGOPEDE','HERMINE','BALEINE'],
+ ['PINCEAU','CRAYON','ARGILE','TOILE','AQUARELLE','FUSAIN','CHEVALET'],
+ ['VALISE','TRAIN','BILLET','ESCALE','CARTE','HORIZON','PASSAGER'],
+ ['VEILLEUSE','REVERIE','BERCEAU','OREILLER','DUVET','PYJAMA','CHUCHOTER'],
+ ['MACARON','GUIMAUVE','PRALINE','MERINGUE','CARAMEL','NOUGATINE','SABLE'],
+ ['BARQUE','ROSEAU','MOULIN','PONTON','ECLUSE','NENUPHAR','LIBELLULE'],
+ ['AIGUILLE','PELOTE','MAILLE','TRICOT','MOUFLE','CHAUSSON','CROCHET'],
+ ['BUCHERON','COPEAU','RABOT','ERABLE','NOYER','CABANE','SCIURE'],
+ ['PRINTEMPS','AUTOMNE','SOLSTICE','EQUINOXE','FEUILLE','RECOLTE','SAISON'],
+ ['SERENITE','GRATITUDE','PATIENCE','HARMONIE','SOURIRE','LUMINEUX','PAISIBLE'],
  /* niveaux de fêtes */
  ['NOEL','HOTTE','ANGE','CRECHE','BERGER'],
  ['CADEAU','RUBAN','PAPIER','BOULE','CLOCHE'],
@@ -5881,10 +5901,11 @@ function readState(){return{ep:st.get('sync:ep',0)&15,fl:Math.max(0,Math.min(1e8
    Les 9 chiffres ne laissent pas la place à la liste exacte : chaque jeu retient son nombre de niveaux terminés ARRONDI VERS LE BAS par paliers
    (de 2 en 2 pour 8 niveaux ; de 3 en 3 pour 20 niveaux ; de 5 en 5 pour 40 niveaux, le total restant exact), et les flocons sont rangés dans l’un de 217 paliers (exacts jusqu’à 99, puis environ 5 % d’écart au plus), toujours arrondis vers le bas : un code ne donne jamais plus que ce qu’on avait.
    Le compte, lui, synchronise tout à l’identique. Les anciens codes (11 à 14 chiffres) restent lus. */
+const LSN={caches:20};/* les codes courts gardent leur disposition : Mots cachés y compte jusqu’à 20 niveaux */
 const PG=G.map((g,i)=>g.soon?-1:i).filter(i=>i>=0),PGO=PG.filter(i=>!['tournade','maze'].includes(G[i].id)),PGT=PG.filter(i=>G[i].id!=='maze'),FM=4096,mkL=(pg,f,fn)=>{const r=pg.map(fn),pm=r.reduce((a,b)=>a*b,1)*f;return{pg,r,f,pm,dg:String(pm-1).length,tb:null,q:null}},
  FST=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,105,110,116,122,128,135,141,149,156,164,172,181,190,200,210,221,232,244,256,269,283,297,312,328,345,362,381,400,420,442,464,488,512,538,566,594,624,656,689,724,761,800,840,883,928,975,1024,1076,1131,1188,1249,1312,1379,1449,1522,1599,1681,1766,1856,1950,2049,2153,2262,2377,2497,2624,2757,2897,3044,3199,3361,3532,3711,3899,4097,4305,4523,4753,4994,5248,5514,5794,6088,6397,6721,7062,7421,7797,8193,8609,9046,9505,9987,10494,11027,11586,12174,12792,13441,14124,14840,15594,16385,17216,18090,19008,19973,20987,22052,23171,24347,25582,26881,28245,29678,31184,32767],
  QS=n=>{const k=n>20?Math.ceil(n/8):n>8?3:2,a=[];for(let v=0;v<=n;v+=k)a.push(v);if(a[a.length-1]!==n)a.push(n);return a},
- LS=Object.assign(mkL(PG,FST.length,i=>QS(nl(G[i].id)).length),{tb:FST,q:PG.map(i=>QS(nl(G[i].id)))}),
+ LS=Object.assign(mkL(PG,FST.length,i=>QS(Math.min(nl(G[i].id),LSN[G[i].id]||99)).length),{tb:FST,q:PG.map(i=>QS(Math.min(nl(G[i].id),LSN[G[i].id]||99)))}),
  FZ=i=>(['mots','memo','caches'].includes(G[i].id)?20:8)+1,LT=mkL(PGT,32768,FZ),LY=mkL(PGO,32768,FZ),LM=mkL(PGO,FM,i=>(['mots','memo'].includes(G[i].id)?20:8)+1),LO=mkL(PGO,FM,i=>(G[i].id==='mots'?20:8)+1),DG=LS.dg,LAY=[LO,LM,LY,LT,LS],MAXC=Math.max(...LAY.map(q=>q.dg+1));/* LT, LY, LM, LO : anciennes dispositions (14, 13, 12 et 11 chiffres), pour les codes déjà donnés */
 const VD=[[0,1,2,3,4,5,6,7,8,9],[1,2,3,4,0,6,7,8,9,5],[2,3,4,0,1,7,8,9,5,6],[3,4,0,1,2,8,9,5,6,7],[4,0,1,2,3,9,5,6,7,8],[5,9,8,7,6,0,4,3,2,1],[6,5,9,8,7,1,0,4,3,2],[7,6,5,9,8,2,1,0,4,3],[8,7,6,5,9,3,2,1,0,4],[9,8,7,6,5,4,3,2,1,0]],
  VP=[[0,1,2,3,4,5,6,7,8,9],[1,5,7,6,2,8,3,0,9,4],[5,8,0,3,7,9,6,1,4,2],[8,9,1,6,0,4,3,5,2,7],[9,4,5,3,1,2,6,8,7,0],[4,2,8,6,5,7,3,9,0,1],[2,7,9,3,8,0,6,4,1,5],[7,0,4,6,9,1,3,2,5,8]],VI=[0,4,3,2,1,5,6,7,8,9];
@@ -6274,6 +6295,10 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches)snow();
   setTimeout(push,2400);
  });
 })();
+/* Mots cachés passe de 20 à 40 niveaux : la progression des niveaux de fêtes (21 à 30) glisse vers 41 à 50, une seule fois */
+(()=>{try{if(st.get('mig:cach40',0))return;const P=[ckey('caches')+':','p:caches:','k:caches:'];
+ for(let i=9;i>=0;i--)P.forEach(pf=>{const o=st.get(pf+(20+i),null);if(o){st.set(pf+(40+i),o);st.set(pf+(20+i),null)}});
+ st.set('mig:cach40',1)}catch(e){}})();
 
 /* ---------- Notifications : un centre dans l’Histoire (cloche), un point sur l’onglet, un aperçu bref à l’arrivée ---------- */
 (()=>{
