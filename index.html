@@ -1515,7 +1515,7 @@ function profilesCol(F){
    delete:async()=>{try{await Fs.deleteDoc(Fs.doc(db,'profiles/'+id))}catch(e){const x=new Error(e&&e.message||'x');x.code=code(e);throw x}}}),
   onSnapshot:(next,err)=>{
    const docs=new Map(),subs=new Map(),loaded=new Set(),extra=new Set();
-   let own=null,inbox=[],gotOwn=false,gotInbox=false,late=false,dead=false,tm=0;
+   let own=null,inbox=[],gotOwn=false,gotInbox=false,late=false,dead=false,tm=0,pw=0;
    const ready=()=>gotOwn&&(late||(gotInbox&&[...subs.keys()].every(k=>loaded.has(k))));
    const emit=()=>{tm=0;if(dead||!gotOwn)return;next({docs:[...docs].map(([id,v])=>({id,data:()=>v})),metadata:{fromCache:false,hasPendingWrites:false}})};
    const sched=()=>{if(dead||tm||!ready())return;tm=setTimeout(emit,40)};
@@ -1535,13 +1535,15 @@ function profilesCol(F){
     own=s.exists()?parse(s.data()):null;
     if(own)docs.set(uid,own);else docs.delete(uid);
     gotOwn=true;want();
-    if(s.metadata.hasPendingWrites)return;
+    /* une écriture du profil qui traîne ne doit pas cacher les amis : on les montre quand même après 6 s */
+    if(s.metadata.hasPendingWrites){clearTimeout(pw);pw=setTimeout(()=>{if(!dead)sched()},6000);return}
+    clearTimeout(pw);
     sched();if(own)index(F,uid,own).catch(()=>{});
    },e=>{if(!dead&&err)err(e)});
    const u1=Fs.onSnapshot(Fs.doc(db,'inbox/'+uid),s=>{if(dead)return;const v=s.exists()?s.data():null;inbox=v&&typeof v==='object'?Object.keys(v):[];gotInbox=true;want();sched()},()=>{gotInbox=true;sched()});
    const tl=setTimeout(()=>{late=true;sched()},3000);
    const live={addExtra:(id,v)=>{extra.add(id);docs.set(id,v);loaded.add(id);want();if(gotOwn)emit()},
-    stop:()=>{dead=true;clearTimeout(tm);clearTimeout(tl);try{u0()}catch(e){}try{u1()}catch(e){}subs.forEach(u=>{try{u()}catch(e){}});subs.clear()}};
+    stop:()=>{dead=true;clearTimeout(tm);clearTimeout(tl);clearTimeout(pw);try{u0()}catch(e){}try{u1()}catch(e){}subs.forEach(u=>{try{u()}catch(e){}});subs.clear()}};
    LIVE=live;
    return()=>{live.stop();if(LIVE===live)LIVE=null};
   }};
@@ -6159,9 +6161,10 @@ async function socInit(){
   if(!db||!user){SO.st='na';return socRefresh()}
   const id=await user.id();if(!id||!SOK.test(id)){SO.st='na';return socRefresh()}
   let cw=null;try{cw=await user.can('data.write')}catch(e){}
-  SO.uid=id;SO.can=cw!==false;SO.col=db.collection('profiles');
+  {const ou=st.get('soc:uid','');if(ou&&ou!==id){st.set('soc:me',null);st.set('soc:seen',{})}st.set('soc:uid',id)}
+  SO.uid=id;SO.can=cw!==false;SO.col=db.collection('profiles');SO.ec='';
   SO.t10=setTimeout(()=>{if(!SO.got){SO.st='slow';socRefresh()}},10000);
-  SO.unsub=SO.col.onSnapshot(socSnap,()=>{clearTimeout(SO.t10);SO.unsub=null;SO.col=null;SO.got=false;SO.st='err';socRefresh()});
+  SO.unsub=SO.col.onSnapshot(socSnap,e=>{clearTimeout(SO.t10);SO.unsub=null;SO.col=null;SO.got=false;SO.st='err';SO.ec=String(e&&(e.code||e.message)||'').slice(0,40);socRefresh()});
  }catch(e){SO.st='na';SO.col=null;socRefresh()}
 }
 const socLater=()=>{clearTimeout(SO.pt);SO.pt=setTimeout(socPush,300)};
@@ -6197,7 +6200,7 @@ function socBody(){
  const M=st.get('soc:me',null),crd=(t,b)=>`<section class="glass play soc-i"><h2>${t}</h2><p class="note" style="margin:0">${b}</p></section>`;
  if(SO.st==='na')return crd('Une connexion est nécessaire','Connecte-toi pour ajouter des amis et leur offrir des flocons.<br><button class="btn" style="margin-top:12px" data-a="fbIn">Se connecter ou créer un compte</button>');
  if(!SO.can&&!(M&&M.code))return crd('Accès en lecture seule','Pour ajouter des amis et envoyer des flocons, il faut le rôle Contributeur sur cette page. Demande à la personne qui te l’a partagée de changer ton accès.');
- if(!SO.got||!M||!M.code){const w=SO.st==='slow'||SO.st==='err';return crd(w?'Pas de réponse pour l’instant':'Un instant…',w?'Le Social se connectera dès que possible. Tes flocons et tes niveaux ne bougent pas.':'Ton profil se prépare.')}
+ if(!SO.got||!M||!M.code){const w=SO.st==='slow'||SO.st==='err';return crd(w?'Pas de réponse pour l’instant':'Un instant…',w?'Le Social se connectera dès que possible : il réessaie tout seul. Tes flocons et tes niveaux ne bougent pas.'+(SO.ec?' <small style="opacity:.7">('+esc(SO.ec)+')</small>':'')+'</p><button class="btn" style="margin-top:14px" data-a="socRetry">Réessayer maintenant</button><p style="display:none">':'Ton profil se prépare.')}
  const me=SO.uid,P=SO.P,live=SO.can&&SO.got&&!!SO.col;
  const nameOf=id=>(P[id]&&P[id].name)||'Ami',hue=id=>{let h=0;for(const c of id)h=(h*31+c.charCodeAt(0))%360;return h};
  const av=id=>socAv(id);
@@ -6334,6 +6337,17 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches)snow();
 (()=>{try{if(st.get('mig:tn24',0))return;const P=[ckey('tournade')+':','p:tournade:','k:tournade:'];
  for(let i=9;i>=0;i--)P.forEach(pf=>{const o=st.get(pf+(8+i),null);if(o){st.set(pf+(24+i),o);st.set(pf+(8+i),null)}});
  st.set('mig:tn24',1)}catch(e){}})();
+/* Social et synchronisation du compte : s’ils ne répondent pas, on relance la connexion tout seul (toutes les 20 s,
+   au retour sur l’app et quand le réseau revient), et un bouton « Réessayer maintenant » le fait tout de suite */
+(()=>{
+ const socRe=()=>{if(!(SO.st==='slow'||SO.st==='err')||SO.got)return false;clearTimeout(SO.t10);try{SO.unsub&&SO.unsub()}catch(e){}SO.unsub=null;SO.col=null;SO.st='';socInit();return true};
+ const accRe=()=>{if(!(Sy.state==='slow'||Sy.state==='err')||!st.get('sync:acc',false))return false;accOff();accInit();return true};
+ const all=()=>{try{socRe()}catch(e){}try{accRe()}catch(e){}};
+ act.socRetry=()=>{try{if(!SO.got){clearTimeout(SO.t10);try{SO.unsub&&SO.unsub()}catch(e){}SO.unsub=null;SO.col=null;SO.st='';socInit()}}catch(e){}try{accRe()}catch(e){}};
+ setInterval(()=>{if(!document.hidden)all()},20000);
+ addEventListener('online',all);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(all,800)});
+})();
 
 /* ---------- Notifications : un centre dans l’Histoire (cloche), un point sur l’onglet, un aperçu bref à l’arrivée ---------- */
 (()=>{
