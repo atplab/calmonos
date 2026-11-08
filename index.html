@@ -1284,6 +1284,30 @@ body[data-tx=d] .sd-c.pc.pk{color:#2a2550}
 .m3t.al i{filter:saturate(.75) brightness(.9)}
 .m3t.free .m3al{transition:opacity .2s,transform .2s;opacity:0;transform:scale(1.3)}
 .m3gr{display:block;width:78%;height:78%;margin:11%;border-radius:5px;background:linear-gradient(160deg,#e2c189,#b98a4c);box-shadow:inset 0 0 0 2px rgba(120,80,30,.55);vertical-align:middle}
+.m3r{padding:0}
+.m3r::before{border-radius:3px;background:
+ radial-gradient(circle at 18% 22%,#6b4a2a 0 3.5%,transparent 4.5%),
+ radial-gradient(circle at 82% 30%,#8a8f96 0 4%,transparent 5%),
+ radial-gradient(ellipse 7% 4% at 74% 84%,#e9e2cf 0 70%,transparent 80%),
+ radial-gradient(circle at 26% 80%,#5c7a4a 0 3%,transparent 4%),
+ radial-gradient(circle at 55% 12%,#7a5530 0 2.5%,transparent 3.5%),
+ radial-gradient(circle at 90% 62%,#6b4a2a 0 2.5%,transparent 3.5%),
+ radial-gradient(circle at 10% 52%,#a8a196 0 3%,transparent 4%),
+ linear-gradient(160deg,#dcb980,#b08345);box-shadow:inset 0 0 0 1.5px rgba(110,72,28,.55)}
+.m3r::after{content:'';position:absolute;inset:0;pointer-events:none;background:
+ linear-gradient(32deg,transparent 46%,rgba(90,60,30,.75) 46% 52%,transparent 52%) 8% 88%/24% 14% no-repeat,
+ linear-gradient(-20deg,transparent 40%,rgba(120,150,170,.8) 40% 60%,transparent 60%) 86% 8%/16% 12% no-repeat,
+ linear-gradient(70deg,transparent 42%,rgba(200,90,70,.65) 42% 58%,transparent 58%) 6% 10%/12% 14% no-repeat}
+.m3r:nth-child(3n+1)::after{transform:scaleX(-1)}.m3r:nth-child(3n+2)::after{transform:scaleY(-1)}.m3r:nth-child(4n)::before{background-position:0 0}
+.m3r:nth-child(2n)::before{transform:scaleX(-1)}
+.m3r[data-n="2"]::before{border-radius:3px;background:
+ radial-gradient(circle at 18% 22%,#3e2a14 0 3.5%,transparent 4.5%),
+ radial-gradient(circle at 82% 30%,#6c7178 0 4%,transparent 5%),
+ radial-gradient(ellipse 7% 4% at 74% 84%,#d8cfb8 0 70%,transparent 80%),
+ radial-gradient(circle at 26% 80%,#41583a 0 3%,transparent 4%),
+ radial-gradient(circle at 90% 62%,#3e2a14 0 2.5%,transparent 3.5%),
+ linear-gradient(160deg,#a87a42,#7a5226);box-shadow:inset 0 0 0 2px rgba(60,35,10,.7)}
+.m3r[data-n="0"]::after{opacity:0}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
