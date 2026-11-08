@@ -5099,9 +5099,11 @@ function pDemen2(r){
   if(t&&!pts.size&&!done){e.preventDefault();e.stopPropagation();try{svg.setPointerCapture(e.pointerId)}catch(_){}drag={id:t.dataset.id,x:e.clientX,y:e.clientY,mv:false};document.addEventListener('pointermove',dmv);document.addEventListener('pointerup',dup);document.addEventListener('pointercancel',dcn);return}
   pts.set(e.pointerId,{x:e.clientX,y:e.clientY});try{svg.setPointerCapture(e.pointerId)}catch(_){}
   if(pts.size===1)bg={x:e.clientX,y:e.clientY,vx:vb.x,vy:vb.y,mv:false,tg:e.target};
-  else if(pts.size===2){const[a,b]=[...pts.values()];bg={pinch:1,d0:Math.hypot(a.x-b.x,a.y-b.y),w0:vb.w,mv:true}}});
+  else if(pts.size===2){const[a,b]=[...pts.values()],m=ptr({clientX:(a.x+b.x)/2,clientY:(a.y+b.y)/2});bg={pinch:1,d0:Math.hypot(a.x-b.x,a.y-b.y),w0:vb.w,m0:m,mv:true}}});
  svg.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId)||!bg)return;pts.set(e.pointerId,{x:e.clientX,y:e.clientY});const rw=svg.getBoundingClientRect().width;
-  if(bg.pinch&&pts.size===2){const[a,b]=[...pts.values()],d=Math.hypot(a.x-b.x,a.y-b.y),m=ptr({clientX:(a.x+b.x)/2,clientY:(a.y+b.y)/2});if(m&&bg.d0>0)zoomAt(vb.w/(bg.w0/(d/bg.d0)),m[0],m[1]);return}
+  if(bg.pinch&&pts.size===2){const[a,b]=[...pts.values()],d=Math.hypot(a.x-b.x,a.y-b.y),R0=svg.getBoundingClientRect();if(!bg.m0||!(bg.d0>0)||!R0.width)return;
+   /* zoom et déplacement en même temps : le point pincé reste sous les doigts */
+   const nw=Math.max(VW/3.2,Math.min(VW,bg.w0*bg.d0/d)),nh=nw*VH/VW,mx=((a.x+b.x)/2-R0.left)/R0.width,my=((a.y+b.y)/2-R0.top)/R0.height;vb.w=nw;vb.x=bg.m0[0]-mx*nw;vb.y=bg.m0[1]-my*nh;setVB();return}
   const dx=e.clientX-bg.x,dy=e.clientY-bg.y;if(!bg.mv&&Math.hypot(dx,dy)>7)bg.mv=true;if(bg.mv&&vb.w<VW-1){const k=vb.w/rw;vb.x=bg.vx-dx*k;vb.y=bg.vy-dy*k;setVB()}});
  const bgEnd=e=>{if(!pts.has(e.pointerId))return;pts.delete(e.pointerId);const b=bg;if(pts.size){const[q]=[...pts.values()];bg={x:q.x,y:q.y,vx:vb.x,vy:vb.y,mv:true};return}bg=null;if(!b||b.mv||b.pinch||e.type==='pointercancel'||done)return;
   const p=ptr(e);if(!p)return;const be=b.tg&&b.tg.closest&&b.tg.closest('.dmbx:not(.op)');
