@@ -1261,6 +1261,15 @@ body[data-tx=d] .sd-c.pc.pk{color:#2a2550}
 .aqfeedb{min-width:118px;padding:11px 18px;border-radius:22px;border-width:2.5px;font-size:15.5px;box-shadow:0 5px 0 #138030,0 9px 18px rgba(0,30,60,.3)}
 .aqfeedb:disabled{opacity:.45;box-shadow:0 5px 0 #5d7489,0 9px 18px rgba(0,30,60,.2)}
 .aqbar .aqrb b{display:none}.aqbar{align-items:center}
+.aqst #aqs,.aqst #aqn{display:none}
+.aqst{gap:5px;min-width:200px;padding:9px 13px 10px}
+.aqln{font-size:13.5px;letter-spacing:.01em}
+.aqlb{display:flex;align-items:center;gap:7px}.aqlb i{font-style:normal;font-size:14px;width:18px;text-align:center}
+.aqlt{position:relative;flex:1;height:8px;border-radius:99px;background:rgba(255,255,255,.18);overflow:visible}
+.aqlt span{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:linear-gradient(90deg,#7fe0ff,#ffd76a);transition:width .6s}
+.aqlt em{position:absolute;top:-2px;width:3px;height:12px;margin-left:-1.5px;border-radius:2px;background:rgba(255,255,255,.45)}.aqlt em.ok{background:#ffd76a}
+.aqlb small{font-size:11px;opacity:.85;min-width:62px;text-align:right;font-variant-numeric:tabular-nums}
+.ai.sil .ap{filter:brightness(0);opacity:.45}.ai.sil .atx b{letter-spacing:.12em;opacity:.7}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -6064,21 +6073,57 @@ function aqInv(){
 function aqPanel(){
  const tc=$('.aqtc');if(tc)tc.textContent=aqTab==='inv'?'Inventaire':'Entretien';
  if(aqTab==='inv')return aqInv();
+ if(!DECO_G.some(g=>g[0]==='float')){DECO_G.splice(1,0,['float','Flottants']);DECO.forEach(d=>{if(!d.g&&d.k==='float')d.g='float'})}
  aqPanel0();
  const el=$('#aql');if(!el)return;
  /* à la boutique, ce qu’on possède se gère dans l’inventaire */
  el.querySelectorAll('[data-a=aqtg],[data-a=aqdt]').forEach(b=>{const s=document.createElement('span');s.className='aqown';s.textContent='Possédé ✓';b.replaceWith(s)});
  el.querySelectorAll('.aqed,[data-a=aqpr]').forEach(b=>b.remove());
  /* objets de Noël : verrouillés tant que Zeni n’a pas atteint l’étape demandée ; les fonds gratuits s’« obtiennent » */
+ const A0=aqRead();
+ /* poissons rangés par sections, comme les décors */
+ if(aqTab==='fish'){const rows=[...el.querySelectorAll(':scope > .ai')];if(rows.length===FISH.length){AQFG.forEach(([g,t])=>{const rs=rows.filter((r,i)=>aqFC(FISH[i])===g);if(!rs.length)return;const h=document.createElement('h3');h.className='aqh';h.textContent=t;el.appendChild(h);rs.forEach(r=>el.appendChild(r))})}}
  el.querySelectorAll('[data-a=aqbuy]').forEach(b=>{const[k,id]=b.dataset.v.split(':'),L=(k==='f'?FISH:k==='d'?DECO:WATER).find(x=>x.id===id);if(!L)return;
-  if(aqXL(L)){const r=b.closest('.ai'),sm=r&&r.querySelector('small');if(sm)sm.textContent='Un noël pour Zeni : étape '+L.lk;if(r)r.classList.add('xlk');b.outerHTML='<button class="sb lkb" disabled>🔒 Étape '+L.lk+'</button>'}
+  const r=b.closest('.ai'),sil=()=>{if(!r)return;r.classList.add('xlk','sil');const nb=r.querySelector('.atx b');if(nb)nb.textContent='???'};
+  if(k==='d'&&aqHid(L,k,A0)){if(r)r.remove();return}
+  const tn=aqTL(L,k,A0);
+  if(tn){sil();const sm=r&&r.querySelector('small');if(sm)sm.textContent='Se débloque avec l’aquarium '+tn;b.outerHTML='<button class="sb lkb" disabled>🔒 Aquarium '+tn+'</button>'}
+  else if(aqXL(L)){sil();const sm=r&&r.querySelector('small');if(sm)sm.textContent='Un noël pour Zeni : étape '+L.lk;b.outerHTML='<button class="sb lkb" disabled>🔒 Étape '+L.lk+'</button>'}
   else if(!L.p)b.textContent='Obtenir'});
  /* boutique : les éléments à acheter défilent en carrousel (à acheter d’abord, déjà possédés ensuite) */
  if(aqTab==='fish'||aqTab==='deco'){
   let grp=[];const flush=()=>{if(!grp.length)return;const c=document.createElement('div');c.className='aqcar';grp[0].before(c);[...grp.filter(r=>r.querySelector('.buy')),...grp.filter(r=>r.classList.contains('xlk')),...grp.filter(r=>!r.querySelector('.buy')&&!r.classList.contains('xlk'))].forEach(r=>c.appendChild(r));grp=[]};
   [...el.children].forEach(ch=>{if(ch.classList.contains('ai'))grp.push(ch);else flush()});flush();
+  /* une section vide (ex. Hiver avant le 10 janvier) disparaît */
+  el.querySelectorAll('h3.aqh').forEach(h=>{const n=h.nextElementSibling;if(!n||!n.classList.contains('aqcar'))h.remove()});
  }
 }
+/* ---------- Niveaux d’aquarium : deux barres (poissons, décors) remplies par les achats ----------
+   Aquarium 2 : 830 ❄ dépensés en poissons et 530 ❄ en décors · Aquarium 3 : 2150 ❄ et 1200 ❄ (totaux depuis le début).
+   Dans chaque barre : +5 ❄ au premier tiers, +10 ❄ au deuxième. Le mode illimité débloque tout. */
+const AQT=[[830,530],[2150,1200]],AQR3=[5,10];
+const aqWinter=()=>UNL()||Date.now()>=new Date(2027,0,10).getTime();
+const aqFC=f=>f.lk||f.ev?'ev':['hippo','raie','tortue','meduse'].includes(f.id)?'mar':'fish';
+const AQFG=[['fish','Poissons'],['mar','Animaux marins'],['ev','Événements']];
+function aqSpent(a){let f=0,d=0;FISH.forEach(x=>{if(a.f[x.id])f+=x.p});DECO.forEach(x=>{if(a.d[x.id]!==undefined)d+=x.p});return{f,d}}
+function aqTier(a){if(UNL())return 3;const s=aqSpent(a);let t=1;for(const[F,D]of AQT){if(s.f>=F&&s.d>=D)t++;else break}return t}
+/* palier demandé pour acheter un objet (0 = libre) */
+function aqNeed(L,k){if(!L||UNL()||L.lk)return 0;if(k==='f'){if(['hippo','discus','raie','lune','tortue','hockey'].includes(L.id))return 2;if(L.id==='royal')return 3;if(L.id==='meduse')return Date.now()<new Date(2026,10,16).getTime()?0:3}return 0}
+const aqTL=(L,k,a)=>{const n=aqNeed(L,k);return n&&aqTier(a||aqRead())<n?n:0};
+const aqHid=(L,k,a)=>k==='d'&&L.g==='winter'&&!aqWinter()&&(a||aqRead()).d[L.id]===undefined;
+/* récompenses des tiers : versées une seule fois */
+function aqRewards(a){const s=aqSpent(a),r=a.lr||{};let g=0,ch=false;
+ [[0,0,s.f],[0,1,s.d],[1,0,s.f],[1,1,s.d]].forEach(([t,b,v])=>{const lo=t?AQT[t-1][b]:0,hi=AQT[t][b];[1,2].forEach(q=>{const k=t+''+b+q;if(!r[k]&&v>=lo+(hi-lo)*q/3){r[k]=1;ch=true;if(!UNL())g+=AQR3[q-1]}})});
+ if(ch){const t0=a.lt||1,t1=aqTier(a);a.lr=r;a.lt=t1;aqSave(a);if(g){fl+=g;st.set('fl',fl);const c=document.querySelector('.aqhd .chip');if(c)c.textContent='❄ '+FLX()}
+  mt='m-aq';if(t1>t0)msg('✦ Aquarium '+t1+' débloqué ! De nouveaux poissons t’attendent à la boutique.'+(g?' +'+g+' ❄':''));else if(g)msg('✦ Palier atteint : +'+g+' ❄');if(g||t1>t0){sfx(880,.3);setTimeout(()=>sfx(1175,.4),140)}}}
+function aqLvHTML(a){const t=aqTier(a),s=aqSpent(a),mx=t>AQT.length,lim=AQT[Math.min(t,AQT.length)-1],lo=t>1?AQT[Math.min(t,AQT.length)-2]:[0,0];
+ const bar=(ic,v,b)=>{const L=lo[b],H=lim[b],p=mx?1:Math.max(0,Math.min(1,(v-L)/(H-L)));return`<div class="aqlb"><i>${ic}</i><div class="aqlt"><span style="width:${(p*100).toFixed(1)}%"></span><em style="left:33.3%" class="${p>=1/3?'ok':''}"></em><em style="left:66.6%" class="${p>=2/3?'ok':''}"></em></div><small>${mx?'max':Math.min(v,H)+' / '+H}</small></div>`};
+ return`<b class="aqln">Aquarium ${Math.min(t,3)}${mx?' · niveau max':''}</b>${bar('🐟',s.f,0)}${bar('🪸',s.d,1)}`}
+const aqStatus0=aqStatus;
+aqStatus=function(){aqStatus0();const a=aqRead();aqRewards(a);const st0=$('.aqst');if(!st0)return;let l=st0.querySelector('.aqlv');if(!l){l=document.createElement('div');l.className='aqlv';st0.appendChild(l)}const h=aqLvHTML(a);if(l.dataset.h!==h){l.innerHTML=h;l.dataset.h=h}};
+const aqBuy0=aqBuy;
+aqBuy=function(v){const[k,id]=v.split(':'),a=aqRead(),L=(k==='f'?FISH:k==='d'?DECO:WATER).find(x=>x.id===id);mt='m-aq';
+ if(L&&aqHid(L,k,a))return;const n=L&&aqTL(L,k,a);if(n)return msg('Se débloque avec l’aquarium '+n+'.');aqBuy0(v)};
 
 function aqNear(P,cx,cy){let b=null,bd=1e9;for(const p of P){if(p.state!==1)continue;const d=Math.hypot(p.xs-cx,p.y-cy)+90*p.n;if(d<bd){bd=d;b=p}}return b}
 function aqStep(ts){
