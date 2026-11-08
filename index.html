@@ -1325,6 +1325,19 @@ body[data-tx=d] .sd-c.pc.pk{color:#2a2550}
 /* en-tête des niveaux : « Niveau N ⏭ » sur une pastille ombrée, texte blanc comme le bouton Indice */
 body .top.stk>.tl,body .top.stk>.tl.tlk{flex:0 1 auto;margin:0 auto;padding:6px 12px;border-radius:999px;background:rgba(14,22,58,.5);border:1px solid rgba(255,255,255,.25);color:#fff!important;font-weight:700;font-size:13px;text-shadow:0 1px 2px rgba(0,0,0,.35)!important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 body .top.stk>.tl.tlk i{opacity:1;border-color:rgba(255,255,255,.7);color:#fff}
+/* Déménagement : plus de fond, la pièce prend toute la place ; les objets sortent des boîtes */
+.play.pg-demenage{background:none!important;border:0!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;padding:0 0 10px!important}
+.pg-demenage .dmw{max-width:640px;width:calc(100% + 24px);margin:0 -12px}
+.pg-demenage .dm .lit{color:#fff;text-shadow:0 1px 6px rgba(10,20,50,.6)}
+.dmbx{cursor:pointer}.dmbx.op{cursor:default}
+.dmtop{cursor:grab;touch-action:none}.dmtop .dmp{pointer-events:auto;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
+.dmtop.sel .dmp{filter:drop-shadow(0 0 3px #7fc0ee) drop-shadow(0 0 6px #7fc0ee)}
+.dmsk .dmp{filter:brightness(.78)}
+.dmbx:not(.op):hover polygon{filter:brightness(1.05)}
+.play.pg-demenage{overflow-x:clip}
+.pg-demenage .dm{min-height:calc(100dvh - 150px);display:flex;flex-direction:column;justify-content:center}
+.pg-demenage .dmw{width:118%;max-width:none;margin:0 -9%}
+.pg-demenage .m,.pg-demenage .dm .lit{color:#fff!important;text-shadow:0 1px 3px rgba(20,16,50,.75),0 0 10px rgba(20,16,50,.45)!important}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -3111,7 +3124,7 @@ function pDemen(r){
  const CP=[];sc.st.forEach((S,si)=>S.parts.forEach((q,j)=>CP.push(Object.assign({id:si+'.'+j,S},q))));
  const op=new Set(r&&r.o?r.o.filter(id=>CP.some(c=>c.id===id)):[]);
  placed=placed.filter(q=>!q[6]||CP.some(c=>c.id===q[6]));
- snap=()=>({p:placed,o:[...op]});
+ snap=()=>({p:placed,o:[...op],b:typeof bx!=='undefined'?bx:undefined,bo:typeof bop!=='undefined'?[...bop]:undefined});
  const f2=a=>a.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
  const SW=.34,cg=c=>{const F=c.S.fp,{u0,u1,z0,z1}=c,g={front:[F(u0,z0),F(u1,z0),F(u1,z1),F(u0,z1)]};
   if(c.t==='door'){const wd=(u1-u0)*.96,sg=c.hg==='l'?-1:1,uh=c.hg==='l'?u0:u1,an=c.hg==='l'?SW:1.15,du=sg*wd*Math.sin(an),de=wd*Math.cos(an);g.panel=[F(uh,z0),F(uh,z0,de,du),F(uh,z1,de,du),F(uh,z1)];g.zone=g.front;
@@ -3124,7 +3137,7 @@ function pDemen(r){
  const csz=c=>c.t==='door'?(c.k==='wardrobe'?20:15):15;
  const knob=(p,c)=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="1.4" fill="#e8d9a8" stroke="${dSh(c,.5)}" stroke-width=".4"/>`;
  const stores=()=>{const h=$('#dmst');if(!h)return;let o='';
-  CP.slice().sort((a,b)=>(a.S===b.S?b.z0-a.z0:0)).forEach(c=>{const g=c.g,col=c.S.c,O=op.has(c.id),mid=(a,b,t)=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];
+  const so=[...new Set(CP.map(c=>c.S))];so.flatMap(S=>{const cs=CP.filter(c=>c.S===S);return[...cs.filter(c=>!op.has(c.id)),...cs.filter(c=>op.has(c.id)).sort((a,b)=>a.z0-b.z0)]}).forEach(c=>{const g=c.g,col=c.S.c,O=op.has(c.id),mid=(a,b,t)=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];
    if(!O){o+=`<polygon class="dmd" data-c="${c.id}" points="${f2(g.front)}" fill="${dSh(col,c.t==='door'?.96:.92)}" stroke="${dSh(col,.55)}" stroke-width=".9" stroke-linejoin="round"/>`;
     if(c.t==='door'){const e=c.hg==='l'?mid(g.front[1],g.front[2],.5):mid(g.front[0],g.front[3],.5),q=mid(e,c.hg==='l'?mid(g.front[0],g.front[3],.5):mid(g.front[1],g.front[2],.5),.14);o+=knob(q,col)}
     else{const a=mid(mid(g.front[0],g.front[3],.5),mid(g.front[1],g.front[2],.5),.4),b=mid(mid(g.front[0],g.front[3],.5),mid(g.front[1],g.front[2],.5),.6);o+=`<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" stroke="#e8d9a8" stroke-width="1.8" stroke-linecap="round"/>`}
@@ -3143,8 +3156,29 @@ function pDemen(r){
  const left=()=>ids.filter(id=>!placed.some(q=>q[0]===id));
  const sp=(id,x,y,c,cls='',z=27)=>`<svg class="dmp ${cls}" data-id="${id}" x="${(x-z/2).toFixed(1)}" y="${(y-(c==='c'?z/2:z*.937)).toFixed(1)}" width="${z}" height="${z}" viewBox="0 0 32 32"><title>${DIT[id][0]}</title>${DIT[id][1]}</svg>`;
  const layer=()=>{const rr=$('#dmr');if(rr)rr.classList.toggle('hb',bad.size>0);stores();const g=$('#dml');if(g)g.innerHTML=placed.filter(q=>!q[6]).sort((a,b)=>a[2]-b[2]).map(q=>sp(q[0],q[1],q[2],q[3],(q[4]?'pop':'')+(bad.has(q[0])?' bad':''))).join('')};
- const tray=()=>{const t=$('#dmt'),n=left();if(!t)return;const K=Math.max(3,Math.floor(((t.clientWidth||320)-12+6)/62)),vis=n.slice(0,K);if(selId&&!vis.includes(selId))selId=null;t.innerHTML=vis.map(id=>`<button class="dmi${selId===id?' sel':''}" data-id="${id}" aria-label="${DIT[id][0]}"><span>${dSpr(id,32)}</span><small>${DIT[id][0]}</small></button>`).join('')||(bad.size?'<p class="note" style="margin:0;text-align:center">Touche un objet en surbrillance pour le reprendre et le ranger au bon endroit.</p>':'<p class="note" style="margin:0;text-align:center">La boîte est vide.</p>');const c=$('#dmn');if(c)c.textContent=n.length?n.length+' objet'+(n.length>1?'s':'')+' à ranger':bad.size?bad.size+' objet'+(bad.size>1?'s':'')+' à replacer':'Boîte vide ✓'};
- frame(`<div class="dm"><p class="lit">${X?'Fêtes · ':R.h+' · '}${R.n}</p><div class="dmw"><svg id="dmr" viewBox="0 0 ${sc.vw} ${sc.vh}" role="img" aria-label="${R.n}">${sc.s}<g id="dmst"></g><g id="dml"></g><g id="dmh"></g></svg></div><div class="dmb"><div class="dmc"><i>📦</i><b id="dmn"></b></div><div class="dmt" id="dmt"></div></div></div>`,1);
+ /* les objets attendent dans des boîtes posées au sol : on touche une boîte pour l’ouvrir, les objets y sont empilés */
+ const P=sc.P,rng=(q=>()=>{q=(q*1103515245+12345)&0x7fffffff;return q/0x7fffffff})(lv*7919+(X?77:13)),BW=1.05,BH=.8;
+ const bHull=(x,y)=>dHull([P(x,y),P(x+BW,y),P(x+BW,y+BW),P(x,y+BW),P(x,y,BH),P(x+BW,y,BH),P(x+BW,y+BW,BH),P(x,y+BW,BH)]);
+ const xH=(a,b)=>a.some(q=>dIn(q,b))||b.some(q=>dIn(q,a))||dIn(dCen(a),b);
+ const BX=(()=>{const nb=Math.max(1,Math.ceil(ids.length/4)),zh=sc.zs.filter(z=>z.k!=='floor'&&z.k!=='wall').map(z=>z.hull).concat(CP.map(c=>dHull([...c.g.front,...(c.g.panel||[]),...(c.g.floor||[])]))),cand=[];
+  for(let x=.25;x<=R.W-BW-.2;x+=.35)for(let y=.25;y<=R.D-BW-.2;y+=.35)cand.push([x,y,x+y+rng()*2.5]);cand.sort((a,b)=>b[2]-a[2]);
+  const ch=[];for(const pass of[0,1])for(const[x,y]of cand){if(ch.length>=nb)break;if(ch.some(([u,v])=>Math.abs(u-x)<1.45&&Math.abs(v-y)<1.45))continue;if(!pass&&zh.some(h=>xH(bHull(x,y),h)))continue;ch.push([x,y])}
+  return ch.sort((a,b)=>(a[0]+a[1])-(b[0]+b[1]))})();
+ let bx=(()=>{if(r&&r.b&&r.b.length===BX.length&&r.b.flat().slice().sort().join()===ids.slice().sort().join())return r.b.map(a=>a.slice());const o=BX.map(()=>[]),sh2=ids.slice();for(let i=sh2.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[sh2[i],sh2[j]]=[sh2[j],sh2[i]]}sh2.forEach((id,i)=>o[i%BX.length].push(id));return o})();
+ const bop=new Set(r&&r.bo?r.bo:[]);
+ const stk=i=>bx[i].filter(id=>!placed.some(q=>q[0]===id));
+ const boxes=()=>{const h=$('#dmbx');if(!h)return;let o='';const cb='#c8955a';
+  BX.forEach(([x,y],i)=>{const S=stk(i);if(!S.length)return;const T=[P(x,y,BH),P(x+BW,y,BH),P(x+BW,y+BW,BH),P(x,y+BW,BH)],Lf=[P(x,y+BW),P(x+BW,y+BW),P(x+BW,y+BW,BH),P(x,y+BW,BH)],Rf=[P(x+BW,y),P(x+BW,y+BW),P(x+BW,y+BW,BH),P(x+BW,y,BH)],pg=(a,f,st)=>`<polygon points="${f2(a)}" fill="${f}" stroke="${st||dSh(cb,.6)}" stroke-width=".8" stroke-linejoin="round"/>`;
+   o+=`<g class="dmbx${bop.has(i)?' op':''}" data-bx="${i}">`;
+   if(!bop.has(i)){o+=pg(Lf,cb)+pg(Rf,dSh(cb,.82))+pg(T,dSh(cb,1.12));const a=P(x+BW/2,y,BH),b=P(x+BW/2,y+BW,BH),c=P(x+BW/2,y+BW,BH-.3);o+=`<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" stroke="#e8d2a2" stroke-width="3"/><line x1="${b[0].toFixed(1)}" y1="${b[1].toFixed(1)}" x2="${c[0].toFixed(1)}" y2="${c[1].toFixed(1)}" stroke="#e8d2a2" stroke-width="3"/>`;}
+   else{const fb=(e1,e2,dx,dy)=>[e1,e2,[e2[0]+dx,e2[1]+dy],[e1[0]+dx,e1[1]+dy]];
+    o+=pg(fb(T[0],T[1],-7,-11),dSh(cb,1.05))+pg(fb(T[1],T[2],9,-9),dSh(cb,.95))+pg(Lf,cb)+pg(Rf,dSh(cb,.82))+pg(T,'#5a3d22');
+    const c0=P(x+BW/2,y+BW/2,BH);
+    const vis=S.slice(-4);vis.forEach((id,k)=>{const top=k===vis.length-1,z=top?30:22,cy=c0[1]+6-k*9;o+=`<g class="${top?'dmtop'+(selId===id?' sel':''):'dmsk'}" data-id="${id}">${sp(id,c0[0],cy,'b','',z).replace('class="dmp ','class="dmp dmq ')}</g>`});
+    o+=pg(fb(T[3],T[0],-9,-3),dSh(cb,1.1))+pg(fb(T[2],T[3],-2,10),dSh(cb,1.15))}
+   o+='</g>'});h.innerHTML=o};
+ const tray=()=>{const n=left(),tops=bx.map((_,i)=>{const S=stk(i);return bop.has(i)&&S.length?S[S.length-1]:null});if(selId&&!tops.includes(selId))selId=null;const c=$('#dmn');if(c)c.textContent=n.length?' · '+n.length+' objet'+(n.length>1?'s':''):'';boxes()};
+ frame(`<div class="dm"><p class="lit">${X?'Fêtes · ':R.h+' · '}${R.n}<b id="dmn"></b></p><div class="dmw"><svg id="dmr" viewBox="0 0 ${sc.vw} ${sc.vh}" role="img" aria-label="${R.n}">${sc.s}<g id="dmst"></g><g id="dmbx"></g><g id="dml"></g><g id="dmh"></g></svg></div></div>`,1);
  const svg=$('#dmr'),ptr=e=>{const m=svg.getScreenCTM();if(!m)return null;const p=new DOMPoint(e.clientX,e.clientY).matrixTransform(m.inverse());return[p.x,p.y]};
  const alive=()=>$('#dmr')===svg&&playing;
  const put=(id,pt)=>{
@@ -3169,20 +3203,23 @@ function pDemen(r){
  let dr=null;
  const ghost=(id,x,y)=>{let g=$('#dmg');if(!g){g=document.createElement('div');g.id='dmg';g.className='dmg';document.body.appendChild(g)}g.innerHTML=dSpr(id,40);g.style.left=x+'px';g.style.top=y+'px'};
  const noGhost=()=>{const g=$('#dmg');if(g)g.remove()};
- const tt=$('#dmt');
- const mvH=e=>{if(!dr)return;if(!dr.mv&&Math.hypot(e.clientX-dr.x,e.clientY-dr.y)>8){dr.mv=true;selId=dr.id;tt.querySelectorAll('.dmi').forEach(b=>b.classList.toggle('sel',b.dataset.id===selId))}if(dr.mv)ghost(dr.id,e.clientX,e.clientY)};
+ const tt=document.createElement('div');
+ const mvH=e=>{if(!dr)return;if(!dr.mv&&Math.hypot(e.clientX-dr.x,e.clientY-dr.y)>8){dr.mv=true;selId=dr.id;boxes()}if(dr.mv)ghost(dr.id,e.clientX,e.clientY)};
  const up=e=>{document.removeEventListener('pointermove',mvH);document.removeEventListener('pointerup',up);document.removeEventListener('pointercancel',cn);if(!dr)return;const d=dr;dr=null;noGhost();
   if(d.mv){const r0=svg.getBoundingClientRect();if(e.clientX>=r0.left&&e.clientX<=r0.right&&e.clientY>=r0.top&&e.clientY<=r0.bottom){const p=ptr(e);if(p&&!put(d.id,p)){selId=null;tray()}}else{selId=null;tray()}}
   else{selId=selId===d.id?null:d.id;tray();msg(selId?'Touche l’endroit où le ranger.':'')}};
+ const grab=(id,e)=>{dr={id,x:e.clientX,y:e.clientY,mv:false};document.addEventListener('pointermove',mvH);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',cn)};
  const cn=()=>{document.removeEventListener('pointermove',mvH);document.removeEventListener('pointerup',up);document.removeEventListener('pointercancel',cn);dr=null;noGhost()};
  tt.addEventListener('pointerdown',e=>{const b=e.target.closest('.dmi');if(!b)return;dr={id:b.dataset.id,x:e.clientX,y:e.clientY,mv:false};document.addEventListener('pointermove',mvH);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',cn)});
- svg.addEventListener('pointerdown',e=>{const s=e.target.closest&&e.target.closest('.dmp.bad');if(!s||dr)return;e.preventDefault();const id=s.dataset.id,k=placed.findIndex(q=>q[0]===id);if(k<0)return;placed.splice(k,1);bad.delete(id);selId=null;layer();tray();sv();dr={id,x:e.clientX,y:e.clientY,mv:false};document.addEventListener('pointermove',mvH);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',cn)});
- svg.addEventListener('pointerup',e=>{if(dr)return;const p=ptr(e);if(!p)return;const h=cAt(p);
+ svg.addEventListener('pointerdown',e=>{const s=e.target.closest&&e.target.closest('.dmp.bad');if(!s||dr)return;e.preventDefault();const id=s.dataset.id,k=placed.findIndex(q=>q[0]===id);if(k<0)return;placed.splice(k,1);bx.forEach((a,i)=>{const j=a.indexOf(id);if(j>=0){a.splice(j,1);a.push(id);bop.add(i)}});bad.delete(id);selId=null;layer();tray();sv();dr={id,x:e.clientX,y:e.clientY,mv:false};document.addEventListener('pointermove',mvH);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',cn)});
+ svg.addEventListener('pointerdown',e=>{const t=e.target.closest&&e.target.closest('.dmtop');if(!t||dr)return;e.preventDefault();grab(t.dataset.id,e)});
+ svg.addEventListener('pointerup',e=>{if(dr)return;const bxe=e.target.closest&&e.target.closest('.dmbx:not(.op)');if(bxe){bop.add(+bxe.dataset.bx);sfx(300,.2);setTimeout(()=>sfx(420,.18),90);vib(8);tray();sv();msg('Prends l’objet du dessus et range-le dans la pièce.');return}const p=ptr(e);if(!p)return;const h=cAt(p);
   if(h&&h.closed){toggle(h.c,true);msg(selId?'':(h.c.t==='door'?'La porte est ouverte.':'Le tiroir est ouvert.'));return}
   if(h&&h.panel&&!selId){toggle(h.c,false);msg('');return}
   if(selId)put(selId,p)});
  act.hint=()=>{const id=selId||left()[0]||[...bad][0];if(!id||!spend(1))return;const h=$('#dmh');if(!h)return;h.innerHTML=sc.zs.filter(z=>DIT[id][2].includes(z.k)&&z.k!=='wall'&&z.k!=='floor'||DIT[id][2].includes(z.k)&&(z.k==='wall'||z.k==='floor')).map(z=>`<polygon class="dmhz" points="${z.hull.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')}"/>`).join('')+CP.filter(c=>DIT[id][2].includes(c.k)).map(c=>`<polygon class="dmhz" points="${f2(op.has(c.id)?c.g.zone:c.g.front)}"/>`).join('');msg(`Indice : « ${DIT[id][0]} » se range sur la zone qui brille.`);clearTimeout(hintT);hintT=setTimeout(()=>{const g=$('#dmh');if(g)g.innerHTML=''},3200)};
  layer();tray();
+ if(!r)msg('Touche une boîte pour l’ouvrir.');
  if(!r&&!X&&dStory[lv]&&!st.get(ckey('demenage')+':'+lv,false))dmOv(`<small>${dStory[lv][0]}</small><p class="sfq">${dStory[lv][1]}</p>`,'Ouvrir les boîtes');
  else if(!r&&!left().length)setTimeout(()=>{if(alive())win()},300);
  if(r&&!left().length)setTimeout(()=>{if(alive())verify()},400);
