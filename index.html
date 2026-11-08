@@ -1387,8 +1387,8 @@ body .top.stk>.tl.tlk i{opacity:1;border-color:rgba(255,255,255,.7);color:#fff}
 .dmtop.lift,.dmit.lift{opacity:.0}
 .tile{position:relative}.tile .tdot{top:8px;right:8px;left:auto;width:12px;height:12px}
 
-.tank .fx.glow>*{filter:drop-shadow(0 0 4px #ffc2ec) drop-shadow(0 0 12px #c9a3ff) drop-shadow(0 0 22px rgba(255,154,213,.7)) brightness(1.3) saturate(1.2);animation:aqglw 2.4s ease-in-out infinite alternate}
-@keyframes aqglw{from{filter:drop-shadow(0 0 3px #ffc2ec) drop-shadow(0 0 9px #c9a3ff) brightness(1.15)}to{filter:drop-shadow(0 0 6px #ffd6f2) drop-shadow(0 0 18px #c9a3ff) drop-shadow(0 0 30px rgba(255,154,213,.8)) brightness(1.4)}}
+.tank .fx.glow svg{filter:brightness(1.04) saturate(1.05) drop-shadow(0 0 4px #ffc2ec) drop-shadow(0 0 12px #c9a3ff);animation:aqglw 2.4s ease-in-out infinite alternate}
+@keyframes aqglw{from{filter:brightness(1) saturate(1) drop-shadow(0 0 3px #ffc2ec) drop-shadow(0 0 9px #c9a3ff)}to{filter:brightness(1.08) saturate(1.1) drop-shadow(0 0 6px #ffd6f2) drop-shadow(0 0 18px #c9a3ff) drop-shadow(0 0 28px rgba(255,154,213,.7))}}
 /* parties multijoueurs en cours : lien à droite du titre */
 h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .mplk{display:inline-flex;align-items:center;gap:5px;border:0;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);color:#fff;font:600 12.5px system-ui;padding:6px 11px;border-radius:999px;cursor:pointer;white-space:nowrap;position:relative}
@@ -6248,7 +6248,7 @@ const FISH=[
 {id:'lune',n:'Poisson-lune doré',p:600,sh:'round',b:'#ffd34d',f:'#ffe9a3',sp:'#fff6d0',sz:1.25},
 {id:'tortue',n:'Tortue de mer',p:650,sh:'tortue',b:'#4fae6a',f:'#ecdca2',sc:'#8bcf86',sz:1.3},
 {id:'hockey',n:'Poisson hockeyeur',p:767,sh:'std',b:'#7ed3ff',f:'#e9f7ff',hk:1,sz:1.12},
-{id:'meduse',n:'Méduse lumineuse',p:850,sh:'meduse',b:'#c9a3ff',f:'#f2e3ff',sc:'#ff9ad5',sz:1.15},
+{id:'meduse',n:'Méduse',p:850,sh:'meduse',b:'#c9a3ff',f:'#f2e3ff',sc:'#ff9ad5',sz:1.15},
 {id:'royal',n:'Betta royal',p:1000,sh:'veil',b:'#2a47d6',f:'#e24bd0',f2:'#ffd2f4',sz:1.2}
 ];
 const GB=(()=>{let s='',k=0;const C=['#ff6b6b','#ffd66b','#6bd4ff','#8dff9c','#d08bff'];for(let i=0;i<4;i++)[.25,.5,.75].forEach(t=>{const x=i*25+2*(1-t)*t*12.5+t*t*25,y=(1-t)*(1-t)+2*(1-t)*t*15+t*t*2,c=C[k%5],dl=(-(k*.37)%2.4).toFixed(2);s+=`<circle class="twk" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${c}" opacity=".3" style="animation-delay:${dl}s"/><circle class="twk" cx="${x.toFixed(1)}" cy="${(y+.6).toFixed(1)}" r="1.4" fill="${c}" style="animation-delay:${dl}s"/>`;k++});return s})();
@@ -6828,7 +6828,7 @@ function aqAdopt(id,name){
  mt='m-aq';const f=FISH.find(x=>x.id===id),a=aqRead();
  if(!f||a.f[id]){aqNameClose();return}
  if(!spend(f.p)){aqNameClose();return}
- const on=aqOn(a).length<MAXF?1:0;a.f[id]={t:Date.now(),on,n:name};aqSave(a);aqNameClose();aquaRefresh();
+ const on=aqOn(a).length<MAXF?1:0;a.f[id]={t:Date.now()-HR,on,n:name};aqSave(a);aqNameClose();aquaRefresh();
  msg(on?'✦ '+name+' rejoint l’aquarium.':'Aquarium complet : '+name+' attend en réserve.');sfx(740,.3);
 }
 Object.assign(act,{
