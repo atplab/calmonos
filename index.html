@@ -1385,6 +1385,7 @@ body .top.stk>.tl.tlk i{opacity:1;border-color:rgba(255,255,255,.7);color:#fff}
 @keyframes dmmeh{from{filter:drop-shadow(0 0 2px #ffd25a)}to{filter:drop-shadow(0 0 3px #ffd25a) drop-shadow(0 0 7px #ffc23a)}}
 .dmdrag{pointer-events:none}.dmdrag svg{filter:drop-shadow(0 6px 5px rgba(30,20,10,.35));overflow:visible}
 .dmtop.lift,.dmit.lift{opacity:.0}
+.tile{position:relative}.tile .tdot{top:8px;right:8px;left:auto;width:12px;height:12px}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -7254,13 +7255,24 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches)snow();
 (()=>{
  const q=s=>document.querySelector(s),LOGK='nt:log',MAX=50;
  const log=()=>{const l=st.get(LOGK,[]);return Array.isArray(l)?l:[]};
+ /* plus d’avis « ton poisson a faim » : on retire aussi les anciens */
+ try{const l=log(),f=l.filter(x=>!String(x.id||'').startsWith('aqf'));if(f.length!==l.length)st.set(LOGK,f)}catch(e){}
+ /* jeux multijoueurs : une pastille quand c’est à toi de jouer (onglet Jeux + tuile du jeu) */
+ const turns=()=>{const T=new Set();
+  try{if(Object.values(SC.G||{}).some(S=>S&&!S.e&&S.t===S.p.indexOf(SO.uid)))T.add('scrabble')}catch(e){}
+  try{if(Object.keys(CH.G||{}).some(f=>CH.G[f]&&chStat(f).k==='me'))T.add('chess')}catch(e){}
+  try{if(unMine().some(([g,S])=>S.st==='play'&&S.S&&S.S[S.t]&&S.S[S.t].u===SO.uid))T.add('uno')}catch(e){}
+  return T};
+ const tdots=()=>{const T=turns(),tab=q('#nav [data-v=games]');
+  if(tab){let d=tab.querySelector('.tdot');if(!d){tab.insertAdjacentHTML('beforeend','<i class="ndot tdot" hidden></i>');d=tab.querySelector('.tdot')}d.hidden=!T.size}
+  ['scrabble','chess','uno'].forEach(id=>document.querySelectorAll('.tile.pt-'+id).forEach(t=>{let d=t.querySelector('.tdot');if(T.has(id)&&!d)t.insertAdjacentHTML('beforeend','<i class="ndot tdot" aria-label="À toi de jouer"></i>');else if(!T.has(id)&&d)d.remove()}))};
+ setInterval(tdots,1500);setTimeout(tdots,300);
  /* conditions « tout ou rien » (faim, entretien, histoire) : une nouvelle notification à chaque fois qu’elles redeviennent vraies */
  const edge=(k,on)=>{const E=st.get('nt:e',{});if(on){if(!E[k]){E[k]=k+':'+Date.now();st.set('nt:e',E)}return E[k]}if(E[k]){E[k]='';st.set('nt:e',E)}return''};
  function items(){
   const L=[],add=(id,ic,t,x,a,v)=>{if(id)L.push({id,ic,t,x,a,v:v||''})};
   try{const a=aqRead(),late=aqMt(a).late&&aqOn(a).length,n=aqHg(a).length;
-   add(edge('aqc',!!late),'🫧','Aquarium','Ton aquarium a besoin d’entretien','aqua');
-   add(edge('aqf',n>0),'🐟','Aquarium',n>1?'Tes poissons ont faim':'Ton poisson a faim','aqua')}catch(e){}
+   add(edge('aqc',!!late),'🫧','Aquarium','Ton aquarium a besoin d’entretien','aqua');}catch(e){}
   try{const Y=styRead();
    [[10,'Les décorations de Noël sont débloquées dans l’aquarium'],[20,'Le Poisson Père Noël est débloqué dans l’aquarium'],[30,'Le fond « Nuit de Noël » est débloqué dans l’aquarium']].forEach(([n,t])=>add(edge('xu'+n,(Y.xp|0)>=n),'🎄','Aquarium de Noël',t,'aqua'));
    if(sxOk(Y))add(edge('stx',(Y.xp||0)<XMX&&xDust(Y)>=XDU&&!UNL()),'🎄','Un noël pour Zeni','Un sapin est prêt : Zeni peut avancer','day')}catch(e){}
