@@ -1387,6 +1387,16 @@ body .top.stk>.tl.tlk i{opacity:1;border-color:rgba(255,255,255,.7);color:#fff}
 .dmtop.lift,.dmit.lift{opacity:.0}
 .tile{position:relative}.tile .tdot{top:8px;right:8px;left:auto;width:12px;height:12px}
 
+.tank .fx.glow>*{filter:drop-shadow(0 0 4px #ffc2ec) drop-shadow(0 0 12px #c9a3ff) drop-shadow(0 0 22px rgba(255,154,213,.7)) brightness(1.3) saturate(1.2);animation:aqglw 2.4s ease-in-out infinite alternate}
+@keyframes aqglw{from{filter:drop-shadow(0 0 3px #ffc2ec) drop-shadow(0 0 9px #c9a3ff) brightness(1.15)}to{filter:drop-shadow(0 0 6px #ffd6f2) drop-shadow(0 0 18px #c9a3ff) drop-shadow(0 0 30px rgba(255,154,213,.8)) brightness(1.4)}}
+/* parties multijoueurs en cours : lien à droite du titre */
+h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.mplk{display:inline-flex;align-items:center;gap:5px;border:0;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);color:#fff;font:600 12.5px system-ui;padding:6px 11px;border-radius:999px;cursor:pointer;white-space:nowrap;position:relative}
+.mplk svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.mplk b{background:#ffb86b;color:#3a2410;border-radius:99px;padding:0 6px;font-size:11px}
+.mpl{display:flex;flex-direction:column;gap:8px;margin:10px 0}.mpl button{display:flex;align-items:center;gap:10px;text-align:left;padding:10px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font:inherit;cursor:pointer}
+.mpl i{font-style:normal;font-size:20px}.mpl span{flex:1;display:flex;flex-direction:column}.mpl small{opacity:.8;font-size:12px}.mpl em{font-style:normal;font-size:11.5px;font-weight:700;color:#3a2410;background:#ffb86b;padding:3px 8px;border-radius:99px}.mpl em.w{background:rgba(255,255,255,.18);color:#fff}
+
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
 .sb.cf{background:linear-gradient(180deg,#ffd18a,#e8944a);color:#3a2310;border:0}
@@ -2446,7 +2456,7 @@ function home(){nv('games');
  cur=null;origin='home';wdBuf='';wdPop=-1;wdLock=false;wdM='';
  const fv=favs(),tile=g=>{const on=fv.includes(g.id);return`<div class="tw"><button class="glass tile pt-${g.id}" style="--a:${g.a};--b:${g.b}" data-a="open" data-v="${g.id}"><i>${g.ic}</i><b>${g.id==='scrabble'||g.id==='chess'||g.id==='uno'?'<svg class="mp" viewBox="0 0 24 24" role="img" aria-label="Multijoueur"><circle cx="12" cy="8" r="3.2"/><circle cx="5" cy="9.6" r="2.3"/><circle cx="19" cy="9.6" r="2.3"/><path d="M6.2 19.5c0-3.3 2.6-5.4 5.8-5.4s5.8 2.1 5.8 5.4z"/><path d="M1.3 18.6c0-2.5 1.7-4.2 4.1-4.2.7 0 1.3.1 1.9.4-1 .9-1.7 2.2-1.9 3.8z"/><path d="M22.7 18.6c0-2.5-1.7-4.2-4.1-4.2-.7 0-1.3.1-1.9.4 1 .9 1.7 2.2 1.9 3.8z"/></svg>':''}${g.n}</b><small>${g.soon?'Bientôt':g.sp?(g.id==='scrabble'?scrTile():g.id==='chess'?'':g.id==='uno'?unTile():g.sp):''}</small></button>${g.soon?'':`<button class="fv ${on?'on':''}" data-a="fav" data-v="${g.id}" aria-pressed="${on}" aria-label="${on?'Retirer '+g.n+' des favoris':'Ajouter '+g.n+' aux favoris'}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/></svg></button>`}</div>`};
  const F=GD.filter(g=>!g.soon&&fv.includes(g.id)),R=GD.filter(g=>!F.includes(g));
- app.innerHTML=`<header class="top"><h1>Nuit de neige</h1><div class="chip" title="Flocons">❄ ${FLX()}</div></header>${wdBlock()}${lastCard()}${F.length?`<h2 class="s">Favoris</h2><div class="grid fgrid">${F.map(tile).join('')}</div>${R.length?'<h2 class="s">Autres jeux</h2>':''}`:`<h2 class="s">Choisis ta veillée</h2>`}${R.length?`<div class="grid">${R.map(tile).join('')}</div>`:''}`;
+ app.innerHTML=`<header class="top"><h1>Nuit de neige</h1><div class="chip" title="Flocons">❄ ${FLX()}</div></header>${wdBlock()}${lastCard()}${F.length?`<h2 class="s shr"><span>Favoris</span>${window.mpLink?mpLink():''}</h2><div class="grid fgrid">${F.map(tile).join('')}</div>${R.length?'<h2 class="s">Autres jeux</h2>':''}`:`<h2 class="s shr"><span>Choisis ta veillée</span>${window.mpLink?mpLink():''}</h2>`}${R.length?`<div class="grid">${R.map(tile).join('')}</div>`:''}`;
 }
 function hub(id){if(id==='quiz')return home();
  cur=id;nv('games');theme(id);const g=G.find(x=>x.id===id),N=nl(id),dd=st.get(dkey(id),false),ok=i=>st.get(ckey(id)+':'+i,false),sk=i=>!ok(i)&&st.get('k:'+id+':'+i,false),nx=[...Array(N).keys()].findIndex(i=>!ok(i)&&!sk(i)),ns=[...Array(N).keys()].findIndex(sk),nsk=[...Array(N).keys()].filter(sk).length,tg=nx>=0?nx:ns>=0?ns:N-1,dn=[...Array(N).keys()].filter(i=>st.get(ckey(id)+':'+i,false)).length;
@@ -4971,6 +4981,27 @@ const dSwing=(o,x,y,len)=>{const H=2.6,c='#e86a6a';o.ch.push({at:o.s.length,x,y,
  [y+len*.3,y+len*.7].forEach(yy=>{o.ln(o.P(x+.5,yy-.2,H-.05),o.P(x+.5,yy-.2,.75),'#8a8f9a',1.2);o.ln(o.P(x+.5,yy+.2,H-.05),o.P(x+.5,yy+.2,.75),'#8a8f9a',1.2);o.box(x+.3,yy-.28,.62,.4,.56,.1,'#ffd36b')});
  o.ln(o.P(x,y,0),o.P(x,y,0),c,1)};
 
+/* la petite cour : clôture, potager surélevé, cabanon qui s’ouvre, table de pique-nique, carré de sable */
+const dYard2=o=>{
+ for(let k=.35;k<7;k+=.5){o.ln(o.P(0,k,.05),o.P(0,k,2.0),'#b9a782',1.2);o.ln(o.P(k,0,.05),o.P(k,0,2.0),'#b9a782',1.2)}
+ o.ln(o.P(0,0,1.75),o.P(0,7,1.75),'#a8966f',2);o.ln(o.P(0,0,1.75),o.P(7,0,1.75),'#a8966f',2);
+ [[2.6,1.8],[3.3,2.5],[3.9,3.3],[4.3,4.2],[4.5,5.2],[4.6,6.2]].forEach(([x,y])=>{o.pg([o.P(x,y),o.P(x+.5,y),o.P(x+.5,y+.42),o.P(x,y+.42)],'#d9d2c2','#bdb4a0',.8)});
+ const R=()=>Math.random();for(let i=0;i<26;i++){const x=.3+((i*37)%63)/10,y=.3+((i*53)%65)/10,q=o.P(x,y);o.s+=`<path d="M${q[0].toFixed(1)} ${q[1].toFixed(1)}l-2-5M${q[0].toFixed(1)} ${q[1].toFixed(1)}l0-6M${q[0].toFixed(1)} ${q[1].toFixed(1)}l2-5" stroke="#6fb46a" stroke-width="1.2" stroke-linecap="round"/>`}
+ /* potager surélevé le long de la clôture du fond */
+ const fb=o.box(.4,.15,0,3.2,1.1,.6,'#8a5a3a',{t:'#7a4e32'});const fl=[o.P(.5,.25,.6),o.P(3.5,.25,.6),o.P(3.5,1.15,.6),o.P(.5,1.15,.6)];o.pg(fl,'#5a3d2a');
+ [[.9,.5],[1.4,.9],[1.9,.5],[2.4,.9],[2.9,.55],[3.2,.9]].forEach(([a,b],k)=>{const q=o.P(a,b,.6);o.s+=`<path d="M${q[0].toFixed(1)} ${q[1].toFixed(1)}v-7" stroke="#4f9a5a" stroke-width="1.4"/><circle cx="${q[0].toFixed(1)}" cy="${(q[1]-8).toFixed(1)}" r="3.2" fill="${['#f08aa8','#f4c24a','#fff','#a98fe0','#ff9a5a','#f08aa8'][k]}"/>`});
+ o.zone('flowerbed',fl,fb.hull);
+ /* cabanon de jardin (deux portes qui s’ouvrent) */
+ const sx=4.3,sw=2.5,sd=1.7,sh=2.5,sb=o.box(sx,0,0,sw,sd,sh,'#c9a06a');for(let k=1;k<9;k++){const u=sx+k*sw/9;o.ln(o.P(u,sd,.05),o.P(u,sd,sh),'#b08a58',1)}
+ o.pg([o.P(sx-.15,-.1,sh),o.P(sx+sw+.15,-.1,sh),o.P(sx+sw+.15,sd*.5,sh+.9),o.P(sx-.15,sd*.5,sh+.9)],'#8a4a3a','#6a3a2a');o.pg([o.P(sx-.15,sd*.5,sh+.9),o.P(sx+sw+.15,sd*.5,sh+.9),o.P(sx+sw+.15,sd+.15,sh),o.P(sx-.15,sd+.15,sh)],'#a85a46','#6a3a2a');
+ o.pg([o.P(sx+sw,-.1,sh),o.P(sx+sw,sd+.15,sh),o.P(sx+sw+.15,sd+.15,sh),o.P(sx+sw+.15,sd*.5,sh+.9),o.P(sx+sw+.15,-.1,sh)],'#7a3e30');
+ const wq=o.P(sx+sw,sd*.5,1.7);o.s+=`<rect x="${(wq[0]-4).toFixed(1)}" y="${(wq[1]-9).toFixed(1)}" width="8" height="8" fill="#bfe3ff" stroke="#8a6a4a" transform="skewY(-26.6)" transform-origin="${wq[0].toFixed(1)} ${wq[1].toFixed(1)}"/>`;
+ dStore(o,sx,0,sw,sd,'L','#c9a06a',[{t:'door',k:'shed',a:.1,b:.5,z0:.05,z1:2.1,hg:'l',cap:2},{t:'door',k:'shed',a:.5,b:.9,z0:.05,z1:2.1,hg:'r',cap:2}]);
+ /* table de pique-nique avec ses bancs */
+ o.box(.7,3.0,0,1.8,.35,.8,'#a8784a');dTable(o,.7,3.5,1.8,1.3,1.5,'#b98a5a','ptable');o.box(.7,5.0,0,1.8,.35,.8,'#a8784a');
+ /* carré de sable */
+ const sbx=o.box(4.9,4.5,0,1.9,1.9,.5,'#c9a36a');const sd2=[o.P(5.05,4.65,.5),o.P(6.65,4.65,.5),o.P(6.65,6.25,.5),o.P(5.05,6.25,.5)];o.pg(sd2,'#f0d9a0');o.zone('sandbox',sd2,sbx.hull)};
+
 /* ---- les onze pièces (une pièce = un niveau) : pour en ajouter une, pousser un objet de plus dans DRM ---- */
 const dYardOld=DRM[DRM.length-1].b;
 DRM.length=0;DRM.push(
@@ -4992,7 +5023,7 @@ DRM.length=0;DRM.push(
   items:['pillow','quilt','lamp','clock','perfume','jewel','shirt','cshirt','dress','sweater','socks','frame','book']},
  {h:'Maison',n:'Le bureau',W:7,D:7,Hh:5.2,c:['#dfe6ee','#cfd9e4','#b9956c','#b08c64'],b:o=>{dBase(o,'#cfd9e4');dWinL(o,2.2,4.4,2.2,4.4);dCurtL(o,2.2,4.4,2.2,4.4,'#9fb7d9');dWallShelf(o,'R',1.5,4.2,3.7);dClockW(o,'R',.8,4.2);dRug(o,1.8,2.4,3.2,2.8,'#c9a6a0');dPotPlant(o,.5,.6,1.0);dDeskO(o,1.3,0,3.1,1.3);dShelf(o,5.0,0,1.9,1.1,4.4,dWood,'L');dChairOf(o,2.3,1.6,'#5f6f8a');dFiling(o,0,5.4,1.1,1.2)},
   items:['computer','lamp','books','book','pens','folder','notebook','earth','clock','plant','mug','frame']},
- {h:'Maison',n:'La petite cour',W:7,D:7,Hh:2.2,yard:1,c:['#d9c8a6','#cdbb98','#8fcf8a'],b:o=>{dYardOld(o);dSwing(o,.15,4.15,2.55)},
+ {h:'Maison',n:'La petite cour',W:7,D:7,Hh:2.2,yard:1,c:['#d9c8a6','#cdbb98','#8fcf8a'],b:o=>dYard2(o),
   items:['ball','bucket','shovel','truck','can','flowerpot','bike','scooter','kite','chair','train']},
  {h:'Maison',n:'La nouvelle cuisine',W:7,D:7,Hh:5.2,c:['#f3e4c6','#e8d6b0','#c59a68','#bd9262'],b:o=>{dBase(o,'#e8d6b0');dWinL(o,2.6,4.6,2.0,4.3);dCurtL(o,2.6,4.6,2.0,4.3,'#e8946c');dWallShelf(o,'L',.9,2.1,3.4,'#8a6a4a');dUpperC(o,.3,2.2,'#8a6a4a');dUpperC(o,3.6,5.5,'#8a6a4a');dRug(o,2.0,3.0,3.8,3.0,'#d98c63');dCounterF(o,.3,0,1.9,1.3,'L','#d9cdb6','#8a6a4a');dStove(o,2.2,0,1.4,1.3);dCounterF(o,3.6,0,1.9,1.3,'L','#d9cdb6','#8a6a4a');dFridge(o,5.6,0,1.3,1.3);dChairOf(o,1.6,3.6,'#5fa9a0');dTable(o,2.8,3.3,2.0,1.8,1.7);dChairOf(o,5.2,3.6,'#5fa9a0');dPotPlant(o,6.3,6.2,1)},
   items:['pot','pan','plate','bowl','mug','cutlery','spatula','kettle','toaster','fruit','magnet','spices','board']}
@@ -5064,7 +5095,7 @@ function pDemen2(r){
    if(!O){o+=`<polygon class="dmd" data-c="${c.id}" points="${f2(g.front)}" fill="${dSh(col,c.t==='door'?.96:.92)}" stroke="${dSh(col,.55)}" stroke-width=".9" stroke-linejoin="round"/>`;
     if(c.t==='door'){const e=c.hg==='l'?mid(g.front[1],g.front[2],.5):mid(g.front[0],g.front[3],.5);o+=knob(mid(e,c.hg==='l'?mid(g.front[0],g.front[3],.5):mid(g.front[1],g.front[2],.5),.14),col)}
     else o+=ln(mid(mid(g.front[0],g.front[3],.5),mid(g.front[1],g.front[2],.5),.4),mid(mid(g.front[0],g.front[3],.5),mid(g.front[1],g.front[2],.5),.6),'#e8d9a8',1.8);return}
-   const its=placed.filter(q=>q.c===c.id).map(q=>it(q.id,q.x,q.y,q.a,c.t==='door'?(c.k==='wardrobe'?20:16):15,cls(q))).join('');
+   const its=placed.filter(q=>q.c===c.id).map(q=>it(q.id,q.x,q.y,q.a,c.t==='door'?(c.k==='wardrobe'?20:c.k==='shed'?24:16):15,cls(q))).join('');
    if(c.t==='door'){o+=`<polygon points="${f2(g.front)}" fill="#3b2a20" stroke="${dSh(col,.5)}" stroke-width=".9"/>`;
     o+=c.k==='wardrobe'?ln(mid(g.front[0],g.front[3],.88),mid(g.front[1],g.front[2],.88),'#b9c3d2',1.6):`<polygon points="${f2([mid(g.front[0],g.front[3],.5),mid(g.front[1],g.front[2],.5),mid(g.front[1],g.front[2],.54),mid(g.front[0],g.front[3],.54)])}" fill="#6b4c38"/>`;
     o+=its+`<polygon class="dmd o" data-c="${c.id}" points="${f2(g.panel)}" fill="${dSh(col,1.05)}" stroke="${dSh(col,.55)}" stroke-width=".9" stroke-linejoin="round"/>`}
@@ -6684,7 +6715,10 @@ function aqLvHTML(a){const t=aqTier(a),s=aqSpent(a),mx=t>AQT.length,lim=AQT[Math
  const bar=(ic,v,b)=>{const L=lo[b],H=lim[b],p=mx?1:Math.max(0,Math.min(1,(v-L)/(H-L)));return`<div class="aqlb"><i>${ic}</i><div class="aqlt"><span style="width:${(p*100).toFixed(1)}%"></span><em style="left:33.3%" class="${p>=1/3?'ok':''}"></em><em style="left:66.6%" class="${p>=2/3?'ok':''}"></em></div><small>${mx?'max':v+' ❄'}</small></div>`};
  return`<b class="aqln">Aquarium ${Math.min(t,3)}${mx?' · niveau max':''}</b>${bar('🐟',s.f,0)}${bar('🪸',s.d,1)}`}
 const aqStatus0=aqStatus;
-aqStatus=function(){aqStatus0();const a=aqRead();aqRewards(a);const st0=$('.aqst');if(!st0)return;let l=st0.querySelector('.aqlv');if(!l){l=document.createElement('div');l.className='aqlv';st0.appendChild(l)}const h=aqLvHTML(a);if(l.dataset.h!==h){l.innerHTML=h;l.dataset.h=h}};
+aqStatus=function(){aqStatus0();const a=aqRead();aqRewards(a);
+ /* la méduse nourrie s’illumine quelques minutes */
+ try{const m=a.f.meduse,on=!!(m&&m.on&&Date.now()-m.t<3*6e4&&Date.now()-m.t>=0);document.querySelectorAll('.tank .fx[data-id=meduse]').forEach(e=>e.classList.toggle('glow',on))}catch(e){}
+const st0=$('.aqst');if(!st0)return;let l=st0.querySelector('.aqlv');if(!l){l=document.createElement('div');l.className='aqlv';st0.appendChild(l)}const h=aqLvHTML(a);if(l.dataset.h!==h){l.innerHTML=h;l.dataset.h=h}};
 const aqBuy0=aqBuy;
 aqBuy=function(v){const[k,id]=v.split(':'),a=aqRead(),L=(k==='f'?FISH:k==='d'?DECO:WATER).find(x=>x.id===id);mt='m-aq';
  if(L&&aqHid(L,k,a))return;const n=L&&aqTL(L,k,a);if(n)return msg('Se débloque avec l’aquarium '+n+'.');aqBuy0(v)};
@@ -7287,6 +7321,15 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches)snow();
   if(tab){let d=tab.querySelector('.tdot');if(!d){tab.insertAdjacentHTML('beforeend','<i class="ndot tdot" hidden></i>');d=tab.querySelector('.tdot')}d.hidden=!T.size}
   ['scrabble','chess','uno'].forEach(id=>document.querySelectorAll('.tile.pt-'+id).forEach(t=>{let d=t.querySelector('.tdot');if(T.has(id)&&!d)t.insertAdjacentHTML('beforeend','<i class="ndot tdot" aria-label="À toi de jouer"></i>');else if(!T.has(id)&&d)d.remove()}))};
  setInterval(tdots,1500);setTimeout(tdots,300);
+ const games=()=>{const L=[];
+  try{Object.entries(SC.G||{}).forEach(([f,S])=>{if(S&&!S.e)L.push({g:'scrabble',ic:'Ⓢ',n:'Scrabble',w:'contre '+scrNm(f),me:S.t===S.p.indexOf(SO.uid)})})}catch(e){}
+  try{Object.keys(CH.G||{}).forEach(f=>{const S=CH.G[f],k=S&&chStat(f).k;if(S&&(k==='me'||k==='them'))L.push({g:'chess',ic:'♞',n:'Échecs',w:'contre '+chNm(f),me:k==='me'})})}catch(e){}
+  try{unMine().forEach(([g,S])=>{if(S.st==='play'||S.st==='lobby')L.push({g:'uno',ic:'🃏',n:'Uno',w:S.st==='lobby'?'salon en attente':(S.S||[]).length+' joueurs',me:S.st==='play'&&S.S&&S.S[S.t]&&S.S[S.t].u===SO.uid})})}catch(e){}
+  return L};
+ window.mpLink=()=>{const L=games(),m=L.filter(x=>x.me).length;return`<button class="mplk" data-a="mpOpen">Parties en cours${m?` <b>${m}</b>`:''}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>`};
+ Object.assign(act,{mpOpen:()=>{const L=games(),e=q('#mpo');if(e)e.remove();const d=document.createElement('div');d.className='sfr';d.id='mpo';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');
+   d.innerHTML=`<div class="glass sfc"><h2 style="margin:0">Parties en cours</h2>${L.length?`<div class="mpl">${L.map(x=>`<button data-a="mpGo" data-v="${x.g}"><i>${x.ic}</i><span><b>${esc(x.n)}</b><small>${esc(x.w)}</small></span><em class="${x.me?'':'w'}">${x.me?'À toi':'En attente'}</em></button>`).join('')}</div>`:'<p class="note" style="margin:14px 0">Aucune partie multijoueur en cours. Lance une partie de Scrabble, d’Échecs ou de Uno avec tes amis.</p>'}<button class="btn alt" data-a="mpx">Fermer</button></div>`;document.body.appendChild(d)},
+  mpx:()=>{const e=q('#mpo');if(e)e.remove()},mpGo:v=>{const e=q('#mpo');if(e)e.remove();act.open(v)}});
  /* conditions « tout ou rien » (faim, entretien, histoire) : une nouvelle notification à chaque fois qu’elles redeviennent vraies */
  const edge=(k,on)=>{const E=st.get('nt:e',{});if(on){if(!E[k]){E[k]=k+':'+Date.now();st.set('nt:e',E)}return E[k]}if(E[k]){E[k]='';st.set('nt:e',E)}return''};
  function items(){
