@@ -3089,7 +3089,7 @@ const dWard=(o,x,y,w,d,h,c,face='R')=>{
  const b=o.box(x,y,0,w,d,h,c),F=face==='R'?b.R:b.L;
  const a=F[0],bb=F[1],cc=F[2],dd=F[3],mx=(p,q,t)=>[p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t];
  o.ln(mx(a,bb,.5),mx(dd,cc,.5),dSh(c,.55),1.2);const k=mx(mx(a,bb,.44),mx(dd,cc,.44),.5),k2=mx(mx(a,bb,.56),mx(dd,cc,.56),.5);o.s+=`<circle cx="${k[0].toFixed(1)}" cy="${k[1].toFixed(1)}" r="1.3" fill="#e8d9a8"/><circle cx="${k2[0].toFixed(1)}" cy="${k2[1].toFixed(1)}" r="1.3" fill="#e8d9a8"/>`;
- dStore(o,x,y,w,d,face,c,w>=1.4?[{t:'door',k:'wardrobe',a:.03,b:.5,z0:.15,z1:h-.2,hg:'l',cap:3},{t:'door',k:'wardrobe',a:.5,b:.97,z0:.15,z1:h-.2,hg:'r',cap:3}]:[{t:'door',k:'wardrobe',a:.04,b:.96,z0:.15,z1:h-.2,hg:'l',cap:3}]);
+ dStore(o,x,y,w,d,face,c,(face==='R'?d:w)>=1.4?[{t:'door',k:'wardrobe',a:.03,b:.5,z0:.15,z1:h-.2,hg:'l',cap:3},{t:'door',k:'wardrobe',a:.5,b:.97,z0:.15,z1:h-.2,hg:'r',cap:3}]:[{t:'door',k:'wardrobe',a:.04,b:.96,z0:.15,z1:h-.2,hg:'l',cap:3}]);
 };
 const dShelf=(o,x,y,w,d,h,c=dWood,face='R')=>{
  const b=o.box(x,y,0,w,d,h,c,{t:dSh(c,1.12)}),F=face==='R'?b.R:b.L,mx=(p,q,t)=>[p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t];
@@ -3102,7 +3102,7 @@ const dDresser=(o,x,y,w,d,h=1.7,c=dWood,face='L')=>{const b=o.box(x,y,0,w,d,h,c)
  dStore(o,x,y,w,d,face,c,[0,1,2].map(k=>({t:'drawer',k:'drawer',a:.04,b:.96,z0:k*h/3+.06,z1:(k+1)*h/3-.06,cap:2})))};
 const dTable=(o,x,y,w,d,h,c=dWood,k='table')=>{[[0,0],[w-.22,0],[0,d-.22],[w-.22,d-.22]].forEach(([a,b])=>o.box(x+a,y+b,0,.22,.22,h,dSh(c,.8)));const t=o.box(x,y,h,w,d,.22,c);o.zone(k,t.top,t.hull)};
 const dSofa=(o,x,y,w,d,c,faceR=true)=>{
- o.box(x,y,0,.5,d,1.7,c);const s=o.box(x+.5,y,0,w-.5,d,.9,dSh(c,1.05));o.box(x+.5,y,0,w-.5,.4,1.4,dSh(c,.95),{noL:1});o.box(x+.5,y+d-.4,0,w-.5,.4,1.3,dSh(c,.9));
+ o.box(x,y,0,.5,d,1.7,c);o.box(x+.5,y,0,w-.5,.4,1.3,dSh(c,.95));const s=o.box(x+.5,y+.4,0,w-.5,d-.8,.9,dSh(c,1.05));o.box(x+.5,y+d-.4,0,w-.5,.4,1.3,dSh(c,.9));
  const st=[o.P(x+.5,y+.4,.9),o.P(x+w,y+.4,.9),o.P(x+w,y+d-.4,.9),o.P(x+.5,y+d-.4,.9)];o.zone('sofa',st,dHull([...s.hull,o.P(x,y+d,1.7),o.P(x,y,1.7)]));
 };
 const dTV=(o,x,y,w,d,h=1.1,c='#5b4636')=>{const b=o.box(x,y,0,w,d,h,c);o.zone('tv',b.top,b.hull)};
@@ -4951,6 +4951,26 @@ const dLampF=(o,x,y)=>{o.box(x+.15,y+.15,0,.3,.3,.08,'#7a6a5a');o.box(x+.27,y+.2
 const dClockW=(o,wall,u,z)=>{const q=wall==='R'?o.P(u,0,z):o.P(0,u,z);o.s+=`<circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="7" fill="#f4efe6" stroke="#8a6a4a" stroke-width="1.6"/><path d="M${q[0].toFixed(1)} ${(q[1]-4.5).toFixed(1)}V${q[1].toFixed(1)}h3.4" stroke="#5a4a3a" stroke-width="1.2" fill="none" stroke-linecap="round"/>`};
 const dSlide=(o,x,y)=>{o.box(x,y,0,.15,.15,2.6,'#e86a6a');o.box(x+.85,y,0,.15,.15,2.6,'#e86a6a');o.box(x,y,2.4,1,.9,.15,'#ffd36b');o.pg([o.P(x,y+.9,2.45),o.P(x+1,y+.9,2.45),o.P(x+1,y+3,0),o.P(x,y+3,0)],'#7fc0ee','#5fa2d4')};
 
+/* douche vitrée dans un coin (contre les deux murs) : bac = zone « tub » */
+const dShower=(o,x,y,w,d)=>{const b=o.box(x,y,0,w,d,.22,'#f4f6fa');const T=[o.P(x+.12,y+.12,.22),o.P(x+w-.12,y+.12,.22),o.P(x+w-.12,y+d-.12,.22),o.P(x+.12,y+d-.12,.22)];o.pg(T,'#dfe9f2','#b8c6d4');
+ for(let i=1;i<6;i++){o.ln(o.P(x+.12+i*(w-.24)/6,y+.12,.23),o.P(x+.12+i*(w-.24)/6,y+d-.12,.23),'#c9d6e2',.8)}
+ const hd=o.P(x+.15,y+d*.5,3.9);o.ln(o.P(.04,y+d*.5,3.1),o.P(.04,y+d*.5,3.95),'#aab4c4',2);o.s+=`<ellipse cx="${(hd[0]+5).toFixed(1)}" cy="${(hd[1]+1).toFixed(1)}" rx="5" ry="2.4" fill="#aab4c4"/>`;
+ o.zone('tub',T,dHull([...b.hull,o.P(x,y+d,2.2),o.P(x+w,y,2.2),o.P(x+w,y+d,2.2)]));
+ const gl=(a)=>{o.pg(a,'rgba(190,225,245,.32)','#9fb3c4',1.2)};
+ gl([o.P(x,y+d,.22),o.P(x+w,y+d,.22),o.P(x+w,y+d,3.9),o.P(x,y+d,3.9)]);gl([o.P(x+w,y,.22),o.P(x+w,y+d,.22),o.P(x+w,y+d,3.9),o.P(x+w,y,3.9)]);
+ o.ln(o.P(x+w,y+d,.22),o.P(x+w,y+d,3.9),'#9fb3c4',2.2);o.ln(o.P(x,y+d,3.9),o.P(x+w,y+d,3.9),'#9fb3c4',1.6);o.ln(o.P(x+w,y,3.9),o.P(x+w,y+d,3.9),'#9fb3c4',1.6);
+ o.ln(o.P(x+w*.55,y+d,1.6),o.P(x+w*.55,y+d,2.4),'#e8eef4',2.4);o.ch.push({at:o.s.length,x,y,z:0,w,d,h:3.9})};
+/* meuble-lavabo double contre le mur de droite (façade L) */
+const dVanityL=(o,x,y,w,d,c,top='#f4f4f6')=>{const b=o.box(x,y,0,w,d,1.9,c,{t:top});[.28,.72].forEach(t=>{const q=o.P(x+w*t,y+d*.5,1.9);o.s+=`<ellipse cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" rx="9" ry="4.4" fill="#dfe7ee" stroke="#b8c6d4"/>`;const f=o.P(x+w*t,y+.12,1.9);o.s+=`<rect x="${(f[0]-1.5).toFixed(1)}" y="${(f[1]-8).toFixed(1)}" width="3" height="8" rx="1.2" fill="#aab4c4"/>`});
+ o.zone('sink',[o.P(x,y,1.9),o.P(x+w,y,1.9),o.P(x+w,y+d,1.9),o.P(x,y+d,1.9)],b.hull);
+ dStore(o,x,y,w,d,'L',c,[{t:'door',k:'bcab',a:.03,b:.26,z0:.12,z1:1.7,hg:'l',cap:1},{t:'door',k:'bcab',a:.26,b:.5,z0:.12,z1:1.7,hg:'r',cap:1},{t:'door',k:'bcab',a:.5,b:.74,z0:.12,z1:1.7,hg:'l',cap:1},{t:'door',k:'bcab',a:.74,b:.97,z0:.12,z1:1.7,hg:'r',cap:1}])};
+/* balançoire contre la clôture de gauche */
+const dSwing=(o,x,y,len)=>{const H=2.6,c='#e86a6a';o.ch.push({at:o.s.length,x,y,z:0,w:1,d:len,h:H});
+ [[y],[y+len]].forEach(([yy])=>{o.ln(o.P(x,yy,0),o.P(x+.5,yy,H),dSh(c,.8),4);o.ln(o.P(x+1,yy,0),o.P(x+.5,yy,H),c,4)});
+ o.box(x+.44,y-.05,H-.08,.12,len+.1,.14,'#c9523f');
+ [y+len*.3,y+len*.7].forEach(yy=>{o.ln(o.P(x+.5,yy-.2,H-.05),o.P(x+.5,yy-.2,.75),'#8a8f9a',1.2);o.ln(o.P(x+.5,yy+.2,H-.05),o.P(x+.5,yy+.2,.75),'#8a8f9a',1.2);o.box(x+.3,yy-.28,.62,.4,.56,.1,'#ffd36b')});
+ o.ln(o.P(x,y,0),o.P(x,y,0),c,1)};
+
 /* ---- les onze pièces (une pièce = un niveau) : pour en ajouter une, pousser un objet de plus dans DRM ---- */
 const dYardOld=DRM[DRM.length-1].b;
 DRM.length=0;DRM.push(
@@ -4964,15 +4984,15 @@ DRM.length=0;DRM.push(
   items:['tv','gamepad','remote','books','book','cushion','blanket','vase','frame','lamp','plant']},
  {h:'Condo',n:'La chambre de bébé',W:7,D:7,Hh:5.2,c:['#f8ead0','#f0dfbe','#e6cfa8','#dfc69c'],b:o=>{dBase(o,'#f0dfbe');dWinR(o,3.0,4.6,2.4,4.3);dCurtR(o,3.0,4.6,2.4,4.3,'#bfe6da');dArtL(o,1.4,2.8,3.2,4.3,['#fff6e0','#ffc9d6','#ffd36b']);dWallShelf(o,'L',4.4,6.2,3.1,'#f4efe6');dRug(o,2.4,2.6,3.2,3.2,'#cfe8f6');dChanging(o,2.9,0,2.0,1.2);dShelf(o,5.3,0,1.5,1.0,2.8,'#f1e6d4','L');dCrib(o,0,.6,2.0,3.2);dRocker(o,1.0,4.9,'#e8c9a0');dToyBox(o,4.6,5.0,1.6,1.2,'#7fc0ee')},
   items:['blanket','teddy','bottle','diapers','onesie','rattle','blocks','nightlight','book','duck','horse']},
- {h:'Maison',n:'La nouvelle salle de bain',W:7,D:7,Hh:5.2,c:['#e9dff4','#d9cdeb','#efe9f6','#dcd2ea'],b:o=>{dBase(o,'#d9cdeb');dWinL(o,1.0,2.6,2.6,4.5);dWallShelf(o,'L',3.0,4.6,3.6,'#f4efe6');dTub(o,1.4,0,4.4,2.1,'#fbf8ff');dRailR(o,5.9,6.9,3.1);dVanityC(o,0,2.9,1.6,2.4,'#8b6fb0');dToilet(o,0,5.4);dRug(o,2.6,3.0,2.6,1.6,'#c9b6e8');dHamper(o,5.7,3.6,'#e8d2a8');dPotPlant(o,6.3,5.8,.8,'#c9b6e8')},
+ {h:'Maison',n:'La nouvelle salle de bain',W:7,D:7,Hh:5.2,c:['#dde9e2','#cfe0d6','#f4f6f4','#e2ebe5'],b:o=>{dBase(o,'#cfe0d6');dWinL(o,4.9,6.3,2.6,4.4);dCurtL(o,4.9,6.3,2.6,4.4,'#b9d8c6');dShower(o,0,0,1.7,1.7);dWallShelf(o,'L',2.9,4.4,3.7,'#f4efe6');dRailR(o,5.3,6.8,3.1);dVanityL(o,2.1,0,2.8,1.25,'#7fa38f');dToilet(o,0,3.0);dRug(o,2.4,2.4,2.6,1.6,'#a8ccb6');dHamper(o,5.9,2.0,'#e8d2a8');dPotPlant(o,.5,6.4,.85,'#e8d2a8')},
   items:['toothbrush','toothpaste','soap','towel','shampoo','perfume','plant','bathmat','cream','hairdryer','laundry','duck']},
  {h:'Maison',n:'L’entrée',W:7,D:7,Hh:5.2,c:['#f2e2cc','#e8d4b8','#c9a77e','#c19f76'],b:o=>{dBase(o,'#e8d4b8');dDoorR(o,4.4,6.0,3.7,'#a87a52');dHooks(o,'R',.9,3.7,3.4);dArtL(o,4.6,6.0,3.1,4.2,['#e9f2f6','#9ac2a0','#f2b84a']);dRug(o,4.2,.9,2.0,1.6,'#c98a6a');dUStand(o,6.45,.5);dBench(o,0,.8,1.1,2.8);dConsole(o,0,4.5,1.0,2.0);dPotPlant(o,6.2,6.2,1.1)},
   items:['coat','hat','scarf','boots','sneakers','umbrella','keys','bag','mirror','plant','frame','letters']},
- {h:'Maison',n:'La chambre des parents',W:7,D:7,Hh:5.2,c:['#d8e6d8','#c5d8c8','#d3ae82','#cba679'],b:o=>{dBase(o,'#c5d8c8');dWinR(o,2.8,4.6,2.6,4.5);dCurtR(o,2.8,4.6,2.6,4.5,'#f2dcb0');dArtL(o,2.4,4.6,3.4,4.5,['#f4ecd8','#8fbfa0','#e8946c']);dRug(o,3.6,2.8,3,3,'#e0bfa0');dSide(o,0,.3,.9,1.1);dDresser(o,2.6,0,2.2,1.1);dWard(o,5.3,0,1.7,1.3,4.2,'#c8b08c','L');dBed(o,0,1.6,3.2,4.2,'#7fb8c9','#8a5a36');dSide(o,0,5.95,.9,.95)},
+ {h:'Maison',n:'La chambre des parents',W:7,D:7,Hh:5.2,c:['#f0dccd','#e6cdb9','#c9a27e','#c19a76'],b:o=>{dBase(o,'#e6cdb9');dWinL(o,2.4,4.2,2.6,4.5);dCurtL(o,2.4,4.2,2.6,4.5,'#d98c6a');dArtR(o,2.7,4.6,3.2,4.3,['#fbefe2','#e8946c','#f2c24a']);dRug(o,2.0,2.6,3.6,3.2,'#d9b8a0');dWard(o,0,.2,1.3,2.0,4.2,'#e8d8c0','R');dChairOf(o,.2,2.9,'#c98a6a');dSide(o,1.4,.1,.9,.9,1.25,'#a8724a');dSide(o,5.0,.1,.9,.9,1.25,'#a8724a');dBed(o,2.3,.2,2.6,4.2,'#e8a28a','#8a5236','#fbf6ee');dDresser(o,0,4.6,1.1,1.9,1.7,'#a8724a','R');dPotPlant(o,6.4,6.3,1)},
   items:['pillow','quilt','lamp','clock','perfume','jewel','shirt','cshirt','dress','sweater','socks','frame','book']},
  {h:'Maison',n:'Le bureau',W:7,D:7,Hh:5.2,c:['#dfe6ee','#cfd9e4','#b9956c','#b08c64'],b:o=>{dBase(o,'#cfd9e4');dWinL(o,2.2,4.4,2.2,4.4);dCurtL(o,2.2,4.4,2.2,4.4,'#9fb7d9');dWallShelf(o,'R',1.5,4.2,3.7);dClockW(o,'R',.8,4.2);dRug(o,1.8,2.4,3.2,2.8,'#c9a6a0');dPotPlant(o,.5,.6,1.0);dDeskO(o,1.3,0,3.1,1.3);dShelf(o,5.0,0,1.9,1.1,4.4,dWood,'L');dChairOf(o,2.3,1.6,'#5f6f8a');dFiling(o,0,5.4,1.1,1.2)},
   items:['computer','lamp','books','book','pens','folder','notebook','earth','clock','plant','mug','frame']},
- {h:'Maison',n:'La petite cour',W:7,D:7,Hh:2.2,yard:1,c:['#d9c8a6','#cdbb98','#8fcf8a'],b:o=>{dYardOld(o);dSlide(o,3.4,.3)},
+ {h:'Maison',n:'La petite cour',W:7,D:7,Hh:2.2,yard:1,c:['#d9c8a6','#cdbb98','#8fcf8a'],b:o=>{dYardOld(o);dSwing(o,.15,4.15,2.55)},
   items:['ball','bucket','shovel','truck','can','flowerpot','bike','scooter','kite','chair','train']},
  {h:'Maison',n:'La nouvelle cuisine',W:7,D:7,Hh:5.2,c:['#f3e4c6','#e8d6b0','#c59a68','#bd9262'],b:o=>{dBase(o,'#e8d6b0');dWinL(o,2.6,4.6,2.0,4.3);dCurtL(o,2.6,4.6,2.0,4.3,'#e8946c');dWallShelf(o,'L',.9,2.1,3.4,'#8a6a4a');dUpperC(o,.3,2.2,'#8a6a4a');dUpperC(o,3.6,5.5,'#8a6a4a');dRug(o,2.0,3.0,3.8,3.0,'#d98c63');dCounterF(o,.3,0,1.9,1.3,'L','#d9cdb6','#8a6a4a');dStove(o,2.2,0,1.4,1.3);dCounterF(o,3.6,0,1.9,1.3,'L','#d9cdb6','#8a6a4a');dFridge(o,5.6,0,1.3,1.3);dChairOf(o,1.6,3.6,'#5fa9a0');dTable(o,2.8,3.3,2.0,1.8,1.7);dChairOf(o,5.2,3.6,'#5fa9a0');dPotPlant(o,6.3,6.2,1)},
   items:['pot','pan','plate','bowl','mug','cutlery','spatula','kettle','toaster','fruit','magnet','spices','board']}
