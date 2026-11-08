@@ -1403,6 +1403,17 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 @keyframes mgrab{0%{transform:none}15%{transform:scale(1.04,1.18)}45%{transform:scale(.82,.88)}74%{transform:scale(.6,.8)}100%{transform:none}}
 @keyframes mgulp{0%,72%{transform:none}82%{transform:scale(.94,1.06)}92%{transform:scale(1.03,.97)}100%{transform:none}}
 
+.aqst:not(.open){display:none!important}
+.aqst.open{animation:aqlvin .25s ease-out}
+@keyframes aqlvin{from{opacity:0;translate:0 -6px}to{opacity:1;translate:0 0}}
+.aqh1{cursor:pointer;display:inline-flex;align-items:center;gap:8px;-webkit-tap-highlight-color:transparent;user-select:none}
+.aqhi{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);color:#fff;animation:aqhp 2.6s ease-in-out infinite}
+.aqhi svg{width:15px;height:15px;transition:rotate .25s}
+.aqh1.on .aqhi{animation:none;background:rgba(255,255,255,.3)}
+.aqh1.on .aqhi svg{rotate:180deg}
+@keyframes aqhp{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.35)}50%{box-shadow:0 0 0 6px rgba(255,255,255,0)}}
+@media (prefers-reduced-motion:reduce){.aqhi{animation:none}}
+
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
 .sb.cf{background:linear-gradient(180deg,#ffd18a,#e8944a);color:#3a2310;border:0}
@@ -6500,7 +6511,7 @@ function aqTabTo(v){
 }
 function aquaScreen(){
  cur=null;origin='home';nv('aqua');mt='m-aq';aqEd=false;aqBusy=0;aqTab='fish';
- AQR=innerWidth/innerHeight;app.innerHTML=`<div class="aqfs"><header class="top aqhd"><h1>Aquarium</h1><div class="chip">❄ ${FLX()}</div></header>${tankHTML(aqRead())}<div class="aqst"><b id="aqs"></b><small id="aqn"></small></div><p class="m" id="m-aq" role="status" aria-live="polite"></p><button class="aqrb aqinv" data-a="aqinv"><span class="aqri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8l8-4 8 4v9l-8 4-8-4V8Z"/><path d="M4 8l8 4 8-4M12 12v9"/></svg></span><b>Inventaire</b></button><div class="aqbar"><button class="aqrb" data-a="aqshop"><span class="aqri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg></span><b>Boutique</b></button><button class="aqfeedb" id="aqb" data-a="aqfeed"></button><button class="aqrb" data-a="aqcare"><span class="aqri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c3.6 4.6 6 7.6 6 11a6 6 0 0 1-12 0c0-3.4 2.4-6.4 6-11Z"/><path d="M9 14.5a3 3 0 0 0 3 3"/></svg><i class="aqm-pt" id="aqm-pt" hidden></i></span><b>Entretien</b></button></div><button class="btn aqedb" data-a="aqed">Terminer le placement</button><div class="aqbd" id="aqbd" data-a="aqclose"></div><section class="aqsh glass" id="aqsh" data-tab="${aqTab}" aria-label="Boutique et entretien"><div class="aqsht"><div class="seg"><button class="${aqTab==='fish'?'on':''}" data-a="aqtab" data-v="fish">Poissons</button><button class="${aqTab==='deco'?'on':''}" data-a="aqtab" data-v="deco">Décors</button></div><h2 class="aqtc">Entretien</h2><button class="aqx" data-a="aqclose" aria-label="Fermer">×</button></div><div id="aql"></div></section></div>`;
+ AQR=innerWidth/innerHeight;app.innerHTML=`<div class="aqfs"><header class="top aqhd"><h1 class="aqh1" data-a="aqlvt" role="button" tabindex="0" aria-expanded="false" aria-label="Aquarium : voir le niveau des poissons et des décors">Aquarium<span class="aqhi" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 5h6M3 11h10"/><path d="m11 4 2 2 2-2" stroke-width="1.6"/></svg></span></h1><div class="chip">❄ ${FLX()}</div></header>${tankHTML(aqRead())}<div class="aqst"><b id="aqs"></b><small id="aqn"></small></div><p class="m" id="m-aq" role="status" aria-live="polite"></p><button class="aqrb aqinv" data-a="aqinv"><span class="aqri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8l8-4 8 4v9l-8 4-8-4V8Z"/><path d="M4 8l8 4 8-4M12 12v9"/></svg></span><b>Inventaire</b></button><div class="aqbar"><button class="aqrb" data-a="aqshop"><span class="aqri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg></span><b>Boutique</b></button><button class="aqfeedb" id="aqb" data-a="aqfeed"></button><button class="aqrb" data-a="aqcare"><span class="aqri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c3.6 4.6 6 7.6 6 11a6 6 0 0 1-12 0c0-3.4 2.4-6.4 6-11Z"/><path d="M9 14.5a3 3 0 0 0 3 3"/></svg><i class="aqm-pt" id="aqm-pt" hidden></i></span><b>Entretien</b></button></div><button class="btn aqedb" data-a="aqed">Terminer le placement</button><div class="aqbd" id="aqbd" data-a="aqclose"></div><section class="aqsh glass" id="aqsh" data-tab="${aqTab}" aria-label="Boutique et entretien"><div class="aqsht"><div class="seg"><button class="${aqTab==='fish'?'on':''}" data-a="aqtab" data-v="fish">Poissons</button><button class="${aqTab==='deco'?'on':''}" data-a="aqtab" data-v="deco">Décors</button></div><h2 class="aqtc">Entretien</h2><button class="aqx" data-a="aqclose" aria-label="Fermer">×</button></div><div id="aql"></div></section></div>`;
  aqPanel();aqStatus();window.scrollTo(0,0);
 }
 /* Nourrir : des grains tombent, les poissons nourris foncent dessus (bien plus vite que d’habitude), mangent, puis reprennent leur nage */
@@ -6724,7 +6735,7 @@ const aqStatus0=aqStatus;
 aqStatus=function(){aqStatus0();const a=aqRead();aqRewards(a);
  /* la méduse nourrie s’illumine quelques minutes */
  try{const m=a.f.meduse,g=m&&m.on&&m.gl&&Date.now()-m.gt<3*6e4&&Date.now()-m.gt>=0?Math.min(3,m.gl):0;document.querySelectorAll('.tank .fx[data-id=meduse]').forEach(e=>{e.classList.toggle('glow',g>0);if(g)e.dataset.gl=g;else delete e.dataset.gl})}catch(e){}
-const st0=$('.aqst');if(!st0)return;let l=st0.querySelector('.aqlv');if(!l){l=document.createElement('div');l.className='aqlv';st0.appendChild(l)}const h=aqLvHTML(a);if(l.dataset.h!==h){l.innerHTML=h;l.dataset.h=h}};
+const st0=$('.aqst');if(!st0)return;st0.classList.toggle('open',!!window.AQLV);{const h1=$('.aqh1');if(h1){h1.classList.toggle('on',!!window.AQLV);h1.setAttribute('aria-expanded',window.AQLV?'true':'false')}}let l=st0.querySelector('.aqlv');if(!l){l=document.createElement('div');l.className='aqlv';st0.appendChild(l)}const h=aqLvHTML(a);if(l.dataset.h!==h){l.innerHTML=h;l.dataset.h=h}};
 const aqBuy0=aqBuy;
 aqBuy=function(v){const[k,id]=v.split(':'),a=aqRead(),L=(k==='f'?FISH:k==='d'?DECO:WATER).find(x=>x.id===id);mt='m-aq';
  if(L&&aqHid(L,k,a))return;const n=L&&aqTL(L,k,a);if(n)return msg('Se débloque avec l’aquarium '+n+'.');aqBuy0(v)};
@@ -6757,6 +6768,8 @@ window.aqMedEat=el=>{try{
 const AQMO={std:[67,25],tall:[59,27],round:[65,25],long:[71,24],neon:[76,25],danio:[78,25],cardinal:[77,25],betta:[76,26],gourami:[70,26],globe:[64,25],hippo:[72,8],manta:[83,25],tortue:[83,29],meduse:[8,27],veil:[71,24]};
 window.aqMouth=(el,t)=>{try{const f=FISH.find(x=>x.id===el.dataset.id),a=AQMO[f&&f.sh]||AQMO.std,s=el.querySelector('.fi svg')||el.querySelector('svg'),m=s.getScreenCTM();if(!m)return null;
  const q=new DOMPoint(a[0],a[1]).matrixTransform(m),r=t.getBoundingClientRect();return{x:q.x-r.left-t.clientLeft,y:q.y-r.top-t.clientTop}}catch(e){return null}};
+
+act.aqlvt=()=>{window.AQLV=!window.AQLV;aqStatus()};
 
 function aqNear(P,cx,cy){let b=null,bd=1e9;for(const p of P){if(p.state!==1)continue;const d=Math.hypot(p.xs-cx,p.y-cy)+90*p.n;if(d<bd){bd=d;b=p}}return b}
 function aqStep(ts){
