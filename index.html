@@ -1208,6 +1208,22 @@ body[data-tx=d] .orb.xm .ring u.on{background:#d8303c;box-shadow:none}
 .untop{padding:0;background:none;box-shadow:none;border-radius:0}
 .uncol{position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3);z-index:2}
 .sobt .btn{width:auto}
+/* Uno : joker posé = carte de la couleur choisie */
+.ukc.u-r{--uc:#e2615c;--ul:#f59a8a;--ud:#b23e4a}
+.ukc.u-y{--uc:#efb53f;--ul:#ffd98a;--ud:#c98624}
+.ukc.u-g{--uc:#43a873;--ul:#86d6a6;--ud:#2a7a55}
+.ukc.u-b{--uc:#4a86dc;--ul:#8dbcf3;--ud:#2f5cb0}
+.ukc .uem{background:radial-gradient(circle at 35% 30%,#fff,#eef3ff 70%,#dfe7fb)}
+/* aquarium de Noël */
+.lkb{opacity:.7}
+.xmbg{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.xmbg svg{position:absolute;inset:0;width:100%;height:100%}
+.xms{position:absolute;inset:-100% 0 0;background-image:radial-gradient(circle,rgba(255,255,255,.85) 0 1.6px,transparent 2.2px),radial-gradient(circle,rgba(255,255,255,.6) 0 1.1px,transparent 1.7px);background-size:90px 110px,57px 73px;background-position:0 0,30px 40px;animation:xmsn 18s linear infinite}
+.xms.b{background-size:130px 150px,80px 95px;opacity:.7;animation-duration:27s}
+@keyframes xmsn{to{transform:translateY(50%)}}
+@media(prefers-reduced-motion:reduce){.xms{animation:none}}
+.xmbg{background:radial-gradient(ellipse 70% 22% at 28% 10%,rgba(122,255,200,.22),transparent 70%),radial-gradient(ellipse 60% 18% at 76% 16%,rgba(255,138,176,.16),transparent 70%)}
+.xmbg svg{top:auto;bottom:16%;height:auto;max-height:45%}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -3527,7 +3543,7 @@ function unDraw(){
  const host=!UN.loc&&S.h===SO.uid;
  root.innerHTML=`<div class="top stk"><button class="back" data-a="unBk">‹ Uno</button><div class="chip">❄ ${FLX()}</div></div>
  <div class="unop">${op}</div>
- <div class="unc"><button class="unk" data-a="unDraw" aria-label="Piocher" ${myT&&!S.dr?'':'disabled'}>${unBack()}<small>${S.D.length}</small></button><div class="untop" style="--cc:${UNHX[S.c]}"><span class="${S.X.length!==UN.lastX?'unpop':''}">${unCard(unTop(S),'big')}</span>${unTop(S)[0]==='k'?`<span class="uncol" style="background:${UNHX[S.c]}" aria-label="Couleur ${UNNM[S.c]}"></span>`:''}<span class="undir" aria-label="${S.d>0?'Sens horaire':'Sens inverse'}">${S.d>0?'↻':'↺'}</span></div></div>
+ <div class="unc"><button class="unk" data-a="unDraw" aria-label="Piocher" ${myT&&!S.dr?'':'disabled'}>${unBack()}<small>${S.D.length}</small></button><div class="untop" style="--cc:${UNHX[S.c]}"><span class="${S.X.length!==UN.lastX?'unpop':''}">${unCard(unTop(S),'big'+(unTop(S)[0]==='k'?' ukc u-'+S.c:''))}</span><span class="undir" aria-label="${S.d>0?'Sens horaire':'Sens inverse'}">${S.d>0?'↻':'↺'}</span></div></div>
  <p class="unlg" role="status" aria-live="polite">${esc(unLg(S,me))}</p>
  <div class="unme${myT?' on':''}"><div class="unt"><b>${turn}</b>${net&&myT?'<span class="untb"><i id="untm"></i></span>':''}</div>
  <div class="unh" id="unh">${(()=>{let base=0;return rows.map(R=>{const b0=base;base+=R.length;return`<div class="unhr" style="--ov:${ovOf(R.length)}px">${R.map((c,j)=>{const k=b0+j;const ok=myT&&(S.dr?k===my.length-1&&unOk(S,c):unOk(S,c));return`<button class="ucd${ok?' ok':''}${myT&&!ok?' no':''}" data-a="unPlay" data-v="${k}" aria-label="${unCnf(c)}"${ok?'':' aria-disabled="true"'}>${unCard(c)}</button>`}).join('')}</div>`}).join('')})()}</div>
@@ -4472,7 +4488,7 @@ function resume(){const l=st.get('last',null);if(!l||l.daily||l.g==='melange'||!
    1 poussière d’étoile par niveau réussi la première fois (dans n’importe quel jeu) ; il en faut 2 pour 1 pas ;
    chaque pas : +1 ❄ · tous les 5 pas : +5 ❄ et un bout d’histoire · tous les 10 pas : un gardien (jeu provisoire), +20 ❄ et un bout d’histoire.
    L’état {e : poussières gagnées, p : pas faits, bw : dernier gardien vaincu} ne fait que grandir : la synchronisation garde le plus grand de chaque. */
-const XMX=20,XDU=10,SDU=10,SMX=80,SMAP=8,SH=1500,SPRE=440;/* SPRE : hauteur ajoutée sous le départ, pour le jardin du crash */
+const XMX=30,XDU=10,SDU=10,SMX=80,SMAP=8,SH=1500,SPRE=440;/* SPRE : hauteur ajoutée sous le départ, pour le jardin du crash */
 /* le ciel change de teinte tout au long du voyage (9 couleurs : bas du chapitre 1 … haut du chapitre 8), de jour comme de nuit */
 const SKD=['#e6e9ff','#f7e1f2','#ffe4d4','#fdebd2','#e0efff','#ece7ff','#d9f3f3','#e2ddff','#d3d8ff'],SKN=['#1b1f58','#281f5e','#2e1f55','#2a1f4e','#1a2658','#1e2160','#14305a','#231f66','#101654'];
 /* L : dessus de l’île · c : feuillages · r : toits, portiques · k : pierres · e : sable zen · p : chemin de lumière · d : poids des décors (îles puis ciel) */
@@ -4792,7 +4808,7 @@ const sFragH=n=>`<small>Étape ${n} · ${CHP[sCh(n)].t}</small><p class="sfq">${
 /* ---------- Histoire de Noël : « Un noël pour Zeni » ----------
    Les niveaux de Noël donnent des boules de Noël (au lieu de poussière d’étoile) ; 10 boules = 1 sapin (au lieu du fragment d’étoile).
    1 sapin = 1 étape ; 20 étapes ; un bout d’histoire toutes les 2 étapes = 10 chapitres. Se choisit en haut de l’écran Histoire (après l’étape 3 du voyage). */
-const XCH=['La veille de Noël','La vitrine','Le banc sous la neige','La nuit la plus longue','La petite lumière','Le sapin tordu','Le petit pain chaud','L’horloge de la place','Minuit','Le plus beau cadeau'];
+const XCH=['La veille de Noël','La vitrine','Le banc sous la neige','La nuit la plus longue','La petite lumière','Le sapin tordu','Le petit pain chaud','L’horloge de la place','Minuit','Le plus beau cadeau','Le matin blanc','La boulangerie','Le sapin de tout le monde','La dernière nuit de l’année','Une année à vivre'];
 const XPRO='C’est la veille de Noël. Il neige doucement sur la ville et, partout, des fenêtres s’allument. Zeni, le petit bonhomme, n’a pas de fenêtre. Pas de maison, pas de table, personne qui l’attende. Il marche, les mains dans ses manches, et regarde passer les autres avec leurs paquets. Pour avancer, il lui faut des sapins : dix boules de Noël en font un, et chaque niveau de Noël en fait tomber quelques-unes.';
 const XSTORY={
 2:'Les rues sentent la cannelle et les marrons chauds. Des enfants courent en tirant leurs parents par la manche, des guirlandes clignotent aux balcons. Zeni longe les murs pour ne gêner personne. Chaque pas qu’il fait résonne un peu plus fort que le précédent : ce soir, la ville est pleine, et lui est tout seul.',
@@ -4804,9 +4820,14 @@ const XSTORY={
 14:'Une boulangère baisse son rideau de fer. Elle voit Zeni, ne pose aucune question et lui glisse dans la main un petit pain encore brûlant : « Joyeux Noël. » C’est tout. Zeni mange, assis sur le trottoir, et la chaleur descend jusqu’à ses orteils. Il y a des cadeaux qui ne s’emballent pas : un geste, un sourire, un matin qui sent bon le pain.',
 16:'Sur la place, la grande horloge approche de minuit. Zeni la regarde tourner. Chaque jour qui passe est un cadeau, pense-t-il, qu’on déballe ou qu’on laisse dans son papier. Il en a laissé tant sans les ouvrir ! Mais celui d’aujourd’hui est encore là, entier, avec ses flocons et son petit pain chaud. Il décide de ne plus rien remettre à plus tard.',
 18:'Les cloches sonnent. Zeni se met à courir, les bras grands ouverts, il dessine un ange dans la neige, glisse sur les pavés gelés, rit tout seul, puis rit plus fort. Il n’a ni maison ni invité, mais il a ce soir, tout entier, et pour la première fois depuis longtemps il n’en laisse pas une miette. Il est vivant, et ça se voit à ses joues rouges.',
-20:'En haut de la colline, il retrouve le sapin tordu, que le vent a rempli de neige scintillante. Zeni y accroche sa dernière boule. Il sait maintenant que le plus beau cadeau n’était ni une maison ni quelqu’un pour l’attendre : c’était d’être là, de vivre pleinement chaque jour, sans regretter aucun de ceux qui passent. Autour de lui, les fenêtres brillent. Demain, peut-être, l’une d’elles s’ouvrira. Mais ce soir, il est déjà comblé. Joyeux Noël, Zeni.'
+20:'En haut de la colline, il retrouve le sapin tordu, que le vent a rempli de neige scintillante. Zeni y accroche sa dernière boule. Il sait maintenant que le plus beau cadeau n’était ni une maison ni quelqu’un pour l’attendre : c’était d’être là, de vivre pleinement chaque jour, sans regretter aucun de ceux qui passent. Autour de lui, les fenêtres brillent. Demain, peut-être, l’une d’elles s’ouvrira. Mais ce soir, il est déjà comblé. Joyeux Noël, Zeni.',
+22:'Le lendemain, la ville dort sous une neige toute neuve. Zeni se réveille sur son banc, un peu transi mais étrangement léger. Pour la première fois, il ne compte pas ce qui lui manque : il compte les flocons sur sa manche, les petites traces d’oiseaux, la fumée qui monte des cheminées. Le jour est neuf, et il est à lui.',
+24:'Il retourne voir la boulangère, rien que pour lui dire merci. Elle lui tend un tablier : « J’ai besoin de bras pour les fêtes. » Zeni pétrit, rit, se brûle un doigt, recommence. Le soir venu, il a de la farine jusqu’aux oreilles et le cœur tout plein. Il n’a rien attendu : il a simplement dit oui.',
+26:'Avec les enfants du quartier, il décore le sapin tordu du terrain vague. Chacun apporte quelque chose : un ruban, un bouchon brillant, une étoile en papier. Le sapin n’a jamais été aussi beau, ni aussi bancal. Zeni comprend que la joie se partage comme les biscuits : plus on en donne, plus il en reste.',
+28:'La veille du Nouvel An, la ville compte à rebours. Zeni n’a toujours pas de maison, mais il connaît maintenant des prénoms, des sourires, une porte où frapper. Sur un bout de papier, il écrit tout ce qu’il a vécu de beau depuis Noël, et la liste déborde de la feuille.',
+30:'Minuit sonne et des feux d’artifice s’ouvrent au-dessus du fleuve. Zeni ne fait pas de vœu pour plus tard : il promet seulement de vivre chaque jour pleinement, les lumineux comme les gris, sans en regretter un seul. Quelqu’un lui prend la main, puis un autre. Une nouvelle année commence, et Zeni l’ouvre comme on ouvre un cadeau.'
 };
-const XR=2;let xFr=0;
+const XR=3;let xFr=0;
 const xmAll=()=>{try{return sxOn()}catch(e){return false}};
 const sxOn=()=>st.get('sty:s','main')==='xm'&&styRead().p>=3;
 const xDust=y=>UNL()?1e6:(y.xe||0)-(y.xp||0)*XDU;
@@ -4919,7 +4940,8 @@ function xArrive(n){
  if(!$('#smap')){if(ch)xFr=n;return}
  sfx(ch?784:660,.5);vib([20,40,20]);
  dayScreen();
- if(ch)sOv(xFragH(n)+`<p class="sfr-g">+${g} ❄</p>`);
+ const ul={10:'Les décorations de Noël sont débloquées dans la boutique de l’aquarium.',20:'Le Poisson Père Noël t’attend dans la boutique de l’aquarium.',30:'Le fond « Nuit de Noël » est débloqué pour l’aquarium.'}[n];
+ if(ch)sOv(xFragH(n)+`<p class="sfr-g">+${g} ❄</p>`+(ul?`<p class="sfr-g">🎁 ${ul}</p>`:''));
  else{mt='m';sMsg('+1 ❄ · étape '+n)}
 }
 /* le choix de l’histoire, en touchant l’en-tête */
@@ -4929,13 +4951,13 @@ act.sstory=()=>{
 };
 act.spick=v=>{if(v==='xm'&&styRead().p<3)return;st.set('sty:s',v==='xm'?'xm':'main');dayScreen()};
 /* le livre de Noël : dix chapitres */
-const xVig=c=>{const t=c/9,a=scMix('#1b2150','#8a5070',t),b=scMix('#2a2f70','#e8a868',t),id='xv'+c;let p='';for(let i=0;i<14;i++)p+=`<circle cx="${(Math.sin(i*91.7)*.5+.5)*300|0}" cy="${(Math.sin(i*37.3)*.5+.5)*70|0}" r="1.3" fill="#fff" opacity=".8"/>`;
+const xVig=c=>{const t=c/(XMX/2-1),a=scMix('#1b2150','#8a5070',t),b=scMix('#2a2f70','#e8a868',t),id='xv'+c;let p='';for(let i=0;i<14;i++)p+=`<circle cx="${(Math.sin(i*91.7)*.5+.5)*300|0}" cy="${(Math.sin(i*37.3)*.5+.5)*70|0}" r="1.3" fill="#fff" opacity=".8"/>`;
  return`<svg class="bkv" viewBox="0 0 300 96" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="300" height="96" rx="14" fill="url(#${id})"/>${p}<ellipse cx="150" cy="104" rx="190" ry="30" fill="#f4f8ff"/><g>${CHK.pine(70,92,64,'#1d4a44','#2a6a5c',1)}${CHK.pine(235,94,76,'#1d4a44','#2a6a5c',1)}${CHK.pine(160,96,48,'#1d4a44','#2a6a5c',1)}</g><circle cx="${70+t*160}" cy="${60-t*10}" r="${3+t*5}" fill="#ffd45a" opacity="${.35+t*.65}"/></svg>`};
 function xBookS(){
- const Y=styRead(),ks=[];for(let n=2;n<=(Y.xp||0);n+=2)ks.push(n);const nx=ks.length<10?(ks.length+1)*2:0,
+ const Y=styRead(),ks=[];for(let n=2;n<=(Y.xp||0);n+=2)ks.push(n);const nx=ks.length<XMX/2?(ks.length+1)*2:0,
   P=[{k:'cov'},{k:'pro'},...ks.map(n=>({k:'fr',n})),nx?{k:'lk',n:nx}:{k:'end'}];
  return{ks,P,tab:'daily',bk:bk('day'),pg:(q,i,f)=>{
-  if(q.k==='cov')return`<div class="bki"><svg viewBox="-32 -34 64 68" width="64" height="68" aria-hidden="true"><path d="M0 -30L-20 -4H-9L-24 18H-6V28H6V18H24L9 -4H20Z" fill="#2f8a62" stroke="#bfe9cf" stroke-width="2.4" stroke-linejoin="round"/><circle cx="-6" cy="2" r="3.4" fill="#e8434f"/><circle cx="8" cy="12" r="3.4" fill="#f2b632"/><polygon points="${sStar(0,-32,7,3.2)}" fill="#ffd45a"/></svg><h2>Un noël pour Zeni</h2><p>dix chapitres pour une nuit de Noël</p><p class="bkh">Fais glisser ou touche un bord pour ouvrir</p></div>`;
+  if(q.k==='cov')return`<div class="bki"><svg viewBox="-32 -34 64 68" width="64" height="68" aria-hidden="true"><path d="M0 -30L-20 -4H-9L-24 18H-6V28H6V18H24L9 -4H20Z" fill="#2f8a62" stroke="#bfe9cf" stroke-width="2.4" stroke-linejoin="round"/><circle cx="-6" cy="2" r="3.4" fill="#e8434f"/><circle cx="8" cy="12" r="3.4" fill="#f2b632"/><polygon points="${sStar(0,-32,7,3.2)}" fill="#ffd45a"/></svg><h2>Un noël pour Zeni</h2><p>quinze chapitres, de Noël au Nouvel An</p><p class="bkh">Fais glisser ou touche un bord pour ouvrir</p></div>`;
   if(q.k==='pro')return`<div class="bki"><span class="bke">Prologue</span>${xVig(0)}<p class="bkt">${XPRO}</p>${f}</div>`;
   if(q.k==='fr')return`<div class="bki"><span class="bke">Chapitre ${q.n/2} · ${XCH[q.n/2-1]}</span>${xVig(q.n/2-1)}<p class="bkt">${XSTORY[q.n]}</p>${f}</div>`;
   if(q.k==='lk')return`<div class="bki"><span class="bke">Chapitre ${q.n/2}</span><p class="bkt" style="margin-top:34px">Cette page s’écrira plus loin dans la nuit, quand Zeni y sera arrivé.</p>${f}</div>`;
@@ -5316,6 +5338,24 @@ const WATER=[
 {id:'foret',n:'Eau de forêt',p:120,c1:'#43b88a',c2:'#0f5648'},
 {id:'aurore',n:'Aurore violette',p:160,c1:'#9a78e0',c2:'#35297a'}
 ];
+/* ---------- Aquarium : section Noël (étape 10 de « Un noël pour Zeni »), Poisson Père Noël (étape 20), fond « Nuit de Noël » (étape 30) ---------- */
+DECO_G.splice(DECO_G.findIndex(g=>g[0]==='winter')+1,0,['xmas','Noël']);
+['sapin','cadeaux'].forEach(id=>{const d=DECO.find(x=>x.id===id);if(d){d.g='xmas';d.lk=10}});
+DECO.push(
+{id:'xsapin',g:'xmas',lk:10,n:'Sapin de Noël décoré',p:160,x:70,w:14,svg:'<rect x="44" y="90" width="12" height="10" fill="#6b4a2f"/><path d="M50 50 92 94H8Z" fill="#1f7448"/><path d="M50 28 82 66H18Z" fill="#278553"/><path d="M50 10 72 42H28Z" fill="#2f9a63"/><path d="M22 84Q50 70 80 80M28 60Q50 50 74 56M34 38Q50 31 66 35" stroke="#ffd45a" stroke-width="2.6" fill="none"/><circle cx="30" cy="86" r="4.5" fill="#e8434f"/><circle cx="66" cy="88" r="4.5" fill="#3b9be0"/><circle cx="48" cy="76" r="4" fill="#ffd45a"/><circle cx="36" cy="62" r="4" fill="#3b9be0"/><circle cx="64" cy="62" r="4" fill="#e8434f"/><circle cx="50" cy="46" r="3.6" fill="#e8434f"/><circle cx="58" cy="34" r="3.2" fill="#ffd45a"/><circle class="twk" cx="50" cy="8" r="12" fill="#ffd45a" opacity=".3"/><polygon points="50,0 53,7 60,7 54.5,11.5 57,19 50,14.5 43,19 45.5,11.5 40,7 47,7" fill="#ffd45a"/>'},
+{id:'sucre',g:'xmas',lk:10,n:'Sucres d’orge',p:60,x:86,w:9,svg:'<g fill="none" stroke-linecap="round"><path d="M34 98V36Q34 18 50 18T66 36" stroke="#fff" stroke-width="11"/><path d="M34 98V36Q34 18 50 18T66 36" stroke="#e8434f" stroke-width="11" stroke-dasharray="7 9"/><path d="M60 98V54Q60 42 70 42T80 54" stroke="#fff" stroke-width="8"/><path d="M60 98V54Q60 42 70 42T80 54" stroke="#3fb36b" stroke-width="8" stroke-dasharray="5 7"/></g>'},
+{id:'couronne',g:'xmas',lk:10,n:'Couronne de Noël',p:90,x:8,w:11,svg:'<circle cx="50" cy="60" r="30" fill="none" stroke="#2a8a54" stroke-width="16"/><circle cx="50" cy="60" r="30" fill="none" stroke="#3fb36b" stroke-width="7" stroke-dasharray="6 7"/><circle cx="26" cy="46" r="4" fill="#e8434f"/><circle cx="76" cy="70" r="4" fill="#e8434f"/><circle cx="30" cy="80" r="3.6" fill="#e8434f"/><path d="M50 30 34 18V40ZM50 30 66 18V40Z" fill="#e8434f"/><circle cx="50" cy="30" r="5" fill="#c23040"/><path d="M48 34 40 54M52 34 60 54" stroke="#e8434f" stroke-width="5" stroke-linecap="round"/>'},
+{id:'traineau',g:'xmas',lk:10,n:'Traîneau du Père Noël',p:220,x:30,w:20,svg:'<path d="M8 90H86Q96 90 96 80" stroke="#ffd45a" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M22 90V80M70 90V80" stroke="#ffd45a" stroke-width="4"/><path d="M12 80H80Q90 80 90 64V50H62Q60 66 40 66H12Z" fill="#d6363f"/><path d="M12 80H80Q90 80 90 64" stroke="#ffd45a" stroke-width="3" fill="none"/><rect x="18" y="40" width="20" height="24" rx="2" fill="#3fb36b"/><rect x="26" y="40" width="4" height="24" fill="#ffd45a"/><rect x="40" y="46" width="18" height="18" rx="2" fill="#3b9be0"/><rect x="47" y="46" width="4" height="18" fill="#fff"/><path d="M22 40Q28 30 28 40M30 40Q36 30 32 40" stroke="#ffd45a" stroke-width="3" fill="none"/>'},
+{id:'pain',g:'xmas',lk:10,n:'Maison en pain d’épices',p:180,x:56,w:15,svg:'<rect x="18" y="52" width="64" height="46" fill="#b9733f"/><path d="M10 56 50 18 90 56Z" fill="#8f5226"/><path d="M10 56 50 18 90 56" stroke="#fff" stroke-width="7" fill="none" stroke-linejoin="round"/><path d="M14 54Q20 60 26 54T38 54T50 54T62 54T74 54T86 54" stroke="#fff" stroke-width="3" fill="none"/><rect x="42" y="70" width="16" height="28" rx="8" fill="#6b3a1a"/><rect x="24" y="64" width="12" height="12" rx="2" fill="#ffd36b" stroke="#fff" stroke-width="2"/><rect x="64" y="64" width="12" height="12" rx="2" fill="#ffd36b" stroke="#fff" stroke-width="2"/><circle cx="30" cy="88" r="3.5" fill="#e8434f"/><circle cx="70" cy="88" r="3.5" fill="#3fb36b"/><circle cx="50" cy="40" r="4" fill="#e8434f"/>'},
+{id:'xboule',g:'xmas',lk:10,k:'float',n:'Boule de Noël géante',p:110,x:24,w:10,b:60,svg:'<circle class="twk" cx="50" cy="58" r="44" fill="#ff8a8a" opacity=".18"/><path d="M50 2V20" stroke="#caa648" stroke-width="2.4"/><rect x="42" y="18" width="16" height="10" rx="3" fill="#e3c25a"/><circle cx="50" cy="60" r="32" fill="#d6363f"/><path d="M19 52Q50 66 81 52M20 70Q50 84 80 70" stroke="#ffd45a" stroke-width="4" fill="none"/><ellipse cx="38" cy="46" rx="9" ry="5" fill="#fff" opacity=".45" transform="rotate(-30 38 46)"/>'},
+{id:'xetoile',g:'xmas',lk:10,k:'float',n:'Étoile de Noël',p:90,x:62,w:9,b:70,svg:'<circle class="twk" cx="50" cy="50" r="46" fill="#ffd45a" opacity=".22"/><polygon points="50,8 61,36 92,38 68,57 76,88 50,71 24,88 32,57 8,38 39,36" fill="#ffd45a" stroke="#fff3b0" stroke-width="3" stroke-linejoin="round"/>'}
+);
+FISH.push({id:'noel',n:'Poisson Père Noël',p:520,sh:'std',b:'#e8434f',f:'#ffd2d2',sp:'#fff',sa:1,sz:1.12,lk:20});
+WATER.push({id:'noel',n:'Nuit de Noël',p:0,c1:'#2a4d8f',c2:'#101f4a',lk:30});
+/* le fond de Noël : aurore douce, village et sapins enneigés au loin, neige qui tombe */
+const XMBG=`<div class="xmbg" aria-hidden="true"><svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMax meet"><defs><radialGradient id="xmau"><stop offset="0" stop-color="#7affc8" stop-opacity=".35"/><stop offset="1" stop-color="#7affc8" stop-opacity="0"/></radialGradient><radialGradient id="xmau2"><stop offset="0" stop-color="#ff8ab0" stop-opacity=".25"/><stop offset="1" stop-color="#ff8ab0" stop-opacity="0"/></radialGradient></defs>${[[20,248,46],[52,252,38],[300,246,52],[338,250,40],[372,247,48]].map(([x,y,s])=>`<path d="M${x} ${y-s}L${x-s*.38} ${y}H${x+s*.38}Z" fill="#1b2f63" opacity=".75"/><path d="M${x} ${y-s}L${x-s*.14} ${y-s*.6}H${x+s*.14}Z" fill="#dfe9ff" opacity=".7"/>`).join('')}<g opacity=".8"><rect x="120" y="222" width="34" height="28" fill="#22366e"/><path d="M114 224 137 204 160 224Z" fill="#2c427e"/><path d="M114 224 137 204 160 224" stroke="#e8f0ff" stroke-width="4" fill="none"/><rect x="128" y="230" width="8" height="8" fill="#ffd36b"/><rect x="142" y="230" width="8" height="8" fill="#ffd36b"/><rect x="200" y="216" width="44" height="34" fill="#22366e"/><path d="M194 218 222 194 250 218Z" fill="#2c427e"/><path d="M194 218 222 194 250 218" stroke="#e8f0ff" stroke-width="4" fill="none"/><rect x="208" y="226" width="9" height="9" fill="#ffd36b"/><rect x="226" y="226" width="9" height="9" fill="#ffcf5a"/><rect x="238" y="200" width="6" height="12" fill="#22366e"/></g><path d="M0 252Q100 238 200 250T400 246V300H0Z" fill="#e9f1ff" opacity=".55"/></svg><i class="xms"></i><i class="xms b"></i></div>`;
+function aqXL(x){return!!(x&&x.lk&&!UNL()&&((styRead().xp|0)<x.lk))}
+
 const hs=s=>[...s].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7);
 /* poissons dessinés un par un : silhouettes, nageoires et motifs propres à chaque espèce (vue de profil, tournés vers la droite) */
 let FSN=0;
@@ -5375,6 +5415,7 @@ function fishSVG(f){
  if(f.sp)[[-6,-3,2.3],[4,4,2.1],[10,-5,1.9],[-13,4,1.8],[-1,8,1.6]].forEach(([x,y,r])=>{s+=`<circle cx="${bx+x}" cy="${by+y*ry/14}" r="${r}" fill="${f.sp}" opacity=".85"/>`});
  if(f.hk)[[-12,6,'#d63a52'],[-7,3.2,'#fff'],[-2,6,'#d63a52']].forEach(([x,w,c])=>{const k=Math.min(hh(x-w/2),hh(x+w/2))-.6;s+=`<rect x="${bx+x-w/2}" y="${by-k}" width="${w}" height="${2*k}" fill="${c}" opacity=".95"/>`});
  s+=`<ellipse cx="${bx}" cy="${by-ry*.4}" rx="${rx*.6}" ry="${ry*.2}" fill="#fff" opacity=".18"/><circle cx="${bx+rx*.55}" cy="${by-ry*.2}" r="3.3" fill="#fff"/><circle cx="${bx+rx*.6}" cy="${by-ry*.2}" r="1.7" fill="#1b1b2f"/>`;
+ if(f.sa)s+=`<path d="M${bx+rx*.05} ${by-ry*.72}Q${bx+rx*.2} ${by-ry-20} ${bx-rx*.35} ${by-ry-14}Q${bx+rx*.5} ${by-ry-12} ${bx+rx*.9} ${by-ry*.5}Z" fill="#d6363f"/><path d="M${bx} ${by-ry*.7}Q${bx+rx*.5} ${by-ry*1.05} ${bx+rx*.95} ${by-ry*.48}" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="${bx-rx*.38}" cy="${by-ry-13}" r="3.8" fill="#fff"/><g fill="#fff"><circle cx="${bx+rx*.92}" cy="${by+ry*.18}" r="3.6"/><circle cx="${bx+rx*.78}" cy="${by+ry*.42}" r="4.4"/><circle cx="${bx+rx*.56}" cy="${by+ry*.55}" r="4.2"/><circle cx="${bx+rx*.36}" cy="${by+ry*.5}" r="3.4"/></g>`;
  if(f.hk)s+=`<path d="M52 30L70 49" stroke="#c98a4b" stroke-width="3" stroke-linecap="round"/><path d="M70 49L80 50" stroke="#3a2a1a" stroke-width="4" stroke-linecap="round"/><ellipse cx="82" cy="54" rx="3.2" ry="1.6" fill="#1b1b2f"/><path d="M46 13Q58 2 68 17L67 21Q57 15 46 17Z" fill="#1f4fbf"/><path d="M52 8Q57 6 62 9" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>`;
  return`<svg viewBox="${vb}" aria-hidden="true">${s}</svg>`;
 }
@@ -5450,7 +5491,7 @@ function dpos(d,a){const p=a.p&&a.p[d.id];if(p&&typeof p.x==='number'&&typeof p.
 function dcl(d,x,b){const T=100-dH(d);return{x:Math.max(0,Math.min(100-d.w,x)),b:d.k==='ceil'?T:Math.max(0,Math.min(T,b))}}
 function tankHTML(a){
  const w=WATER.find(x=>x.id===a.w)||WATER[0],now=Date.now(),gl=aqHg(a,now),hg=new Set(gl.map(f=>f.id)),gq=aqGain(a,gl).g,gn=Object.fromEntries(gl.map((f,i)=>[f.id,gq[i]])),nmq=aqNames(a);
- return`<div class="tank${aqEd?' ed':''}" id="tank" style="--w1:${w.c1};--w2:${w.c2};--dt:${aqLv(a,now).dt.toFixed(3)};--gr:${aqLv(a,now).gr.toFixed(3)};${aqSkyStyle(now)}" data-ph="${aqSky(now).ph}" data-late="${aqMt(a,now).late?1:0}" data-dirty="${aqLv(a,now).dt>.01?1:0}"><div class="skn" aria-hidden="true"></div><div class="rays"></div><div class="sky" aria-hidden="true"><div class="stars">${[[11,8],[26,22],[38,5],[54,17],[67,9],[80,24],[91,13],[19,32],[46,29]].map(([x,y],i)=>`<i style="left:${x}%;top:${y}%;--dl:${-i*.7}s"></i>`).join('')}</div></div><div class="sand"></div><div class="bubs">${[9,24,43,62,78,91].map((x,i)=>`<i style="left:${x}%;--dl:${-i*1.9}s;--du:${7+i%3*2}s"></i>`).join('')}</div>${DECO.filter(d=>a.d[d.id]).map(d=>{const q=dpos(d,a),mv=aqEd&&!d.fix;return`<svg class="dc ${d.k||''}${mv?' mv':''}" data-id="${d.id}" viewBox="${d.vb||'0 0 100 100'}" style="left:${q.x}%;width:${d.w}%;bottom:${q.b}%;aspect-ratio:${d.ar||1};${d.k==='float'?'animation-delay:'+(-(hs(d.id)%7))+'s':''}" role="img" aria-label="${d.n}"${mv?' tabindex="0"':''}><rect width="100%" height="100%" fill="transparent"/>${d.svg}</svg>${aqGlowEl(d,q)}`}).join('')}${aqOn(a).map((f,k)=>{const q=hs(f.id),du=16+q%10,y=8+(k*37+q%11)%46,W=aqWan(f,q,du,k);return`<style>${W.css}</style><div class="fx ${hg.has(f.id)?'h':''}" data-id="${f.id}" data-a="aqfish" data-v="${f.id}" role="button" tabindex="0" aria-label="${esc(nmq[f.id]||f.n)} (${f.n})" style="--y:${y}%;--w:${(15*f.sz).toFixed(1)}%;--tx:${((96-15*f.sz)/(15*f.sz)*100).toFixed(2)}%;--d:${W.D}s;--dl:${W.dl}s;--p:${(q%100)/100}"><div class="fy"><div class="fr"><div class="fi">${fishSVG(f)}</div></div><span class="hg">+${gn[f.id]??aqGain(a,[f]).g[0]} ❄</span></div></div>`}).join('')}<div class="aqm-haze"></div></div>`;
+ return`<div class="tank${aqEd?' ed':''}" id="tank" style="--w1:${w.c1};--w2:${w.c2};--dt:${aqLv(a,now).dt.toFixed(3)};--gr:${aqLv(a,now).gr.toFixed(3)};${aqSkyStyle(now)}" data-ph="${aqSky(now).ph}" data-late="${aqMt(a,now).late?1:0}" data-dirty="${aqLv(a,now).dt>.01?1:0}"><div class="skn" aria-hidden="true"></div>${a.w==='noel'?XMBG:''}<div class="rays"></div><div class="sky" aria-hidden="true"><div class="stars">${[[11,8],[26,22],[38,5],[54,17],[67,9],[80,24],[91,13],[19,32],[46,29]].map(([x,y],i)=>`<i style="left:${x}%;top:${y}%;--dl:${-i*.7}s"></i>`).join('')}</div></div><div class="sand"></div><div class="bubs">${[9,24,43,62,78,91].map((x,i)=>`<i style="left:${x}%;--dl:${-i*1.9}s;--du:${7+i%3*2}s"></i>`).join('')}</div>${DECO.filter(d=>a.d[d.id]).map(d=>{const q=dpos(d,a),mv=aqEd&&!d.fix;return`<svg class="dc ${d.k||''}${mv?' mv':''}" data-id="${d.id}" viewBox="${d.vb||'0 0 100 100'}" style="left:${q.x}%;width:${d.w}%;bottom:${q.b}%;aspect-ratio:${d.ar||1};${d.k==='float'?'animation-delay:'+(-(hs(d.id)%7))+'s':''}" role="img" aria-label="${d.n}"${mv?' tabindex="0"':''}><rect width="100%" height="100%" fill="transparent"/>${d.svg}</svg>${aqGlowEl(d,q)}`}).join('')}${aqOn(a).map((f,k)=>{const q=hs(f.id),du=16+q%10,y=8+(k*37+q%11)%46,W=aqWan(f,q,du,k);return`<style>${W.css}</style><div class="fx ${hg.has(f.id)?'h':''}" data-id="${f.id}" data-a="aqfish" data-v="${f.id}" role="button" tabindex="0" aria-label="${esc(nmq[f.id]||f.n)} (${f.n})" style="--y:${y}%;--w:${(15*f.sz).toFixed(1)}%;--tx:${((96-15*f.sz)/(15*f.sz)*100).toFixed(2)}%;--d:${W.D}s;--dl:${W.dl}s;--p:${(q%100)/100}"><div class="fy"><div class="fr"><div class="fi">${fishSVG(f)}</div></div><span class="hg">+${gn[f.id]??aqGain(a,[f]).g[0]} ❄</span></div></div>`}).join('')}<div class="aqm-haze"></div></div>`;
 }
 function aqPanel0(){
  const a=aqRead(),el=$('#aql');if(!el)return;
@@ -5690,9 +5731,13 @@ function aqPanel(){
  /* à la boutique, ce qu’on possède se gère dans l’inventaire */
  el.querySelectorAll('[data-a=aqtg],[data-a=aqdt]').forEach(b=>{const s=document.createElement('span');s.className='aqown';s.textContent='Possédé ✓';b.replaceWith(s)});
  el.querySelectorAll('.aqed,[data-a=aqpr]').forEach(b=>b.remove());
+ /* objets de Noël : verrouillés tant que Zeni n’a pas atteint l’étape demandée ; les fonds gratuits s’« obtiennent » */
+ el.querySelectorAll('[data-a=aqbuy]').forEach(b=>{const[k,id]=b.dataset.v.split(':'),L=(k==='f'?FISH:k==='d'?DECO:WATER).find(x=>x.id===id);if(!L)return;
+  if(aqXL(L)){const r=b.closest('.ai'),sm=r&&r.querySelector('small');if(sm)sm.textContent='Un noël pour Zeni : étape '+L.lk;if(r)r.classList.add('xlk');b.outerHTML='<button class="sb lkb" disabled>🔒 Étape '+L.lk+'</button>'}
+  else if(!L.p)b.textContent='Obtenir'});
  /* boutique : les éléments à acheter défilent en carrousel (à acheter d’abord, déjà possédés ensuite) */
  if(aqTab==='fish'||aqTab==='deco'){
-  let grp=[];const flush=()=>{if(!grp.length)return;const c=document.createElement('div');c.className='aqcar';grp[0].before(c);[...grp.filter(r=>r.querySelector('.buy')),...grp.filter(r=>!r.querySelector('.buy'))].forEach(r=>c.appendChild(r));grp=[]};
+  let grp=[];const flush=()=>{if(!grp.length)return;const c=document.createElement('div');c.className='aqcar';grp[0].before(c);[...grp.filter(r=>r.querySelector('.buy')),...grp.filter(r=>r.classList.contains('xlk')),...grp.filter(r=>!r.querySelector('.buy')&&!r.classList.contains('xlk'))].forEach(r=>c.appendChild(r));grp=[]};
   [...el.children].forEach(ch=>{if(ch.classList.contains('ai'))grp.push(ch);else flush()});flush();
  }
 }
@@ -5760,7 +5805,7 @@ function aqFeed(only){
  const R=aqGain(a,ids.map(id=>FISH.find(x=>x.id===id))),gain=R.g.reduce((q,n)=>q+n,0),M=aqM(a);if(R.r)a.r=R.r;else delete a.r;AQG=Object.fromEntries(ids.map((id,i)=>[id,R.g[i]]));fl+=gain;st.set('fl',fl);aqSave(a);chip();aqStatus();aqFx(all,ids);sfx(660,.45);vib([15,30,15]);msg('✦ +'+gain+' ❄');setTimeout(()=>{const m=$('#m');if(m&&m.textContent==='✦ +'+gain+' ❄')m.textContent=''},4000);return true;
 }
 function aqBuy(v){
- mt='m-aq';const[k,id]=v.split(':'),a=aqRead();
+ mt='m-aq';const[k,id]=v.split(':'),a=aqRead(),XL=(k==='f'?FISH:k==='d'?DECO:WATER).find(x=>x.id===id);if(aqXL(XL))return msg('Se débloque à l’étape '+XL.lk+' d’« Un noël pour Zeni ».');
  if(k==='f'){const f=FISH.find(x=>x.id===id);if(!f)return;
   if(a.f[id])return msg('Tu as déjà ce poisson : on ne peut pas le racheter.');
   if(!UNL()&&fl<f.p)return msg('Il te manque quelques flocons.');
@@ -6242,6 +6287,7 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches)snow();
    add(edge('aqc',!!late),'🫧','Aquarium','Ton aquarium a besoin d’entretien','aqua');
    add(edge('aqf',n>0),'🐟','Aquarium',n>1?'Tes poissons ont faim':'Ton poisson a faim','aqua')}catch(e){}
   try{const Y=styRead();add(edge('sty',Y.p<SMX&&styDust(Y)>=SDU&&!UNL()),'✦','Histoire','Tu as assez de poussière d’étoile pour avancer','day');
+   [[10,'Les décorations de Noël sont débloquées dans l’aquarium'],[20,'Le Poisson Père Noël est débloqué dans l’aquarium'],[30,'Le fond « Nuit de Noël » est débloqué dans l’aquarium']].forEach(([n,t])=>add(edge('xu'+n,(Y.xp|0)>=n),'🎄','Aquarium de Noël',t,'aqua'));
    if(Y.p>=3)add(edge('stx',(Y.xp||0)<XMX&&xDust(Y)>=XDU&&!UNL()),'🎄','Un noël pour Zeni','Un sapin est prêt : Zeni peut avancer','day')}catch(e){}
   try{const s=st.get('soc:seen',{});Object.entries(SO.rec||{}).forEach(([id,n])=>{if(n>(+s[id]||0))add('gift:'+id+':'+n,'🎁','Cadeau',((SO.P[id]&&SO.P[id].name)||'Un ami')+' t’a offert des ❄','soc')})}catch(e){}
   try{Object.entries(SC.G||{}).forEach(([f,S])=>{if(S&&!S.e&&S.t===S.p.indexOf(SO.uid))add('scr:'+S.id+':'+S.n,'Ⓢ','Scrabble','À toi de jouer contre '+scrNm(f),'scr')})}catch(e){}
