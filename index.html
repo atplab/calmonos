@@ -6472,7 +6472,7 @@ function aqStatus(){
  if(s){
   s.textContent=!on.length?(FISH.some(f=>a.f[f.id])?'Aucun poisson dans l’aquarium':'Ton aquarium est vide'):lt?'Entretien nécessaire':hg.length?(hg.length===1?'1 poisson a faim':hg.length+' poissons ont faim'):'Tout le monde est rassasié';
   $('#aqn').textContent=!on.length?(FISH.some(f=>a.f[f.id])?'Remets un poisson à l’eau.':'Ton premier poisson coûte '+FISH[0].p+' ❄.'):lt?'Sans entretien, plus de flocons':hg.length?(hg.length===1?'+'+aqGain(a,hg).g[0]+' ❄ à récolter':'Chacun donne selon sa valeur'):'Prochain repas dans '+aqFmt(next);
-  const b=$('#aqb');b.disabled=!lt&&!hg.length;b.textContent=lt?'Entretien':hg.length?'Nourrir · +'+aqGain(a,hg).g.reduce((q,n)=>q+n,0)+' ❄':on.length?'Dans '+aqFmt(next):'Nourrir';
+  const b=$('#aqb'),uf=UNL()&&on.length&&!hg.length;b.disabled=!lt&&!hg.length&&!uf;b.classList.toggle('uf',!!uf);b.textContent=lt?'Entretien':uf?'Nourrir':hg.length?'Nourrir · +'+aqGain(a,hg).g.reduce((q,n)=>q+n,0)+' ❄':on.length?'Dans '+aqFmt(next):'Nourrir';
  }
  const c=$('#aqc');if(c)c.textContent=on.length+' / '+MAXF;
  const pt=$('#aqm-pt');if(pt)pt.hidden=!late;
@@ -6780,7 +6780,7 @@ function aqStep(ts){
 function aqFeed(only){
  mt='m-aq';const a=aqRead(),now=Date.now(),ids=[],all=[];
  if(aqMt(a,now).late&&aqOn(a).length){msg(aqLateMsg(a,now));return false}
- aqOn(a).forEach(f=>{const o=a.f[f.id];if(only&&only!==f.id)return;all.push(f.id);if(now-o.t<HR)return;o.t=now;ids.push(f.id)});
+ aqOn(a).forEach(f=>{const o=a.f[f.id];if(only&&only!==f.id)return;all.push(f.id);if(now-o.t<HR&&!UNL())return;o.t=now;ids.push(f.id)});
  if(!ids.length)return false;
  /* tous les poissons de l’aquarium viennent manger ; seuls les affamés rapportent des flocons */
  const R=aqGain(a,ids.map(id=>FISH.find(x=>x.id===id))),gain=R.g.reduce((q,n)=>q+n,0),M=aqM(a);if(R.r)a.r=R.r;else delete a.r;AQG=Object.fromEntries(ids.map((id,i)=>[id,R.g[i]]));fl+=gain;st.set('fl',fl);aqSave(a);chip();aqStatus();aqFx(all,ids);sfx(660,.45);vib([15,30,15]);msg('✦ +'+gain+' ❄');setTimeout(()=>{const m=$('#m');if(m&&m.textContent==='✦ +'+gain+' ❄')m.textContent=''},4000);return true;
