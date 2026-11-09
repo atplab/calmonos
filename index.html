@@ -1632,6 +1632,57 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 @keyframes agp{0%{transform:scale(.3);opacity:.2}100%{transform:none;opacity:1}}
 @keyframes agf{40%{transform:scale(1.14);filter:brightness(1.3)}}
 .pv.bad{animation:shk .3s;color:#ffb3b3}
+/* Relie les points */
+.fls{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:6px 0 10px;font-size:13px}
+.fls span{padding:5px 11px;border-radius:999px;background:rgba(0,0,0,.18);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.fls b{color:#fff3a6;font-variant-numeric:tabular-nums}
+.flw{width:min(100%,430px);margin:0 auto 8px}
+.flv{display:block;width:100%;height:auto;touch-action:none;user-select:none;-webkit-user-select:none;background:rgba(10,8,30,.55);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.flc{fill:transparent;fill-opacity:.2;transition:fill .18s,fill-opacity .18s}
+.flg{fill:none;stroke:rgba(255,255,255,.2);stroke-width:.025}
+.flp{fill:none;stroke-width:.3;stroke-linecap:round;stroke-linejoin:round;transition:stroke-width .2s,filter .3s}
+.flp.ok{stroke-width:.34;filter:drop-shadow(0 0 .08px currentColor)}
+.flp.hn{animation:flh .9s}
+@keyframes flh{0%{stroke-width:.05;opacity:.2}60%{stroke-width:.42}100%{stroke-width:.34}}
+.fld{transform-box:fill-box;transform-origin:center;transition:transform .2s}
+.fld.pop{animation:fldp .45s cubic-bezier(.3,1.6,.5,1)}
+@keyframes fldp{0%{transform:scale(1)}45%{transform:scale(1.35)}100%{transform:scale(1)}}
+.flcur{opacity:0;fill-opacity:.28;transition:opacity .15s;pointer-events:none}
+.flv.drg .flcur{opacity:1}
+.flv.won .flc{animation:flw .7s var(--d) both}
+.flv.won .fld{animation:fldp .5s cubic-bezier(.3,1.6,.5,1) .5s}
+@keyframes flw{40%{fill-opacity:.65}100%{fill-opacity:.3}}
+/* 2048 */
+.g2h{display:flex;align-items:center;justify-content:center;gap:10px;margin:6px 0 12px}
+.g2t{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:74px;padding:6px 10px;border-radius:12px;background:rgba(0,0,0,.18);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.g2t small{font-size:11px;opacity:.8;text-transform:uppercase;letter-spacing:.06em}
+.g2t b{font:800 18px/1.1 "Nunito Sans",sans-serif;font-variant-numeric:tabular-nums}
+.g2o{padding:1px 8px;border-radius:7px;background:var(--tb);color:var(--tf)}
+.g2u{display:flex;align-items:center;gap:5px;height:44px;padding:0 12px;border-radius:12px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);color:#fff;font:700 14px "Nunito Sans",sans-serif}
+.g2u svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.g2b{--s:70px;--gp:8px;position:relative;width:min(100%,400px);aspect-ratio:1;margin:0 auto;padding:var(--gp);box-sizing:border-box;display:grid;grid-template-columns:repeat(var(--n),1fr);gap:var(--gp);border-radius:16px;background:rgba(20,26,60,.45);box-shadow:0 10px 30px rgba(0,0,0,.28),inset 0 0 0 1px rgba(255,255,255,.14);touch-action:none;user-select:none;-webkit-user-select:none}
+.g2b>i{border-radius:12%;background:rgba(255,255,255,.09)}
+.g2x{position:absolute;left:0;top:0;width:var(--s);height:var(--s);border-radius:12%;display:grid;place-items:center;font:800 calc(var(--s)*.42)/1 "Nunito Sans",sans-serif;font-variant-numeric:tabular-nums;transition:transform 110ms ease-out;will-change:transform;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+.g2x[data-d="3"]{font-size:calc(var(--s)*.34)}.g2x[data-d="4"]{font-size:calc(var(--s)*.27)}
+.g2x.gl{box-shadow:0 0 calc(var(--s)*.25) rgba(255,220,140,.45),0 2px 6px rgba(0,0,0,.18)}
+.g2x.nw{animation:g2n .22s 90ms cubic-bezier(.3,1.4,.5,1) backwards}
+.g2x.mg{animation:g2m .22s cubic-bezier(.3,1.6,.5,1)}
+.g2x.win{animation:g2w 1.2s ease-in-out infinite;z-index:2}
+@keyframes g2n{from{scale:0;opacity:0}to{scale:1;opacity:1}}
+@keyframes g2m{0%{scale:1}45%{scale:1.2}100%{scale:1}}
+@keyframes g2w{0%,100%{scale:1;filter:brightness(1)}50%{scale:1.12;filter:brightness(1.25)}}
+.g2b.nm0{animation:g2s0 .25s}.g2b.nm1{animation:g2s1 .25s}.g2b.nm2{animation:g2s2 .25s}.g2b.nm3{animation:g2s3 .25s}
+@keyframes g2s0{40%{translate:-5px 0}}@keyframes g2s1{40%{translate:5px 0}}@keyframes g2s2{40%{translate:0 -5px}}@keyframes g2s3{40%{translate:0 5px}}
+.g2ar{position:absolute;inset:0;pointer-events:none;opacity:0;z-index:3}
+.g2ar::after{content:"";position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px;background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 12H5M11 6l-6 6 6 6'/%3E%3C/svg%3E");filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
+.g2ar.on{animation:g2a 1.6s ease-out}
+.g2ar.d1::after{rotate:180deg}.g2ar.d2::after{rotate:90deg}.g2ar.d3::after{rotate:-90deg}
+@keyframes g2a{0%{opacity:0}20%,70%{opacity:1}100%{opacity:0}}
+.g2ar.on.d0::after{animation:g2m0 1.6s ease-in-out}.g2ar.on.d1::after{animation:g2m1 1.6s ease-in-out}.g2ar.on.d2::after{animation:g2m2 1.6s ease-in-out}.g2ar.on.d3::after{animation:g2m3 1.6s ease-in-out}
+@keyframes g2m0{50%{translate:-30px 0}}@keyframes g2m1{50%{translate:30px 0}}@keyframes g2m2{50%{translate:0 -30px}}@keyframes g2m3{50%{translate:0 30px}}
+.g2ov{position:absolute;inset:0;z-index:4;display:grid;place-items:center;border-radius:16px;background:rgba(12,14,40,.72);backdrop-filter:blur(3px);opacity:0;transition:opacity .35s;text-align:center;padding:16px}
+.g2ov.on{opacity:1}.g2ov>div{display:flex;flex-direction:column;gap:8px;align-items:center}.g2ov b{font:700 20px Fraunces,Georgia,serif}.g2ov p{margin:0 0 6px;opacity:.85}
+.g2k{text-align:center;font-size:13px;opacity:.75;margin:10px 0 2px}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -2015,7 +2066,7 @@ const st={get(k,d){if(k in mem)return mem[k];try{const v=localStorage.getItem(k)
 const sh=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const today=new Date().toLocaleDateString('sv'),di=Math.floor(Date.now()/864e5);
 const dkey=g=>'d:'+g+':'+today,ckey=g=>'c:'+g;
-const NLS={mots:60,memo:30,caches:60,phrase:40,maze:30,match3:70,demenage:11,quiz:1,cherche:20,tournade:40,sudoku:40,ana:50},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
+const NLS={mots:60,memo:30,caches:60,phrase:40,maze:30,match3:70,demenage:11,quiz:1,cherche:20,tournade:40,sudoku:40,ana:50,flow:60,g2048:30},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
 /* Section temporaire « fêtes » : 10 niveaux spéciaux de plus par jeu (indices nl, nl+1 … nl+9), disponible tout de suite et jusqu’au 11 janvier 2027 inclus ; #noel dans l’adresse force l’affichage.
    Ils ne font pas partie du code de sauvegarde ni de la synchronisation. */
 const NLX=10,xmasOn=()=>{const d=new Date(),m=d.getMonth();return UNL()||location.hash==='#noel'||m===11||(m===0&&d.getDate()<12)},isX=(g,l)=>l>=nl(g),xn=(g,l)=>l-nl(g)+1;
@@ -2581,7 +2632,9 @@ const G=[
 {id:'match3',n:'Constellations',ic:'✧',a:'#8fb4f0',b:'#4a5db0',t:'Les constellations',s:'Dans le ciel, des pièces brillantes se mêlent. Aligne-les pour les faire briller : quatre alignées font naître une lune, un carré de quatre une étoile, et cinq alignées un soleil.',w:'Le ciel brille un peu plus fort ce soir.'},
 {id:'demenage',n:'Déménagement',ic:'⌂',a:'#e8b98a',b:'#9a5f3a',t:'Les boîtes du déménagement',s:'Une nouvelle maison, des boîtes partout. Sors les objets un à un et range-les là où ils vont : la brosse à dents sur le lavabo, le toutou sur le lit…',w:'Tout est rangé. La maison sent déjà le chez-soi.'},
 {id:'quiz',n:'Quiz',ic:'?',a:'#8fd6d0',b:'#2f7f87',t:'Le quiz du bonhomme',s:'Le petit bonhomme te pose une question de culture générale, avec quatre réponses possibles. Bonne réponse : il est content et tu gagnes un flocon. Mauvaise réponse : il est déçu, la bonne réponse t’est montrée, et on passe à la suite.',w:'Le bonhomme est ravi.'},
-{id:'cherche',n:'Cherche et trouve',ic:'◉',a:'#ffd37a',b:'#c9742e',t:'Le bonhomme s’est perdu',s:'Le petit bonhomme est tombé de son étoile filante. Dans chaque univers, retrouve-le parmi des dizaines d’éléments, ainsi que les objets qui l’aideront à rentrer chez lui. Fais glisser la scène, pince pour agrandir, touche ce que tu trouves.',w:'Le bonhomme te remercie. Un pas de plus vers la maison.',wl:CHWL}
+{id:'cherche',n:'Cherche et trouve',ic:'◉',a:'#ffd37a',b:'#c9742e',t:'Le bonhomme s’est perdu',s:'Le petit bonhomme est tombé de son étoile filante. Dans chaque univers, retrouve-le parmi des dizaines d’éléments, ainsi que les objets qui l’aideront à rentrer chez lui. Fais glisser la scène, pince pour agrandir, touche ce que tu trouves.',w:'Le bonhomme te remercie. Un pas de plus vers la maison.',wl:CHWL},
+{id:'flow',n:'Relie les points',ic:'◍',a:'#ff8fb8',b:'#5a3a9a',t:'Les fils de couleur',s:'Relie chaque paire de points de même couleur avec un fil, sans croiser les autres fils. Remplis toute la grille pour terminer.',w:'Tous les fils sont reliés, la grille brille de toutes ses couleurs.'},
+{id:'g2048',n:'2048',ic:'❆',a:'#9fd3ff',b:'#3a5aa8',t:'Les flocons qui s’assemblent',s:'Fais glisser la grille : tous les flocons partent ensemble, et deux flocons pareils se rejoignent pour doubler. Fais naître le flocon objectif du niveau.',w:'Le grand flocon est né, il scintille au-dessus de la grille.'}
 ];
 const SP=[{id:'scrabble',n:'Scrabble',ic:'Ⓢ',a:'#e6b86a',b:'#9a6a2e',t:'La partie du soir',s:'Pose des mots sur le plateau avec les sept lettres de ton chevalet. Joue ton tour, ton ami joue le sien quand il le souhaite. Pas d’indices ici.',sp:'Entre amis'},
 {id:'chess',n:'Échecs',ic:'♞',a:'#7fb88a',b:'#2b5f45',t:'La clairière',s:'Une partie d’échecs au calme, sous les sapins : contre l’ordinateur, à deux sur le même appareil, ou à distance contre un ami. Tu choisis la durée au début, ou pas de limite de temps.',sp:'Seul ou à deux'},
@@ -2589,7 +2642,7 @@ const SP=[{id:'scrabble',n:'Scrabble',ic:'Ⓢ',a:'#e6b86a',b:'#9a6a2e',t:'La par
 {id:'solitaire',n:'Solitaire',ic:'♠',a:'#5aa38a',b:'#24505a',t:'La patience',s:'Le solitaire classique : 40 niveaux et un mode infini.',sp:''},
 {id:'colorie',n:'Coloriage',ic:'🎨',a:'#e88ab0',b:'#7a3f8a',t:'Couleurs du soir',s:'Colorie les dessins case par case, en suivant les numéros.',sp:''},
 {id:'airhockey',n:'Air hockey',ic:'🏒',a:'#4aa3d8',b:'#1d4f7a',t:'La table glisse',s:'Contre l’IA en 20 niveaux, à deux sur le même écran ou en ligne avec un ami.',sp:''}];
-const ORD=['mots','caches','croises','phrase','tournade','maze','memo','sudoku','match3','demenage','quiz','cherche'],GD=[...ORD.map(i=>G.find(g=>g.id===i)),...SP,...G.filter(g=>g.soon)];
+const ORD=['mots','caches','croises','phrase','tournade','maze','memo','sudoku','match3','demenage','quiz','cherche','flow','g2048'],GD=[...ORD.map(i=>G.find(g=>g.id===i)),...SP,...G.filter(g=>g.soon)];
 const DL=[
 {id:'wordle',n:'Le mot du jour',ic:'✺',a:'#cfd6ff',b:'#4a5a9a',t:'Le mot du jour',w:'Le mot du jour est trouvé.'}
 ];
@@ -2699,7 +2752,7 @@ function home(){nv('games');
 }
 const HBI=n=>`<svg class="hbi" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></svg><span>${n} ❄</span>`;
 /* ordre des jeux choisi par le joueur (les nouveaux jeux se rangent à la fin) */
-const GUNL=['mots','caches','sudoku','match3','colorie','scrabble','croises','phrase','uno','cherche','chess','airhockey','demineur','memo','maze','tournade','solitaire','demenage','quiz'];
+const GUNL=['mots','caches','sudoku','match3','colorie','scrabble','croises','phrase','uno','cherche','chess','airhockey','demineur','memo','maze','tournade','solitaire','demenage','quiz','flow','g2048'];
 function gOrd(L){const O0=st.get('g:ord',[]),O=O0.length?O0:GUNL;const ix=g=>{const i=O.indexOf(g.id);return i<0?1e3+L.indexOf(g):i};return L.slice().sort((a,b)=>ix(a)-ix(b))}
 function gOrdDraw(){const L=gOrd(GD.filter(g=>!g.soon&&!gHid(g.id))),e=$('#gordo .gorl');if(!e)return;
  e.innerHTML=L.map((g,i)=>`<li style="--a:${g.a};--b:${g.b}"><i>${g.ic}</i><b>${esc(g.n)}</b><button data-a="gMv" data-v="${g.id}:-1" aria-label="Monter ${esc(g.n)}"${i?'':' disabled'}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button><button data-a="gMv" data-v="${g.id}:1" aria-label="Descendre ${esc(g.n)}"${i<L.length-1?'':' disabled'}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></li>`).join('')}
@@ -2713,7 +2766,7 @@ setTimeout(()=>Object.assign(act,{
  gOrdX:()=>{const o=$('#gordo');if(o)o.remove()}
 }));
 /* jeux qui arrivent plus tard : cachés jusqu’à leur date (tout est visible en mode illimité) */
-const GAV={airhockey:[2026,11,5],demenage:[2026,11,12]};
+const GAV={airhockey:[2026,11,5],demenage:[2026,11,12],flow:[2099,0,1],g2048:[2099,0,1]};
 const gOpenAt=id=>{const a=GAV[id];return a?new Date(a[0],a[1],a[2]).getTime():0};
 function gHid(id){return Date.now()<gOpenAt(id)&&!UNL()}
 /* fête de déblocage : une seule fois par jeu, à la première visite de l’onglet Jeux après la date */
@@ -6249,6 +6302,159 @@ function pAna2(r){
  window.__anT=T;if(!window.__anR){window.__anR=1;addEventListener('resize',()=>{const e=$('#agr');if(e&&window.__anT)e.style.setProperty('--t',window.__anT()+'px')})}
  place();auto();grid();draw();
 }
+/* ---------- Relie les points : un fil par couleur, toute la grille remplie ---------- */
+const FLC=['#ff5a5f','#4f8cff','#3ccf6e','#ffd84a','#ff9a3c','#5fe0e6','#e65cd7','#a06cff','#b8e986','#f2f2f2','#c9874a','#ff8fb1'];
+function flGen(l){
+ const n=l<5?5:l<15?6:l<30?7:l<45?8:9,R=rng((l+3)*2246822519+17),N=n*n;
+ const nb=a=>{const r=a/n|0,c=a%n,o=[];if(r)o.push(a-n);if(r<n-1)o.push(a+n);if(c)o.push(a-1);if(c<n-1)o.push(a+1);return o};
+ const adj=(a,b)=>Math.abs((a/n|0)-(b/n|0))+Math.abs(a%n-b%n)===1;
+ let best=null;
+ for(let att=0;att<300;att++){
+  /* chemin qui passe par toutes les cases (serpentin brassé par « backbite ») */
+  let P=[];for(let r=0;r<n;r++)for(let c=0;c<n;c++)P.push(r*n+(r%2?n-1-c:c));
+  for(let it=0;it<N*60;it++){if(R()<.5)P.reverse();const ns=nb(P[0]),v=ns[R()*ns.length|0],i=P.indexOf(v);if(i>1)P=P.slice(0,i).reverse().concat(P.slice(i))}
+  /* découpé en fils d’au moins 3 cases */
+  const K=n-1+(R()<.5?0:1)+(n>=9&&R()<.5?1:0),L=Array(K).fill(3);let rem=N-3*K;
+  const w=L.map(()=>.3+R()*R()*2.5),ws=w.reduce((a,b)=>a+b,0);for(let i=0;i<K;i++){const x=Math.floor(rem*w[i]/ws);L[i]+=x}
+  let left=N-L.reduce((a,b)=>a+b,0);while(left-->0)L[R()*K|0]++;
+  const S=[];let p=0;for(const x of L){S.push(P.slice(p,p+x));p+=x}
+  /* pas de fil trop évident : les deux points ne se touchent pas et le fil tourne au moins une fois */
+  const bad=S.filter(s=>adj(s[0],s[s.length-1])).length;
+  const str=S.filter(s=>s.every(c=>(c/n|0)===(s[0]/n|0))||s.every(c=>c%n===s[0]%n)).length;
+  const sc=bad*10+str;
+  if(!best||sc<best.sc)best={sc,S};
+  if(sc===0)break;
+ }
+ const S=best.S.map(s=>R()<.5?s.slice().reverse():s);
+ return{n,S,F:S.map(s=>[s[0],s[s.length-1]])};
+}
+function pFlow(r){
+ const Z=flGen(lv),n=Z.n,K=Z.F.length,N=n*n,end={};Z.F.forEach(([a,b],i)=>{end[a]=i;end[b]=i});
+ const nb=(a,b)=>Math.abs((a/n|0)-(b/n|0))+Math.abs(a%n-b%n)===1;
+ let paths=r&&r.p&&r.p.length===K?r.p.map(x=>x.slice()):Z.F.map(()=>[]),mv=r&&r.mv||0,last=-1,drag=null,okPrev=paths.map(()=>false),done=false;
+ snap=()=>({p:paths,mv});
+ const conn=i=>{const p=paths[i];return p.length>1&&end[p[p.length-1]]===i&&p[p.length-1]!==p[0]};
+ const own=()=>{const o=Array(N).fill(-1);paths.forEach((p,i)=>p.forEach(c=>o[c]=i));return o};
+ const C=i=>FLC[i%FLC.length],cx=a=>a%n+.5,cy=a=>(a/n|0)+.5;
+ let gl='';for(let i=1;i<n;i++)gl+=`M${i} 0V${n}M0 ${i}H${n}`;
+ frame(`<div class="fls" id="fls"></div><div class="flw"><svg class="flv" id="flv" viewBox="-.06 -.06 ${n+.12} ${n+.12}">
+  <g>${[...Array(N).keys()].map(a=>`<rect class="flc" id="fc${a}" x="${a%n+.04}" y="${(a/n|0)+.04}" width=".92" height=".92" rx=".1" style="--d:${((a%n)+(a/n|0))*35}ms"/>`).join('')}</g>
+  <path class="flg" d="M0 0H${n}V${n}H0Z${gl}"/>
+  <circle class="flcur" id="flcur" r=".62" cx="-5" cy="-5"/>
+  <g>${Z.F.map((_,i)=>`<polyline class="flp" id="fp${i}" stroke="${C(i)}" points=""/>`).join('')}</g>
+  <g>${Z.F.map(([a,b],i)=>[a,b].map(x=>`<circle class="fld" data-c="${i}" fill="${C(i)}" cx="${cx(x)}" cy="${cy(x)}" r=".34"/>`).join('')).join('')}</g>
+ </svg></div>`,1);
+ const sv0=$('#flv'),cur0=$('#flcur');
+ const draw=()=>{const o=own();
+  for(let a=0;a<N;a++){const e=$('#fc'+a);e.style.fill=o[a]<0?'':C(o[a])}
+  paths.forEach((p,i)=>$('#fp'+i).setAttribute('points',p.map(a=>cx(a)+','+cy(a)).join(' ')));
+  const ok=paths.map((_,i)=>conn(i));
+  sv0.querySelectorAll('.fld').forEach(d=>{const i=+d.dataset.c;d.classList.toggle('ok',ok[i]);if(ok[i]&&!okPrev[i]){d.classList.remove('pop');void d.getBBox();d.classList.add('pop')}});
+  ok.forEach((v,i)=>{$('#fp'+i).classList.toggle('ok',v);if(v&&!okPrev[i]&&drag){sfx(520+i*40,.25);vib(12)}});okPrev=ok;
+  const f=o.filter(x=>x>=0).length;
+  $('#fls').innerHTML=`<span>Fils <b>${ok.filter(Boolean).length}/${K}</b></span><span>Coups <b>${mv}</b></span><span>Grille <b>${Math.round(f*100/N)} %</b></span>`;
+  return{ok,f}};
+ const pt=e=>{const b=sv0.getBoundingClientRect(),s=(n+.12)/b.width;return[(e.clientX-b.left)*s-.06,(e.clientY-b.top)*s-.06]};
+ const cellAt=([x,y])=>x<0||y<0||x>=n||y>=n?-1:(y|0)*n+(x|0);
+ /* les autres fils sont coupés là où le fil en cours passe, et reviennent si on recule */
+ const recut=()=>{const S=new Set(drag.p);paths=drag.base.map((p,i)=>{if(i===drag.c)return drag.p;const k=p.findIndex(a=>S.has(a));return k<0?p.slice():p.slice(0,k)})};
+ const step=y=>{const p=drag.p,h=p[p.length-1];if(y===h)return true;
+  const k=p.indexOf(y);if(k>=0){p.length=k+1;return true}
+  if(!nb(h,y))return false;
+  if(p.length>1&&end[h]===drag.c)return false;
+  if(end[y]!==undefined&&end[y]!==drag.c)return false;
+  p.push(y);return true};
+ const go=y=>{let h=drag.p[drag.p.length-1],g=0;
+  while(h!==y&&g++<20){if(drag.p.includes(y)){step(y);break}
+   const dr=(y/n|0)-(h/n|0),dc=y%n-h%n,cand=Math.abs(dr)>=Math.abs(dc)?[h+Math.sign(dr)*n,h+Math.sign(dc)]:[h+Math.sign(dc),h+Math.sign(dr)*n];
+   let moved=false;for(const c of cand)if(c!==h&&c>=0&&c<N&&nb(h,c)&&step(c)){moved=true;break}
+   if(!moved)break;h=drag.p[drag.p.length-1]}
+  recut();draw()};
+ sv0.addEventListener('pointerdown',e=>{if(done)return;const q=pt(e),x=cellAt(q);if(x<0)return;const o=own();let c,p;
+  if(end[x]!==undefined){c=end[x];p=[x]}else if(o[x]>=0){c=o[x];p=paths[c].slice(0,paths[c].indexOf(x)+1)}else return;
+  drag={c,p,base:paths.map(z=>z.slice()),b0:JSON.stringify(paths)};try{sv0.setPointerCapture(e.pointerId)}catch(_){}
+  cur0.setAttribute('cx',q[0]);cur0.setAttribute('cy',q[1]);cur0.style.fill=C(c);sv0.classList.add('drg');recut();draw();e.preventDefault()});
+ sv0.addEventListener('pointermove',e=>{if(!drag)return;const q=pt(e);cur0.setAttribute('cx',q[0]);cur0.setAttribute('cy',q[1]);
+  const x=cellAt([Math.min(n-.01,Math.max(0,q[0])),Math.min(n-.01,Math.max(0,q[1]))]);go(x)});
+ const up=()=>{if(!drag)return;const ch=JSON.stringify(paths)!==drag.b0;if(ch&&drag.c!==last){mv++;last=drag.c}
+  drag=null;sv0.classList.remove('drg');const s=draw();if(ch)sv();check(s)};
+ ['pointerup','pointercancel','lostpointercapture'].forEach(t=>sv0.addEventListener(t,up));
+ const check=s=>{if(done)return;if(s.ok.every(Boolean)){if(s.f===N){done=true;sv0.classList.add('won');msg('Toute la grille brille ✦');setTimeout(win,1300)}else msg('Tous les fils sont reliés : remplis aussi toute la grille.')}};
+ /* indice : un fil se trace tout seul, à sa bonne place */
+ act.hint=()=>{if(done)return;const i=paths.findIndex((p,j)=>p.join()!==Z.S[j].join()&&p.join()!==Z.S[j].slice().reverse().join());if(i<0||!spend(1))return;
+  const S=new Set(Z.S[i]);paths=paths.map((p,j)=>{if(j===i)return Z.S[i].slice();const k=p.findIndex(a=>S.has(a));return k<0?p:p.slice(0,k)});
+  const e=$('#fp'+i);e.classList.remove('hn');void e.getBBox();e.classList.add('hn');sv();check(draw())};
+ draw();
+}
+/* ---------- 2048 : les flocons qui s’assemblent ---------- */
+const G2L=[[4,64],[4,128],[4,128],[4,256],[3,64],[4,256],[5,256],[4,512],[3,128],[4,512],[5,512],[4,512],[3,128],[4,1024],[5,1024],[4,1024],[3,256],[5,1024],[4,1024],[4,2048],[5,2048],[3,256],[4,1024],[5,2048],[4,2048],[3,256],[5,2048],[4,2048],[5,4096],[4,2048]];
+const G2C={2:['#eef4fb','#3b4a6b'],4:['#d9e7f7','#3b4a6b'],8:['#aed3f6','#24406b'],16:['#82b8f0','#fff'],32:['#6895ea','#fff'],64:['#7a6ee6','#fff'],128:['#9a62d8','#fff'],256:['#c45cc4','#fff'],512:['#e0609a','#fff'],1024:['#f0846a','#fff'],2048:['#f5b942','#fff'],4096:['#ffd96a','#6b4a10']};
+function p2048(r){
+ const [n,T]=G2L[lv%G2L.length],D=110;
+ let tiles=[],id=0,sc=0,prev=null,busy=false,q=null,done=false,over=false,S=0,GP=0;
+ const mk=(v,r,c)=>{const t={id:++id,v,r,c,el:null};tiles.push(t);return t};
+ const free=()=>{const o=[];for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(!tiles.some(t=>t.r===r&&t.c===c))o.push([r,c]);return o};
+ const spawn=()=>{const f=free();if(!f.length)return null;const [r,c]=f[Math.random()*f.length|0];return mk(Math.random()<.9?2:4,r,c)};
+ const vals=()=>{const g=Array(n*n).fill(0);tiles.forEach(t=>g[t.r*n+t.c]=t.v);return g};
+ if(r&&r.g&&r.g.length===n*n){r.g.forEach((v,i)=>{if(v)mk(v,i/n|0,i%n)});sc=r.sc||0;prev=r.pv||null}else{spawn();spawn()}
+ snap=()=>({g:vals(),sc,pv:prev});
+ frame(`<div class="g2h"><div class="g2t"><small>Objectif</small><b class="g2o" style="--tb:${G2C[T][0]};--tf:${G2C[T][1]}">${T}</b></div><div class="g2t"><small>Score</small><b id="g2s">${sc}</b></div><button class="g2u" data-a="g2u" aria-label="Annuler le dernier coup, 1 flocon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg><span>1 ❄</span></button></div>
+  <div class="g2b" id="g2b" style="--n:${n}">${'<i></i>'.repeat(n*n)}<div class="g2ar" id="g2ar"></div><div class="g2ov" id="g2ov" hidden></div></div><p class="g2k">Glisse dans une direction : tous les flocons partent ensemble.</p>`,1);
+ const B=$('#g2b');
+ const geo=()=>{const w=B.clientWidth;GP=Math.max(6,Math.round(w*.025));S=(w-GP*(n+1))/n;B.style.setProperty('--s',S+'px');B.style.setProperty('--gp',GP+'px')};
+ const pos=t=>`translate(${GP+t.c*(S+GP)}px,${GP+t.r*(S+GP)}px)`;
+ const paint=t=>{const k=G2C[t.v]||['#ffe9a8','#6b4a10'];t.el.style.background=k[0];t.el.style.color=k[1];t.el.textContent=t.v;t.el.dataset.d=String(t.v).length;t.el.classList.toggle('gl',t.v>=128)};
+ const add=(t,cl)=>{const e=document.createElement('b');e.className='g2x'+(cl?' '+cl:'');t.el=e;e.style.transform=pos(t);paint(t);B.appendChild(e)};
+ const layout=()=>{geo();tiles.forEach(t=>{if(!t.el)add(t);t.el.style.transition='none';t.el.style.transform=pos(t);void t.el.offsetWidth;t.el.style.transition=''})};
+ const hud=()=>{$('#g2s').textContent=sc};
+ const can=()=>{if(free().length)return true;const g=vals();for(let r=0;r<n;r++)for(let c=0;c<n;c++){const v=g[r*n+c];if(c<n-1&&g[r*n+c+1]===v||r<n-1&&g[(r+1)*n+c]===v)return true}return false};
+ /* d : 0 gauche, 1 droite, 2 haut, 3 bas */
+ const sim=(g,d)=>{let moved=false,gain=0;const o=g.slice();
+  for(let i=0;i<n;i++){const P=[...Array(n).keys()].map(j=>{const k=d===0||d===2?j:n-1-j;return d<2?i*n+k:k*n+i});
+   const L=P.map(p=>g[p]).filter(Boolean),R=[];for(let j=0;j<L.length;j++){if(L[j]===L[j+1]){R.push(L[j]*2);gain+=L[j]*2;j++}else R.push(L[j])}
+   P.forEach((p,j)=>{const v=R[j]||0;if(o[p]!==v)moved=true;o[p]=v})}
+  return{g:o,moved,gain}};
+ const move=d=>{if(done||over)return;if(busy){q=d;return}
+  const g0=vals(),sc0=sc,merged=[],dead=[];let moved=false;
+  for(let i=0;i<n;i++){
+   const P=[...Array(n).keys()].map(j=>{const k=d===0||d===2?j:n-1-j;return d<2?[i,k]:[k,i]});
+   let tg=0,lastT=null;
+   for(const [r,c] of P){const t=tiles.find(x=>x.r===r&&x.c===c&&!x.x);if(!t)continue;
+    if(lastT&&lastT.v===t.v&&!lastT.m){t.r=lastT.r;t.c=lastT.c;t.x=1;dead.push(t);lastT.v*=2;lastT.m=1;merged.push(lastT);sc+=lastT.v;moved=true}
+    else{const [nr,nc]=P[tg++];if(nr!==r||nc!==c)moved=true;t.r=nr;t.c=nc;lastT=t}}
+  }
+  if(!moved){B.classList.remove('nm'+d);void B.offsetWidth;B.classList.add('nm'+d);return}
+  prev={g:g0,sc:sc0};busy=true;$('#g2ar').className='g2ar';
+  /* les flocons glissent ; ceux qui se rejoignent disparaissent dans l’autre, qui grandit */
+  tiles.forEach(t=>{const v=t.m?t.v/2:t.v;t.el.style.transform=pos(t);if(t.m){t.el.textContent=v}});
+  setTimeout(()=>{dead.forEach(t=>{t.el.remove()});tiles=tiles.filter(t=>!t.x);
+   merged.forEach(t=>{t.m=0;paint(t);t.el.classList.remove('mg');void t.el.offsetWidth;t.el.classList.add('mg')});
+   if(merged.length){sfx(330+Math.log2(Math.max(...merged.map(t=>t.v)))*45,.25);vib(8)}
+   const nt=spawn();if(nt)add(nt,'nw');hud();sv();busy=false;
+   if(tiles.some(t=>t.v>=T)){done=true;const w=tiles.find(t=>t.v>=T);w.el.classList.add('win');msg('Le flocon '+T+' est né ✦');setTimeout(win,1400);return}
+   if(!can()){over=true;showOver();return}
+   if(q!==null){const d2=q;q=null;move(d2)}},D)};
+ const showOver=()=>{const o=$('#g2ov');o.hidden=false;o.innerHTML=`<div><b>Plus de place…</b><p>Aucun flocon ne peut encore bouger.</p><button class="btn" data-a="g2u">Annuler le dernier coup · 1 ❄</button><button class="btn alt" data-a="g2r">Recommencer</button></div>`;requestAnimationFrame(()=>o.classList.add('on'))};
+ const load=(g,s)=>{tiles.forEach(t=>t.el&&t.el.remove());tiles=[];g.forEach((v,i)=>{if(v)mk(v,i/n|0,i%n)});sc=s;layout();tiles.forEach(t=>{t.el.classList.add('nw')});hud();over=false;const o=$('#g2ov');o.classList.remove('on');o.hidden=true};
+ act.g2u=()=>{if(done||busy)return;if(!prev)return msg('Rien à annuler pour l’instant.');if(!spend(1))return;load(prev.g,prev.sc);prev=null;sv();msg('Dernier coup annulé.')};
+ act.g2r=()=>{if(done)return;const g=Array(n*n).fill(0);load(g,0);spawn();spawn();layout();tiles.forEach(t=>t.el.classList.add('nw'));prev=null;sv()};
+ /* indice : la flèche montre le glissement qui garde le plus de place */
+ act.hint=()=>{if(done||over||busy)return;const g=vals();let bd=-1,bs=-1e9;
+  for(let d=0;d<4;d++){const s=sim(g,d);if(!s.moved)continue;let e=s.g.filter(v=>!v).length*10+s.gain/4;
+   const mx=Math.max(...s.g),k=s.g.indexOf(mx),r0=k/n|0,c0=k%n;if((r0===0||r0===n-1)&&(c0===0||c0===n-1))e+=15;
+   for(let d2=0;d2<4;d2++){const s2=sim(s.g,d2);if(s2.moved)e+=s2.g.filter(v=>!v).length}
+   if(e>bs){bs=e;bd=d}}
+  if(bd<0||!spend(1))return;const a=$('#g2ar');a.className='g2ar';void a.offsetWidth;a.className='g2ar on d'+bd;msg(['Glisse vers la gauche','Glisse vers la droite','Glisse vers le haut','Glisse vers le bas'][bd])};
+ let sx=null,sy=null;
+ B.addEventListener('pointerdown',e=>{sx=e.clientX;sy=e.clientY;try{B.setPointerCapture(e.pointerId)}catch(_){}e.preventDefault()});
+ B.addEventListener('pointermove',e=>{if(sx===null)return;const dx=e.clientX-sx,dy=e.clientY-sy;if(Math.max(Math.abs(dx),Math.abs(dy))<26)return;move(Math.abs(dx)>Math.abs(dy)?(dx<0?0:1):(dy<0?2:3));sx=null});
+ ['pointerup','pointercancel'].forEach(t=>B.addEventListener(t,()=>{sx=null}));
+ const kd=e=>{if(cur!=='g2048'||!B.isConnected){removeEventListener('keydown',kd);return}const d={ArrowLeft:0,ArrowRight:1,ArrowUp:2,ArrowDown:3}[e.key];if(d!==undefined){e.preventDefault();move(d)}};
+ addEventListener('keydown',kd);
+ const rs=()=>{if(!B.isConnected){removeEventListener('resize',rs);return}layout()};addEventListener('resize',rs);
+ layout();tiles.forEach(t=>t.el.classList.add('nw'));
+ if(!can()){over=true;showOver()}
+}
 function pCross(r){
  const E=CW[lv].map((a,i)=>({w:a[0],c:a[1],r:a[2],x:a[3],h:a[4]==='h',i})),cells={},ok=new Set(r?r.ok:[]);
  const keys=e=>[...e.w].map((_,k)=>(e.r+(e.h?0:k))+','+(e.x+(e.h?k:0)));
@@ -6441,7 +6647,7 @@ act.skip=()=>{const w=$('#skw');if(w)w.innerHTML='<span>Passer ce niveau sans r�
 act.skipn=()=>{const w=$('#skw');if(w)w.innerHTML=''};
 act.skipy=()=>{const g=cur,l=lv;if(!g||daily)return;st.set('k:'+g+':'+l,true);st.set('last',{g,daily:false,lv:l,date:today,done:1});
  if(isX(g,l)?l<nl(g)+NLX-1:l<nl(g)-1){start(g,false,l+1);msg('Niveau passé, sans flocons : tu pourras y revenir.')}else hub(g)};
-function start(g,d,l,r){if(g==='ana'&&(!anaOn()||l>=nl(g)))return hub(anaOn()?'ana':'mots');if(!d&&l>=nl(g)&&!xmasOn())return hub(g);cur=g;daily=d;lv=l;playing=true;wsG=null;if(!r&&!d&&!st.get(ckey(g)+':'+l,false))r=st.get('p:'+g+':'+l,null)||undefined;theme(g,!d&&l>=nl(g));({ana:pAna2,mots:pRoue,croises:pCross,phrase:pPhrase,tournade:pTourne,maze:pMaze,memo:pMemo,sudoku:pSudoku,caches:pSearch,match3:pMatch,demenage:pDemen2,quiz:pQuiz,cherche:pCherche})[g](r);window.scrollTo(0,0)}
+function start(g,d,l,r){if(g==='ana'&&(!anaOn()||l>=nl(g)))return hub(anaOn()?'ana':'mots');if(!d&&l>=nl(g)&&!xmasOn())return hub(g);cur=g;daily=d;lv=l;playing=true;wsG=null;if(!r&&!d&&!st.get(ckey(g)+':'+l,false))r=st.get('p:'+g+':'+l,null)||undefined;theme(g,!d&&l>=nl(g));({ana:pAna2,flow:pFlow,g2048:p2048,mots:pRoue,croises:pCross,phrase:pPhrase,tournade:pTourne,maze:pMaze,memo:pMemo,sudoku:pSudoku,caches:pSearch,match3:pMatch,demenage:pDemen2,quiz:pQuiz,cherche:pCherche})[g](r);window.scrollTo(0,0)}
 function theme(id,x){const xa=xmAll();m3Mus(id==='match3'&&!x&&!xa);xmMus(!!x||xa);const g=ALL.find(x=>x.id===id),s=document.body.style;s.setProperty('--a',x?'#d9453d':g?g.a:'#a99cf0');s.setProperty('--b',x?'#1f8a52':g?g.b:'#5458AB');$('#tint').classList.toggle('on',!!g);document.body.classList.toggle('g',!!g);document.body.classList.toggle('xm',!!x);const p=$('#pat');if(g)p.className='pt-'+id+' on';else p.classList.remove('on')}
 function nv(t){if(t!=='aqua')['#aqsh','#aqbd'].forEach(q=>{const e=$(q);if(e){e.classList.remove('open');e.style.visibility='hidden';e.style.transition='none'}});playing=false;wsG=null;theme(null);if(t!=='set'){rc=false;Sy.done='';Sy.pv=null;Sy.err=''}const n=$('#nav');n.hidden=false;n.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===t))}
 function resume(){const l=st.get('last',null);if(!l||l.daily||l.g==='melange'||!(G.some(g=>g.id===l.g)||l.g==='ana'))return;const X=isX(l.g,l.lv);if(X&&!xmasOn())return;if(l.done)return(X?l.lv<nl(l.g)+NLX-1:l.lv<nl(l.g)-1)?start(l.g,false,l.lv+1):hub(l.g);start(l.g,false,l.lv,l.s)}
