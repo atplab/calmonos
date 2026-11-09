@@ -1698,7 +1698,6 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 @keyframes unkp{0%,100%{box-shadow:0 0 0 0 rgba(255,216,74,.85),0 0 10px rgba(255,216,74,.4);scale:1}50%{box-shadow:0 0 0 7px rgba(255,216,74,0),0 0 22px rgba(255,216,74,.75);scale:1.07}}
 @keyframes unkb{0%,100%{translate:-50% 0}50%{translate:-50% -4px}}
 /* Uno : en attendant son tour, la main est un peu assombrie */
-.ucd .ucard{transition:filter .35s}
 .ucd.wt .ucard{filter:saturate(.75) brightness(.9)}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
@@ -4524,7 +4523,7 @@ function unDraw(){
  UN.lastX=S.X.length;
  const h2=$('#unh');if(h2)h2.scrollLeft=sl;
  UN.pkS=UN.pk>=0;
- unTimers();unAnim(S);unUiAnim(S,myT);unHandFlip(flip,S);unTurnAnim()}
+ unTimers();unAnim(S);unUiAnim(S,myOn);unHandFlip(flip,S);unTurnAnim()}
 /* le joueur dont c’est le tour s’allume en douceur ; celui d’avant s’éteint */
 function unTurnAnim(){
  const on=$('.unp.on'),me=$('.unme.on'),k=on?on.dataset.i:me?'me':'',P=UN.pTurn;UN.pTurn=k;if(P===undefined||P===k||wRM)return;
@@ -4554,9 +4553,9 @@ function unUiAnim(S,myT){
  if(!same||wRM)return;
  if(P.myT!==myT){cds.forEach((e,i)=>{const dl=i*28,c=e.querySelector('.ucard');
    if(myT){if(e.classList.contains('ok'))e.animate([{transform:'translateY(0)'},{transform:'translateY(-15px)',offset:.7},{transform:'translateY(-12px)'}],{duration:380,delay:dl,easing:'ease-out',fill:'backwards'});
-    else if(c&&e.classList.contains('no'))c.animate([{filter:'none'},{filter:'saturate(.5) brightness(.8)'}],{duration:350,delay:dl,fill:'backwards'})}
+    if(c)c.animate([{filter:'saturate(.75) brightness(.9)'},{filter:e.classList.contains('no')?'saturate(.5) brightness(.8)':'saturate(1) brightness(1)'}],{duration:350,delay:dl,fill:'backwards'})}
    else{if(P.ok[i])e.animate([{transform:'translateY(-12px)'},{transform:'translateY(0)'}],{duration:320,delay:dl,easing:'ease-in-out',fill:'backwards'});
-    if(c&&P.no[i])c.animate([{filter:'saturate(.5) brightness(.8)'},{filter:'none'}],{duration:320,delay:dl,fill:'backwards'})}})}
+    if(c)c.animate([{filter:P.no[i]?'saturate(.5) brightness(.8)':'saturate(1) brightness(1)'},{filter:'saturate(.75) brightness(.9)'}],{duration:320,delay:dl,fill:'backwards'})}})}
  if(P.d!==undefined&&P.d!==S.d)document.querySelectorAll('.unar').forEach(e=>e.animate([{transform:'scale(1) rotate(0)',opacity:1},{transform:'scale(.2) rotate(-180deg)',opacity:.2,offset:.5},{transform:'scale(1.15) rotate(-360deg)',opacity:1,offset:.8},{transform:'scale(1) rotate(-360deg)',opacity:1}],{duration:700,easing:'ease-in-out'}))}
 /* animations : la carte jouée part de la main du joueur vers le talon ; les cartes piochées partent de la pioche vers le joueur */
 const unJ=i=>{const h=Math.abs(Math.sin(i*12.9898+4.1)*43758.5453)%1,g=Math.abs(Math.sin(i*78.233+1.7)*12543.11)%1,k=Math.abs(Math.sin(i*39.425+.3)*9871.7)%1;return{r:(h-.5)*12,x:(g-.5)*8,y:(k-.5)*6}};
