@@ -1697,6 +1697,9 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .unk.must{animation:unkp 1.4s ease-in-out infinite;border-radius:12px}
 @keyframes unkp{0%,100%{box-shadow:0 0 0 0 rgba(255,216,74,.85),0 0 10px rgba(255,216,74,.4);scale:1}50%{box-shadow:0 0 0 7px rgba(255,216,74,0),0 0 22px rgba(255,216,74,.75);scale:1.07}}
 @keyframes unkb{0%,100%{translate:-50% 0}50%{translate:-50% -4px}}
+/* Uno : en attendant son tour, la main est un peu assombrie */
+.ucd .ucard{transition:filter .35s}
+.ucd.wt .ucard{filter:saturate(.75) brightness(.9)}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -4512,7 +4515,7 @@ function unDraw(){
  <div class="unc"><span class="unar l ${S.d>0?'up':'dn'}" aria-hidden="true"><svg viewBox="0 0 28 72"><path d="M20 66Q2 36 18 8"/><path d="M9 11l9-3 1 9"/></svg></span><button class="btn ununo${UN.uc?' on':''}" data-a="unUno" ${myT&&my.length===2?'':'disabled'} aria-pressed="${UN.uc}">Uno !</button><button class="unk${myT&&!S.dr&&!UN.busy&&!my.some(c=>unOk(S,c))?' must':''}" data-a="unDraw" aria-label="Piocher" ${myT&&!S.dr?'':'disabled'}>${unBack()}<small>${S.D.length}</small><em class="unkm" aria-hidden="true">Pioche !</em></button><div class="untop" style="--cc:${UNHX[S.c]}">${S.X.length>1?`<span class="unund" style="${unJit(S.X.length-2)}" aria-hidden="true">${unCard(S.X[S.X.length-2],'big')}</span>`:''}<span style="${unJit(S.X.length-1)}" class="untc ${S.X.length!==UN.lastX&&wRM?'unpop':''}"${UN.flyX&&UN.flyX===S.X.length?' style="visibility:hidden"':''}>${unCard(unTop(S),'big'+(unTop(S)[0]==='k'?' ukc u-'+S.c:''))}</span></div><span class="unar r ${S.d>0?'dn':'up'}" aria-hidden="true"><svg viewBox="0 0 28 72"><path d="M20 66Q2 36 18 8"/><path d="M9 11l9-3 1 9"/></svg></span></div>
  <p class="unlg vh" role="status" aria-live="polite">${esc(unLg(S,me))}</p>
  <div class="unme${myT&&!(UN.hit&&Date.now()<UN.hit.u)?' on':''}${UN.hit&&UN.hit.i===me&&Date.now()<UN.hit.u?' hit':''}">${UN.hit&&UN.hit.i===me&&Date.now()<UN.hit.u?`<em class="unhb">${UN.hit.t}</em>`:''}<div class="unt"><b>${turn}</b>${net&&myT?'<span class="untb"><i id="untm"></i></span>':''}</div>
- <div class="unh" id="unh">${(()=>{let base=0;return rows.map(R=>{const b0=base;base+=R.length;return`<div class="unhr" style="--ov:${ovOf(R.length)}px">${R.map((c,j)=>{const k=b0+j;const ok=myT&&(S.dr?k===my.length-1&&unOk(S,c):unOk(S,c));return`<button class="ucd${ok?' ok':''}${myT&&!ok?' no':''}" data-a="unPlay" data-v="${k}" data-c="${c}" aria-label="${unCnf(c)}"${ok?'':' aria-disabled="true"'}>${unCard(c)}</button>`}).join('')}</div>`}).join('')})()}</div>
+ <div class="unh" id="unh">${(()=>{let base=0;return rows.map(R=>{const b0=base;base+=R.length;return`<div class="unhr" style="--ov:${ovOf(R.length)}px">${R.map((c,j)=>{const k=b0+j;const ok=myT&&(S.dr?k===my.length-1&&unOk(S,c):unOk(S,c));return`<button class="ucd${ok?' ok':''}${myT&&!ok?' no':''}${myT?'':' wt'}" data-a="unPlay" data-v="${k}" data-c="${c}" aria-label="${unCnf(c)}"${ok?'':' aria-disabled="true"'}>${unCard(c)}</button>`}).join('')}</div>`}).join('')})()}</div>
  ${myT&&S.dr?'<div class="unbt"><button class="btn alt" data-a="unPass">Garder et passer</button></div>':''}
  ${S.S[me]&&S.S[me].ab&&S.S[me].u===SO.uid&&live?'<button class="btn" style="margin-top:10px" data-a="unBackIn">Reprendre ma place</button>':''}
  ${UN.m?`<p class="note" style="text-align:center">${esc(UN.m)}</p>`:''}</div>
