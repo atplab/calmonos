@@ -1488,6 +1488,14 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 @keyframes unard{0%,100%{translate:0 -4px}50%{translate:0 4px}}
 @media (prefers-reduced-motion:reduce){.unar{animation:none!important}}
 
+.untop .unund{transform:translate(var(--jx,0),var(--jy,0)) rotate(var(--jr,0));filter:brightness(.88)}
+.untop .untc{transform:translate(var(--jx,0),var(--jy,0)) rotate(var(--jr,0))}
+.unar{width:26px;height:72px}
+.unar svg{stroke-width:3.2}
+.unar.l.dn svg{transform:scaleY(-1)}
+.unar.r.dn svg{transform:rotate(180deg)}
+.unar.r.up svg{transform:scaleX(-1)}
+
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
 .sb.cf{background:linear-gradient(180deg,#ffd18a,#e8944a);color:#3a2310;border:0}
@@ -4245,7 +4253,7 @@ function unDraw(){
  const host=!UN.loc&&S.h===SO.uid;
  root.innerHTML=`<div class="top stk"><button class="back" data-a="unBk">‹ Uno</button><div class="chip">❄ ${FLX()}</div></div>
  <div class="unop">${op}</div>
- <div class="unc"><span class="unar l ${S.d>0?'up':'dn'}" aria-hidden="true"><svg viewBox="0 0 24 64"><path d="M12 58V8M4 17l8-9 8 9"/></svg></span><button class="btn ununo${UN.uc?' on':''}" data-a="unUno" ${myT&&my.length===2?'':'disabled'} aria-pressed="${UN.uc}">Uno !</button><button class="unk" data-a="unDraw" aria-label="Piocher" ${myT&&!S.dr?'':'disabled'}>${unBack()}<small>${S.D.length}</small></button><div class="untop" style="--cc:${UNHX[S.c]}">${S.X.length>1?`<span class="unund" aria-hidden="true">${unCard(S.X[S.X.length-2],'big')}</span>`:''}<span class="untc ${S.X.length!==UN.lastX&&wRM?'unpop':''}"${UN.flyX&&UN.flyX===S.X.length?' style="visibility:hidden"':''}>${unCard(unTop(S),'big'+(unTop(S)[0]==='k'?' ukc u-'+S.c:''))}</span></div><span class="unar r ${S.d>0?'dn':'up'}" aria-hidden="true"><svg viewBox="0 0 24 64"><path d="M12 58V8M4 17l8-9 8 9"/></svg></span></div>
+ <div class="unc"><span class="unar l ${S.d>0?'up':'dn'}" aria-hidden="true"><svg viewBox="0 0 28 72"><path d="M20 66Q2 36 18 8"/><path d="M9 11l9-3 1 9"/></svg></span><button class="btn ununo${UN.uc?' on':''}" data-a="unUno" ${myT&&my.length===2?'':'disabled'} aria-pressed="${UN.uc}">Uno !</button><button class="unk" data-a="unDraw" aria-label="Piocher" ${myT&&!S.dr?'':'disabled'}>${unBack()}<small>${S.D.length}</small></button><div class="untop" style="--cc:${UNHX[S.c]}">${S.X.length>1?`<span class="unund" style="${unJit(S.X.length-2)}" aria-hidden="true">${unCard(S.X[S.X.length-2],'big')}</span>`:''}<span style="${unJit(S.X.length-1)}" class="untc ${S.X.length!==UN.lastX&&wRM?'unpop':''}"${UN.flyX&&UN.flyX===S.X.length?' style="visibility:hidden"':''}>${unCard(unTop(S),'big'+(unTop(S)[0]==='k'?' ukc u-'+S.c:''))}</span></div><span class="unar r ${S.d>0?'dn':'up'}" aria-hidden="true"><svg viewBox="0 0 28 72"><path d="M20 66Q2 36 18 8"/><path d="M9 11l9-3 1 9"/></svg></span></div>
  <p class="unlg vh" role="status" aria-live="polite">${esc(unLg(S,me))}</p>
  <div class="unme${myT?' on':''}"><div class="unt"><b>${turn}</b>${net&&myT?'<span class="untb"><i id="untm"></i></span>':''}</div>
  <div class="unh" id="unh">${(()=>{let base=0;return rows.map(R=>{const b0=base;base+=R.length;return`<div class="unhr" style="--ov:${ovOf(R.length)}px">${R.map((c,j)=>{const k=b0+j;const ok=myT&&(S.dr?k===my.length-1&&unOk(S,c):unOk(S,c));return`<button class="ucd${ok?' ok':''}${myT&&!ok?' no':''}" data-a="unPlay" data-v="${k}" aria-label="${unCnf(c)}"${ok?'':' aria-disabled="true"'}>${unCard(c)}</button>`}).join('')}</div>`}).join('')})()}</div>
@@ -4258,13 +4266,15 @@ function unDraw(){
  const h2=$('#unh');if(h2)h2.scrollLeft=sl;
  unTimers();unAnim(S)}
 /* animations : la carte jouée part de la main du joueur vers le talon ; les cartes piochées partent de la pioche vers le joueur */
-function unFly(html,a,b,dl,done){
+const unJ=i=>{const h=Math.abs(Math.sin(i*12.9898+4.1)*43758.5453)%1,g=Math.abs(Math.sin(i*78.233+1.7)*12543.11)%1,k=Math.abs(Math.sin(i*39.425+.3)*9871.7)%1;return{r:(h-.5)*12,x:(g-.5)*8,y:(k-.5)*6}};
+const unJit=i=>{const j=unJ(i);return`--jr:${j.r.toFixed(1)}deg;--jx:${j.x.toFixed(1)}px;--jy:${j.y.toFixed(1)}px`};
+function unFly(html,a,b,dl,done,J){J=J||{r:0,x:0,y:0};
  if(!a||!b||!b.width){done&&done();return}
  const e=document.createElement('div');e.className='unfly';e.innerHTML=html;document.body.appendChild(e);
  const c=e.firstElementChild,nw=c.offsetWidth||58,nh=c.offsetHeight||87,s1=b.width/nw,s0=Math.max(.15,Math.min(a.width/nw,a.height/nh)),
   bx=b.left+b.width/2-nw/2,by=b.top+b.height/2-nh/2,dx=a.left+a.width/2-nw/2-bx,dy=a.top+a.height/2-nh/2-by;
  e.style.left=bx+'px';e.style.top=by+'px';
- const an=e.animate([{transform:`translate(${dx}px,${dy}px) scale(${s0}) rotate(-12deg)`,opacity:.85},{transform:`translate(${dx*.45}px,${dy*.45-18}px) scale(${(s0+s1)/2*1.08}) rotate(-4deg)`,opacity:1,offset:.55},{transform:`translate(0,0) scale(${s1}) rotate(0)`,opacity:1}],{duration:460,delay:dl,easing:'cubic-bezier(.3,.6,.35,1)',fill:'backwards'});
+ const an=e.animate([{transform:`translate(${dx}px,${dy}px) scale(${s0}) rotate(-12deg)`,opacity:.85},{transform:`translate(${dx*.45}px,${dy*.45-18}px) scale(${(s0+s1)/2*1.08}) rotate(-4deg)`,opacity:1,offset:.55},{transform:`translate(${J.x}px,${J.y}px) scale(${s1}) rotate(${J.r}deg)`,opacity:1}],{duration:460,delay:dl,easing:'cubic-bezier(.3,.6,.35,1)',fill:'backwards'});
  an.onfinish=an.oncancel=()=>{e.remove();done&&done()}}
 function unAnim(S){
  const P=UN.pv,N={id:S.id,top:unTop(S),X:S.X.length,H:S.H.map(h=>h.length),t:S.t};UN.pv=N;const fr=UN.fromR;UN.fromR=null;
@@ -4272,7 +4282,8 @@ function unAnim(S){
  const me=UN.me,R=e=>e?e.getBoundingClientRect():null,seat=i=>i===me?$('#unh'):($(`.unp[data-i="${i}"] .unbk i:last-child`)||$(`.unp[data-i="${i}"] .unav`)||$(`.unp[data-i="${i}"]`));
  const played=N.X>P.X||P.top!==N.top,pl=played?P.t:-1;let dl=0;
  if(pl>=0){const tg=$('.untop>.untc');if(tg){tg.style.visibility='hidden';const from=pl===me&&fr?fr:R(seat(pl)),fx=UN.flyX=N.X;
-  unFly(unCard(N.top,'big'+(N.top[0]==='k'?' ukc u-'+S.c:'')),from,R(tg.firstElementChild||tg),0,()=>{if(UN.flyX===fx)UN.flyX=0;const t2=$('.untop>.untc');if(t2)t2.style.visibility=''});dl=330}}
+  const tr=tg.style.transform;tg.style.transform='none';const tgr=R(tg.firstElementChild||tg);tg.style.transform=tr;
+  unFly(unCard(N.top,'big'+(N.top[0]==='k'?' ukc u-'+S.c:'')),from,tgr,0,()=>{if(UN.flyX===fx)UN.flyX=0;const t2=$('.untop>.untc');if(t2)t2.style.visibility=''},unJ(N.X-1));dl=330}}
  const src=R($('.unk .ucard')||$('.unk'));
  N.H.forEach((h,i)=>{const k=Math.min(4,h-P.H[i]+(i===pl?1:0));if(k<=0)return;
   for(let j=0;j<k;j++){
