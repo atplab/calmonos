@@ -7475,7 +7475,7 @@ const FISH=[
 {id:'lune',n:'Poisson-lune doré',p:600,sh:'round',b:'#ffd34d',f:'#ffe9a3',sp:'#fff6d0',sz:1.25},
 {id:'tortue',n:'Tortue de mer',p:650,sh:'tortue',b:'#4fae6a',f:'#ecdca2',sc:'#8bcf86',sz:1.3},
 {id:'hockey',n:'Poisson hockeyeur',p:767,sh:'std',b:'#7ed3ff',f:'#e9f7ff',hk:1,sz:1.12},
-{id:'gardien',n:'Poisson gardien de but',p:790,sh:'std',b:'#ffcf5c',f:'#fff4d6',gk:1,sz:1.16},
+{id:'gardien',n:'Poisson gardien de but',p:470,sh:'std',b:'#ffcf5c',f:'#fff4d6',gk:1,sz:1.16},
 {id:'meduse',n:'Méduse',p:850,sh:'meduse',b:'#c9a3ff',f:'#f2e3ff',sc:'#ff9ad5',sz:1.15},
 {id:'royal',n:'Betta royal',p:1000,sh:'veil',b:'#2a47d6',f:'#e24bd0',f2:'#ffd2f4',sz:1.2}
 ];
@@ -7913,7 +7913,8 @@ function aqPanel(){
   const r=b.closest('.ai'),sil=()=>{if(!r)return;r.classList.add('xlk','sil');const nb=r.querySelector('.atx b');if(nb)nb.textContent='???'};
   if(k==='d'&&aqHid(L,k,A0)){if(r)r.remove();return}
   const tn=aqTL(L,k,A0);
-  if(tn){sil();const sm=r&&r.querySelector('small');if(sm)sm.textContent='Se débloque avec l’aquarium '+tn;b.outerHTML='<button class="sb lkb" disabled>🔒 Aquarium '+tn+'</button>'}
+  if(k==='f'&&id==='gardien'&&!A0.f.hockey){sil();const sm=r&&r.querySelector('small');if(sm)sm.textContent='Se débloque après le poisson hockeyeur';b.outerHTML='<button class="sb lkb" disabled>🔒 Hockeyeur</button>'}
+  else if(tn){sil();const sm=r&&r.querySelector('small');if(sm)sm.textContent='Se débloque avec l’aquarium '+tn;b.outerHTML='<button class="sb lkb" disabled>🔒 Aquarium '+tn+'</button>'}
   else if(aqXL(L)){sil();const sm=r&&r.querySelector('small');if(sm)sm.textContent='Un noël pour Zeni : étape '+L.lk;b.outerHTML='<button class="sb lkb" disabled>🔒 Étape '+L.lk+'</button>'}
   else if(!L.p)b.textContent='Obtenir'});
  /* boutique : les éléments à acheter défilent en carrousel (à acheter d’abord, déjà possédés ensuite) */
@@ -7952,7 +7953,7 @@ aqStatus=function(){aqStatus0();const a=aqRead();aqRewards(a);
 const st0=$('.aqst');if(!st0)return;st0.classList.toggle('open',!!window.AQLV);{const h1=$('.aqh1');if(h1){h1.classList.toggle('on',!!window.AQLV);h1.setAttribute('aria-expanded',window.AQLV?'true':'false')}}let l=st0.querySelector('.aqlv');if(!l){l=document.createElement('div');l.className='aqlv';st0.appendChild(l)}const h=aqLvHTML(a);if(l.dataset.h!==h){l.innerHTML=h;l.dataset.h=h}};
 const aqBuy0=aqBuy;
 aqBuy=function(v){const[k,id]=v.split(':'),a=aqRead(),L=(k==='f'?FISH:k==='d'?DECO:WATER).find(x=>x.id===id);mt='m-aq';
- if(L&&aqHid(L,k,a))return;const n=L&&aqTL(L,k,a);if(n)return msg('Se débloque avec l’aquarium '+n+'.');aqBuy0(v)};
+ if(L&&aqHid(L,k,a))return;if(k==='f'&&id==='gardien'&&!a.f.hockey)return msg('Le gardien arrive une fois le poisson hockeyeur acheté.');const n=L&&aqTL(L,k,a);if(n)return msg('Se débloque avec l’aquarium '+n+'.');aqBuy0(v)};
 
 window.aqMedGl=n=>{try{const a=aqRead(),m=a.f.meduse;if(!m)return;m.gl=Math.min(3,n);m.gt=Date.now();aqSave(a);aqStatus()}catch(e){}};
 /* la méduse attrape le grain avec une tentacule, la replie pour amener le grain sous son ombrelle, dans sa bouche */
@@ -8051,6 +8052,13 @@ window.aqGainShow=g=>{AQGN+=g;clearInterval(AQGI);clearTimeout(AQGT);const t0=Da
   if(busy&&Date.now()-t0<25000)return;clearInterval(AQGI);const n=AQGN;AQGN=0;const c=$('.aqhd .chip');if(!c||!n)return;
   const e=document.createElement('span');e.className='aqgn';e.setAttribute('role','status');e.textContent='+'+n+' ❄';c.insertAdjacentElement('beforebegin',e);
   AQGT=setTimeout(()=>{e.classList.add('out');setTimeout(()=>e.remove(),450)},5000)},200)};
+
+/* le gardien ne nage jamais sans le poisson hockeyeur */
+setTimeout(()=>{const t0=act.aqtg;act.aqtg=v=>{mt='m-aq';const a=aqRead(),g=a.f.gardien,h=a.f.hockey;
+  if(v==='gardien'&&g&&!g.on&&!(h&&h.on))return msg('Le gardien a besoin du poisson hockeyeur dans l’aquarium.');
+  if(v==='hockey'&&h&&h.on&&g&&g.on){h.on=0;g.on=0;aqSave(a);aquaRefresh();return msg('Le gardien suit le hockeyeur en réserve.')}
+  return t0(v)};
+ try{const a=aqRead();if(a.f.gardien&&a.f.gardien.on&&!(a.f.hockey&&a.f.hockey.on)){a.f.gardien.on=0;aqSave(a)}}catch(e){}},0);
 
 function aqNear(P,cx,cy){let b=null,bd=1e9;for(const p of P){if(p.state!==1)continue;const d=Math.hypot(p.xs-cx,p.y-cy)+90*p.n;if(d<bd){bd=d;b=p}}return b}
 function aqStep(ts){
@@ -8157,8 +8165,8 @@ function aqAdopt(id,name){
  mt='m-aq';const f=FISH.find(x=>x.id===id),a=aqRead();
  if(!f||a.f[id]){aqNameClose();return}
  if(!spend(f.p)){aqNameClose();return}
- const on=aqOn(a).length<MAXF?1:0;a.f[id]={t:Date.now()-HR,on,n:name};aqSave(a);aqNameClose();aquaRefresh();
- msg(on?'✦ '+name+' rejoint l’aquarium.':'Aquarium complet : '+name+' attend en réserve.');sfx(740,.3);
+ const nh=id==='gardien'&&!(a.f.hockey&&a.f.hockey.on),on=aqOn(a).length<MAXF&&!nh?1:0;a.f[id]={t:Date.now()-HR,on,n:name};aqSave(a);aqNameClose();aquaRefresh();
+ const tx=on?'✦ '+name+' rejoint l’aquarium.':nh?name+' attend en réserve : il lui faut le poisson hockeyeur dans l’aquarium.':'Aquarium complet : '+name+' attend en réserve.';msg(tx);setTimeout(()=>{const m=$('#m-aq');if(m&&m.textContent===tx)m.textContent=''},5000);sfx(740,.3);
 }
 Object.assign(act,{
  aqnr:()=>{const d=$('#aqnm'),i=$('#aqni');if(!d||!i)return;const s=aqRnd(aqRead(),d.dataset.s);d.dataset.s=s;i.placeholder=s},
