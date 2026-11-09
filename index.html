@@ -2641,10 +2641,10 @@ const gOpenAt=id=>{const a=GAV[id];return a?new Date(a[0],a[1],a[2]).getTime():0
 function gHid(id){return Date.now()<gOpenAt(id)&&!UNL()}
 /* fête de déblocage : une seule fois par jeu, à la première visite de l’onglet Jeux après la date */
 /* jeux tout juste débloqués : pastille « Nouveau » sur la tuile ; toucher la tuile lance la fête de déblocage */
-function gFresh(){const seen=st.get('g:unl',[]),now=Date.now(),ids=[...new Set([...Object.keys(GAV),...Object.keys(GSTEP)])];return ids.filter(id=>now>=gOpenAt(id)&&(GSTEP[id]||0)<=gStepNow()&&ALL.some(x=>x.id===id&&!x.soon)&&!seen.includes(id))}
+function gFresh(){const seen=st.get('g:tap',[]),now=Date.now(),ids=[...new Set([...Object.keys(GAV),...Object.keys(GSTEP)])];return ids.filter(id=>now>=gOpenAt(id)&&(GSTEP[id]||0)<=gStepNow()&&ALL.some(x=>x.id===id&&!x.soon)&&!seen.includes(id))}
 function gUnlockCheck(){const F=gFresh();document.querySelectorAll('.tile[data-a=open]').forEach(t=>{const id=t.dataset.v;if(!F.includes(id))return;t.classList.add('nw');t.dataset.a='gNew';if(!t.querySelector('.gnwb'))t.insertAdjacentHTML('beforeend','<em class="gnwb">Nouveau !</em>');const s=t.querySelector('small');if(s)s.textContent='Touche pour découvrir'})}
 function gUnlockShow(id){
- if($('#gunl'))return;const seen=st.get('g:unl',[]),g=ALL.find(x=>x.id===id);if(!seen.includes(id))st.set('g:unl',[...seen,id]);if(!g)return;
+ if($('#gunl'))return;const seen=st.get('g:tap',[]),g=ALL.find(x=>x.id===id);if(!seen.includes(id))st.set('g:tap',[...seen,id]);if(!g)return;
  const d=document.createElement('div');d.id='gunl';d.className='gunl';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.setAttribute('aria-label','Nouveau jeu débloqué : '+g.n);
  d.innerHTML=`<div class="gunb" style="--a:${g.a};--b:${g.b}"><div class="gunr" aria-hidden="true">${'<i></i>'.repeat(12)}</div><small>Nouveau jeu débloqué !</small><div class="guni">${g.ic}</div><h2>${esc(g.n)}</h2><p>${esc(g.t||'')}</p><div class="chrow"><button class="btn" data-a="gUnlGo" data-v="${id}">Découvrir</button><button class="btn alt" data-a="gUnlX">Plus tard</button></div></div>`;
  document.body.appendChild(d);try{sfx(660,.12);setTimeout(()=>sfx(880,.12),130);setTimeout(()=>sfx(1175,.25),260);vib([15,30,15])}catch(e){}
