@@ -1473,6 +1473,8 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .untop{position:relative}
 .untop .unund{position:absolute;left:0;top:0;transform:rotate(-9deg) translate(-4px,2px);filter:brightness(.82);pointer-events:none}
 .untop .untc{position:relative;display:inline-block;z-index:1}
+.unfly{line-height:0}.unfly>.ucard{display:block;vertical-align:top}
+.unfly>.ucard{margin:0!important}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -4231,7 +4233,7 @@ function unDraw(){
  const host=!UN.loc&&S.h===SO.uid;
  root.innerHTML=`<div class="top stk"><button class="back" data-a="unBk">‹ Uno</button><div class="chip">❄ ${FLX()}</div></div>
  <div class="unop">${op}</div>
- <div class="unc"><button class="unk" data-a="unDraw" aria-label="Piocher" ${myT&&!S.dr?'':'disabled'}>${unBack()}<small>${S.D.length}</small></button><div class="untop" style="--cc:${UNHX[S.c]}">${S.X.length>1?`<span class="unund" aria-hidden="true">${unCard(S.X[S.X.length-2],'big')}</span>`:''}<span class="untc ${S.X.length!==UN.lastX?'unpop':''}">${unCard(unTop(S),'big'+(unTop(S)[0]==='k'?' ukc u-'+S.c:''))}</span><span class="undir" aria-label="${S.d>0?'Sens horaire':'Sens inverse'}">${S.d>0?'↻':'↺'}</span></div></div>
+ <div class="unc"><button class="unk" data-a="unDraw" aria-label="Piocher" ${myT&&!S.dr?'':'disabled'}>${unBack()}<small>${S.D.length}</small></button><div class="untop" style="--cc:${UNHX[S.c]}">${S.X.length>1?`<span class="unund" aria-hidden="true">${unCard(S.X[S.X.length-2],'big')}</span>`:''}<span class="untc ${S.X.length!==UN.lastX&&wRM?'unpop':''}"${UN.flyX&&UN.flyX===S.X.length?' style="visibility:hidden"':''}>${unCard(unTop(S),'big'+(unTop(S)[0]==='k'?' ukc u-'+S.c:''))}</span><span class="undir" aria-label="${S.d>0?'Sens horaire':'Sens inverse'}">${S.d>0?'↻':'↺'}</span></div></div>
  <p class="unlg" role="status" aria-live="polite">${esc(unLg(S,me))}</p>
  <div class="unme${myT?' on':''}"><div class="unt"><b>${turn}</b>${net&&myT?'<span class="untb"><i id="untm"></i></span>':''}</div>
  <div class="unh" id="unh">${(()=>{let base=0;return rows.map(R=>{const b0=base;base+=R.length;return`<div class="unhr" style="--ov:${ovOf(R.length)}px">${R.map((c,j)=>{const k=b0+j;const ok=myT&&(S.dr?k===my.length-1&&unOk(S,c):unOk(S,c));return`<button class="ucd${ok?' ok':''}${myT&&!ok?' no':''}" data-a="unPlay" data-v="${k}" aria-label="${unCnf(c)}"${ok?'':' aria-disabled="true"'}>${unCard(c)}</button>`}).join('')}</div>`}).join('')})()}</div>
@@ -4257,8 +4259,8 @@ function unAnim(S){
  if(!P||P.id!==S.id||P.H.length!==N.H.length||wRM)return;
  const me=UN.me,R=e=>e?e.getBoundingClientRect():null,seat=i=>i===me?$('#unh'):($(`.unp[data-i="${i}"] .unbk i:last-child`)||$(`.unp[data-i="${i}"] .unav`)||$(`.unp[data-i="${i}"]`));
  const played=N.X>P.X||P.top!==N.top,pl=played?P.t:-1;let dl=0;
- if(pl>=0){const tg=$('.untop>.untc');if(tg){tg.classList.remove('unpop');tg.style.visibility='hidden';const from=pl===me&&fr?fr:R(seat(pl));
-  unFly(unCard(N.top,'big'+(N.top[0]==='k'?' ukc u-'+S.c:'')),from,R(tg.firstElementChild||tg),0,()=>{tg.style.visibility=''});dl=330}}
+ if(pl>=0){const tg=$('.untop>.untc');if(tg){tg.style.visibility='hidden';const from=pl===me&&fr?fr:R(seat(pl)),fx=UN.flyX=N.X;
+  unFly(unCard(N.top,'big'+(N.top[0]==='k'?' ukc u-'+S.c:'')),from,R(tg.firstElementChild||tg),0,()=>{if(UN.flyX===fx)UN.flyX=0;const t2=$('.untop>.untc');if(t2)t2.style.visibility=''});dl=330}}
  const src=R($('.unk .ucard')||$('.unk'));
  N.H.forEach((h,i)=>{const k=Math.min(4,h-P.H[i]+(i===pl?1:0));if(k<=0)return;
   for(let j=0;j<k;j++){
