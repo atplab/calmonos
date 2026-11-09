@@ -4258,7 +4258,7 @@ function unAnim(S){
  const me=UN.me,R=e=>e?e.getBoundingClientRect():null,seat=i=>i===me?$('#unh'):($(`.unp[data-i="${i}"] .unbk i:last-child`)||$(`.unp[data-i="${i}"] .unav`)||$(`.unp[data-i="${i}"]`));
  const played=N.X>P.X||P.top!==N.top,pl=played?P.t:-1;let dl=0;
  if(pl>=0){const tg=$('.untop>.untc');if(tg){tg.classList.remove('unpop');tg.style.visibility='hidden';const from=pl===me&&fr?fr:R(seat(pl));
-  unFly(unCard(N.top,'big'+(N.top[0]==='k'?' ukc u-'+S.c:'')),from,R(tg.firstElementChild||tg),0,()=>{tg.style.visibility='';void tg.offsetWidth;tg.classList.add('unpop')});dl=330}}
+  unFly(unCard(N.top,'big'+(N.top[0]==='k'?' ukc u-'+S.c:'')),from,R(tg.firstElementChild||tg),0,()=>{tg.style.visibility=''});dl=330}}
  const src=R($('.unk .ucard')||$('.unk'));
  N.H.forEach((h,i)=>{const k=Math.min(4,h-P.H[i]+(i===pl?1:0));if(k<=0)return;
   for(let j=0;j<k;j++){
