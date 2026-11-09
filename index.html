@@ -2752,7 +2752,7 @@ function home(){nv('games');
 }
 const HBI=n=>`<svg class="hbi" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></svg><span>${n} ❄</span>`;
 /* ordre des jeux choisi par le joueur (les nouveaux jeux se rangent à la fin) */
-const GUNL=['mots','caches','sudoku','match3','colorie','scrabble','croises','phrase','uno','cherche','chess','airhockey','demineur','memo','maze','tournade','solitaire','demenage','quiz','flow','g2048'];
+const GUNL=['mots','caches','sudoku','match3','colorie','scrabble','croises','uno','cherche','chess','airhockey','demenage','memo','flow','maze','tournade','solitaire','phrase','g2048','demineur','quiz'];
 function gOrd(L){const O0=st.get('g:ord',[]),O=O0.length?O0:GUNL;const ix=g=>{const i=O.indexOf(g.id);return i<0?1e3+L.indexOf(g):i};return L.slice().sort((a,b)=>ix(a)-ix(b))}
 function gOrdDraw(){const L=gOrd(GD.filter(g=>!g.soon&&!gHid(g.id))),e=$('#gordo .gorl');if(!e)return;
  e.innerHTML=L.map((g,i)=>`<li style="--a:${g.a};--b:${g.b}"><i>${g.ic}</i><b>${esc(g.n)}</b><button data-a="gMv" data-v="${g.id}:-1" aria-label="Monter ${esc(g.n)}"${i?'':' disabled'}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button><button data-a="gMv" data-v="${g.id}:1" aria-label="Descendre ${esc(g.n)}"${i<L.length-1?'':' disabled'}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></li>`).join('')}
@@ -2766,7 +2766,7 @@ setTimeout(()=>Object.assign(act,{
  gOrdX:()=>{const o=$('#gordo');if(o)o.remove()}
 }));
 /* jeux qui arrivent plus tard : cachés jusqu’à leur date (tout est visible en mode illimité) */
-const GAV={airhockey:[2026,11,5],demenage:[2026,11,12],flow:[2099,0,1],g2048:[2099,0,1]};
+const GAV={airhockey:[2026,11,5],demenage:[2026,11,12]};
 const gOpenAt=id=>{const a=GAV[id];return a?new Date(a[0],a[1],a[2]).getTime():0};
 function gHid(id){return Date.now()<gOpenAt(id)&&!UNL()}
 /* fête de déblocage : une seule fois par jeu, à la première visite de l’onglet Jeux après la date */
@@ -2782,9 +2782,10 @@ function gUnlockShow(id){
 setTimeout(()=>Object.assign(act,{gUnlX:()=>{const e=$('#gunl');if(!e)return;e.classList.add('out');setTimeout(()=>{e.remove();if(cur===null)home()},300)},gNew:v=>gUnlockShow(v),gUnlGo:v=>{const e=$('#gunl');if(e)e.remove();act.open(v)}}));
 
 /* jeux débloqués au fil de l’histoire (étapes du voyage) ; tout est ouvert en mode illimité */
-const GSTEP={scrabble:1,croises:1,phrase:2,uno:2,cherche:3,chess:4,airhockey:5,demineur:5,memo:6,maze:7,tournade:8,solitaire:9,demenage:15,quiz:20};
+const GSTEP={flow:0,tournade:5,solitaire:10,phrase:15,g2048:20,quiz:40};
 const gStepNow=()=>{try{return styRead().p||0}catch(e){return 0}};
-function gLock(id){return !UNL()&&(GSTEP[id]||0)>gStepNow()}
+/* un jeu déjà débloqué (ou déjà ouvert) le reste, même si son étape a changé */
+function gLock(id){return !UNL()&&(GSTEP[id]||0)>gStepNow()&&!st.get('g:unl',[]).includes(id)&&!st.get('g:tap',[]).includes(id)}
 const xLvOn=()=>xmasOn()&&(UNL()||gStepNow()>=10);
 function gLockTiles(){document.querySelectorAll('.tile[data-a=open]').forEach(t=>{const id=t.dataset.v;if(!gLock(id))return;t.classList.add('lk');t.dataset.a='gLk';const s=t.querySelector('small');if(s)s.textContent='🔒 Étape '+GSTEP[id];const f=t.parentNode&&t.parentNode.querySelector('.fv');if(f)f.remove()})}
 function gToast(t){let e=$('#gtoast');if(e)e.remove();e=document.createElement('div');e.id='gtoast';e.className='gtoast';e.setAttribute('role','status');e.textContent=t;document.body.appendChild(e);setTimeout(()=>{e.classList.add('out');setTimeout(()=>e.remove(),400)},2600)}
