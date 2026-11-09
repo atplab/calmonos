@@ -2408,9 +2408,9 @@ const G=[
 ];
 const SP=[{id:'scrabble',n:'Scrabble',ic:'Ⓢ',a:'#e6b86a',b:'#9a6a2e',t:'La partie du soir',s:'Pose des mots sur le plateau avec les sept lettres de ton chevalet. Joue ton tour, ton ami joue le sien quand il le souhaite. Pas d’indices ici.',sp:'Entre amis'},
 {id:'chess',n:'Échecs',ic:'♞',a:'#7fb88a',b:'#2b5f45',t:'La clairière',s:'Une partie d’échecs au calme, sous les sapins : contre l’ordinateur, à deux sur le même appareil, ou à distance contre un ami. Tu choisis la durée au début, ou pas de limite de temps.',sp:'Seul ou à deux'},
-{id:'uno',n:'Uno',ic:'🃏',a:'#e8735a',b:'#7a3550',t:'Le salon de cartes',s:'Débarrasse-toi de toutes tes cartes avant les autres, contre des bots ou avec jusqu’à 3 amis.',sp:'Seul ou entre amis'},
-{id:'solitaire',n:'Solitaire',ic:'♠',a:'#5aa38a',b:'#24505a',t:'La patience',s:'Le solitaire classique : 40 niveaux et un mode infini.',sp:'Niveaux et mode infini'},
-{id:'airhockey',n:'Air hockey',ic:'🏒',a:'#4aa3d8',b:'#1d4f7a',t:'La table glisse',s:'Contre l’IA en 20 niveaux, à deux sur le même écran ou en ligne avec un ami.',sp:'IA, à deux ou en ligne'}];
+{id:'uno',n:'Uno',ic:'🃏',a:'#e8735a',b:'#7a3550',t:'Le salon de cartes',s:'Débarrasse-toi de toutes tes cartes avant les autres, contre des bots ou avec jusqu’à 3 amis.',sp:''},
+{id:'solitaire',n:'Solitaire',ic:'♠',a:'#5aa38a',b:'#24505a',t:'La patience',s:'Le solitaire classique : 40 niveaux et un mode infini.',sp:''},
+{id:'airhockey',n:'Air hockey',ic:'🏒',a:'#4aa3d8',b:'#1d4f7a',t:'La table glisse',s:'Contre l’IA en 20 niveaux, à deux sur le même écran ou en ligne avec un ami.',sp:''}];
 const ORD=['mots','caches','croises','phrase','tournade','maze','memo','sudoku','match3','demenage','quiz','cherche'],GD=[...ORD.map(i=>G.find(g=>g.id===i)),...SP,...G.filter(g=>g.soon)];
 const DL=[
 {id:'wordle',n:'Le mot du jour',ic:'✺',a:'#cfd6ff',b:'#4a5a9a',t:'Le mot du jour',w:'Le mot du jour est trouvé.'}
@@ -4296,7 +4296,7 @@ function unRooms(){
   if(S.st==='lobby'){t=me?'Ton salon':'Invitation de '+hn;b=me?'En attente des joueurs':j?'Tu as rejoint le salon':'Te propose une partie';a=me||j?['unOpen','Ouvrir']:['unJoin','Rejoindre']}
   else{const mi=S.S.findIndex(s=>s.u===SO.uid);t='Partie avec '+S.S.filter(s=>s.u!==SO.uid).map(unDN).join(', ');b=mi<0?'Tu regardes la partie':S.t===mi?'À toi de jouer':'En cours';a=['unOpen',mi===S.t?'Jouer':'Ouvrir']}
   return`<div class="fr-i"><button class="fr-o" data-a="${a[0]}" data-v="${esc(g)}"><span class="fr-av em" style="--h:10" aria-hidden="true">🃏</span><span class="fr-t"><b>${esc(t)}</b><small>${esc(b)}</small></span></button><div class="fr-b"><button class="sb buy" data-a="${a[0]}" data-v="${esc(g)}">${a[1]}</button></div></div>`}).join('')}</section>`}
-const unTile=()=>{if(!SO.uid)return'Seul ou entre amis';const L=unMine().filter(([g,S])=>S.st==='lobby'?S.h!==SO.uid&&!unJoined(S,g,SO.uid):S.t===S.S.findIndex(s=>s.u===SO.uid));return L.length?(L[0][1].st==='lobby'?'Invitation au Uno':'À toi de jouer'):'Seul ou entre amis'};
+const unTile=()=>{if(!SO.uid)return'';const L=unMine().filter(([g,S])=>S.st==='lobby'?S.h!==SO.uid&&!unJoined(S,g,SO.uid):S.t===S.S.findIndex(s=>s.u===SO.uid));return L.length?(L[0][1].st==='lobby'?'Invitation au Uno':'À toi de jouer'):''};
 function unTileUp(){const t=$('.tile.pt-uno small');if(t)t.textContent=unTile()}
 /* ---------- en ligne : abonnements ---------- */
 const unGid=p=>p.slice().sort().join('_')+'_u';
