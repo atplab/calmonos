@@ -5052,7 +5052,7 @@ function cbHub(){
  <div class="dd pt-colorie${lvOpen?' open':''}" id="cbdd"><button class="dd-h" data-a="cbDd" aria-expanded="${lvOpen}" aria-controls="lvl"><span><b>Choisir un pixel art</b><small>${d.length} / ${CBN} terminés</small></span>${chev}</button><div class="dd-l" id="lvl"><div class="dd-i"><div class="lvg cbg">${[...Array(CBN).keys()].map(i=>{const o=d.includes(i);return`<button class="lv ${o?'d cbt':i===nx?'nx':'far'}" data-a="cbLv" data-v="${i}" aria-label="${esc(CBP[i].n)}${o?', terminé':''}">${o?`<img src="${cbThumb(i)}" alt="">`:i+1}</button>`}).join('')}</div></div></div></div></div>`;
  window.scrollTo(0,0)}
 function cbScreen(){
- cbActs();cur='colorie';nv('games');theme('colorie');
+ cbActs();cur='colorie';nv('games');theme('colorie');{const n=$('#nav');if(n)n.hidden=true}
  const G=CB.G,D=CBP[CB.l];
  app.innerHTML=`<div class="cbs"><div class="top stk"><button class="back" data-a="cbBk">‹ Coloriage</button><b class="sott">${esc(D.n)}</b><div class="chip">❄ ${FLX()}</div></div>
  <div class="cbpal" role="radiogroup" aria-label="Couleurs">${G.pal.map((c,i)=>`<button class="cbsw${cbLight(c)?' lt':''}" role="radio" data-a="cbSel" data-v="${i+1}" style="--c:${c}" aria-label="Couleur ${i+1}"><b>${i+1}</b><i></i></button>`).join('')}</div>
@@ -5226,7 +5226,7 @@ function cdLeft(k){let n=0;CD.M.R.forEach((r,i)=>{if(r.c===k&&!CD.f[i])n++});ret
 function cdTotal(k){let n=0;CD.M.R.forEach(r=>{if(r.c===k)n++});return n}
 function cdThumb(l){const sc=cdScene(l),K=Math.min(50,10+Math.round(l*40/(CDN-1))),{pal,map}=cdPal(sc.S,K),c=document.createElement('canvas');c.width=60;c.height=78;const x=c.getContext('2d');x.scale(60/CDW,78/CDH);sc.S.forEach(s=>{x.fillStyle=pal[map[s.c]-1];x.fill(new Path2D(s.d))});return c.toDataURL()}
 function cdScreen(){
- cbActs();cur='colorie';nv('games');theme('colorie');
+ cbActs();cur='colorie';nv('games');theme('colorie');{const n=$('#nav');if(n)n.hidden=true}
  const M=CD.M;
  app.innerHTML=`<div class="cds"><div class="top stk"><button class="back" data-a="cdBk">‹ Coloriage</button><b class="sott">Dessin ${CD.l+1}</b><button class="cdhint" data-a="cdHint" aria-label="Indice, 1 flocon">💡<small>1 ❄</small></button></div>
  <div class="cdw" id="cdw"><canvas id="cdc" aria-label="Dessin à colorier : glisse pour te déplacer, pince pour zoomer, touche une zone pour la colorier"></canvas><div class="cdz"><button data-a="cdZ" data-v="1" aria-label="Zoomer">+</button><button data-a="cdZ" data-v="-1" aria-label="Dézoomer">−</button></div></div>
@@ -5241,7 +5241,7 @@ function cdScreen(){
  if(CD.f.every(Boolean))CD.ok=true;
  cdPick(cdNext(1)||1);window.scrollTo(0,0)}
 function cdSizeC(first){const cv=CD.cv;if(!cv||!cv.isConnected){removeEventListener('resize',cdSizeC);return}
- const w=Math.min(($('#cdw')||cv).clientWidth||360,600),h=Math.max(260,innerHeight-cv.getBoundingClientRect().top-190),dpr=Math.min(2.5,devicePixelRatio||1);
+ const w=Math.min(($('#cdw')||cv).clientWidth||360,600),h=Math.max(260,innerHeight-cv.getBoundingClientRect().top-120),dpr=Math.min(2.5,devicePixelRatio||1);
  cv.style.width=w+'px';cv.style.height=h+'px';cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);CD.dpr=dpr;CD.w=w;CD.h=h;const fit=Math.min(w/CDW,h/CDH);
  if(first===true||!CD.fit){CD.fit=fit;CD.z=fit;CD.ox=(w-CDW*fit)/2;CD.oy=(h-CDH*fit)/2}else{CD.fit=fit;cdClamp()}cdDraw()}
 function cdClamp(){const f=CD.fit;CD.z=Math.max(f*.5,Math.min(f*14,CD.z));const W=CDW*CD.z,H=CDH*CD.z,mx=CD.w*.75,my=CD.h*.75;CD.ox=Math.min(mx,Math.max(CD.w-mx-W,CD.ox));CD.oy=Math.min(my,Math.max(CD.h-my-H,CD.oy))}
