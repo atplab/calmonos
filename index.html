@@ -1551,6 +1551,14 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .gtoast.out{opacity:0;transition:opacity .35s}
 @keyframes gtin{from{opacity:0;translate:-50% 10px}to{opacity:1;translate:-50% 0}}
 
+.tile.nw{box-shadow:0 0 0 2px #ffd86b,0 0 22px rgba(255,216,107,.55);animation:gnwp 1.8s ease-in-out infinite}
+@keyframes gnwp{0%,100%{box-shadow:0 0 0 2px #ffd86b,0 0 14px rgba(255,216,107,.35)}50%{box-shadow:0 0 0 3px #ffe9a8,0 0 30px rgba(255,216,107,.8)}}
+.tile.nw small{color:#ffe9a8;font-weight:700}
+.gnwb{position:absolute;top:10px;right:10px;font-style:normal;font:800 11px/1 "Nunito Sans",system-ui,sans-serif;letter-spacing:.04em;text-transform:uppercase;color:#4a2c00;background:linear-gradient(135deg,#ffe58a,#ffbf3d);padding:5px 9px;border-radius:999px;box-shadow:0 3px 10px rgba(255,180,50,.5);animation:gnwb 1.8s ease-in-out infinite}
+@keyframes gnwb{0%,100%{transform:scale(1) rotate(-3deg)}50%{transform:scale(1.1) rotate(3deg)}}
+.tile.nw~.fv{display:none}
+@media (prefers-reduced-motion:reduce){.tile.nw,.gnwb{animation:none}}
+
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
 .sb.cf{background:linear-gradient(180deg,#ffd18a,#e8944a);color:#3a2310;border:0}
@@ -2611,7 +2619,7 @@ function home(){nv('games');
  cur=null;origin='home';wdBuf='';wdPop=-1;wdLock=false;wdM='';
  const fv=favs(),tile=g=>{const on=fv.includes(g.id);return`<div class="tw"><button class="glass tile pt-${g.id}" style="--a:${g.a};--b:${g.b}" data-a="open" data-v="${g.id}"><i>${g.ic}</i><b>${g.id==='scrabble'||g.id==='chess'||g.id==='uno'||g.id==='airhockey'?'<svg class="mp" viewBox="0 0 24 24" role="img" aria-label="Multijoueur"><circle cx="12" cy="8" r="3.2"/><circle cx="5" cy="9.6" r="2.3"/><circle cx="19" cy="9.6" r="2.3"/><path d="M6.2 19.5c0-3.3 2.6-5.4 5.8-5.4s5.8 2.1 5.8 5.4z"/><path d="M1.3 18.6c0-2.5 1.7-4.2 4.1-4.2.7 0 1.3.1 1.9.4-1 .9-1.7 2.2-1.9 3.8z"/><path d="M22.7 18.6c0-2.5-1.7-4.2-4.1-4.2-.7 0-1.3.1-1.9.4 1 .9 1.7 2.2 1.9 3.8z"/></svg>':''}${g.n}</b><small>${g.soon?'Bientôt':g.sp?(g.id==='scrabble'?scrTile():g.id==='chess'?'':g.id==='uno'?unTile():g.sp):''}</small></button>${g.soon?'':`<button class="fv ${on?'on':''}" data-a="fav" data-v="${g.id}" aria-pressed="${on}" aria-label="${on?'Retirer '+g.n+' des favoris':'Ajouter '+g.n+' aux favoris'}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/></svg></button>`}</div>`};
  const GO=gOrd(GD.filter(g=>!gHid(g.id))),F=GO.filter(g=>!g.soon&&fv.includes(g.id)),R=GO.filter(g=>!F.includes(g));
- app.innerHTML=`<header class="top"><h1>Nuit de neige</h1><div class="chip" title="Flocons">❄ ${FLX()}</div></header>${wdBlock()}${lastCard()}${F.length?`<h2 class="s shr"><span>Favoris</span>${window.mpLink?mpLink():''}</h2><div class="grid fgrid">${F.map(tile).join('')}</div>${R.length?'<h2 class="s">Autres jeux</h2>':''}`:`<h2 class="s shr"><span>Choisis ta veillée</span>${window.mpLink?mpLink():''}</h2>`}${R.length?`<div class="grid">${R.map(tile).join('')}</div>`:''}<button class="gordb" data-a="gOrd"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4v16M4 8l4-4 4 4M16 20V4M12 16l4 4 4-4"/></svg>Modifier l’ordre des jeux</button>`;gLockTiles();setTimeout(gUnlockCheck,450);
+ app.innerHTML=`<header class="top"><h1>Nuit de neige</h1><div class="chip" title="Flocons">❄ ${FLX()}</div></header>${wdBlock()}${lastCard()}${F.length?`<h2 class="s shr"><span>Favoris</span>${window.mpLink?mpLink():''}</h2><div class="grid fgrid">${F.map(tile).join('')}</div>${R.length?'<h2 class="s">Autres jeux</h2>':''}`:`<h2 class="s shr"><span>Choisis ta veillée</span>${window.mpLink?mpLink():''}</h2>`}${R.length?`<div class="grid">${R.map(tile).join('')}</div>`:''}<button class="gordb" data-a="gOrd"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4v16M4 8l4-4 4 4M16 20V4M12 16l4 4 4-4"/></svg>Modifier l’ordre des jeux</button>`;gLockTiles();gUnlockCheck();
 }
 /* ordre des jeux choisi par le joueur (les nouveaux jeux se rangent à la fin) */
 const GUNL=['mots','caches','sudoku','match3','scrabble','croises','phrase','uno','cherche','chess','airhockey','demineur','memo','maze','tournade','solitaire','demenage','quiz'];
@@ -2632,14 +2640,16 @@ const GAV={airhockey:[2026,11,5],demenage:[2026,11,12]};
 const gOpenAt=id=>{const a=GAV[id];return a?new Date(a[0],a[1],a[2]).getTime():0};
 function gHid(id){return Date.now()<gOpenAt(id)&&!UNL()}
 /* fête de déblocage : une seule fois par jeu, à la première visite de l’onglet Jeux après la date */
-function gUnlockCheck(){
- if($('#gunl'))return;const seen=st.get('g:unl',[]),now=Date.now(),ids=[...new Set([...Object.keys(GAV),...Object.keys(GSTEP)])],L=ids.filter(id=>now>=gOpenAt(id)&&(GSTEP[id]||0)<=gStepNow()&&ALL.some(x=>x.id===id&&!x.soon)&&!seen.includes(id));
- if(!L.length)return;const id=L[0],g=ALL.find(x=>x.id===id);st.set('g:unl',[...seen,id]);if(!g)return;
+/* jeux tout juste débloqués : pastille « Nouveau » sur la tuile ; toucher la tuile lance la fête de déblocage */
+function gFresh(){const seen=st.get('g:unl',[]),now=Date.now(),ids=[...new Set([...Object.keys(GAV),...Object.keys(GSTEP)])];return ids.filter(id=>now>=gOpenAt(id)&&(GSTEP[id]||0)<=gStepNow()&&ALL.some(x=>x.id===id&&!x.soon)&&!seen.includes(id))}
+function gUnlockCheck(){const F=gFresh();document.querySelectorAll('.tile[data-a=open]').forEach(t=>{const id=t.dataset.v;if(!F.includes(id))return;t.classList.add('nw');t.dataset.a='gNew';if(!t.querySelector('.gnwb'))t.insertAdjacentHTML('beforeend','<em class="gnwb">Nouveau !</em>');const s=t.querySelector('small');if(s)s.textContent='Touche pour découvrir'})}
+function gUnlockShow(id){
+ if($('#gunl'))return;const seen=st.get('g:unl',[]),g=ALL.find(x=>x.id===id);if(!seen.includes(id))st.set('g:unl',[...seen,id]);if(!g)return;
  const d=document.createElement('div');d.id='gunl';d.className='gunl';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.setAttribute('aria-label','Nouveau jeu débloqué : '+g.n);
  d.innerHTML=`<div class="gunb" style="--a:${g.a};--b:${g.b}"><div class="gunr" aria-hidden="true">${'<i></i>'.repeat(12)}</div><small>Nouveau jeu débloqué !</small><div class="guni">${g.ic}</div><h2>${esc(g.n)}</h2><p>${esc(g.t||'')}</p><div class="chrow"><button class="btn" data-a="gUnlGo" data-v="${id}">Découvrir</button><button class="btn alt" data-a="gUnlX">Plus tard</button></div></div>`;
  document.body.appendChild(d);try{sfx(660,.12);setTimeout(()=>sfx(880,.12),130);setTimeout(()=>sfx(1175,.25),260);vib([15,30,15])}catch(e){}
  setTimeout(()=>{try{confetti(d.querySelector('.guni'))}catch(e){}},350)}
-setTimeout(()=>Object.assign(act,{gUnlX:()=>{const e=$('#gunl');if(!e)return;e.classList.add('out');setTimeout(()=>{e.remove();gUnlockCheck()},300)},gUnlGo:v=>{const e=$('#gunl');if(e)e.remove();act.open(v)}}));
+setTimeout(()=>Object.assign(act,{gUnlX:()=>{const e=$('#gunl');if(!e)return;e.classList.add('out');setTimeout(()=>{e.remove();if(cur===null)home()},300)},gNew:v=>gUnlockShow(v),gUnlGo:v=>{const e=$('#gunl');if(e)e.remove();act.open(v)}}));
 
 /* jeux débloqués au fil de l’histoire (étapes du voyage) ; tout est ouvert en mode illimité */
 const GSTEP={scrabble:1,croises:1,phrase:2,uno:2,cherche:3,chess:4,airhockey:5,demineur:5,memo:6,maze:7,tournade:8,solitaire:9,demenage:15,quiz:20};
