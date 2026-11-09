@@ -1604,6 +1604,12 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .cdg .lv small{display:block;font-size:10px;opacity:.7;font-weight:600;margin-top:2px}
 .cdg .lv{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
 
+.tpr{display:flex;align-items:center;gap:8px}
+.hintb{display:inline-flex;align-items:center;gap:5px;cursor:pointer;font:inherit;color:#fff;line-height:1}
+.hintb svg{width:18px;height:18px;fill:rgba(255,216,107,.25);stroke:#ffd86b;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.hintb span{font-size:12px;font-weight:700;opacity:.9}
+.hintb:active{transform:scale(.95)}
+
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
 .sb.cf{background:linear-gradient(180deg,#ffd18a,#e8944a);color:#3a2310;border:0}
@@ -5054,11 +5060,11 @@ function cbHub(){
 function cbScreen(){
  cbActs();cur='colorie';nv('games');theme('colorie');{const n=$('#nav');if(n)n.hidden=true}
  const G=CB.G,D=CBP[CB.l];
- app.innerHTML=`<div class="cbs"><div class="top stk"><button class="back" data-a="cbBk">‹ Coloriage</button><b class="sott">${esc(D.n)}</b><div class="chip">❄ ${FLX()}</div></div>
+ app.innerHTML=`<div class="cbs"><div class="top stk"><button class="back" data-a="cbBk">‹ Coloriage</button><b class="sott">${esc(D.n)}</b><div class="tpr"><button class="chip hintb" data-a="cbHint" aria-label="Indice : coûte 1 flocon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></svg><span>−1 ❄</span></button><div class="chip">❄ ${FLX()}</div></div></div>
  <div class="cbpal" role="radiogroup" aria-label="Couleurs">${G.pal.map((c,i)=>`<button class="cbsw${cbLight(c)?' lt':''}" role="radio" data-a="cbSel" data-v="${i+1}" style="--c:${c}" aria-label="Couleur ${i+1}"><b>${i+1}</b><i></i></button>`).join('')}</div>
  <div class="cbw"><canvas id="cbc" aria-label="Dessin à colorier"></canvas></div>
  <p class="m" id="m" role="status" aria-live="polite"></p>
- <div class="cbbt"><button class="btn alt" data-a="cbHint">Indice · 1 ❄</button></div></div>`;
+ </div>`;
  const cv=CB.cv=$('#cbc');CB.x=cv.getContext('2d');cbSizeC();
  cv.addEventListener('pointerdown',cbPD);cv.addEventListener('pointermove',cbPM);['pointerup','pointercancel'].forEach(e=>cv.addEventListener(e,()=>{CB.drag=false}));
  addEventListener('resize',cbSizeC);
@@ -5088,7 +5094,7 @@ function cbPD(e){if(!CB.G)return;CB.drag=true;try{CB.cv.setPointerCapture(e.poin
 function cbPM(e){if(!CB.drag)return;cbPaint(cbCell(e),false);e.preventDefault()}
 function cbWin(){
  CB.ok=true;st.set('cb:sv:'+CB.l,'');const d=st.get('cb:d',[]),first=!d.includes(CB.l);if(first){d.push(CB.l);st.set('cb:d',d)}
- const r=first?2+Math.floor(CB.l/8):1;fl+=r;st.set('fl',fl);const ch=$('.chip');if(ch)ch.textContent='❄ '+FLX();
+ const r=first?2+Math.floor(CB.l/8):1;fl+=r;st.set('fl',fl);const ch=$('.chip:not(.hintb)');if(ch)ch.textContent='❄ '+FLX();
  cbDraw();document.querySelectorAll('.cbsw').forEach(b=>{b.classList.add('ok');b.querySelector('i').textContent='✓'});
  const cv=CB.cv;if(cv&&!wRM)cv.animate([{transform:'scale(1)'},{transform:'scale(1.04)'},{transform:'scale(1)'}],{duration:600,easing:'ease-out'});
  sfx(784,.6);vib([20,40,20]);try{confetti(cv)}catch(e){}
@@ -5099,7 +5105,7 @@ function cbActs(){if(cbAO)return;cbAO=true;Object.assign(act,{
  cbDd:()=>{const d=$('#cbdd');lvOpen=d.classList.toggle('open');d.querySelector('.dd-h').setAttribute('aria-expanded',lvOpen)},
  cbLv:v=>{CB.l=Math.max(0,Math.min(CBN-1,+v||0));CB.G=cbGrid(CB.l);CB.done=cbLoad(CB.l);CB.ok=false;CB.sel=1;CB.fl=null;cbScreen()},
  cbSel:v=>{cbPick(+v)},
- cbHint:()=>{if(CB.ok)return;const left=cbLeft(CB.sel);if(!left)return;if(!UNL()){if(fl<1){const m=$('#m');if(m)m.textContent='Il te manque un flocon pour un indice.';return}fl-=1;st.set('fl',fl);const c=$('.chip');if(c)c.textContent='❄ '+FLX()}
+ cbHint:()=>{if(CB.ok)return;const left=cbLeft(CB.sel);if(!left)return;if(!UNL()){if(fl<1){const m=$('#m');if(m)m.textContent='Il te manque un flocon pour un indice.';return}fl-=1;st.set('fl',fl);const c=$('.chip:not(.hintb)');if(c)c.textContent='❄ '+FLX()}
   CB.fl=new Set();CB.G.g.forEach((v,i)=>{if(v===CB.sel&&!CB.done[i])CB.fl.add(i)});cbDraw();setTimeout(()=>{CB.fl=null;cbDraw()},1600)}
 })}
 /* ---------- Coloriage « dessins » (à la Zen Color / Happy Color) ----------
@@ -5228,7 +5234,7 @@ function cdThumb(l){const sc=cdScene(l),K=Math.min(50,10+Math.round(l*40/(CDN-1)
 function cdScreen(){
  cbActs();cur='colorie';nv('games');theme('colorie');{const n=$('#nav');if(n)n.hidden=true}
  const M=CD.M;
- app.innerHTML=`<div class="cds"><div class="top stk"><button class="back" data-a="cdBk">‹ Coloriage</button><b class="sott">Dessin ${CD.l+1}</b><button class="cdhint" data-a="cdHint" aria-label="Indice, 1 flocon">💡<small>1 ❄</small></button></div>
+ app.innerHTML=`<div class="cds"><div class="top stk"><button class="back" data-a="cdBk">‹ Coloriage</button><b class="sott">Dessin ${CD.l+1}</b><div class="tpr"><button class="chip hintb" data-a="cdHint" aria-label="Indice : coûte 1 flocon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></svg><span>−1 ❄</span></button><div class="chip">❄ ${FLX()}</div></div></div>
  <div class="cdw" id="cdw"><canvas id="cdc" aria-label="Dessin à colorier : glisse pour te déplacer, pince pour zoomer, touche une zone pour la colorier"></canvas><div class="cdz"><button data-a="cdZ" data-v="1" aria-label="Zoomer">+</button><button data-a="cdZ" data-v="-1" aria-label="Dézoomer">−</button></div></div>
  <div class="cdpal" id="cdpal" role="radiogroup" aria-label="Couleurs">${M.pal.map((c,i)=>`<button class="cdsw${cbLight(c)?' lt':''}" role="radio" data-a="cdSel" data-v="${i+1}" style="--c:${c}" aria-label="Couleur ${i+1}"><b>${i+1}</b></button>`).join('')}</div>
  <p class="m" id="m" role="status" aria-live="polite"></p></div>`;
@@ -5280,7 +5286,7 @@ function cdPM(e){if(!CD.pt[e.pointerId])return;CD.pt[e.pointerId]={x:e.clientX,y
 function cdPU(e){delete CD.pt[e.pointerId];const T=CD.tap;if(T&&T.id===e.pointerId){if(!T.mv&&e.type==='pointerup')cdTapAt(e);CD.tap=null}if(cdPts().length<2)CD.pz=null}
 function cdWin(){
  CD.ok=true;st.set('cd:sv:'+CD.l,'');const d=st.get('cd:d',[]),first=!d.includes(CD.l);if(first){d.push(CD.l);st.set('cd:d',d)}
- const r=first?3+Math.floor(CD.l/8):1;fl+=r;st.set('fl',fl);
+ const r=first?3+Math.floor(CD.l/8):1;fl+=r;st.set('fl',fl);{const ch=$('.chip:not(.hintb)');if(ch)ch.textContent='❄ '+FLX()}
  const z0=CD.z,ox0=CD.ox,oy0=CD.oy,t0=performance.now(),D=700;CD.fit=Math.min(CD.w/CDW,CD.h/CDH);const zf=CD.fit,oxf=(CD.w-CDW*zf)/2,oyf=(CD.h-CDH*zf)/2;
  const st2=n=>{const k=Math.min(1,(n-t0)/D),e=1-Math.pow(1-k,3);CD.z=z0+(zf-z0)*e;CD.ox=ox0+(oxf-ox0)*e;CD.oy=oy0+(oyf-oy0)*e;cdDraw();if(k<1&&!wRM)requestAnimationFrame(st2);else{CD.z=zf;CD.ox=oxf;CD.oy=oyf;cdDraw()}};requestAnimationFrame(st2);
  document.querySelectorAll('.cdsw').forEach(b=>{b.classList.add('ok');b.style.setProperty('--pr','360deg')});
@@ -5294,7 +5300,7 @@ setTimeout(()=>Object.assign(act,{
  cdZ:v=>cdZoomAt(CD.z*(+v>0?1.6:1/1.6),CD.w/2,CD.h/2),
  cdDd:()=>{const d=$('#cddd');CD.ddOpen=d.classList.toggle('open');d.querySelector('.dd-h').setAttribute('aria-expanded',CD.ddOpen)},
  cdHint:()=>{if(CD.ok||!CD.M)return;const k=CD.sel,ids=CD.M.R.map((r,i)=>i).filter(i=>CD.M.R[i].c===k&&!CD.f[i]);if(!ids.length)return;
-  if(!UNL()){if(fl<1){const m=$('#m');if(m)m.textContent='Il te manque un flocon pour un indice.';return}fl-=1;st.set('fl',fl)}
+  if(!UNL()){if(fl<1){const m=$('#m');if(m)m.textContent='Il te manque un flocon pour un indice.';return}fl-=1;st.set('fl',fl);const ch=$('.chip:not(.hintb)');if(ch)ch.textContent='❄ '+FLX()}
   const r=CD.M.R[ids.reduce((a,b)=>CD.M.R[a].n<=CD.M.R[b].n?a:b)];const zt=Math.max(CD.z,Math.min(CD.fit*14,24/(r.fs*.62||10))),tx=CD.w/2-r.lx*zt,ty=CD.h/2-r.ly*zt,z0=CD.z,ox0=CD.ox,oy0=CD.oy,t0=performance.now();
   CD.hl=new Set(ids);const an=n=>{const k=Math.min(1,(n-t0)/600),e=1-Math.pow(1-k,3);CD.z=z0+(zt-z0)*e;CD.ox=ox0+(tx-ox0)*e;CD.oy=oy0+(ty-oy0)*e;cdClamp();cdDraw();if(k<1)requestAnimationFrame(an)};requestAnimationFrame(an);
   setTimeout(()=>{CD.hl=null;cdDraw()},2200)}
