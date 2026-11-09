@@ -5244,8 +5244,8 @@ function cdSizeC(first){const cv=CD.cv;if(!cv||!cv.isConnected){removeEventListe
  const w=Math.min(($('#cdw')||cv).clientWidth||360,600),h=Math.max(260,innerHeight-cv.getBoundingClientRect().top-190),dpr=Math.min(2.5,devicePixelRatio||1);
  cv.style.width=w+'px';cv.style.height=h+'px';cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);CD.dpr=dpr;CD.w=w;CD.h=h;const fit=Math.min(w/CDW,h/CDH);
  if(first===true||!CD.fit){CD.fit=fit;CD.z=fit;CD.ox=(w-CDW*fit)/2;CD.oy=(h-CDH*fit)/2}else{CD.fit=fit;cdClamp()}cdDraw()}
-function cdClamp(){const f=CD.fit;CD.z=Math.max(f,Math.min(f*14,CD.z));const W=CDW*CD.z,H=CDH*CD.z;CD.ox=W<=CD.w?(CD.w-W)/2:Math.min(0,Math.max(CD.w-W,CD.ox));CD.oy=H<=CD.h?(CD.h-H)/2:Math.min(0,Math.max(CD.h-H,CD.oy))}
-function cdZoomAt(z,mx,my){const wx=(mx-CD.ox)/CD.z,wy=(my-CD.oy)/CD.z;CD.z=Math.max(CD.fit,Math.min(CD.fit*14,z));CD.ox=mx-wx*CD.z;CD.oy=my-wy*CD.z;cdClamp();cdDraw()}
+function cdClamp(){const f=CD.fit;CD.z=Math.max(f*.5,Math.min(f*14,CD.z));const W=CDW*CD.z,H=CDH*CD.z,mx=CD.w*.75,my=CD.h*.75;CD.ox=Math.min(mx,Math.max(CD.w-mx-W,CD.ox));CD.oy=Math.min(my,Math.max(CD.h-my-H,CD.oy))}
+function cdZoomAt(z,mx,my){const wx=(mx-CD.ox)/CD.z,wy=(my-CD.oy)/CD.z;CD.z=Math.max(CD.fit*.5,Math.min(CD.fit*14,z));CD.ox=mx-wx*CD.z;CD.oy=my-wy*CD.z;cdClamp();cdDraw()}
 function cdNext(from){const K=CD.M.pal.length;for(let j=0;j<K;j++){const k=(from-1+j)%K+1;if(cdLeft(k))return k}return 0}
 function cdPick(k){CD.sel=k;document.querySelectorAll('.cdsw').forEach(b=>{const v=+b.dataset.v,left=cdLeft(v),t=cdTotal(v)||1;b.classList.toggle('on',v===k);b.classList.toggle('ok',!left);b.setAttribute('aria-checked',v===k);b.style.setProperty('--pr',(1-left/t)*360+'deg')});
  const b=$(`.cdsw[data-v="${k}"]`);if(b)b.scrollIntoView({behavior:wRM?'auto':'smooth',inline:'center',block:'nearest'});cdDraw()}
@@ -5274,7 +5274,7 @@ function cdPD(e){if(!CD.M)return;try{CD.cv.setPointerCapture(e.pointerId)}catch(
  else if(P.length===2){CD.tap=null;const r=CD.cv.getBoundingClientRect(),a=P[0],b=P[1];CD.pz={d:Math.hypot(a.x-b.x,a.y-b.y)||1,z:CD.z,mx:(a.x+b.x)/2-r.left,my:(a.y+b.y)/2-r.top,ox:CD.ox,oy:CD.oy}}
  e.preventDefault()}
 function cdPM(e){if(!CD.pt[e.pointerId])return;CD.pt[e.pointerId]={x:e.clientX,y:e.clientY};const P=cdPts();
- if(P.length>=2&&CD.pz){const r=CD.cv.getBoundingClientRect(),a=P[0],b=P[1],d=Math.hypot(a.x-b.x,a.y-b.y)||1,mx=(a.x+b.x)/2-r.left,my=(a.y+b.y)/2-r.top,Z=CD.pz,z=Math.max(CD.fit,Math.min(CD.fit*14,Z.z*d/Z.d)),wx=(Z.mx-Z.ox)/Z.z,wy=(Z.my-Z.oy)/Z.z;CD.z=z;CD.ox=mx-wx*z;CD.oy=my-wy*z;cdClamp();cdDraw()}
+ if(P.length>=2&&CD.pz){const r=CD.cv.getBoundingClientRect(),a=P[0],b=P[1],d=Math.hypot(a.x-b.x,a.y-b.y)||1,mx=(a.x+b.x)/2-r.left,my=(a.y+b.y)/2-r.top,Z=CD.pz,z=Math.max(CD.fit*.5,Math.min(CD.fit*14,Z.z*d/Z.d)),wx=(Z.mx-Z.ox)/Z.z,wy=(Z.my-Z.oy)/Z.z;CD.z=z;CD.ox=mx-wx*z;CD.oy=my-wy*z;cdClamp();cdDraw()}
  else if(CD.tap&&CD.tap.id===e.pointerId){const T=CD.tap,dx=e.clientX-T.x,dy=e.clientY-T.y;if(!T.mv&&Math.hypot(dx,dy)>8)T.mv=true;if(T.mv){CD.ox=T.ox+dx;CD.oy=T.oy+dy;cdClamp();cdDraw()}}
  e.preventDefault()}
 function cdPU(e){delete CD.pt[e.pointerId];const T=CD.tap;if(T&&T.id===e.pointerId){if(!T.mv&&e.type==='pointerup')cdTapAt(e);CD.tap=null}if(cdPts().length<2)CD.pz=null}
