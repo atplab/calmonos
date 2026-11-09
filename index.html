@@ -1515,6 +1515,16 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .unme>.unhb{top:-6px;left:50%;right:auto;translate:-50% 0;font-size:15px}
 @keyframes unhbp{0%{opacity:0;scale:.4}20%{opacity:1;scale:1.25}35%{scale:1}85%{opacity:1}100%{opacity:0}}
 
+.unpk.in{animation:unpkf .25s ease-out}
+.unpk.in section{animation:unpks .38s cubic-bezier(.3,1.5,.5,1)}
+.unpk.in .unpc button{animation:unpkb .42s cubic-bezier(.3,1.6,.5,1) backwards}
+.unpk.in .unpc button:nth-child(2){animation-delay:.05s}.unpk.in .unpc button:nth-child(3){animation-delay:.1s}.unpk.in .unpc button:nth-child(4){animation-delay:.15s}
+.unpc button{transition:transform .15s}
+.unpc button:active{transform:scale(.92)}
+@keyframes unpkf{from{opacity:0}to{opacity:1}}
+@keyframes unpks{from{opacity:0;transform:scale(.8) translateY(14px)}to{opacity:1;transform:none}}
+@keyframes unpkb{from{opacity:0;transform:scale(.3) rotate(-25deg)}to{opacity:1;transform:none}}
+
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
 .sb.cf{background:linear-gradient(180deg,#ffd18a,#e8944a);color:#3a2310;border:0}
@@ -4263,7 +4273,7 @@ function unDraw(){
  const S=UN.g,me=UN.me,n=S.S.length,my=S.H[me]||[],live=S.st==='play',myT=live&&S.t===me&&!S.S[me].b,net=!UN.loc;
  const hs=$('#unh'),sl=hs?hs.scrollLeft:0,flip=unHandPos();
  let op='';for(let r=1;r<n;r++){const i=(me+r)%n,s=S.S[i],h=S.H[i].length;
-  const hit=UN.hit&&UN.hit.i===i&&Date.now()<UN.hit.u;op+=`<div class="unp${live&&S.t===i?' on':''}${hit?' hit':''}" data-i="${i}">${hit?`<em class="unhb">${UN.hit.t}</em>`:''}<span class="unav">${unAv(s)}</span><b>${esc(unDN(s))}${s.ab?' <small>(bot)</small>':''}</b><span class="unbk">${'<i></i>'.repeat(Math.min(h,8))}</span><span class="unn">${h} carte${h>1?'s':''}${S.uc[i]&&h===1?' · <em>Uno !</em>':''}</span></div>`}
+  const hit=UN.hit&&UN.hit.i===i&&Date.now()<UN.hit.u,hold=UN.hit&&Date.now()<UN.hit.u;op+=`<div class="unp${live&&S.t===i&&!hold?' on':''}${hit?' hit':''}" data-i="${i}">${hit?`<em class="unhb">${UN.hit.t}</em>`:''}<span class="unav">${unAv(s)}</span><b>${esc(unDN(s))}${s.ab?' <small>(bot)</small>':''}</b><span class="unbk">${'<i></i>'.repeat(Math.min(h,8))}</span><span class="unn">${h} carte${h>1?'s':''}${S.uc[i]&&h===1?' · <em>Uno !</em>':''}</span></div>`}
  /* la main : toujours entière à l’écran (chevauchement selon la largeur réelle, sur deux rangées si besoin) */
  const W=Math.max(200,(root.clientWidth||Math.min(innerWidth,440)-36)-16),cw=58,cap=1+Math.floor((W-cw)/17),rows=my.length>cap?[my.slice(0,Math.ceil(my.length/2)),my.slice(Math.ceil(my.length/2))]:[my];
  const ovOf=m=>m>1?Math.min(6,Math.floor((W-cw)/(m-1))-cw):0;
@@ -4274,16 +4284,23 @@ function unDraw(){
  <div class="unop">${op}</div>
  <div class="unc"><span class="unar l ${S.d>0?'up':'dn'}" aria-hidden="true"><svg viewBox="0 0 28 72"><path d="M20 66Q2 36 18 8"/><path d="M9 11l9-3 1 9"/></svg></span><button class="btn ununo${UN.uc?' on':''}" data-a="unUno" ${myT&&my.length===2?'':'disabled'} aria-pressed="${UN.uc}">Uno !</button><button class="unk" data-a="unDraw" aria-label="Piocher" ${myT&&!S.dr?'':'disabled'}>${unBack()}<small>${S.D.length}</small></button><div class="untop" style="--cc:${UNHX[S.c]}">${S.X.length>1?`<span class="unund" style="${unJit(S.X.length-2)}" aria-hidden="true">${unCard(S.X[S.X.length-2],'big')}</span>`:''}<span style="${unJit(S.X.length-1)}" class="untc ${S.X.length!==UN.lastX&&wRM?'unpop':''}"${UN.flyX&&UN.flyX===S.X.length?' style="visibility:hidden"':''}>${unCard(unTop(S),'big'+(unTop(S)[0]==='k'?' ukc u-'+S.c:''))}</span></div><span class="unar r ${S.d>0?'dn':'up'}" aria-hidden="true"><svg viewBox="0 0 28 72"><path d="M20 66Q2 36 18 8"/><path d="M9 11l9-3 1 9"/></svg></span></div>
  <p class="unlg vh" role="status" aria-live="polite">${esc(unLg(S,me))}</p>
- <div class="unme${myT?' on':''}${UN.hit&&UN.hit.i===me&&Date.now()<UN.hit.u?' hit':''}">${UN.hit&&UN.hit.i===me&&Date.now()<UN.hit.u?`<em class="unhb">${UN.hit.t}</em>`:''}<div class="unt"><b>${turn}</b>${net&&myT?'<span class="untb"><i id="untm"></i></span>':''}</div>
+ <div class="unme${myT&&!(UN.hit&&Date.now()<UN.hit.u)?' on':''}${UN.hit&&UN.hit.i===me&&Date.now()<UN.hit.u?' hit':''}">${UN.hit&&UN.hit.i===me&&Date.now()<UN.hit.u?`<em class="unhb">${UN.hit.t}</em>`:''}<div class="unt"><b>${turn}</b>${net&&myT?'<span class="untb"><i id="untm"></i></span>':''}</div>
  <div class="unh" id="unh">${(()=>{let base=0;return rows.map(R=>{const b0=base;base+=R.length;return`<div class="unhr" style="--ov:${ovOf(R.length)}px">${R.map((c,j)=>{const k=b0+j;const ok=myT&&(S.dr?k===my.length-1&&unOk(S,c):unOk(S,c));return`<button class="ucd${ok?' ok':''}${myT&&!ok?' no':''}" data-a="unPlay" data-v="${k}" data-c="${c}" aria-label="${unCnf(c)}"${ok?'':' aria-disabled="true"'}>${unCard(c)}</button>`}).join('')}</div>`}).join('')})()}</div>
  ${myT&&S.dr?'<div class="unbt"><button class="btn alt" data-a="unPass">Garder et passer</button></div>':''}
  ${S.S[me]&&S.S[me].ab&&S.S[me].u===SO.uid&&live?'<button class="btn" style="margin-top:10px" data-a="unBackIn">Reprendre ma place</button>':''}
  ${UN.m?`<p class="note" style="text-align:center">${esc(UN.m)}</p>`:''}</div>
  ${w>=0?`<div class="unend"><section class="glass play"><h2>${w===me?'Tu as gagné !':esc(unNmD(S,w))+' a gagné'}</h2>${rw?`<p class="unrw">${rw}</p>`:''}<div class="chrow">${UN.loc||host?'<button class="btn" data-a="unAgain">Rejouer</button>':'<p class="note">L’hôte peut relancer une partie.</p>'}<button class="btn alt" data-a="unBk">Retour</button></div></section></div>`:''}
- ${UN.pk>=0?`<div class="unpk"><section class="glass play"><h2>Choisis une couleur</h2><div class="unpc">${UNCL.map(c=>`<button data-a="unCol" data-v="${c}" style="background:${UNHX[c]}" aria-label="${UNNM[c]}"></button>`).join('')}</div><button class="lnk" data-a="unCol" data-v="">Annuler</button></section></div>`:''}`;
+ ${UN.pk>=0?`<div class="unpk${UN.pkS?'':' in'}"><section class="glass play"><h2>Choisis une couleur</h2><div class="unpc">${UNCL.map(c=>`<button data-a="unCol" data-v="${c}" style="background:${UNHX[c]}" aria-label="${UNNM[c]}"></button>`).join('')}</div><button class="lnk" data-a="unCol" data-v="">Annuler</button></section></div>`:''}`;
  UN.lastX=S.X.length;
  const h2=$('#unh');if(h2)h2.scrollLeft=sl;
- unTimers();unAnim(S);unUiAnim(S,myT);unHandFlip(flip,S)}
+ UN.pkS=UN.pk>=0;
+ unTimers();unAnim(S);unUiAnim(S,myT);unHandFlip(flip,S);unTurnAnim()}
+/* le joueur dont c’est le tour s’allume en douceur ; celui d’avant s’éteint */
+function unTurnAnim(){
+ const on=$('.unp.on'),me=$('.unme.on'),k=on?on.dataset.i:me?'me':'',P=UN.pTurn;UN.pTurn=k;if(P===undefined||P===k||wRM)return;
+ if(on)on.animate([{transform:'translateY(0) scale(1)',filter:'saturate(.25) brightness(.75)',boxShadow:'0 0 0 0 rgba(255,216,107,0)'},{transform:'translateY(-6px) scale(1.09)',filter:'saturate(1.1) brightness(1.08)',offset:.6},{transform:'translateY(-3px) scale(1.05)',filter:'none'}],{duration:480,easing:'ease-out'});
+ if(me){const t=me.querySelector('.unt b');if(t)t.animate([{opacity:0,transform:'translateY(6px) scale(.9)'},{opacity:1,transform:'none'}],{duration:380,easing:'ease-out'})}
+ if(P&&P!=='me'){const e=$(`.unp[data-i="${P}"]`);if(e&&!e.classList.contains('on')&&!e.classList.contains('hit'))e.animate([{transform:'translateY(-3px) scale(1.05)',filter:'brightness(1.15) saturate(1.3) sepia(.5)'},{transform:'none',filter:'none'}],{duration:420,easing:'ease-in-out'})}}
 /* distribution au début de la partie : 7 cartes à chacun, une à la fois, autour de la table, puis la première carte du jeu */
 function unDeal(S){
  const me=UN.me,n=S.S.length,T=1700+Math.random()*500,FD=380,step=(T-FD-320)/(7*n),R=e=>e?e.getBoundingClientRect():null,src=R($('.unk .ucard')||$('.unk'));
@@ -4331,7 +4348,7 @@ function unAnim(S){
  if(pl>=0){const tg=$('.untop>.untc');if(tg){tg.style.visibility='hidden';const from=pl===me&&fr?fr:R(seat(pl)),fx=UN.flyX=N.X;
   const tr=tg.style.transform;tg.style.transform='none';const tgr=R(tg.firstElementChild||tg);tg.style.transform=tr;
   unFly(unCard(N.top,'big'+(N.top[0]==='k'?' ukc u-'+S.c:'')),from,tgr,0,()=>{if(UN.flyX===fx)UN.flyX=0;const t2=$('.untop>.untc');if(t2)t2.style.visibility=''},unJ(N.X-1));dl=330}}
- if(pl>=0&&['s','d','f'].includes(N.top[1])){const n=S.S.length,v=((pl+S.d)%n+n)%n;if(v!==pl){UN.hit={i:v,u:Date.now()+750+dl,t:N.top[1]==='s'?'Passe !':N.top[1]==='d'?'+2':'+4'};setTimeout(()=>{const e=v===me?$('.unme'):$(`.unp[data-i="${v}"]`);if(e&&!e.classList.contains('hit')){e.classList.add('hit');e.insertAdjacentHTML('afterbegin',`<em class="unhb">${UN.hit.t}</em>`)}},dl);setTimeout(()=>{document.querySelectorAll('.unp.hit,.unme.hit').forEach(e=>e.classList.remove('hit'));document.querySelectorAll('.unhb').forEach(e=>e.remove())},dl+750)}}
+ if(pl>=0&&['s','d','f'].includes(N.top[1])){const n=S.S.length,v=((pl+S.d)%n+n)%n;if(v!==pl){UN.hit={i:v,u:Date.now()+750+dl,t:N.top[1]==='s'?'Passe !':N.top[1]==='d'?'+2':'+4'};setTimeout(()=>{const e=v===me?$('.unme'):$(`.unp[data-i="${v}"]`);if(e&&!e.classList.contains('hit')){e.classList.add('hit');e.insertAdjacentHTML('afterbegin',`<em class="unhb">${UN.hit.t}</em>`)}},dl);document.querySelectorAll('.unp.on,.unme.on').forEach(e=>e.classList.remove('on'));setTimeout(()=>{document.querySelectorAll('.unp.hit,.unme.hit').forEach(e=>e.classList.remove('hit'));document.querySelectorAll('.unhb').forEach(e=>e.remove());if($('#ung')&&UN.g)unDraw()},dl+760)}}
  const src=R($('.unk .ucard')||$('.unk'));
  N.H.forEach((h,i)=>{const k=Math.min(4,h-P.H[i]+(i===pl?1:0));if(k<=0)return;
   for(let j=0;j<k;j++){
@@ -4530,7 +4547,8 @@ function unActs(){if(unAO)return;unAO=true;Object.assign(act,{
   const N=unNew(seats,{h:L.h,p:L.p,nms:L.nms,bt:L.bt});unArm(N,null,true);N.n=1;
   try{await unSetDoc(g,N);unRoomSync(N)}catch(e){UN.m='La partie n’a pas pu démarrer. '+scrWhy(e);unRoomDraw()}},
  unClose:async()=>{const g=UN.room,L=UN.G[g];if(!L||L.h!==SO.uid)return;try{await unSetDoc(g,Object.assign({},L,{st:'off',at:Date.now()}))}catch(e){}unMark('');unHub()}
-});}
+});
+ const oc=act.unCol;act.unCol=v=>{const b=v&&$(`.unpk [data-a=unCol][data-v="${v}"]`);if(!b||wRM||UN.pkBusy)return oc(v);UN.pkBusy=true;b.animate([{transform:'scale(1)'},{transform:'scale(1.18)',offset:.45},{transform:'scale(.94)'}],{duration:230,easing:'ease-out',fill:'forwards'});const sc=$('.unpk section'),ov=$('.unpk');if(sc)sc.animate([{opacity:1,transform:'none'},{opacity:0,transform:'scale(.88)'}],{duration:200,delay:120,fill:'forwards'});if(ov)ov.animate([{opacity:1},{opacity:0}],{duration:200,delay:120,fill:'forwards'});setTimeout(()=>{UN.pkBusy=false;oc(v)},310)}}
 
 /* ---------- Solitaire (Klondike, une carte à la fois, pioche illimitée) : 40 niveaux et un mode infini ----------
    Toutes les donnes proposées ont une solution : les niveaux sont des donnes choisies d’avance (de la plus simple à la plus
