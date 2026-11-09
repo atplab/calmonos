@@ -1447,6 +1447,9 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .ahinv .fr-i{border:1px solid rgba(255,255,255,.35);border-radius:14px}
 .ahs .ahov[hidden]{display:none}
 
+.rc .ahx{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:12px;line-height:1;cursor:pointer}
+.rc .rc-ic .fr-av{width:100%;height:100%;font-size:1em}
+
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
 .sb.cf{background:linear-gradient(180deg,#ffd18a,#e8944a);color:#3a2310;border:0}
@@ -4574,12 +4577,14 @@ function ahHub(){
  const d=st.get('ah:d',[]),nx=[...Array(AHN).keys()].find(i=>!d.includes(i)),M=st.get('soc:me',null);
  const ids=M&&M.fr?Object.keys(M.fr).filter(i=>M.fr[i]>0&&SO.P[i]).sort((a,b)=>scrNm(a).localeCompare(scrNm(b),'fr')):[],inv=ahInv(),can=!!(window.claude&&window.claude.use);
  const online=!can?'<p class="note" style="margin:0">Le jeu en ligne est offert dans l’app Claude.</p>':!SO.uid?'<p class="note" style="margin:0">Active ton profil dans l’onglet Amis pour jouer en ligne.</p>':
-  (inv.length?`<div class="ahinv">${inv.map(x=>`<div class="fr-i"><span class="fr-o">${socAv(x.id)}<span class="fr-t"><b>${esc(x.nm)}</b><small>t’invite à une partie</small></span></span><div class="fr-b"><button class="sb buy" data-a="ahJoin" data-v="${esc(x.g)}">Jouer</button><button class="sb" data-a="ahNo" data-v="${esc(x.g)}" aria-label="Refuser">✕</button></div></div>`).join('')}</div>`:'')+
-  (ids.length?`<p class="note" style="margin:${inv.length?'12px':0} 0 6px">Invite un ami : la partie commence dès qu’il accepte.</p>${ids.map(id=>`<div class="fr-i"><span class="fr-o">${socAv(id)}<span class="fr-t"><b>${esc(scrNm(id))}</b></span></span><div class="fr-b"><button class="sb buy" data-a="ahAsk" data-v="${esc(id)}">Inviter</button></div></div>`).join('')}`:'<p class="note" style="margin:0">Ajoute des amis dans l’onglet Amis pour les défier.</p>');
- app.innerHTML=`<div class="top stk">${bk('home')}<div class="chip">❄ ${FLX()}</div></div><section class="glass story pt-airhockey"><i>🏒</i><h2>Air hockey</h2><p>Glisse ton maillet du bout du doigt et envoie la rondelle dans le but d’en face. Le premier à ${7} buts gagne (${5} en niveaux).</p></section>
- <section class="glass play"><h2>Contre l’IA</h2><p class="note" style="margin:0 0 10px">${d.length} sur ${AHN} niveaux gagnés · l’adversaire est de plus en plus vif</p><div class="solv">${[...Array(AHN).keys()].map(i=>{const ok=d.includes(i),open=UNL()||ok||i<=(nx===undefined?AHN:nx);return`<button class="sol${ok?' ok':''}${i===nx?' nx':''}" data-a="ahLv" data-v="${i}"${open?'':' disabled'}>${ok?'✓':i+1}</button>`}).join('')}</div></section>
- <section class="glass play"><h2>À deux sur cet écran</h2><p class="note" style="margin:0 0 12px">Chacun son côté de la table : posez le téléphone à plat entre vous deux.</p><button class="btn chgo" data-a="ahLoc">Jouer</button></section>
- <section class="glass play soc-i"><h2>En ligne avec un ami</h2>${online}</section>`;
+  (ids.length?`<p class="note" style="margin:0 0 6px">Invite un ami : la partie commence dès qu’il accepte.</p>${ids.map(id=>`<div class="fr-i"><span class="fr-o">${socAv(id)}<span class="fr-t"><b>${esc(scrNm(id))}</b></span></span><div class="fr-b"><button class="sb buy" data-a="ahAsk" data-v="${esc(id)}">Inviter</button></div></div>`).join('')}`:'<p class="note" style="margin:0">Ajoute des amis dans l’onglet Amis pour les défier.</p>');
+ const g=ALL.find(x=>x.id==='airhockey')||{t:'Air hockey',s:'',ic:'🏒'},dn=d.length,tg=nx===undefined?AHN-1:nx,AR='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',chev='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+ app.innerHTML=`<div class="top stk">${bk('home')}<div class="chip">❄ ${FLX()}</div></div><section class="glass story pt-airhockey"><i>${g.ic}</i><h2>${g.t}</h2><p>Glisse ton maillet du bout du doigt et envoie la rondelle dans le but d’en face. Contre l’IA, le premier à 5 buts gagne ; à deux ou en ligne, le premier à 7.</p></section>
+ <div class="opts">${inv.map(x=>`<section class="rc pt-airhockey" data-g="🏒"><div class="rc-ic">${socAv(x.id)}</div><div class="rc-t"><small>Invitation</small><b>${esc(x.nm)}</b><span>t’invite à une partie en ligne</span></div><button class="rc-go" data-a="ahJoin" data-v="${esc(x.g)}">Jouer${AR}</button><button class="ahx" data-a="ahNo" data-v="${esc(x.g)}" aria-label="Refuser l’invitation de ${esc(x.nm)}">✕</button></section>`).join('')}
+ <section class="rc pt-airhockey" data-g="🏒"><div class="rc-ic">🏒</div><div class="rc-t"><small>${dn?'Continuer':'Commencer'}</small><b>${nx===undefined?'Rejouer le niveau '+AHN:'Niveau '+(tg+1)}</b><span>${nx===undefined?'Tous les niveaux sont gagnés':dn+' sur '+AHN+' gagnés · contre l’IA'}</span></div><button class="rc-go" data-a="ahLv" data-v="${tg}">Jouer${AR}</button></section>
+ <section class="rc" data-g="⇅"><div class="rc-ic">👥</div><div class="rc-t"><small>Sur cet écran</small><b>À deux</b><span>Posez le téléphone à plat entre vous</span></div><button class="rc-go" data-a="ahLoc">Jouer${AR}</button></section>
+ <div class="dd pt-airhockey${AH.onOpen?' open':''}" id="ahdd2"><button class="dd-h" data-a="ahOnT" aria-expanded="${!!AH.onOpen}" aria-controls="ahonl"><span><b>En ligne avec un ami</b><small>${inv.length?inv.length+' invitation'+(inv.length>1?'s':''):'Invite un ami à jouer'}</small></span>${chev}</button><div class="dd-l" id="ahonl"><div class="dd-i soc-i">${online}</div></div></div>
+ <div class="dd pt-airhockey${lvOpen?' open':''}" id="ahdd"><button class="dd-h" data-a="ahDd" aria-expanded="${lvOpen}" aria-controls="lvl"><span><b>Choisir un niveau</b><small>${dn} / ${AHN} gagnés</small></span>${chev}</button><div class="dd-l" id="lvl"><div class="dd-i"><div class="lvg">${[...Array(AHN).keys()].map(i=>{const o=d.includes(i);return`<button class="lv ${o?'d':i===nx?'nx':'far'}" data-a="ahLv" data-v="${i}" aria-label="Niveau ${i+1}${o?', gagné':''}">${i+1}</button>`}).join('')}</div></div></div></div></div>`;
  window.scrollTo(0,0)}
 /* ---------- écran de jeu ---------- */
 function ahNewState(){return{p:{x:.5,y:AHH*.5,vx:0,vy:0},a:{x:.5,y:AHH-.2,vx:0,vy:0,tx:.5,ty:AHH-.2},b:{x:.5,y:.2,vx:0,vy:0,tx:.5,ty:.2},s:[0,0],st:'play',pause:0,ai:{t:0,tx:.5,ty:.2,mode:'home'},fl:0,fls:0}}
@@ -4722,6 +4727,8 @@ function ahActs(){if(ahAO)return;ahAO=true;Object.assign(act,{
  ahLoc:()=>{AH.mode='loc';AH.role='';AH.S=ahNewState();AH.S.st='cd';AH.S.cd=3;ahScreen('Rouge en bas, bleu en haut.')},
  ahAsk:v=>{if(SO.P[v])ahHost(v)},
  ahJoin:v=>{if(/^[a-z0-9]{4,20}$/.test(v))ahGuestJoin(v)},
+ ahDd:()=>{const d=$('#ahdd');lvOpen=d.classList.toggle('open');d.querySelector('.dd-h').setAttribute('aria-expanded',lvOpen)},
+ ahOnT:()=>{const d=$('#ahdd2');AH.onOpen=d.classList.toggle('open');d.querySelector('.dd-h').setAttribute('aria-expanded',AH.onOpen)},
  ahNo:v=>{const no=st.get('ah:no',[]);no.push(v);st.set('ah:no',no.slice(-30));ahHub()}
 })}
 
