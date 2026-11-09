@@ -1467,6 +1467,9 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .gorl li button svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .gorc .chrow{justify-content:center}
 
+.unfly{position:fixed;left:0;top:0;z-index:70;pointer-events:none;transform-origin:50% 50%;will-change:transform}
+.unfly .ucard{box-shadow:0 10px 22px rgba(0,0,0,.4)}
+
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
 .sb.cf{background:linear-gradient(180deg,#ffd18a,#e8944a);color:#3a2310;border:0}
@@ -4235,7 +4238,32 @@ function unDraw(){
  ${UN.pk>=0?`<div class="unpk"><section class="glass play"><h2>Choisis une couleur</h2><div class="unpc">${UNCL.map(c=>`<button data-a="unCol" data-v="${c}" style="background:${UNHX[c]}" aria-label="${UNNM[c]}"></button>`).join('')}</div><button class="lnk" data-a="unCol" data-v="">Annuler</button></section></div>`:''}`;
  UN.lastX=S.X.length;
  const h2=$('#unh');if(h2)h2.scrollLeft=sl;
- unTimers()}
+ unTimers();unAnim(S)}
+/* animations : la carte jouée part de la main du joueur vers le talon ; les cartes piochées partent de la pioche vers le joueur */
+function unFly(html,a,b,dl,done){
+ if(!a||!b||!b.width){done&&done();return}
+ const e=document.createElement('div');e.className='unfly';e.innerHTML=html;document.body.appendChild(e);
+ const c=e.firstElementChild,nw=c.offsetWidth||58,nh=c.offsetHeight||87,s1=b.width/nw,s0=Math.max(.15,Math.min(a.width/nw,a.height/nh)),
+  bx=b.left+b.width/2-nw/2,by=b.top+b.height/2-nh/2,dx=a.left+a.width/2-nw/2-bx,dy=a.top+a.height/2-nh/2-by;
+ e.style.left=bx+'px';e.style.top=by+'px';
+ const an=e.animate([{transform:`translate(${dx}px,${dy}px) scale(${s0}) rotate(-12deg)`,opacity:.85},{transform:`translate(${dx*.45}px,${dy*.45-18}px) scale(${(s0+s1)/2*1.08}) rotate(-4deg)`,opacity:1,offset:.55},{transform:`translate(0,0) scale(${s1}) rotate(0)`,opacity:1}],{duration:460,delay:dl,easing:'cubic-bezier(.3,.6,.35,1)',fill:'backwards'});
+ an.onfinish=an.oncancel=()=>{e.remove();done&&done()}}
+function unAnim(S){
+ const P=UN.pv,N={id:S.id,top:unTop(S),X:S.X.length,H:S.H.map(h=>h.length),t:S.t};UN.pv=N;const fr=UN.fromR;UN.fromR=null;
+ if(!P||P.id!==S.id||P.H.length!==N.H.length||wRM)return;
+ const me=UN.me,R=e=>e?e.getBoundingClientRect():null,seat=i=>i===me?$('#unh'):($(`.unp[data-i="${i}"] .unbk i:last-child`)||$(`.unp[data-i="${i}"] .unav`)||$(`.unp[data-i="${i}"]`));
+ const played=N.X>P.X||P.top!==N.top,pl=played?P.t:-1;let dl=0;
+ if(pl>=0){const tg=$('.untop>span');if(tg){tg.classList.remove('unpop');tg.style.visibility='hidden';const from=pl===me&&fr?fr:R(seat(pl));
+  unFly(unCard(N.top,'big'+(N.top[0]==='k'?' ukc u-'+S.c:'')),from,R(tg.firstElementChild||tg),0,()=>{tg.style.visibility='';void tg.offsetWidth;tg.classList.add('unpop')});dl=330}}
+ const src=R($('.unk .ucard')||$('.unk'));
+ N.H.forEach((h,i)=>{const k=Math.min(4,h-P.H[i]+(i===pl?1:0));if(k<=0)return;
+  for(let j=0;j<k;j++){
+   if(i===me){const cs=[...document.querySelectorAll('#unh .ucd')],el=cs[cs.length-k+j];if(!el)continue;el.style.visibility='hidden';const c=S.H[me][S.H[me].length-k+j];
+    unFly(unCard(c),src,R(el),dl+j*150,()=>{el.style.visibility=''})}
+   else unFly(unBack(),src,R(seat(i)),dl+j*150)}
+  dl+=k*150})}
+document.addEventListener('pointerdown',e=>{const b=e.target&&e.target.closest&&e.target.closest('#unh .ucd');if(b)UN.fromR=b.getBoundingClientRect()},true);
+
 const unLg=(S,me)=>String(S.lg||'').replace(/\^(\d)/g,(m,i)=>+i===me?'Tu':unNmD(S,+i)).replace(/\{(\d):([^|}]*)\|([^}]*)\}/g,(m,i,a,b)=>+i===me?b:a);
 function unTimers(){
  const S=UN.g;if(!S||UN.loc)return;const now=Date.now(),f=S.st==='play'&&S.dl&&!S.S[S.t].b?Math.max(0,Math.min(1,(S.dl-now)/UNT)):0;
