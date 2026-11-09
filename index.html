@@ -4582,7 +4582,10 @@ function unAnim(S){
  N.H.forEach((h,i)=>{const k=Math.min(4,h-P.H[i]+(i===pl?1:0));if(k<=0)return;
   for(let j=0;j<k;j++){
    if(i===me){const cs=[...document.querySelectorAll('#unh .ucd')],el=cs[cs.length-k+j];if(!el)continue;el.style.visibility='hidden';const c=S.H[me][S.H[me].length-k+j];
-    unFly(unCard(c),src,R(el),dl+j*150,()=>{el.style.visibility=''})}
+    unFly(unCard(c),src,R(el),dl+j*150,()=>{el.style.visibility='';
+     /* la carte piochée arrive en couleur, puis s’assombrit doucement si elle ne peut pas être jouée */
+     const cs2=[...document.querySelectorAll('#unh .ucd')],e2=el.isConnected?el:cs2[cs2.length-k+j],cd=e2&&e2.querySelector('.ucard');
+     if(cd&&(e2.classList.contains('wt')||e2.classList.contains('no')))cd.animate([{filter:'saturate(1) brightness(1)'},{filter:e2.classList.contains('no')?'saturate(.5) brightness(.8)':'saturate(.75) brightness(.9)'}],{duration:450,easing:'ease-in-out',fill:'backwards'})})}
    else unFly(unBack(),src,R(seat(i)),dl+j*150)}
   dl+=k*150})}
 document.addEventListener('pointerdown',e=>{const b=e.target&&e.target.closest&&e.target.closest('#unh .ucd');if(b)UN.fromR=b.getBoundingClientRect()},true);
