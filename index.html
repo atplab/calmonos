@@ -5066,7 +5066,7 @@ function cbHub(){
 function cbScreen(){
  cbActs();cur='colorie';nv('games');theme('colorie');{const n=$('#nav');if(n)n.hidden=true}
  const G=CB.G,D=CBP[CB.l];
- app.innerHTML=`<div class="cbs"><div class="top stk"><button class="back" data-a="cbBk">‹ Retour</button><span class="tl tlk cbtl"><span class="tlf">Niveau</span><span class="tls">Niv.</span>&nbsp;${CB.l+1}</span><div class="tr"><button class="hb hintb" data-a="cbHint" aria-label="Indice : coûte 1 flocon">${HBI(1)}</button><div class="chip">❄ ${FLX()}</div></div></div>
+ app.innerHTML=`<div class="cbs"><div class="top stk"><button class="back" data-a="cbBk">‹ Retour</button><button class="tl tlk" data-a="cSkip" data-v="cb" aria-label="Niveau ${CB.l+1} : toucher pour passer ce niveau"><span class="tlf">Niveau</span><span class="tls">Niv.</span>&nbsp;${CB.l+1}<i aria-hidden="true">⏭</i></button><div class="tr"><button class="hb hintb" data-a="cbHint" aria-label="Indice : coûte 1 flocon">${HBI(1)}</button><div class="chip">❄ ${FLX()}</div></div></div><div id="skw" class="skw"></div>
  <div class="cbpal" role="radiogroup" aria-label="Couleurs">${G.pal.map((c,i)=>`<button class="cbsw${cbLight(c)?' lt':''}" role="radio" data-a="cbSel" data-v="${i+1}" style="--c:${c}" aria-label="Couleur ${i+1}"><b>${i+1}</b><i></i></button>`).join('')}</div>
  <div class="cbw"><canvas id="cbc" aria-label="Dessin à colorier"></canvas></div>
  <p class="m" id="m" role="status" aria-live="polite"></p>
@@ -5240,7 +5240,7 @@ function cdThumb(l){const sc=cdScene(l),K=Math.min(50,10+Math.round(l*40/(CDN-1)
 function cdScreen(){
  cbActs();cur='colorie';nv('games');theme('colorie');{const n=$('#nav');if(n)n.hidden=true}
  const M=CD.M;
- app.innerHTML=`<div class="cds"><div class="top stk"><button class="back" data-a="cdBk">‹ Retour</button><span class="tl tlk cbtl"><span class="tlf">Niveau</span><span class="tls">Niv.</span>&nbsp;${CD.l+1}</span><div class="tr"><button class="hb hintb" data-a="cdHint" aria-label="Indice : coûte 1 flocon">${HBI(1)}</button><div class="chip">❄ ${FLX()}</div></div></div>
+ app.innerHTML=`<div class="cds"><div class="top stk"><button class="back" data-a="cdBk">‹ Retour</button><button class="tl tlk" data-a="cSkip" data-v="cd" aria-label="Niveau ${CD.l+1} : toucher pour passer ce niveau"><span class="tlf">Niveau</span><span class="tls">Niv.</span>&nbsp;${CD.l+1}<i aria-hidden="true">⏭</i></button><div class="tr"><button class="hb hintb" data-a="cdHint" aria-label="Indice : coûte 1 flocon">${HBI(1)}</button><div class="chip">❄ ${FLX()}</div></div></div><div id="skw" class="skw"></div>
  <div class="cdw" id="cdw"><canvas id="cdc" aria-label="Dessin à colorier : glisse pour te déplacer, pince pour zoomer, touche une zone pour la colorier"></canvas><div class="cdz"><button data-a="cdZ" data-v="1" aria-label="Zoomer">+</button><button data-a="cdZ" data-v="-1" aria-label="Dézoomer">−</button></div></div>
  <div class="cdpal" id="cdpal" role="radiogroup" aria-label="Couleurs">${M.pal.map((c,i)=>`<button class="cdsw${cbLight(c)?' lt':''}" role="radio" data-a="cdSel" data-v="${i+1}" style="--c:${c}" aria-label="Couleur ${i+1}"><b>${i+1}</b></button>`).join('')}</div>
  <p class="m" id="m" role="status" aria-live="polite"></p></div>`;
@@ -5302,6 +5302,8 @@ function cdOpen(l){CD.l=Math.max(0,Math.min(CDN-1,+l||0));const m=$('#m');CD.M=c
 setTimeout(()=>Object.assign(act,{
  cdBk:()=>{cdSave();CD.M=null;cbHub()},
  cdLv:v=>cdOpen(v),
+ cSkip:v=>{const w=$('#skw');if(w)w.innerHTML=`<span>Passer ce ${v==='cd'?'dessin':'pixel art'} sans récompense ? Tu pourras y revenir plus tard.</span><div><button class="skp y" data-a="cSkipY" data-v="${v}">Passer</button><button class="skp" data-a="skipn">Rester</button></div>`},
+ cSkipY:v=>{if(v==='cd'){cdSave();if(CD.l<CDN-1){cdOpen(CD.l+1);msg('Dessin passé, sans flocons : tu pourras y revenir.')}else{CD.M=null;cbHub()}}else{cbSave();if(CB.l<CBN-1){act.cbLv(CB.l+1);msg('Pixel art passé, sans flocons : tu pourras y revenir.')}else{CB.G=null;cbHub()}}},
  cdSel:v=>cdPick(+v),
  cdZ:v=>cdZoomAt(CD.z*(+v>0?1.6:1/1.6),CD.w/2,CD.h/2),
  cdDd:()=>{const d=$('#cddd');CD.ddOpen=d.classList.toggle('open');d.querySelector('.dd-h').setAttribute('aria-expanded',CD.ddOpen)},
