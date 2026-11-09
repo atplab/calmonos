@@ -1543,6 +1543,14 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 @media (prefers-reduced-motion:reduce){.gunl,.gunb,.gunb *{animation:none!important}}
 .gunb small{color:#fff}
 
+.tile.lk{filter:saturate(.25) brightness(.7);opacity:.85}
+.tile.lk i{opacity:.6}
+.tile.lk small{opacity:1;font-weight:700}
+.tile.shk{animation:soshk .3s}
+.gtoast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));translate:-50% 0;z-index:90;max-width:min(92vw,380px);padding:12px 16px;border-radius:16px;background:rgba(20,18,50,.92);color:#fff;font:600 14px/1.35 "Nunito Sans",system-ui,sans-serif;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.2);animation:gtin .3s ease-out}
+.gtoast.out{opacity:0;transition:opacity .35s}
+@keyframes gtin{from{opacity:0;translate:-50% 10px}to{opacity:1;translate:-50% 0}}
+
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
 .sb.cf{background:linear-gradient(180deg,#ffd18a,#e8944a);color:#3a2310;border:0}
@@ -2603,7 +2611,7 @@ function home(){nv('games');
  cur=null;origin='home';wdBuf='';wdPop=-1;wdLock=false;wdM='';
  const fv=favs(),tile=g=>{const on=fv.includes(g.id);return`<div class="tw"><button class="glass tile pt-${g.id}" style="--a:${g.a};--b:${g.b}" data-a="open" data-v="${g.id}"><i>${g.ic}</i><b>${g.id==='scrabble'||g.id==='chess'||g.id==='uno'||g.id==='airhockey'?'<svg class="mp" viewBox="0 0 24 24" role="img" aria-label="Multijoueur"><circle cx="12" cy="8" r="3.2"/><circle cx="5" cy="9.6" r="2.3"/><circle cx="19" cy="9.6" r="2.3"/><path d="M6.2 19.5c0-3.3 2.6-5.4 5.8-5.4s5.8 2.1 5.8 5.4z"/><path d="M1.3 18.6c0-2.5 1.7-4.2 4.1-4.2.7 0 1.3.1 1.9.4-1 .9-1.7 2.2-1.9 3.8z"/><path d="M22.7 18.6c0-2.5-1.7-4.2-4.1-4.2-.7 0-1.3.1-1.9.4 1 .9 1.7 2.2 1.9 3.8z"/></svg>':''}${g.n}</b><small>${g.soon?'Bientôt':g.sp?(g.id==='scrabble'?scrTile():g.id==='chess'?'':g.id==='uno'?unTile():g.sp):''}</small></button>${g.soon?'':`<button class="fv ${on?'on':''}" data-a="fav" data-v="${g.id}" aria-pressed="${on}" aria-label="${on?'Retirer '+g.n+' des favoris':'Ajouter '+g.n+' aux favoris'}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/></svg></button>`}</div>`};
  const GO=gOrd(GD.filter(g=>!gHid(g.id))),F=GO.filter(g=>!g.soon&&fv.includes(g.id)),R=GO.filter(g=>!F.includes(g));
- app.innerHTML=`<header class="top"><h1>Nuit de neige</h1><div class="chip" title="Flocons">❄ ${FLX()}</div></header>${wdBlock()}${lastCard()}${F.length?`<h2 class="s shr"><span>Favoris</span>${window.mpLink?mpLink():''}</h2><div class="grid fgrid">${F.map(tile).join('')}</div>${R.length?'<h2 class="s">Autres jeux</h2>':''}`:`<h2 class="s shr"><span>Choisis ta veillée</span>${window.mpLink?mpLink():''}</h2>`}${R.length?`<div class="grid">${R.map(tile).join('')}</div>`:''}<button class="gordb" data-a="gOrd"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4v16M4 8l4-4 4 4M16 20V4M12 16l4 4 4-4"/></svg>Modifier l’ordre des jeux</button>`;setTimeout(gUnlockCheck,450);
+ app.innerHTML=`<header class="top"><h1>Nuit de neige</h1><div class="chip" title="Flocons">❄ ${FLX()}</div></header>${wdBlock()}${lastCard()}${F.length?`<h2 class="s shr"><span>Favoris</span>${window.mpLink?mpLink():''}</h2><div class="grid fgrid">${F.map(tile).join('')}</div>${R.length?'<h2 class="s">Autres jeux</h2>':''}`:`<h2 class="s shr"><span>Choisis ta veillée</span>${window.mpLink?mpLink():''}</h2>`}${R.length?`<div class="grid">${R.map(tile).join('')}</div>`:''}<button class="gordb" data-a="gOrd"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4v16M4 8l4-4 4 4M16 20V4M12 16l4 4 4-4"/></svg>Modifier l’ordre des jeux</button>`;gLockTiles();setTimeout(gUnlockCheck,450);
 }
 /* ordre des jeux choisi par le joueur (les nouveaux jeux se rangent à la fin) */
 function gOrd(L){const O=st.get('g:ord',[]);if(!O.length)return L;const ix=g=>{const i=O.indexOf(g.id);return i<0?1e3+L.indexOf(g):i};return L.slice().sort((a,b)=>ix(a)-ix(b))}
@@ -2624,7 +2632,7 @@ const gOpenAt=id=>{const a=GAV[id];return a?new Date(a[0],a[1],a[2]).getTime():0
 function gHid(id){return Date.now()<gOpenAt(id)&&!UNL()}
 /* fête de déblocage : une seule fois par jeu, à la première visite de l’onglet Jeux après la date */
 function gUnlockCheck(){
- if($('#gunl'))return;const seen=st.get('g:unl',[]),now=Date.now(),L=Object.keys(GAV).filter(id=>now>=gOpenAt(id)&&!seen.includes(id));
+ if($('#gunl'))return;const seen=st.get('g:unl',[]),now=Date.now(),ids=[...new Set([...Object.keys(GAV),...Object.keys(GSTEP)])],L=ids.filter(id=>now>=gOpenAt(id)&&(GSTEP[id]||0)<=gStepNow()&&ALL.some(x=>x.id===id&&!x.soon)&&!seen.includes(id));
  if(!L.length)return;const id=L[0],g=ALL.find(x=>x.id===id);st.set('g:unl',[...seen,id]);if(!g)return;
  const d=document.createElement('div');d.id='gunl';d.className='gunl';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.setAttribute('aria-label','Nouveau jeu débloqué : '+g.n);
  d.innerHTML=`<div class="gunb" style="--a:${g.a};--b:${g.b}"><div class="gunr" aria-hidden="true">${'<i></i>'.repeat(12)}</div><small>Nouveau jeu débloqué !</small><div class="guni">${g.ic}</div><h2>${esc(g.n)}</h2><p>${esc(g.t||'')}</p><div class="chrow"><button class="btn" data-a="gUnlGo" data-v="${id}">Découvrir</button><button class="btn alt" data-a="gUnlX">Plus tard</button></div></div>`;
@@ -2632,10 +2640,21 @@ function gUnlockCheck(){
  setTimeout(()=>{try{confetti(d.querySelector('.guni'))}catch(e){}},350)}
 setTimeout(()=>Object.assign(act,{gUnlX:()=>{const e=$('#gunl');if(!e)return;e.classList.add('out');setTimeout(()=>{e.remove();gUnlockCheck()},300)},gUnlGo:v=>{const e=$('#gunl');if(e)e.remove();act.open(v)}}));
 
+/* jeux débloqués au fil de l’histoire (étapes du voyage) ; tout est ouvert en mode illimité */
+const GSTEP={scrabble:1,croises:1,phrase:2,uno:2,cherche:3,chess:4,airhockey:5,demineur:5,memo:6,maze:7,tournade:8,solitaire:9,demenage:15,quiz:20};
+const gStepNow=()=>{try{return styRead().p||0}catch(e){return 0}};
+function gLock(id){return !UNL()&&(GSTEP[id]||0)>gStepNow()}
+const xLvOn=()=>xmasOn()&&(UNL()||gStepNow()>=10);
+function gLockTiles(){document.querySelectorAll('.tile[data-a=open]').forEach(t=>{const id=t.dataset.v;if(!gLock(id))return;t.classList.add('lk');t.dataset.a='gLk';const s=t.querySelector('small');if(s)s.textContent='🔒 Étape '+GSTEP[id];const f=t.parentNode&&t.parentNode.querySelector('.fv');if(f)f.remove()})}
+function gToast(t){let e=$('#gtoast');if(e)e.remove();e=document.createElement('div');e.id='gtoast';e.className='gtoast';e.setAttribute('role','status');e.textContent=t;document.body.appendChild(e);setTimeout(()=>{e.classList.add('out');setTimeout(()=>e.remove(),400)},2600)}
+setTimeout(()=>Object.assign(act,{gLk:v=>{const g=ALL.find(x=>x.id===v),n=GSTEP[v]||0;gToast((g?g.n:'Ce jeu')+' se débloque à l’étape '+n+' de l’histoire (tu es à l’étape '+gStepNow()+').');const t=$(`.tile[data-v="${v}"]`);if(t){t.classList.remove('shk');void t.offsetWidth;t.classList.add('shk')}}}));
+/* au premier lancement de cette version, les jeux déjà ouverts ne refont pas la fête */
+setTimeout(()=>{try{if(!st.get('g:unl0',false)){const s0=st.get('g:unl',[]);Object.keys(GSTEP).forEach(id=>{if(!gLock(id)&&!gHid(id)&&!s0.includes(id))s0.push(id)});st.set('g:unl',s0);st.set('g:unl0',true)}}catch(e){}},0);
+
 function hub(id){if(id==='quiz')return home();
  cur=id;nv('games');theme(id);const g=G.find(x=>x.id===id),N=nl(id),dd=st.get(dkey(id),false),ok=i=>st.get(ckey(id)+':'+i,false),sk=i=>!ok(i)&&st.get('k:'+id+':'+i,false),nx=[...Array(N).keys()].findIndex(i=>!ok(i)&&!sk(i)),ns=[...Array(N).keys()].findIndex(sk),nsk=[...Array(N).keys()].filter(sk).length,tg=nx>=0?nx:ns>=0?ns:N-1,dn=[...Array(N).keys()].filter(i=>st.get(ckey(id)+':'+i,false)).length;
- const xon=xmasOn()&&!g.soon&&!g.nox,xok=i=>st.get(ckey(id)+':'+(N+i),false),xsk=i=>!xok(i)&&st.get('k:'+id+':'+(N+i),false),xnx=[...Array(NLX).keys()].findIndex(i=>!xok(i)&&!xsk(i)),xdn=[...Array(NLX).keys()].filter(xok).length,xns=[...Array(NLX).keys()].findIndex(xsk),xtg=xnx>=0?xnx:xns>=0?xns:NLX-1,xpr=xdn+[...Array(NLX).keys()].filter(xsk).length;
- app.innerHTML=`<div class="top stk">${bk('home')}<div class="chip">❄ ${FLX()}</div></div><section class="glass story pt-${id}"><i>${g.ic}</i><h2>${g.t}</h2><p>${g.s}</p></section>`+(g.soon?`<p class="note">Ce jeu arrive dans la prochaine version de la maquette.</p>`:`<div class="opts"><section class="rc pt-${id}" data-g="${g.ic}"><div class="rc-ic">${g.ic}</div><div class="rc-t"><small>${dn?'Continuer':'Commencer'}</small><b>${nx>=0?'Niveau '+(nx+1):ns>=0?'Niveau '+(ns+1)+' (passé)':'Rejouer le niveau '+N}</b><span>${nx>=0?dn+' sur '+N+' terminés · +'+rw(id)+' ❄'+(nsk?' · '+nsk+' passé'+(nsk>1?'s':''):''):ns>=0?'Un niveau passé t’attend · +'+rw(id)+' ❄':'Tous les niveaux sont terminés'}</span></div><button class="rc-go" data-a="play" data-v="${tg}">Jouer<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>${id==='demenage'?`<section class="rc" data-g="📖"><div class="rc-ic">📖</div><div class="rc-t"><small>Le livre</small><b>Revoir l’histoire</b><span>Les pages que tu as déjà écrites</span></div><button class="rc-go" data-a="dbook">Ouvrir<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>`:''}${xon?`<section class="rc xm" data-g="✦"><div class="rc-ic">✦</div><div class="rc-t"><small>Spécial Noël</small><b>${xnx<0&&xns<0?'Rejouer Fêtes '+NLX:'Fêtes '+(xtg+1)+(xnx<0?' (passé)':'')}</b><span>${xdn} / ${NLX} terminés</span></div><button class="rc-go" data-a="play" data-v="${N+xtg}" title="Jusqu’au 11 janvier">${xnx<0&&xns<0?'Rejouer':xpr?'Continuer':'Commencer'}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>`:(!g.soon&&!g.nox?`<section class="rc xm xlk" data-g="✦"><div class="rc-ic">🔒</div><div class="rc-t"><small>Spécial Noël</small><b>${NLX} niveaux de fêtes</b><span>Disponible le 1er décembre</span></div></section>`:'')}<div class="dd pt-${id}${lvOpen?' open':''}"><button class="dd-h" data-a="dd" aria-expanded="${lvOpen}" aria-controls="lvl"><span><b>Choisir un niveau</b><small>${dn} / ${N} terminés</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="dd-l" id="lvl"><div class="dd-i"><div class="lvg">${Array.from({length:N},(_,i)=>{const o=ok(i),p=sk(i);return`<button class="lv ${o?'d':p?'sk':i===nx?'nx':'far'}" data-a="play" data-v="${i}" aria-label="Niveau ${i+1}${o?', terminé':p?', passé, à refaire pour les flocons':''}">${i+1}</button>`}).join('')}</div></div></div></div></div>`);
+ const xon=xLvOn()&&!g.soon&&!g.nox,xok=i=>st.get(ckey(id)+':'+(N+i),false),xsk=i=>!xok(i)&&st.get('k:'+id+':'+(N+i),false),xnx=[...Array(NLX).keys()].findIndex(i=>!xok(i)&&!xsk(i)),xdn=[...Array(NLX).keys()].filter(xok).length,xns=[...Array(NLX).keys()].findIndex(xsk),xtg=xnx>=0?xnx:xns>=0?xns:NLX-1,xpr=xdn+[...Array(NLX).keys()].filter(xsk).length;
+ app.innerHTML=`<div class="top stk">${bk('home')}<div class="chip">❄ ${FLX()}</div></div><section class="glass story pt-${id}"><i>${g.ic}</i><h2>${g.t}</h2><p>${g.s}</p></section>`+(g.soon?`<p class="note">Ce jeu arrive dans la prochaine version de la maquette.</p>`:`<div class="opts"><section class="rc pt-${id}" data-g="${g.ic}"><div class="rc-ic">${g.ic}</div><div class="rc-t"><small>${dn?'Continuer':'Commencer'}</small><b>${nx>=0?'Niveau '+(nx+1):ns>=0?'Niveau '+(ns+1)+' (passé)':'Rejouer le niveau '+N}</b><span>${nx>=0?dn+' sur '+N+' terminés · +'+rw(id)+' ❄'+(nsk?' · '+nsk+' passé'+(nsk>1?'s':''):''):ns>=0?'Un niveau passé t’attend · +'+rw(id)+' ❄':'Tous les niveaux sont terminés'}</span></div><button class="rc-go" data-a="play" data-v="${tg}">Jouer<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>${id==='demenage'?`<section class="rc" data-g="📖"><div class="rc-ic">📖</div><div class="rc-t"><small>Le livre</small><b>Revoir l’histoire</b><span>Les pages que tu as déjà écrites</span></div><button class="rc-go" data-a="dbook">Ouvrir<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>`:''}${xon?`<section class="rc xm" data-g="✦"><div class="rc-ic">✦</div><div class="rc-t"><small>Spécial Noël</small><b>${xnx<0&&xns<0?'Rejouer Fêtes '+NLX:'Fêtes '+(xtg+1)+(xnx<0?' (passé)':'')}</b><span>${xdn} / ${NLX} terminés</span></div><button class="rc-go" data-a="play" data-v="${N+xtg}" title="Jusqu’au 11 janvier">${xnx<0&&xns<0?'Rejouer':xpr?'Continuer':'Commencer'}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>`:(!g.soon&&!g.nox?`<section class="rc xm xlk" data-g="✦"><div class="rc-ic">🔒</div><div class="rc-t"><small>Spécial Noël</small><b>${NLX} niveaux de fêtes</b><span>${xmasOn()?'Étape 10 de l’histoire':'Disponible le 1er décembre'}</span></div></section>`:'')}<div class="dd pt-${id}${lvOpen?' open':''}"><button class="dd-h" data-a="dd" aria-expanded="${lvOpen}" aria-controls="lvl"><span><b>Choisir un niveau</b><small>${dn} / ${N} terminés</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="dd-l" id="lvl"><div class="dd-i"><div class="lvg">${Array.from({length:N},(_,i)=>{const o=ok(i),p=sk(i);return`<button class="lv ${o?'d':p?'sk':i===nx?'nx':'far'}" data-a="play" data-v="${i}" aria-label="Niveau ${i+1}${o?', terminé':p?', passé, à refaire pour les flocons':''}">${i+1}</button>`}).join('')}</div></div></div></div></div>`);
 }
 function quote(){
  cur='quote';nv('soc');let i=di%Q.length;
@@ -5688,7 +5707,7 @@ function pPhrase(r){
  d();
 }
 const act={
- dbook:()=>demBook(),dbk:()=>hub('demenage'),open:v=>{if(typeof gHid==='function'&&gHid(v))return home();lvOpen=false;const r=v==='quiz'?start('quiz',false,0):v==='quote'?quote():v==='scrabble'?scrHub():v==='chess'?chHub():v==='uno'?unHub():v==='solitaire'?soHub():v==='airhockey'?ahHub():hub(v);window.scrollTo(0,0);return r},
+ dbook:()=>demBook(),dbk:()=>hub('demenage'),open:v=>{if(typeof gHid==='function'&&gHid(v))return home();if(typeof gLock==='function'&&gLock(v)){if(cur!==null)home();return act.gLk(v)}lvOpen=false;const r=v==='quiz'?start('quiz',false,0):v==='quote'?quote():v==='scrabble'?scrHub():v==='chess'?chHub():v==='uno'?unHub():v==='solitaire'?soHub():v==='airhockey'?ahHub():hub(v);window.scrollTo(0,0);return r},
  back:v=>v==='home'?home():v==='day'?dayScreen():v==='soc'?socScreen():hub(cur),
  play:v=>start(cur,false,+v),
  dd:()=>{const d=$('.dd:not(.xm)');lvOpen=d.classList.toggle('open');d.querySelector('.dd-h').setAttribute('aria-expanded',lvOpen)},
@@ -6180,7 +6199,7 @@ const XSTORY={
 };
 const XR=3;let xFr=0;
 const xmAll=()=>{try{return sxOn()}catch(e){return false}};
-const sxOk=Y=>xmasOn()&&(Y.p>=3||UNL());
+const sxOk=Y=>xmasOn()&&(Y.p>=10||UNL());
 const sxOn=()=>st.get('sty:s','main')==='xm'&&sxOk(styRead());
 const xDust=y=>UNL()?1e6:(y.xe||0)-(y.xp||0)*XDU;
 const xGain=(n=1)=>{const y=styRead();y.xe=(y.xe||0)+Math.max(1,n|0);styWrite(y)};
@@ -6299,7 +6318,7 @@ function xArrive(n){
 /* le choix de l’histoire, en touchant l’en-tête */
 act.sstory=()=>{
  const Y=styRead(),X=sxOn(),ok=sxOk(Y);
- sOv(`<small>Choisir l’histoire</small><div class="sch"><button class="sck${X?'':' on'}" data-a="spick" data-v="main"><b>Le voyage du petit bonhomme</b><small>${CHP[sCh(Y.p)].t} · étape ${Y.p} / ${SMX}</small></button><button class="sck${X?' on':''}" data-a="spick" data-v="xm"${ok?'':' disabled'}><b>🎄 Un noël pour Zeni</b><small>${ok?'Étape '+(Y.xp||0)+' / '+XMX:!xmasOn()?'🔒 Disponible le 1er décembre':'Se débloque à l’étape 3 du voyage (tu es à l’étape '+Y.p+')'}</small></button></div>`,'Fermer');
+ sOv(`<small>Choisir l’histoire</small><div class="sch"><button class="sck${X?'':' on'}" data-a="spick" data-v="main"><b>Le voyage du petit bonhomme</b><small>${CHP[sCh(Y.p)].t} · étape ${Y.p} / ${SMX}</small></button><button class="sck${X?' on':''}" data-a="spick" data-v="xm"${ok?'':' disabled'}><b>🎄 Un noël pour Zeni</b><small>${ok?'Étape '+(Y.xp||0)+' / '+XMX:!xmasOn()?'🔒 Disponible le 1er décembre':'Se débloque à l’étape 10 du voyage (tu es à l’étape '+Y.p+')'}</small></button></div>`,'Fermer');
 };
 act.spick=v=>{if(v==='xm'&&!sxOk(styRead()))return;st.set('sty:s',v==='xm'?'xm':'main');dayScreen()};
 /* le livre de Noël : dix chapitres */
