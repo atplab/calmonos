@@ -2069,7 +2069,7 @@ const st={get(k,d){if(k in mem)return mem[k];try{const v=localStorage.getItem(k)
 const sh=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const today=new Date().toLocaleDateString('sv'),di=Math.floor(Date.now()/864e5);
 const dkey=g=>'d:'+g+':'+today,ckey=g=>'c:'+g;
-const NLS={mots:60,memo:30,caches:60,phrase:40,maze:30,match3:70,demenage:11,quiz:1,cherche:20,tournade:40,sudoku:40,ana:50,flow:60,g2048:30},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
+const NLS={mots:60,memo:30,caches:60,phrase:40,maze:30,match3:70,demenage:11,quiz:1,cherche:20,tournade:40,sudoku:40,ana:50,flow:75,g2048:30},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
 /* Section temporaire « fêtes » : 10 niveaux spéciaux de plus par jeu (indices nl, nl+1 … nl+9), disponible tout de suite et jusqu’au 11 janvier 2027 inclus ; #noel dans l’adresse force l’affichage.
    Ils ne font pas partie du code de sauvegarde ni de la synchronisation. */
 const NLX=10,xmasOn=()=>{const d=new Date(),m=d.getMonth();return UNL()||location.hash==='#noel'||m===11||(m===0&&d.getDate()<12)},isX=(g,l)=>l>=nl(g),xn=(g,l)=>l-nl(g)+1;
@@ -6308,8 +6308,14 @@ function pAna2(r){
 }
 /* ---------- Relie les points : un fil par couleur, toute la grille remplie ---------- */
 const FLC=['#ff5a5f','#4f8cff','#3ccf6e','#ffd84a','#ff9a3c','#5fe0e6','#e65cd7','#a06cff','#b8e986','#f2f2f2','#c9874a','#ff8fb1'];
-function flGen(l){
- const n=l<5?5:l<15?6:l<30?7:l<45?8:9,R=rng((l+3)*2246822519+17),N=n*n;
+/* ordre des niveaux : 1 à 10 en douceur, le 50 difficile, le reste mélangé (dont 15 grilles 6×6 moyennement faciles) */
+const flSz=l=>l<5?5:l<15?6:l<30?7:l<45?8:9;
+const FLO=(()=>{const R=rng(424242),P=[...Array(49).keys()].map(i=>i+10).map(l=>[l,flSz(l)]).concat([...Array(15).keys()].map(i=>[100+i,6]));
+ for(let i=P.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[P[i],P[j]]=[P[j],P[i]]}
+ return[...[...Array(10).keys()].map(l=>[l,flSz(l)]),...P.slice(0,39),[59,9],...P.slice(39)]})();
+function flGen(l){const o=FLO[l]||[l,7];return flGen0(o[0],o[1])}
+function flGen0(l,n){
+ const R=rng((l+3)*2246822519+17),N=n*n;
  const nb=a=>{const r=a/n|0,c=a%n,o=[];if(r)o.push(a-n);if(r<n-1)o.push(a+n);if(c)o.push(a-1);if(c<n-1)o.push(a+1);return o};
  const adj=(a,b)=>Math.abs((a/n|0)-(b/n|0))+Math.abs(a%n-b%n)===1;
  let best=null;
@@ -6335,8 +6341,8 @@ function flGen(l){
 function pFlow(r){
  const Z=flGen(lv),n=Z.n,K=Z.F.length,N=n*n,end={};Z.F.forEach(([a,b],i)=>{end[a]=i;end[b]=i});
  const nb=(a,b)=>Math.abs((a/n|0)-(b/n|0))+Math.abs(a%n-b%n)===1;
- let paths=r&&r.p&&r.p.length===K?r.p.map(x=>x.slice()):Z.F.map(()=>[]),mv=r&&r.mv||0,last=-1,drag=null,okPrev=paths.map(()=>false),done=false;
- snap=()=>({p:paths,mv});
+ let paths=r&&r.v===2&&r.p&&r.p.length===K?r.p.map(x=>x.slice()):Z.F.map(()=>[]),mv=r&&r.mv||0,last=-1,drag=null,okPrev=paths.map(()=>false),done=false;
+ snap=()=>({v:2,p:paths,mv});
  const conn=i=>{const p=paths[i];return p.length>1&&end[p[p.length-1]]===i&&p[p.length-1]!==p[0]};
  const own=()=>{const o=Array(N).fill(-1);paths.forEach((p,i)=>p.forEach(c=>o[c]=i));return o};
  const C=i=>FLC[i%FLC.length],cx=a=>a%n+.5,cy=a=>(a/n|0)+.5;
