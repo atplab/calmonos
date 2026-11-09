@@ -4242,7 +4242,7 @@ function unAv(s){
 function unDraw(){
  const root=$('#ung');if(!root||!UN.g)return;
  const S=UN.g,me=UN.me,n=S.S.length,my=S.H[me]||[],live=S.st==='play',myT=live&&S.t===me&&!S.S[me].b,net=!UN.loc;
- const hs=$('#unh'),sl=hs?hs.scrollLeft:0;
+ const hs=$('#unh'),sl=hs?hs.scrollLeft:0,flip=unHandPos();
  let op='';for(let r=1;r<n;r++){const i=(me+r)%n,s=S.S[i],h=S.H[i].length;
   op+=`<div class="unp${live&&S.t===i?' on':''}" data-i="${i}"><span class="unav">${unAv(s)}</span><b>${esc(unDN(s))}${s.ab?' <small>(bot)</small>':''}</b><span class="unbk">${'<i></i>'.repeat(Math.min(h,8))}</span><span class="unn">${h} carte${h>1?'s':''}${S.uc[i]&&h===1?' · <em>Uno !</em>':''}</span></div>`}
  /* la main : toujours entière à l’écran (chevauchement selon la largeur réelle, sur deux rangées si besoin) */
@@ -4256,7 +4256,7 @@ function unDraw(){
  <div class="unc"><span class="unar l ${S.d>0?'up':'dn'}" aria-hidden="true"><svg viewBox="0 0 28 72"><path d="M20 66Q2 36 18 8"/><path d="M9 11l9-3 1 9"/></svg></span><button class="btn ununo${UN.uc?' on':''}" data-a="unUno" ${myT&&my.length===2?'':'disabled'} aria-pressed="${UN.uc}">Uno !</button><button class="unk" data-a="unDraw" aria-label="Piocher" ${myT&&!S.dr?'':'disabled'}>${unBack()}<small>${S.D.length}</small></button><div class="untop" style="--cc:${UNHX[S.c]}">${S.X.length>1?`<span class="unund" style="${unJit(S.X.length-2)}" aria-hidden="true">${unCard(S.X[S.X.length-2],'big')}</span>`:''}<span style="${unJit(S.X.length-1)}" class="untc ${S.X.length!==UN.lastX&&wRM?'unpop':''}"${UN.flyX&&UN.flyX===S.X.length?' style="visibility:hidden"':''}>${unCard(unTop(S),'big'+(unTop(S)[0]==='k'?' ukc u-'+S.c:''))}</span></div><span class="unar r ${S.d>0?'dn':'up'}" aria-hidden="true"><svg viewBox="0 0 28 72"><path d="M20 66Q2 36 18 8"/><path d="M9 11l9-3 1 9"/></svg></span></div>
  <p class="unlg vh" role="status" aria-live="polite">${esc(unLg(S,me))}</p>
  <div class="unme${myT?' on':''}"><div class="unt"><b>${turn}</b>${net&&myT?'<span class="untb"><i id="untm"></i></span>':''}</div>
- <div class="unh" id="unh">${(()=>{let base=0;return rows.map(R=>{const b0=base;base+=R.length;return`<div class="unhr" style="--ov:${ovOf(R.length)}px">${R.map((c,j)=>{const k=b0+j;const ok=myT&&(S.dr?k===my.length-1&&unOk(S,c):unOk(S,c));return`<button class="ucd${ok?' ok':''}${myT&&!ok?' no':''}" data-a="unPlay" data-v="${k}" aria-label="${unCnf(c)}"${ok?'':' aria-disabled="true"'}>${unCard(c)}</button>`}).join('')}</div>`}).join('')})()}</div>
+ <div class="unh" id="unh">${(()=>{let base=0;return rows.map(R=>{const b0=base;base+=R.length;return`<div class="unhr" style="--ov:${ovOf(R.length)}px">${R.map((c,j)=>{const k=b0+j;const ok=myT&&(S.dr?k===my.length-1&&unOk(S,c):unOk(S,c));return`<button class="ucd${ok?' ok':''}${myT&&!ok?' no':''}" data-a="unPlay" data-v="${k}" data-c="${c}" aria-label="${unCnf(c)}"${ok?'':' aria-disabled="true"'}>${unCard(c)}</button>`}).join('')}</div>`}).join('')})()}</div>
  ${myT&&S.dr?'<div class="unbt"><button class="btn alt" data-a="unPass">Garder et passer</button></div>':''}
  ${S.S[me]&&S.S[me].ab&&S.S[me].u===SO.uid&&live?'<button class="btn" style="margin-top:10px" data-a="unBackIn">Reprendre ma place</button>':''}
  ${UN.m?`<p class="note" style="text-align:center">${esc(UN.m)}</p>`:''}</div>
@@ -4264,7 +4264,12 @@ function unDraw(){
  ${UN.pk>=0?`<div class="unpk"><section class="glass play"><h2>Choisis une couleur</h2><div class="unpc">${UNCL.map(c=>`<button data-a="unCol" data-v="${c}" style="background:${UNHX[c]}" aria-label="${UNNM[c]}"></button>`).join('')}</div><button class="lnk" data-a="unCol" data-v="">Annuler</button></section></div>`:''}`;
  UN.lastX=S.X.length;
  const h2=$('#unh');if(h2)h2.scrollLeft=sl;
- unTimers();unAnim(S);unUiAnim(S,myT)}
+ unTimers();unAnim(S);unUiAnim(S,myT);unHandFlip(flip,S)}
+/* la main se resserre en glissant quand une carte part (ou s’écarte quand une carte arrive) */
+function unHandPos(){const m={},n={};document.querySelectorAll('#unh .ucd').forEach(e=>{const c=e.dataset.c;if(!c)return;n[c]=(n[c]||0)+1;const r=e.getBoundingClientRect();m[c+'#'+n[c]]=[r.left,r.top]});return{m,id:UN.g&&UN.g.id}}
+function unHandFlip(F,S){if(!F||F.id!==S.id||wRM)return;const n={};
+ document.querySelectorAll('#unh .ucd').forEach(e=>{const c=e.dataset.c;if(!c)return;n[c]=(n[c]||0)+1;const o=F.m[c+'#'+n[c]];if(!o)return;const r=e.getBoundingClientRect(),dx=o[0]-r.left,dy=o[1]-r.top;
+  if(Math.abs(dx)<1&&Math.abs(dy)<1)return;const k=e.querySelector('.ucard');if(k)k.animate([{transform:`translate(${dx}px,${dy}px)`},{transform:'translate(0,0)'}],{duration:340,easing:'cubic-bezier(.3,.7,.3,1)'})})}
 function unUiAnim(S,myT){
  const same=UN.pUi&&UN.pUi.id===S.id,P=UN.pUi||{},cds=[...document.querySelectorAll('#unh .ucd')];
  UN.pUi={id:S.id,myT,d:S.d,ok:cds.map(e=>e.classList.contains('ok')),no:cds.map(e=>e.classList.contains('no'))};
