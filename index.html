@@ -1455,6 +1455,17 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .scd.bur .pkf,.scd.bur .pkb{box-shadow:none}
 .pkf i,.pkf b{font-style:normal}
 .pkf .pkm.fc small{color:inherit;opacity:.9}
+.gordb{display:flex;align-items:center;justify-content:center;gap:8px;margin:22px auto 8px;padding:11px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08);color:var(--text,#fff);font:600 14px "Nunito Sans",system-ui,sans-serif;cursor:pointer}
+.gordb svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.gorc{max-height:86vh;display:flex;flex-direction:column}
+.gorl{list-style:none;margin:0 0 14px;padding:0;overflow:auto;display:grid;gap:6px}
+.gorl li{display:flex;align-items:center;gap:10px;padding:7px 8px 7px 10px;border-radius:14px;background:linear-gradient(135deg,color-mix(in srgb,var(--a) 35%,transparent),color-mix(in srgb,var(--b) 35%,transparent));border:1px solid rgba(255,255,255,.15)}
+.gorl li i{font-style:normal;width:28px;text-align:center;font-size:18px}
+.gorl li b{flex:1;font-weight:700}
+.gorl li button{width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.16);color:#fff;display:grid;place-items:center;cursor:pointer}
+.gorl li button:disabled{opacity:.3;cursor:default}
+.gorl li button svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.gorc .chrow{justify-content:center}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -2514,10 +2525,24 @@ function lastCard(){
 }
 function home(){nv('games');
  cur=null;origin='home';wdBuf='';wdPop=-1;wdLock=false;wdM='';
- const fv=favs(),tile=g=>{const on=fv.includes(g.id);return`<div class="tw"><button class="glass tile pt-${g.id}" style="--a:${g.a};--b:${g.b}" data-a="open" data-v="${g.id}"><i>${g.ic}</i><b>${g.id==='scrabble'||g.id==='chess'||g.id==='uno'?'<svg class="mp" viewBox="0 0 24 24" role="img" aria-label="Multijoueur"><circle cx="12" cy="8" r="3.2"/><circle cx="5" cy="9.6" r="2.3"/><circle cx="19" cy="9.6" r="2.3"/><path d="M6.2 19.5c0-3.3 2.6-5.4 5.8-5.4s5.8 2.1 5.8 5.4z"/><path d="M1.3 18.6c0-2.5 1.7-4.2 4.1-4.2.7 0 1.3.1 1.9.4-1 .9-1.7 2.2-1.9 3.8z"/><path d="M22.7 18.6c0-2.5-1.7-4.2-4.1-4.2-.7 0-1.3.1-1.9.4 1 .9 1.7 2.2 1.9 3.8z"/></svg>':''}${g.n}</b><small>${g.soon?'Bientôt':g.sp?(g.id==='scrabble'?scrTile():g.id==='chess'?'':g.id==='uno'?unTile():g.sp):''}</small></button>${g.soon?'':`<button class="fv ${on?'on':''}" data-a="fav" data-v="${g.id}" aria-pressed="${on}" aria-label="${on?'Retirer '+g.n+' des favoris':'Ajouter '+g.n+' aux favoris'}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/></svg></button>`}</div>`};
- const F=GD.filter(g=>!g.soon&&fv.includes(g.id)),R=GD.filter(g=>!F.includes(g));
- app.innerHTML=`<header class="top"><h1>Nuit de neige</h1><div class="chip" title="Flocons">❄ ${FLX()}</div></header>${wdBlock()}${lastCard()}${F.length?`<h2 class="s shr"><span>Favoris</span>${window.mpLink?mpLink():''}</h2><div class="grid fgrid">${F.map(tile).join('')}</div>${R.length?'<h2 class="s">Autres jeux</h2>':''}`:`<h2 class="s shr"><span>Choisis ta veillée</span>${window.mpLink?mpLink():''}</h2>`}${R.length?`<div class="grid">${R.map(tile).join('')}</div>`:''}`;
+ const fv=favs(),tile=g=>{const on=fv.includes(g.id);return`<div class="tw"><button class="glass tile pt-${g.id}" style="--a:${g.a};--b:${g.b}" data-a="open" data-v="${g.id}"><i>${g.ic}</i><b>${g.id==='scrabble'||g.id==='chess'||g.id==='uno'||g.id==='airhockey'?'<svg class="mp" viewBox="0 0 24 24" role="img" aria-label="Multijoueur"><circle cx="12" cy="8" r="3.2"/><circle cx="5" cy="9.6" r="2.3"/><circle cx="19" cy="9.6" r="2.3"/><path d="M6.2 19.5c0-3.3 2.6-5.4 5.8-5.4s5.8 2.1 5.8 5.4z"/><path d="M1.3 18.6c0-2.5 1.7-4.2 4.1-4.2.7 0 1.3.1 1.9.4-1 .9-1.7 2.2-1.9 3.8z"/><path d="M22.7 18.6c0-2.5-1.7-4.2-4.1-4.2-.7 0-1.3.1-1.9.4 1 .9 1.7 2.2 1.9 3.8z"/></svg>':''}${g.n}</b><small>${g.soon?'Bientôt':g.sp?(g.id==='scrabble'?scrTile():g.id==='chess'?'':g.id==='uno'?unTile():g.sp):''}</small></button>${g.soon?'':`<button class="fv ${on?'on':''}" data-a="fav" data-v="${g.id}" aria-pressed="${on}" aria-label="${on?'Retirer '+g.n+' des favoris':'Ajouter '+g.n+' aux favoris'}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/></svg></button>`}</div>`};
+ const GO=gOrd(GD),F=GO.filter(g=>!g.soon&&fv.includes(g.id)),R=GO.filter(g=>!F.includes(g));
+ app.innerHTML=`<header class="top"><h1>Nuit de neige</h1><div class="chip" title="Flocons">❄ ${FLX()}</div></header>${wdBlock()}${lastCard()}${F.length?`<h2 class="s shr"><span>Favoris</span>${window.mpLink?mpLink():''}</h2><div class="grid fgrid">${F.map(tile).join('')}</div>${R.length?'<h2 class="s">Autres jeux</h2>':''}`:`<h2 class="s shr"><span>Choisis ta veillée</span>${window.mpLink?mpLink():''}</h2>`}${R.length?`<div class="grid">${R.map(tile).join('')}</div>`:''}<button class="gordb" data-a="gOrd"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4v16M4 8l4-4 4 4M16 20V4M12 16l4 4 4-4"/></svg>Modifier l’ordre des jeux</button>`;
 }
+/* ordre des jeux choisi par le joueur (les nouveaux jeux se rangent à la fin) */
+function gOrd(L){const O=st.get('g:ord',[]);if(!O.length)return L;const ix=g=>{const i=O.indexOf(g.id);return i<0?1e3+L.indexOf(g):i};return L.slice().sort((a,b)=>ix(a)-ix(b))}
+function gOrdDraw(){const L=gOrd(GD.filter(g=>!g.soon)),e=$('#gordo .gorl');if(!e)return;
+ e.innerHTML=L.map((g,i)=>`<li style="--a:${g.a};--b:${g.b}"><i>${g.ic}</i><b>${esc(g.n)}</b><button data-a="gMv" data-v="${g.id}:-1" aria-label="Monter ${esc(g.n)}"${i?'':' disabled'}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button><button data-a="gMv" data-v="${g.id}:1" aria-label="Descendre ${esc(g.n)}"${i<L.length-1?'':' disabled'}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></li>`).join('')}
+setTimeout(()=>Object.assign(act,{
+ gOrd:()=>{const o=$('#gordo');if(o)o.remove();const d=document.createElement('div');d.className='sfr';d.id='gordo';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.setAttribute('aria-label','Ordre des jeux');
+  d.innerHTML=`<div class="glass sfc gorc"><h2 style="margin:0 0 4px">Ordre des jeux</h2><p class="note" style="margin:0 0 10px">Monte ou descends chaque jeu avec les flèches.</p><ol class="gorl"></ol><div class="chrow"><button class="btn" data-a="gOrdX">Terminé</button><button class="btn alt" data-a="gOrdR">Ordre d’origine</button></div></div>`;
+  document.body.appendChild(d);gOrdDraw()},
+ gMv:v=>{const [id,dr]=v.split(':'),L=gOrd(GD.filter(g=>!g.soon)).map(g=>g.id),i=L.indexOf(id),j=i+(+dr);if(i<0||j<0||j>=L.length)return;[L[i],L[j]]=[L[j],L[i]];st.set('g:ord',L);gOrdDraw();
+  const b=$(`#gordo [data-v="${id}:${dr}"]`);if(b&&!b.disabled)b.focus();if(cur===null&&typeof home==='function'){const y=scrollY;home();scrollTo(0,y)}},
+ gOrdR:()=>{st.set('g:ord',[]);gOrdDraw();if(cur===null&&typeof home==='function'){const y=scrollY;home();scrollTo(0,y)}},
+ gOrdX:()=>{const o=$('#gordo');if(o)o.remove()}
+}));
+
 function hub(id){if(id==='quiz')return home();
  cur=id;nv('games');theme(id);const g=G.find(x=>x.id===id),N=nl(id),dd=st.get(dkey(id),false),ok=i=>st.get(ckey(id)+':'+i,false),sk=i=>!ok(i)&&st.get('k:'+id+':'+i,false),nx=[...Array(N).keys()].findIndex(i=>!ok(i)&&!sk(i)),ns=[...Array(N).keys()].findIndex(sk),nsk=[...Array(N).keys()].filter(sk).length,tg=nx>=0?nx:ns>=0?ns:N-1,dn=[...Array(N).keys()].filter(i=>st.get(ckey(id)+':'+i,false)).length;
  const xon=xmasOn()&&!g.soon&&!g.nox,xok=i=>st.get(ckey(id)+':'+(N+i),false),xsk=i=>!xok(i)&&st.get('k:'+id+':'+(N+i),false),xnx=[...Array(NLX).keys()].findIndex(i=>!xok(i)&&!xsk(i)),xdn=[...Array(NLX).keys()].filter(xok).length,xns=[...Array(NLX).keys()].findIndex(xsk),xtg=xnx>=0?xnx:xns>=0?xns:NLX-1,xpr=xdn+[...Array(NLX).keys()].filter(xsk).length;
