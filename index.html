@@ -1496,6 +1496,15 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .unar.r.dn svg{transform:rotate(180deg)}
 .unar.r.up svg{transform:scaleX(-1)}
 .ung.undeal .unh,.ung.undeal .unk,.ung.undeal .ununo{pointer-events:none}
+.unp{position:relative;overflow:hidden;background:linear-gradient(160deg,#4a3fa6,#2a2370 62%,#1d1752);border:2.5px solid rgba(255,255,255,.88);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 4px 12px rgba(5,5,30,.35);opacity:.8;transition:transform .35s cubic-bezier(.3,1.4,.5,1),opacity .3s,background .3s,box-shadow .3s,border-color .3s}
+.unp::before{content:'';position:absolute;left:50%;top:50%;width:150%;height:62%;translate:-50% -50%;rotate:-28deg;border-radius:50%;background:rgba(255,255,255,.07);pointer-events:none}
+.unp>*{position:relative}
+.unp .unav{background:conic-gradient(#ffd86b calc(var(--p)*360deg),rgba(255,255,255,.92) 0);box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.unp.on{opacity:1;background:linear-gradient(160deg,#ffd76a,#f4ac3e 70%,#e8922c);border-color:#fff;color:#3b2300;transform:translateY(-3px) scale(1.05);box-shadow:0 0 0 3px rgba(255,216,107,.5),0 10px 24px rgba(255,180,60,.45)}
+.unp.on::before{background:rgba(255,255,255,.22)}
+.unp.on .unn{opacity:1;font-weight:700}
+.unp.on .unav{background:conic-gradient(#3b2300 calc(var(--p)*360deg),#fff 0)}
+.unp.on b small{opacity:.8}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -4268,7 +4277,7 @@ function unDraw(){
  unTimers();unAnim(S);unUiAnim(S,myT);unHandFlip(flip,S)}
 /* distribution au début de la partie : 7 cartes à chacun, une à la fois, autour de la table, puis la première carte du jeu */
 function unDeal(S){
- const me=UN.me,n=S.S.length,T=1200+Math.random()*500,FD=360,step=(T-FD-320)/(7*n),R=e=>e?e.getBoundingClientRect():null,src=R($('.unk .ucard')||$('.unk'));
+ const me=UN.me,n=S.S.length,T=1700+Math.random()*500,FD=380,step=(T-FD-320)/(7*n),R=e=>e?e.getBoundingClientRect():null,src=R($('.unk .ucard')||$('.unk'));
  UN.dealT=Date.now()+T+80;const root=$('#ung');if(root)root.classList.add('undeal');
  const cs=[...document.querySelectorAll('#unh .ucd')];cs.forEach(e=>e.style.visibility='hidden');
  const tg=$('.untop>.untc'),ud=$('.untop>.unund');if(tg)tg.style.visibility='hidden';if(ud)ud.style.visibility='hidden';
