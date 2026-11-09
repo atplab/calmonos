@@ -1495,6 +1495,7 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .unar.l.dn svg{transform:scaleY(-1)}
 .unar.r.dn svg{transform:rotate(180deg)}
 .unar.r.up svg{transform:scaleX(-1)}
+.ung.undeal .unh,.ung.undeal .unk,.ung.undeal .ununo{pointer-events:none}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -4265,6 +4266,18 @@ function unDraw(){
  UN.lastX=S.X.length;
  const h2=$('#unh');if(h2)h2.scrollLeft=sl;
  unTimers();unAnim(S);unUiAnim(S,myT);unHandFlip(flip,S)}
+/* distribution au début de la partie : 7 cartes à chacun, une à la fois, autour de la table, puis la première carte du jeu */
+function unDeal(S){
+ const me=UN.me,n=S.S.length,T=1200+Math.random()*500,FD=360,step=(T-FD-320)/(7*n),R=e=>e?e.getBoundingClientRect():null,src=R($('.unk .ucard')||$('.unk'));
+ UN.dealT=Date.now()+T+80;const root=$('#ung');if(root)root.classList.add('undeal');
+ const cs=[...document.querySelectorAll('#unh .ucd')];cs.forEach(e=>e.style.visibility='hidden');
+ const tg=$('.untop>.untc'),ud=$('.untop>.unund');if(tg)tg.style.visibility='hidden';if(ud)ud.style.visibility='hidden';
+ for(let k=0;k<7;k++)for(let p=0;p<n;p++){const i=(me+1+p)%n,dl=(k*n+p)*step;
+  if(i===me){const el=cs[k];if(!el)continue;unFly(unCard(S.H[me][k]),src,R(el),dl,()=>{el.style.visibility=''},null,FD)}
+  else{const st=$(`.unp[data-i="${i}"] .unbk i:last-child`)||$(`.unp[data-i="${i}"] .unav`);unFly(unBack(),src,R(st),dl,null,null,FD)}}
+ if(tg){const tr=tg.style.transform;tg.style.transform='none';const r=R(tg.firstElementChild||tg);tg.style.transform=tr;
+  unFly(unCard(unTop(S),'big'+(unTop(S)[0]==='k'?' ukc u-'+S.c:'')),src,r,T-320,()=>{const t2=$('.untop>.untc');if(t2)t2.style.visibility=''},unJ(0),320)}
+ setTimeout(()=>{const r2=$('#ung');if(r2)r2.classList.remove('undeal');document.querySelectorAll('#unh .ucd').forEach(e=>e.style.visibility='')},T+80)}
 /* la main se resserre en glissant quand une carte part (ou s’écarte quand une carte arrive) */
 function unHandPos(){const m={},n={};document.querySelectorAll('#unh .ucd').forEach(e=>{const c=e.dataset.c;if(!c)return;n[c]=(n[c]||0)+1;const r=e.getBoundingClientRect();m[c+'#'+n[c]]=[r.left,r.top]});return{m,id:UN.g&&UN.g.id}}
 function unHandFlip(F,S){if(!F||F.id!==S.id||wRM)return;const n={};
@@ -4283,16 +4296,17 @@ function unUiAnim(S,myT){
 /* animations : la carte jouée part de la main du joueur vers le talon ; les cartes piochées partent de la pioche vers le joueur */
 const unJ=i=>{const h=Math.abs(Math.sin(i*12.9898+4.1)*43758.5453)%1,g=Math.abs(Math.sin(i*78.233+1.7)*12543.11)%1,k=Math.abs(Math.sin(i*39.425+.3)*9871.7)%1;return{r:(h-.5)*12,x:(g-.5)*8,y:(k-.5)*6}};
 const unJit=i=>{const j=unJ(i);return`--jr:${j.r.toFixed(1)}deg;--jx:${j.x.toFixed(1)}px;--jy:${j.y.toFixed(1)}px`};
-function unFly(html,a,b,dl,done,J){J=J||{r:0,x:0,y:0};
+function unFly(html,a,b,dl,done,J,du){J=J||{r:0,x:0,y:0};
  if(!a||!b||!b.width){done&&done();return}
  const e=document.createElement('div');e.className='unfly';e.innerHTML=html;document.body.appendChild(e);
  const c=e.firstElementChild,nw=c.offsetWidth||58,nh=c.offsetHeight||87,s1=b.width/nw,s0=Math.max(.15,Math.min(a.width/nw,a.height/nh)),
   bx=b.left+b.width/2-nw/2,by=b.top+b.height/2-nh/2,dx=a.left+a.width/2-nw/2-bx,dy=a.top+a.height/2-nh/2-by;
  e.style.left=bx+'px';e.style.top=by+'px';
- const an=e.animate([{transform:`translate(${dx}px,${dy}px) scale(${s0}) rotate(0deg)`,opacity:.9},{transform:`translate(${dx*.45}px,${dy*.45-14}px) scale(${(s0+s1)/2*1.05}) rotate(${(J.r*.5).toFixed(1)}deg)`,opacity:1,offset:.55},{transform:`translate(${J.x}px,${J.y}px) scale(${s1}) rotate(${J.r}deg)`,opacity:1}],{duration:520,delay:dl,easing:'cubic-bezier(.33,.1,.3,1)',fill:'backwards'});
+ const an=e.animate([{transform:`translate(${dx}px,${dy}px) scale(${s0}) rotate(0deg)`,opacity:.9},{transform:`translate(${dx*.45}px,${dy*.45-14}px) scale(${(s0+s1)/2*1.05}) rotate(${(J.r*.5).toFixed(1)}deg)`,opacity:1,offset:.55},{transform:`translate(${J.x}px,${J.y}px) scale(${s1}) rotate(${J.r}deg)`,opacity:1}],{duration:du||520,delay:dl,easing:'cubic-bezier(.33,.1,.3,1)',fill:'backwards'});
  an.onfinish=an.oncancel=()=>{e.remove();done&&done()}}
 function unAnim(S){
  const P=UN.pv,N={id:S.id,top:unTop(S),X:S.X.length,H:S.H.map(h=>h.length),t:S.t};UN.pv=N;const fr=UN.fromR;UN.fromR=null;
+ if((!P||P.id!==S.id)&&!wRM&&S.st==='play'&&S.X.length===1&&S.H.every(h=>h.length===7)){unDeal(S);return}
  if(!P||P.id!==S.id||P.H.length!==N.H.length||wRM)return;
  const me=UN.me,R=e=>e?e.getBoundingClientRect():null,seat=i=>i===me?$('#unh'):($(`.unp[data-i="${i}"] .unbk i:last-child`)||$(`.unp[data-i="${i}"] .unav`)||$(`.unp[data-i="${i}"]`));
  const played=N.X>P.X||P.top!==N.top,pl=played?P.t:-1;let dl=0;
@@ -4347,6 +4361,7 @@ function unTick(){
  if(!$('#ung')){clearInterval(UN.iv);UN.iv=0;return}
  unTimers();
  const S=UN.g;if(!S||S.st!=='play'||UN.busy||UN.pk>=0&&UN.loc)return;
+ if(UN.dealT&&Date.now()<UN.dealT){if(UN.loc&&S.dl&&S.S[S.t].b&&S.dl<UN.dealT+500)S.dl=UN.dealT+500+Math.random()*600;return}
  const now=Date.now(),i=S.t,s=S.S[i];
  if(UN.loc){if(s.b&&S.dl&&now>=S.dl)unCommit(unBotMove(S,i));return}
  if(UN.drvN===S.n&&now-UN.drvT<4000)return;
