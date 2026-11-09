@@ -1665,10 +1665,10 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .g2x{position:absolute;left:0;top:0;width:var(--s);height:var(--s);border-radius:12%;display:grid;place-items:center;font:800 calc(var(--s)*.42)/1 "Nunito Sans",sans-serif;font-variant-numeric:tabular-nums;transition:transform 110ms ease-out;will-change:transform;box-shadow:0 2px 6px rgba(0,0,0,.18)}
 .g2x[data-d="3"]{font-size:calc(var(--s)*.34)}.g2x[data-d="4"]{font-size:calc(var(--s)*.27)}
 .g2x.gl{box-shadow:0 0 calc(var(--s)*.18) rgba(255,230,180,.3),0 2px 6px rgba(0,0,0,.18)}
-.g2x.nw{animation:g2n .5s 120ms ease-out backwards}
+.g2x.nw{animation:g2n .45s 100ms ease-out backwards}
 .g2x.mg{animation:g2m .45s ease-in-out}
 .g2x.win{animation:g2w 2.4s ease-in-out infinite;z-index:2}
-@keyframes g2n{from{scale:.7;opacity:0}to{scale:1;opacity:1}}
+@keyframes g2n{from{opacity:0;filter:blur(3px)}to{opacity:1;filter:none}}
 @keyframes g2m{0%{scale:1;filter:brightness(1)}40%{scale:1.06;filter:brightness(1.12)}100%{scale:1;filter:brightness(1)}}
 @keyframes g2w{0%,100%{scale:1;filter:brightness(1)}50%{scale:1.05;filter:brightness(1.12)}}
 .g2b.nm0{animation:g2s0 .5s ease-in-out}.g2b.nm1{animation:g2s1 .5s ease-in-out}.g2b.nm2{animation:g2s2 .5s ease-in-out}.g2b.nm3{animation:g2s3 .5s ease-in-out}
@@ -6425,8 +6425,8 @@ function p2048(r){
  const geo=()=>{const w=B.clientWidth;GP=Math.max(6,Math.round(w*.025));S=(w-GP*(n+1))/n;B.style.setProperty('--s',S+'px');B.style.setProperty('--gp',GP+'px')};
  const pos=t=>`translate(${GP+t.c*(S+GP)}px,${GP+t.r*(S+GP)}px)`;
  const paint=t=>{const k=G2C[t.v]||['#ffe9a8','#6b4a10'];t.el.style.background=k[0];t.el.style.color=k[1];t.el.textContent=t.v;t.el.dataset.d=String(t.v).length;t.el.classList.toggle('gl',t.v>=128)};
- const add=(t,cl)=>{const e=document.createElement('b');e.className='g2x'+(cl?' '+cl:'');t.el=e;e.style.transition='none';e.style.transform=pos(t);paint(t);B.appendChild(e);void e.offsetWidth;e.style.transition=''};
- const layout=()=>{geo();tiles.forEach(t=>{if(!t.el)add(t);t.el.style.transition='none';t.el.style.transform=pos(t);void t.el.offsetWidth;t.el.style.transition=''})};
+ const add=(t,cl)=>{const e=document.createElement('b');e.className='g2x'+(cl?' '+cl:'');t.el=e;e.style.transition='none';e.style.transform=pos(t);paint(t);B.appendChild(e)};
+ const layout=()=>{geo();tiles.forEach(t=>{if(!t.el)add(t);t.el.style.transition='none';t.el.style.transform=pos(t)})};
  const hud=()=>{$('#g2s').textContent=sc;const m=$('#g2m');if(m){m.textContent=MV-mu;m.classList.toggle('lo',MV-mu<=10)}};
  const can=()=>{if(free().length)return true;const g=vals();for(let r=0;r<n;r++)for(let c=0;c<n;c++){const v=g[r*n+c];if(c<n-1&&g[r*n+c+1]===v||r<n-1&&g[(r+1)*n+c]===v)return true}return false};
  /* d : 0 gauche, 1 droite, 2 haut, 3 bas */
@@ -6449,6 +6449,8 @@ function p2048(r){
   if(!moved){B.classList.remove('nm'+d);void B.offsetWidth;B.classList.add('nm'+d);return}
   prev={g:g0,sc:sc0,mu};mu++;busy=true;$('#g2ar').className='g2ar';
   /* les flocons glissent ; ceux qui se rejoignent disparaissent dans l’autre, qui grandit */
+  /* un flocon tout juste apparu n’a pas de transition tant qu’il n’a pas bougé : il naît sur sa case */
+  tiles.forEach(t=>{t.el.style.transition='';t.el.classList.remove('nw')});void B.offsetWidth;
   tiles.forEach(t=>{const v=t.m?t.v/2:t.v;t.el.style.transform=pos(t);if(t.m){t.el.textContent=v}});
   setTimeout(()=>{dead.forEach(t=>{t.el.remove()});tiles=tiles.filter(t=>!t.x);
    merged.forEach(t=>{t.m=0;paint(t);t.el.classList.remove('mg');void t.el.offsetWidth;t.el.classList.add('mg')});
