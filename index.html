@@ -7136,6 +7136,8 @@ function aqDash(el){
  const an=el.animate([{transform:'translateX('+(x0-x1).toFixed(1)+'px)'},{transform:'translateX(0px)'}],{duration:760,easing:'cubic-bezier(.12,.8,.25,1)'});
  an.onfinish=an.oncancel=()=>{el._dsh=0};
 }
+/* citations que seuls les poissons de hockey disent */
+const AQHK=['On rate cent pour cent des tirs qu’on ne prend pas. Alors je tire, même dans l’eau.','Garde la tête haute et la palette sur la glace : le reste suit.','Un bon arrêt vaut un but. Un grand arrêt vaut une soirée entière.','Ce n’est pas la rondelle qui fait l’équipe, c’est chaque passe qu’on se fait.','Tombe, relève-toi, patine encore. C’est ça, le hockey. C’est ça, la vie.','Le plus beau son du monde ? Une rondelle qui frappe le fond du filet.','Respire, place-toi, fais confiance à tes réflexes : le filet est à toi.','Les meilleures parties se gagnent dans le troisième tiers… et les meilleures journées aussi.','Une patinoire gelée, des amis, une rondelle : l’hiver ne demande rien de plus.','On ne compte pas les buts, on compte les sourires après la partie.'];
 /* toucher un animal : un petit sursaut dans le sens où il regarde (sans quitter sa route) */
 function aqDash(el){
  if(wRM||!el||!el.isConnected||el._dsh||el._qt)return;
@@ -7156,7 +7158,7 @@ async function aqQuoteGo(){
   m=getComputedStyle(fi).transform,nat=m&&m!=='none'?Math.sign(parseFloat(m.slice(m.indexOf('(')+1)))||1:1,face=nat*(fr&&fr.classList.contains('x')?-1:1),
   S=Math.min(2.3,tb.width*.3/r.width),dx=tb.width/2-(r.left-tb.left+r.width/2),dy=tb.height*.68-(r.top-tb.top+r.height/2),
   c=document.createElement('div'),b=document.createElement('div'),sl=ms=>new Promise(o=>setTimeout(o,ms)),
-  qt=Q[Math.floor(Math.random()*Q.length)];
+  qt=(['hockey','gardien'].includes(el.dataset.id)&&Math.random()<.75)?AQHK[Math.floor(Math.random()*AQHK.length)]:Q[Math.floor(Math.random()*Q.length)];
  c.className='aqq';c.style.cssText=`left:${r.left-tb.left}px;top:${r.top-tb.top}px;width:${r.width}px;height:${r.height}px`;
  c.innerHTML=`<div style="transform:scaleX(${face})">${el.querySelector('.fi svg').outerHTML}</div>`;
  b.className='aqb';b.textContent=qt;if(qt.length>90)b.style.fontSize='13px';
