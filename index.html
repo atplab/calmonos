@@ -1524,6 +1524,24 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 @keyframes unpkf{from{opacity:0}to{opacity:1}}
 @keyframes unpks{from{opacity:0;transform:scale(.8) translateY(14px)}to{opacity:1;transform:none}}
 @keyframes unpkb{from{opacity:0;transform:scale(.3) rotate(-25deg)}to{opacity:1;transform:none}}
+.gunl{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:20px;background:rgba(8,8,30,.62);backdrop-filter:blur(5px);animation:gunf .35s ease-out}
+.gunl.out{animation:gunf .3s ease-in reverse forwards}
+.gunb{position:relative;width:min(100%,330px);text-align:center;padding:26px 22px 20px;border-radius:28px;color:#fff;background:linear-gradient(160deg,var(--a),var(--b));border:3px solid rgba(255,255,255,.9);box-shadow:0 0 0 6px rgba(255,255,255,.12),0 24px 60px rgba(0,0,20,.5);overflow:hidden;animation:gunp .6s cubic-bezier(.3,1.5,.5,1)}
+.gunb small{display:inline-block;font:800 12px/1 "Nunito Sans",system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.22);animation:gunt .5s .25s both}
+.guni{position:relative;width:104px;height:104px;margin:18px auto 10px;display:grid;place-items:center;font-size:56px;border-radius:30px;background:rgba(255,255,255,.18);box-shadow:inset 0 0 0 2px rgba(255,255,255,.4),0 10px 30px rgba(0,0,0,.25);animation:guni .9s .15s cubic-bezier(.3,1.6,.5,1) both}
+.gunb h2{margin:0 0 4px;font:600 1.7rem/1.15 Fraunces,Georgia,serif;animation:gunt .5s .45s both}
+.gunb p{margin:0 0 16px;opacity:.9;animation:gunt .5s .55s both}
+.gunb .chrow{justify-content:center;animation:gunt .5s .65s both}
+.gunr{position:absolute;left:50%;top:118px;width:0;height:0;pointer-events:none}
+.gunr i{position:absolute;left:-2px;top:-90px;width:4px;height:44px;border-radius:4px;background:linear-gradient(rgba(255,255,255,.9),transparent);transform-origin:2px 90px;opacity:0;animation:gunray 1.4s .3s ease-out both}
+.gunr i:nth-child(1){rotate:0deg}.gunr i:nth-child(2){rotate:30deg}.gunr i:nth-child(3){rotate:60deg}.gunr i:nth-child(4){rotate:90deg}.gunr i:nth-child(5){rotate:120deg}.gunr i:nth-child(6){rotate:150deg}.gunr i:nth-child(7){rotate:180deg}.gunr i:nth-child(8){rotate:210deg}.gunr i:nth-child(9){rotate:240deg}.gunr i:nth-child(10){rotate:270deg}.gunr i:nth-child(11){rotate:300deg}.gunr i:nth-child(12){rotate:330deg}
+@keyframes gunf{from{opacity:0}to{opacity:1}}
+@keyframes gunp{from{opacity:0;transform:scale(.6) translateY(30px)}to{opacity:1;transform:none}}
+@keyframes guni{0%{opacity:0;transform:scale(.2) rotate(-30deg)}60%{opacity:1;transform:scale(1.18) rotate(8deg)}100%{transform:none}}
+@keyframes gunt{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes gunray{0%{opacity:0;transform:scaleY(.3)}30%{opacity:1}100%{opacity:0;transform:scaleY(1.4) translateY(-20px)}}
+@media (prefers-reduced-motion:reduce){.gunl,.gunb,.gunb *{animation:none!important}}
+.gunb small{color:#fff}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -2577,29 +2595,42 @@ const frame=(h,hint)=>{if(!playing)return;mt='m';$('#nav').hidden=true;keep();ap
 /* favoris : une étoile sur chaque jeu */
 const favs=()=>{const f=st.get('fav',null);return f&&Array.isArray(f.l)?f.l:[]};
 function lastCard(){
- const l0=st.get('last',null),l=l0&&!l0.daily&&l0.g!=='melange'&&G.some(g=>g.id===l0.g)?l0:null,g=l?ALL.find(x=>x.id===l.g):null;if(!g)return'';
+ const l0=st.get('last',null),l=l0&&!l0.daily&&l0.g!=='melange'&&G.some(g=>g.id===l0.g)?l0:null,g=l?ALL.find(x=>x.id===l.g):null;if(!g||gHid(g.id))return'';
  const X=isX(l.g,l.lv);if(X&&!xmasOn())return'';const nxt=l.done&&(X?l.lv<nl(l.g)+NLX-1:l.lv<nl(l.g)-1),sub=X?'Fêtes '+(xn(l.g,l.lv)+(nxt?1:0)):'Niveau '+(l.lv+1+(nxt?1:0)),btn=nxt?'Continuer':l.done?'Niveaux':'Reprendre';
  return`<section class="rc xl pt-${g.id}" style="--a:${g.a};--b:${g.b}" data-g="${g.ic}"><div class="rc-ic">${g.ic}</div><div class="rc-t"><small>Dernière partie</small><b>${g.n}</b><span>${sub}</span></div><button class="rc-go" data-a="resume">${btn}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>`;
 }
 function home(){nv('games');
  cur=null;origin='home';wdBuf='';wdPop=-1;wdLock=false;wdM='';
  const fv=favs(),tile=g=>{const on=fv.includes(g.id);return`<div class="tw"><button class="glass tile pt-${g.id}" style="--a:${g.a};--b:${g.b}" data-a="open" data-v="${g.id}"><i>${g.ic}</i><b>${g.id==='scrabble'||g.id==='chess'||g.id==='uno'||g.id==='airhockey'?'<svg class="mp" viewBox="0 0 24 24" role="img" aria-label="Multijoueur"><circle cx="12" cy="8" r="3.2"/><circle cx="5" cy="9.6" r="2.3"/><circle cx="19" cy="9.6" r="2.3"/><path d="M6.2 19.5c0-3.3 2.6-5.4 5.8-5.4s5.8 2.1 5.8 5.4z"/><path d="M1.3 18.6c0-2.5 1.7-4.2 4.1-4.2.7 0 1.3.1 1.9.4-1 .9-1.7 2.2-1.9 3.8z"/><path d="M22.7 18.6c0-2.5-1.7-4.2-4.1-4.2-.7 0-1.3.1-1.9.4 1 .9 1.7 2.2 1.9 3.8z"/></svg>':''}${g.n}</b><small>${g.soon?'Bientôt':g.sp?(g.id==='scrabble'?scrTile():g.id==='chess'?'':g.id==='uno'?unTile():g.sp):''}</small></button>${g.soon?'':`<button class="fv ${on?'on':''}" data-a="fav" data-v="${g.id}" aria-pressed="${on}" aria-label="${on?'Retirer '+g.n+' des favoris':'Ajouter '+g.n+' aux favoris'}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/></svg></button>`}</div>`};
- const GO=gOrd(GD),F=GO.filter(g=>!g.soon&&fv.includes(g.id)),R=GO.filter(g=>!F.includes(g));
- app.innerHTML=`<header class="top"><h1>Nuit de neige</h1><div class="chip" title="Flocons">❄ ${FLX()}</div></header>${wdBlock()}${lastCard()}${F.length?`<h2 class="s shr"><span>Favoris</span>${window.mpLink?mpLink():''}</h2><div class="grid fgrid">${F.map(tile).join('')}</div>${R.length?'<h2 class="s">Autres jeux</h2>':''}`:`<h2 class="s shr"><span>Choisis ta veillée</span>${window.mpLink?mpLink():''}</h2>`}${R.length?`<div class="grid">${R.map(tile).join('')}</div>`:''}<button class="gordb" data-a="gOrd"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4v16M4 8l4-4 4 4M16 20V4M12 16l4 4 4-4"/></svg>Modifier l’ordre des jeux</button>`;
+ const GO=gOrd(GD.filter(g=>!gHid(g.id))),F=GO.filter(g=>!g.soon&&fv.includes(g.id)),R=GO.filter(g=>!F.includes(g));
+ app.innerHTML=`<header class="top"><h1>Nuit de neige</h1><div class="chip" title="Flocons">❄ ${FLX()}</div></header>${wdBlock()}${lastCard()}${F.length?`<h2 class="s shr"><span>Favoris</span>${window.mpLink?mpLink():''}</h2><div class="grid fgrid">${F.map(tile).join('')}</div>${R.length?'<h2 class="s">Autres jeux</h2>':''}`:`<h2 class="s shr"><span>Choisis ta veillée</span>${window.mpLink?mpLink():''}</h2>`}${R.length?`<div class="grid">${R.map(tile).join('')}</div>`:''}<button class="gordb" data-a="gOrd"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4v16M4 8l4-4 4 4M16 20V4M12 16l4 4 4-4"/></svg>Modifier l’ordre des jeux</button>`;setTimeout(gUnlockCheck,450);
 }
 /* ordre des jeux choisi par le joueur (les nouveaux jeux se rangent à la fin) */
 function gOrd(L){const O=st.get('g:ord',[]);if(!O.length)return L;const ix=g=>{const i=O.indexOf(g.id);return i<0?1e3+L.indexOf(g):i};return L.slice().sort((a,b)=>ix(a)-ix(b))}
-function gOrdDraw(){const L=gOrd(GD.filter(g=>!g.soon)),e=$('#gordo .gorl');if(!e)return;
+function gOrdDraw(){const L=gOrd(GD.filter(g=>!g.soon&&!gHid(g.id))),e=$('#gordo .gorl');if(!e)return;
  e.innerHTML=L.map((g,i)=>`<li style="--a:${g.a};--b:${g.b}"><i>${g.ic}</i><b>${esc(g.n)}</b><button data-a="gMv" data-v="${g.id}:-1" aria-label="Monter ${esc(g.n)}"${i?'':' disabled'}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button><button data-a="gMv" data-v="${g.id}:1" aria-label="Descendre ${esc(g.n)}"${i<L.length-1?'':' disabled'}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></li>`).join('')}
 setTimeout(()=>Object.assign(act,{
  gOrd:()=>{const o=$('#gordo');if(o)o.remove();const d=document.createElement('div');d.className='sfr';d.id='gordo';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.setAttribute('aria-label','Ordre des jeux');
   d.innerHTML=`<div class="glass sfc gorc"><h2 style="margin:0 0 4px">Ordre des jeux</h2><p class="note" style="margin:0 0 10px">Monte ou descends chaque jeu avec les flèches.</p><ol class="gorl"></ol><div class="chrow"><button class="btn" data-a="gOrdX">Terminé</button><button class="btn alt" data-a="gOrdR">Ordre d’origine</button></div></div>`;
   document.body.appendChild(d);gOrdDraw()},
- gMv:v=>{const [id,dr]=v.split(':'),L=gOrd(GD.filter(g=>!g.soon)).map(g=>g.id),i=L.indexOf(id),j=i+(+dr);if(i<0||j<0||j>=L.length)return;[L[i],L[j]]=[L[j],L[i]];st.set('g:ord',L);gOrdDraw();
+ gMv:v=>{const [id,dr]=v.split(':'),L=gOrd(GD.filter(g=>!g.soon&&!gHid(g.id))).map(g=>g.id),i=L.indexOf(id),j=i+(+dr);if(i<0||j<0||j>=L.length)return;[L[i],L[j]]=[L[j],L[i]];st.set('g:ord',L);gOrdDraw();
   const b=$(`#gordo [data-v="${id}:${dr}"]`);if(b&&!b.disabled)b.focus();if(cur===null&&typeof home==='function'){const y=scrollY;home();scrollTo(0,y)}},
  gOrdR:()=>{st.set('g:ord',[]);gOrdDraw();if(cur===null&&typeof home==='function'){const y=scrollY;home();scrollTo(0,y)}},
  gOrdX:()=>{const o=$('#gordo');if(o)o.remove()}
 }));
+/* jeux qui arrivent plus tard : cachés jusqu’à leur date (tout est visible en mode illimité) */
+const GAV={airhockey:[2026,11,5],demenage:[2026,11,12]};
+const gOpenAt=id=>{const a=GAV[id];return a?new Date(a[0],a[1],a[2]).getTime():0};
+function gHid(id){return Date.now()<gOpenAt(id)&&!UNL()}
+/* fête de déblocage : une seule fois par jeu, à la première visite de l’onglet Jeux après la date */
+function gUnlockCheck(){
+ if($('#gunl'))return;const seen=st.get('g:unl',[]),now=Date.now(),L=Object.keys(GAV).filter(id=>now>=gOpenAt(id)&&!seen.includes(id));
+ if(!L.length)return;const id=L[0],g=ALL.find(x=>x.id===id);st.set('g:unl',[...seen,id]);if(!g)return;
+ const d=document.createElement('div');d.id='gunl';d.className='gunl';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.setAttribute('aria-label','Nouveau jeu débloqué : '+g.n);
+ d.innerHTML=`<div class="gunb" style="--a:${g.a};--b:${g.b}"><div class="gunr" aria-hidden="true">${'<i></i>'.repeat(12)}</div><small>Nouveau jeu débloqué !</small><div class="guni">${g.ic}</div><h2>${esc(g.n)}</h2><p>${esc(g.t||'')}</p><div class="chrow"><button class="btn" data-a="gUnlGo" data-v="${id}">Découvrir</button><button class="btn alt" data-a="gUnlX">Plus tard</button></div></div>`;
+ document.body.appendChild(d);try{sfx(660,.12);setTimeout(()=>sfx(880,.12),130);setTimeout(()=>sfx(1175,.25),260);vib([15,30,15])}catch(e){}
+ setTimeout(()=>{try{confetti(d.querySelector('.guni'))}catch(e){}},350)}
+setTimeout(()=>Object.assign(act,{gUnlX:()=>{const e=$('#gunl');if(!e)return;e.classList.add('out');setTimeout(()=>{e.remove();gUnlockCheck()},300)},gUnlGo:v=>{const e=$('#gunl');if(e)e.remove();act.open(v)}}));
 
 function hub(id){if(id==='quiz')return home();
  cur=id;nv('games');theme(id);const g=G.find(x=>x.id===id),N=nl(id),dd=st.get(dkey(id),false),ok=i=>st.get(ckey(id)+':'+i,false),sk=i=>!ok(i)&&st.get('k:'+id+':'+i,false),nx=[...Array(N).keys()].findIndex(i=>!ok(i)&&!sk(i)),ns=[...Array(N).keys()].findIndex(sk),nsk=[...Array(N).keys()].filter(sk).length,tg=nx>=0?nx:ns>=0?ns:N-1,dn=[...Array(N).keys()].filter(i=>st.get(ckey(id)+':'+i,false)).length;
@@ -5657,7 +5688,7 @@ function pPhrase(r){
  d();
 }
 const act={
- dbook:()=>demBook(),dbk:()=>hub('demenage'),open:v=>{lvOpen=false;const r=v==='quiz'?start('quiz',false,0):v==='quote'?quote():v==='scrabble'?scrHub():v==='chess'?chHub():v==='uno'?unHub():v==='solitaire'?soHub():v==='airhockey'?ahHub():hub(v);window.scrollTo(0,0);return r},
+ dbook:()=>demBook(),dbk:()=>hub('demenage'),open:v=>{if(typeof gHid==='function'&&gHid(v))return home();lvOpen=false;const r=v==='quiz'?start('quiz',false,0):v==='quote'?quote():v==='scrabble'?scrHub():v==='chess'?chHub():v==='uno'?unHub():v==='solitaire'?soHub():v==='airhockey'?ahHub():hub(v);window.scrollTo(0,0);return r},
  back:v=>v==='home'?home():v==='day'?dayScreen():v==='soc'?socScreen():hub(cur),
  play:v=>start(cur,false,+v),
  dd:()=>{const d=$('.dd:not(.xm)');lvOpen=d.classList.toggle('open');d.querySelector('.dd-h').setAttribute('aria-expanded',lvOpen)},
