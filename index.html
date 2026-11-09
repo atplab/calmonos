@@ -1610,6 +1610,11 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .hintb span{font-size:12px;font-weight:700;opacity:.9}
 .hintb:active{transform:scale(.95)}
 
+.hb.hintb{display:inline-flex;align-items:center;gap:4px}
+.hb.hintb .hbi{width:17px;height:17px;flex:none;fill:rgba(255,216,107,.25);stroke:#ffd86b;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.hb.hintb span{font-size:12px;font-weight:700}
+.top.stk>.tl.cbtl{pointer-events:none}
+
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
 .sb.cf{background:linear-gradient(180deg,#ffd18a,#e8944a);color:#3a2310;border:0}
@@ -2183,7 +2188,7 @@ function pCherche(r){
  $('#nav').hidden=true;mt='m';keep();
  app.innerHTML=`<div class="hf" id="hf" style="--bc1:${u.bc[0]};--bc2:${u.bc[1]};--bink:${u.bc[2]};--bem:'${[...u.ge.filter(e=>e.length<=4).slice(0,7)].join(' ')}  '"><div class="hv" id="hv"><div class="hw" id="hw" style="width:${CHW}px;height:${CHH}px">${S.html}</div></div>
 <div class="htb"></div>
-<div class="hhd"><button class="back" data-a="back" data-v="hub">‹ Retour</button><span class="hsp"></span><button class="hb skh" data-a="skip">Passer</button><button class="hb" data-a="hint">Indice · 1 ❄</button><div class="chip">❄ ${FLX()}</div></div>
+<div class="hhd"><button class="back" data-a="back" data-v="hub">‹ Retour</button><span class="hsp"></span><button class="hb skh" data-a="skip">Passer</button><button class="hb hintb" data-a="hint" aria-label="Indice : coûte 1 flocon">${HBI(1)}</button><div class="chip">❄ ${FLX()}</div></div>
 <p class="m hmsg" id="m" role="status" aria-live="polite"></p>
 <div class="skw" id="skw"></div>
 <div class="hbar"><button class="hzb" data-a="chz" data-v="-1" aria-label="Rétrécir">−</button><div class="htr" id="htr" aria-label="À trouver">${tray()}</div><button class="hzb" data-a="chz" data-v="1" aria-label="Agrandir">+</button></div>
@@ -2658,7 +2663,7 @@ const spend=n=>{if(UNL())return true;if(fl<n){msg('Il te manque quelques flocons
 /* progression par niveau : on retrouve sa partie en revenant */
 const pkey=()=>'p:'+cur+':'+lv;
 const keep=()=>{if(!playing||!snap)return;const s=snap();st.set('last',{g:cur,daily,lv,date:today,s});st.set(pkey(),s)};
-const frame=(h,hint)=>{if(!playing)return;mt='m';$('#nav').hidden=true;keep();app.innerHTML=`<div class="top stk">${bk('hub')}${(()=>{const t=isX(cur,lv)?'Fêtes '+xn(cur,lv):'Niveau '+(lv+1);return daily||cur==='quiz'||cur==='match3'?`<span class="tl">${t}</span>`:`<button class="tl tlk" data-a="skip" aria-label="${t} : toucher pour passer ce niveau">${isX(cur,lv)?t:'<span class="tlf">Niveau</span><span class="tls">Niv.</span>&nbsp;'+(lv+1)}<i aria-hidden="true">⏭</i></button>`})()}<div class="tr">${hint?`<button class="hb" data-a="hint">Indice · ${hint} ❄</button>`:''}<div class="chip">❄ ${FLX()}</div></div></div><section class="glass play pg-${cur}" aria-label="${ALL.find(g=>g.id===cur).n}"><p class="m" id="m" role="status" aria-live="polite"></p>${h}</section>${daily?'':'<div class="skw" id="skw"></div>'}`};
+const frame=(h,hint)=>{if(!playing)return;mt='m';$('#nav').hidden=true;keep();app.innerHTML=`<div class="top stk">${bk('hub')}${(()=>{const t=isX(cur,lv)?'Fêtes '+xn(cur,lv):'Niveau '+(lv+1);return daily||cur==='quiz'||cur==='match3'?`<span class="tl">${t}</span>`:`<button class="tl tlk" data-a="skip" aria-label="${t} : toucher pour passer ce niveau">${isX(cur,lv)?t:'<span class="tlf">Niveau</span><span class="tls">Niv.</span>&nbsp;'+(lv+1)}<i aria-hidden="true">⏭</i></button>`})()}<div class="tr">${hint?`<button class="hb hintb" data-a="hint" aria-label="Indice : coûte ${hint} flocon${hint>1?'s':''}">${HBI(hint)}</button>`:''}<div class="chip">❄ ${FLX()}</div></div></div><section class="glass play pg-${cur}" aria-label="${ALL.find(g=>g.id===cur).n}"><p class="m" id="m" role="status" aria-live="polite"></p>${h}</section>${daily?'':'<div class="skw" id="skw"></div>'}`};
 
 /* favoris : une étoile sur chaque jeu */
 const favs=()=>{const f=st.get('fav',null);return f&&Array.isArray(f.l)?f.l:[]};
@@ -2673,6 +2678,7 @@ function home(){nv('games');
  const GO=gOrd(GD.filter(g=>!gHid(g.id))),F=GO.filter(g=>!g.soon&&fv.includes(g.id)),R=GO.filter(g=>!F.includes(g));
  app.innerHTML=`<header class="top"><h1>Nuit de neige</h1><div class="chip" title="Flocons">❄ ${FLX()}</div></header>${wdBlock()}${lastCard()}${F.length?`<h2 class="s shr"><span>Favoris</span>${window.mpLink?mpLink():''}</h2><div class="grid fgrid">${F.map(tile).join('')}</div>${R.length?'<h2 class="s">Autres jeux</h2>':''}`:`<h2 class="s shr"><span>Choisis ta veillée</span>${window.mpLink?mpLink():''}</h2>`}${R.length?`<div class="grid">${R.map(tile).join('')}</div>`:''}<button class="gordb" data-a="gOrd"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4v16M4 8l4-4 4 4M16 20V4M12 16l4 4 4-4"/></svg>Modifier l’ordre des jeux</button>`;gLockTiles();gUnlockCheck();
 }
+const HBI=n=>`<svg class="hbi" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></svg><span>−${n} ❄</span>`;
 /* ordre des jeux choisi par le joueur (les nouveaux jeux se rangent à la fin) */
 const GUNL=['mots','caches','sudoku','match3','colorie','scrabble','croises','phrase','uno','cherche','chess','airhockey','demineur','memo','maze','tournade','solitaire','demenage','quiz'];
 function gOrd(L){const O0=st.get('g:ord',[]),O=O0.length?O0:GUNL;const ix=g=>{const i=O.indexOf(g.id);return i<0?1e3+L.indexOf(g):i};return L.slice().sort((a,b)=>ix(a)-ix(b))}
@@ -4721,7 +4727,7 @@ function soNew(mode,lv){
 function soScreen(){
  soActs();cur='solitaire';nv('games');theme('solitaire');SL.el={};
  const ttl=SL.mode==='lv'?'Niveau '+(SL.lv+1):'Mode infini';
- app.innerHTML=`<div id="sog" class="sog"><div class="top stk"><button class="back" data-a="soBk">‹ Solitaire</button><b class="sott">${ttl}</b><div class="chip">❄ ${FLX()}</div></div><div class="sob" id="sob"></div><p class="m somsg" id="m" role="status" aria-live="polite"></p><div class="sobt"><button class="btn alt" data-a="soUndo">Annuler</button><button class="btn alt" data-a="soHint">Indice · 1 ❄</button><button class="btn alt" data-a="soRe">${SL.mode==='lv'?'Recommencer':'Nouvelle donne'}</button></div></div>`;
+ app.innerHTML=`<div id="sog" class="sog"><div class="top stk"><button class="back" data-a="soBk">‹ Solitaire</button><b class="sott">${ttl}</b><div class="tr"><button class="hb hintb" data-a="soHint" aria-label="Indice : coûte 1 flocon">${HBI(1)}</button><div class="chip">❄ ${FLX()}</div></div></div><div class="sob" id="sob"></div><p class="m somsg" id="m" role="status" aria-live="polite"></p><div class="sobt"><button class="btn alt" data-a="soUndo">Annuler</button><button class="btn alt" data-a="soRe">${SL.mode==='lv'?'Recommencer':'Nouvelle donne'}</button></div></div>`;
  const B=$('#sob');B.addEventListener('click',soTap);
  soLay();window.scrollTo(0,0);
  clearTimeout(SL.rt);addEventListener('resize',soRs)}
@@ -4825,7 +4831,7 @@ function soActs(){if(soAO)return;soAO=true;Object.assign(act,{
  soDrop:()=>{st.set('sol:sv',null);soHub()},
  soUndo:()=>{if(SL.busy||SL.done||!SL.h.length)return;SL.g=JSON.parse(SL.h.pop());SL.hint=null;soSave();soLay();sfx(300,.05)},
  soRe:()=>{if(SL.busy)return;if(SL.mode==='lv')soNew('lv',SL.lv);else soNew('inf',0)},
- soHint:()=>{if(SL.busy||SL.done)return;if(!UNL()){if(fl<1){const m=$('#m');if(m)m.textContent='Il te manque un flocon pour un indice.';return}fl-=1;st.set('fl',fl);const c=$('.chip');if(c)c.textContent='❄ '+FLX()}
+ soHint:()=>{if(SL.busy||SL.done)return;if(!UNL()){if(fl<1){const m=$('#m');if(m)m.textContent='Il te manque un flocon pour un indice.';return}fl-=1;st.set('fl',fl);const c=$('.chip:not(.hintb)');if(c)c.textContent='❄ '+FLX()}
   const h=soHintFind();SL.hint=h.c>=0?h:null;const m=$('#m');if(m)m.textContent=h.t;soLay();if(h.c<0&&SL.g.S.length){const s=$('.sstk');if(s){s.classList.remove('shk');void s.offsetWidth;s.classList.add('shk')}}},
  soFin:()=>soFin()
 })}
@@ -5060,7 +5066,7 @@ function cbHub(){
 function cbScreen(){
  cbActs();cur='colorie';nv('games');theme('colorie');{const n=$('#nav');if(n)n.hidden=true}
  const G=CB.G,D=CBP[CB.l];
- app.innerHTML=`<div class="cbs"><div class="top stk"><button class="back" data-a="cbBk">‹ Coloriage</button><b class="sott">${esc(D.n)}</b><div class="tpr"><button class="chip hintb" data-a="cbHint" aria-label="Indice : coûte 1 flocon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></svg><span>−1 ❄</span></button><div class="chip">❄ ${FLX()}</div></div></div>
+ app.innerHTML=`<div class="cbs"><div class="top stk"><button class="back" data-a="cbBk">‹ Retour</button><span class="tl tlk cbtl"><span class="tlf">Niveau</span><span class="tls">Niv.</span>&nbsp;${CB.l+1}</span><div class="tr"><button class="hb hintb" data-a="cbHint" aria-label="Indice : coûte 1 flocon">${HBI(1)}</button><div class="chip">❄ ${FLX()}</div></div></div>
  <div class="cbpal" role="radiogroup" aria-label="Couleurs">${G.pal.map((c,i)=>`<button class="cbsw${cbLight(c)?' lt':''}" role="radio" data-a="cbSel" data-v="${i+1}" style="--c:${c}" aria-label="Couleur ${i+1}"><b>${i+1}</b><i></i></button>`).join('')}</div>
  <div class="cbw"><canvas id="cbc" aria-label="Dessin à colorier"></canvas></div>
  <p class="m" id="m" role="status" aria-live="polite"></p>
@@ -5234,7 +5240,7 @@ function cdThumb(l){const sc=cdScene(l),K=Math.min(50,10+Math.round(l*40/(CDN-1)
 function cdScreen(){
  cbActs();cur='colorie';nv('games');theme('colorie');{const n=$('#nav');if(n)n.hidden=true}
  const M=CD.M;
- app.innerHTML=`<div class="cds"><div class="top stk"><button class="back" data-a="cdBk">‹ Coloriage</button><b class="sott">Dessin ${CD.l+1}</b><div class="tpr"><button class="chip hintb" data-a="cdHint" aria-label="Indice : coûte 1 flocon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></svg><span>−1 ❄</span></button><div class="chip">❄ ${FLX()}</div></div></div>
+ app.innerHTML=`<div class="cds"><div class="top stk"><button class="back" data-a="cdBk">‹ Retour</button><span class="tl tlk cbtl"><span class="tlf">Niveau</span><span class="tls">Niv.</span>&nbsp;${CD.l+1}</span><div class="tr"><button class="hb hintb" data-a="cdHint" aria-label="Indice : coûte 1 flocon">${HBI(1)}</button><div class="chip">❄ ${FLX()}</div></div></div>
  <div class="cdw" id="cdw"><canvas id="cdc" aria-label="Dessin à colorier : glisse pour te déplacer, pince pour zoomer, touche une zone pour la colorier"></canvas><div class="cdz"><button data-a="cdZ" data-v="1" aria-label="Zoomer">+</button><button data-a="cdZ" data-v="-1" aria-label="Dézoomer">−</button></div></div>
  <div class="cdpal" id="cdpal" role="radiogroup" aria-label="Couleurs">${M.pal.map((c,i)=>`<button class="cdsw${cbLight(c)?' lt':''}" role="radio" data-a="cdSel" data-v="${i+1}" style="--c:${c}" aria-label="Couleur ${i+1}"><b>${i+1}</b></button>`).join('')}</div>
  <p class="m" id="m" role="status" aria-live="polite"></p></div>`;
