@@ -1622,6 +1622,16 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .m3t.an.saved{transition:none!important;animation:m3sav .65s ease-in forwards}
 @keyframes m3sav{0%{opacity:1;scale:1}40%{scale:1.25}100%{opacity:0;scale:.6;translate:0 60%}}
 .m3gn{font-style:normal}
+/* Anagramme en grille croisée */
+.agr{--t:36px;display:grid;grid-auto-rows:var(--t);gap:4px;justify-content:center;margin:16px auto 4px}
+.agr i{border-radius:24%;background:rgba(255,255,255,.1);box-shadow:inset 0 0 0 1px rgba(255,255,255,.24);display:grid;place-items:center;font:800 calc(var(--t)*.56)/1 "Nunito Sans",sans-serif;font-style:normal;color:#fff;transition:background .3s,color .3s}
+.agr i.on{background:color-mix(in srgb,var(--a) 78%,#fff);color:var(--b);box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.agr i.rv{background:rgba(255,255,255,.22);color:#fff}
+.agr i.nw{animation:agp .5s cubic-bezier(.3,1.5,.5,1) backwards;animation-delay:var(--d,0ms)}
+.agr i.fl{animation:agf .6s}
+@keyframes agp{0%{transform:scale(.3);opacity:.2}100%{transform:none;opacity:1}}
+@keyframes agf{40%{transform:scale(1.14);filter:brightness(1.3)}}
+.pv.bad{animation:shk .3s;color:#ffb3b3}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -2005,7 +2015,7 @@ const st={get(k,d){if(k in mem)return mem[k];try{const v=localStorage.getItem(k)
 const sh=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const today=new Date().toLocaleDateString('sv'),di=Math.floor(Date.now()/864e5);
 const dkey=g=>'d:'+g+':'+today,ckey=g=>'c:'+g;
-const NLS={mots:60,memo:30,caches:60,phrase:40,maze:30,match3:65,demenage:11,quiz:1,cherche:20,tournade:40,sudoku:40,ana:46},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
+const NLS={mots:60,memo:30,caches:60,phrase:40,maze:30,match3:70,demenage:11,quiz:1,cherche:20,tournade:40,sudoku:40,ana:46},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
 /* Section temporaire « fêtes » : 10 niveaux spéciaux de plus par jeu (indices nl, nl+1 … nl+9), disponible tout de suite et jusqu’au 11 janvier 2027 inclus ; #noel dans l’adresse force l’affichage.
    Ils ne font pas partie du code de sauvegarde ni de la synchronisation. */
 const NLX=10,xmasOn=()=>{const d=new Date(),m=d.getMonth();return UNL()||location.hash==='#noel'||m===11||(m===0&&d.getDate()<12)},isX=(g,l)=>l>=nl(g),xn=(g,l)=>l-nl(g)+1;
@@ -2583,7 +2593,7 @@ const ORD=['mots','caches','croises','phrase','tournade','maze','memo','sudoku',
 const DL=[
 {id:'wordle',n:'Le mot du jour',ic:'✺',a:'#cfd6ff',b:'#4a5a9a',t:'Le mot du jour',w:'Le mot du jour est trouvé.'}
 ];
-const ANA={id:'ana',n:'Anagramme',ic:'⇄',a:'#c9a2f0',b:'#6b4aa8',t:'Le vent brouille les lettres',s:'Le vent a mélangé les lettres de la roue. Utilise-les toutes, sans en oublier une, pour retrouver le mot caché. Parfois, plusieurs mots se cachent dans les mêmes lettres.',w:'Les lettres retrouvent leur place. Au village de Givre, le vent s’apaise.',nox:1};
+const ANA={id:'ana',n:'Anagramme',ic:'⇄',a:'#c9a2f0',b:'#6b4aa8',t:'Le vent brouille les lettres',s:'Le vent a mélangé les lettres de la roue. Relie-les pour retrouver tous les mots qui s’entremêlent dans la grille. Les autres mots trouvés rapportent des flocons.',w:'Les lettres retrouvent leur place. Au village de Givre, le vent s’apaise.',nox:1};
 const ALL=[...G,ANA,...DL,...SP],lh=g=>DL.some(x=>x.id===g)?dayScreen():hub(g);
 const Q=['Chaque flocon tombe sans se presser, et pourtant la neige couvre tout.','Ce soir, il suffit de respirer lentement. Le reste attendra le matin.','Le silence n’est pas un vide : c’est une couverture.','Tout ce qui est doux prend le temps d’arriver.','Dépose ta journée comme on pose un manteau mouillé près du feu.','Même la forêt la plus dense dort quand la neige tombe.','Tu as fait assez aujourd’hui.','Fermer les yeux, c’est ouvrir la porte aux rêves.','La lune ne se presse jamais, et pourtant elle fait le tour du ciel.','Une pensée à la fois, comme on allume une seule bougie dans le noir.','Les arbres ne s’inquiètent pas de l’hiver : ils savent que le printemps reviendra.','Ce qui n’a pas été fait aujourd’hui attendra sagement demain.','Laisse tes soucis sur le pas de la porte, comme des bottes pleines de neige.','La nuit n’éteint pas le monde, elle le berce.','Respirer lentement, c’est déjà se faire un cadeau.','Même le plus petit feu réchauffe une grande pièce.','Le calme n’est pas l’absence de bruit, c’est un endroit en toi.','Les étoiles brillent mieux quand on cesse de courir.','Chaque soir est une page blanche que le sommeil écrit pour toi.','Tu n’as pas besoin de tout comprendre ce soir. Repose-toi.','La neige efface les traces de la journée et prépare un chemin tout neuf.','Sois doux avec toi-même, comme avec un ami qui rentre du froid.','Le vent peut souffler dehors : ici, la lampe reste allumée.','Ce n’est pas grave d’avancer lentement, tant que tu avances avec douceur.','Une tasse chaude entre les mains, et le monde paraît plus léger.','Les rivières gelées continuent de couler, tout bas, sous la glace.','Demain sera un autre jour, et il saura t’attendre.','Le sommeil est une forêt tranquille où personne ne te presse.','Ferme les volets, éteins les écrans, et laisse la nuit faire le reste.','Il y a de la beauté dans les choses qui prennent leur temps.'];
 const D={
@@ -2687,7 +2697,7 @@ function home(){nv('games');
  const GO=gOrd(GD.filter(g=>!gHid(g.id))),F=GO.filter(g=>!g.soon&&fv.includes(g.id)),R=GO.filter(g=>!F.includes(g));
  app.innerHTML=`<header class="top"><h1>Nuit de neige</h1><div class="chip" title="Flocons">❄ ${FLX()}</div></header>${wdBlock()}${lastCard()}${F.length?`<h2 class="s shr"><span>Favoris</span>${window.mpLink?mpLink():''}</h2><div class="grid fgrid">${F.map(tile).join('')}</div>${R.length?'<h2 class="s">Autres jeux</h2>':''}`:`<h2 class="s shr"><span>Choisis ta veillée</span>${window.mpLink?mpLink():''}</h2>`}${R.length?`<div class="grid">${R.map(tile).join('')}</div>`:''}<button class="gordb" data-a="gOrd"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4v16M4 8l4-4 4 4M16 20V4M12 16l4 4 4-4"/></svg>Modifier l’ordre des jeux</button>`;gLockTiles();gUnlockCheck();
 }
-const HBI=n=>`<svg class="hbi" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></svg><span>−${n} ❄</span>`;
+const HBI=n=>`<svg class="hbi" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></svg><span>${n} ❄</span>`;
 /* ordre des jeux choisi par le joueur (les nouveaux jeux se rangent à la fin) */
 const GUNL=['mots','caches','sudoku','match3','colorie','scrabble','croises','phrase','uno','cherche','chess','airhockey','demineur','memo','maze','tournade','solitaire','demenage','quiz'];
 function gOrd(L){const O0=st.get('g:ord',[]),O=O0.length?O0:GUNL;const ix=g=>{const i=O.indexOf(g.id);return i<0?1e3+L.indexOf(g):i};return L.slice().sort((a,b)=>ix(a)-ix(b))}
@@ -3058,10 +3068,12 @@ const M3G=[{mv:24,k:4,c:{0:10}},{mv:24,k:4,p:600},{mv:24,k:5,c:{0:12,1:12}},{mv:
 /* 50-59 : pièces prises dans les algues */
 {mv:24,k:5,al:4,sh:'n_sq'},{mv:26,k:5,al:6,c:{1:14},sh:'n_circle'},{mv:26,k:6,al:6,rz:'bot2',sh:'igloo'},{mv:26,k:6,al:7,sh:'diamond'},{mv:28,k:6,al:8,m:{m:2},sh:'plus'},{mv:28,k:6,al:8,rz:'ring',sh:'castle'},{mv:28,k:6,al:10,sh:'n_sq'},{mv:30,k:6,al:9,rz:'mid',sh:'crown'},{mv:30,k:6,al:10,p:2400,sh:'heart'},{mv:32,k:6,al:12,rz:'chk',sh:'n_circle'},
 /* 60-64 : petits animaux marins à sauver (les faire descendre jusqu’en bas) */
-{mv:26,k:5,an:2,sh:'n_sq'},{mv:28,k:5,an:3,c:{0:12},sh:'n_circle'},{mv:28,k:6,an:3,rz:'bot2',sh:'diamond'},{mv:30,k:6,an:4,al:5,sh:'castle'},{mv:32,k:6,an:5,sh:'n_sq'}];
+{mv:26,k:5,an:2,sh:'n_sq'},{mv:28,k:5,an:3,c:{0:12},sh:'n_circle'},{mv:28,k:6,an:3,rz:'bot2',sh:'diamond'},{mv:30,k:6,an:4,al:5,sh:'castle'},{mv:32,k:6,an:5,sh:'n_sq'},
+/* 65-69 : défis mêlés */
+{mv:28,k:6,an:3,c:{2:16},sh:'heart'},{mv:30,k:6,rz:'ring',al:6,sh:'n_circle'},{mv:30,k:6,an:4,m:{s:2},sh:'crown'},{mv:32,k:6,rz:'x',al:8,c:{0:18},sh:'castle'},{mv:34,k:6,an:5,rz:'chk',al:6,sh:'n_sq'}];
 const M3AN=['🐠','🦀','🐙','🐡','🦐','🐬'];
 /* ordre de jeu : les niveaux à résidus (dès le 25) et à algues (dès le 40) s’intercalent parmi les anciens */
-const M3ORD=[...Array(24).keys(),40,24,25,41,26,27,42,28,29,43,30,31,44,32,45,50,33,46,51,34,52,47,35,53,36,54,48,37,55,56,38,49,57,39,58,59];M3ORD.splice(54,0,60,61,62,63,64);
+const M3ORD=[...Array(24).keys(),40,24,25,41,26,27,42,28,29,43,30,31,44,32,45,50,33,46,51,34,52,47,35,53,36,54,48,37,55,56,38,49,57,39,58,59];M3ORD.splice(54,0,60,61,62,63,64);{const o=M3ORD.slice(55,65);M3ORD.splice(55,10,o[4],o[0],o[5],o[6],o[1],o[7],o[2],o[8],o[9],o[3])}M3ORD.push(65,66,67,68,69);
 /* résidus : 0 rien, 1 une couche, 2 deux couches */
 function m3RZ(k,A){const N=M3N,P=i=>i>=0&&i<N*N&&A[i],bd=i=>{const r=(i/N)|0,c=i%N;return r===0||r===N-1||c===0||c===N-1||!P(i-1)||!P(i+1)||!P(i-N)||!P(i+N)};
  return A.map((a,i)=>{if(!a)return 0;const r=(i/N)|0,c=i%N;switch(k){case'bot2':return r>=6?1:0;case'bot3':return r>=5?1:0;case'bot2d':return r>=6?2:r===5?1:0;case'mid':return r===3||r===4?1:0;case'ring':return bd(i)?1:0;case'ring2':return bd(i)?2:0;case'core':return bd(i)?0:1;case'chk':return(r+c)%2?0:1;case'x':return r===c||r+c===N-1?1:0;case'all':return 1}return 0})}
@@ -6140,6 +6152,97 @@ function pAna(r){
  act.hint=()=>{const c=W.map((_,i)=>i).filter(i=>!got.includes(i));if(!c.length||!spend(1))return;const i=c[Math.random()*c.length|0];rev[i]=(rev[i]||0)+1;if(rev[i]>=W[i].k.length)got.push(i);wd();sv();if(full())setTimeout(win,900)};
  place();wd();draw();
 }
+/* ---------- Anagramme, façon mots croisés : les mots s’entremêlent dans une petite grille ---------- */
+/* base|lignes|colonnes|mot,ligne,colonne,sens;…|mots bonus */
+const ANL2=[
+"PERLE|5|5|perle,2,0,h;père,1,4,v;réel,0,1,v;pré,4,2,h;ère,0,0,h|ELE EPR ERP LEP LEPRE LER PEL PELE PELER PERL REP",
+"POIRE|6|6|poire,1,1,h;proie,1,1,v;pire,4,0,h;prie,0,4,v|EPI EPO EPR ERP IEP IRE OIE ORI PEI PERI PERO PIERO PIO PIR POI POIR POR PRE PRI REI REP RIE RIO ROI",
+"NEIGE|5|5|neige,3,0,h;génie,0,2,v;gêne,0,4,v;née,1,0,h|EEN EINE ENGIE ENI GIE GIEN IEN IGN INE NIE",
+"GIVRE|7|5|givre,5,0,h;rive,3,2,v;viré,3,0,h;ivre,0,3,v;vie,0,2,h|GER GIE GRE GRI IRE IVG REGI REI RIE VER VIER VIR",
+"HIVER|7|5|hiver,3,0,h;hier,3,0,v;rive,3,4,v;viré,3,2,v;ivre,0,3,v;vie,0,2,h|IRE REI RIE VER VIER VIH VIR",
+"NUAGE|4|8|nuage,2,2,h;ange,0,5,v;nage,0,4,h;une,1,2,v;eau,1,0,h;âge,3,0,h|ANE AUGE AUNE EAN ENA EUN GAN GEA GNA GNU GUE GUEN NEU NGA UNA UNG",
+"FORET|6|6|forêt,3,0,h;forte,1,2,v;fort,1,2,h;fret,0,4,v;ôter,5,0,h|EFT FER FET FOR ORTF OTE OTRE REF ROTE RTE TRO",
+"MATIN|5|5|matin,2,0,h;main,1,1,v;anti,4,0,h;mai,0,3,v;ami,0,2,h|AIN AMIN AMT ANIM IAM IMA ITA MANI MAT MIA MIN MIT MTN NAIT NAMI NAT NTM TAM TIAN TMA",
+"LUTIN|6|5|lutin,1,0,h;nuit,1,4,v;lui,3,2,h;lit,3,2,v;nul,0,1,v;uni,4,0,h|IUT LIN LUN LUT NIL NUI TUI UIT",
+"CONTE|7|7|conte,4,0,h;côté,2,3,v;note,3,1,v;cent,2,3,h;cône,0,5,v;net,6,0,h|CEN CNE CNT COE COEN COT CTE ECT ENC ENT EON NEC NOCE ONT OTE TCE TEC TOC TON",
+"TASSE|5|5|tasse,0,0,h;est,0,4,v;ses,0,2,v;tes,2,0,h;tas,2,0,v|AES ASE ASSE ESA ESS ESTA ETA ETS SAS SEST STASE TASS TESSA TSE TSS",
+"SUCRE|7|7|sucre,4,2,h;reçus,2,4,v;sucer,1,6,v;crues,0,2,v;reçu,0,0,h;rues,0,0,v|CER CRE CRS CRU CRUE CRUS CSU CURE CURES ECU ECUS ERC ESC ESR EUS RCS RES REUS RSE RUE RUS RUSE SEC SECU SER SEU SRC SUC SUCE SUER SUR SURE URS USE",
+"ETOILE|7|9|étoile,5,1,h;toile,2,5,v;élite,2,2,v;télé,3,0,h;oeil,3,5,h;liée,3,8,v;îlot,0,0,v|ELE ELIO ELIT ELO ELOI ETE ETI ILE ITELE LEI LETO LIE LIO LIT LOI LOTI OIE OIT OLE OLI OTE TEE TEL TLE TOI TOLE",
+"BOUGIE|6|7|bougie,2,1,h;bouge,0,3,v;boue,2,1,v;ouïe,4,0,h;oui,0,5,v;bio,0,3,h|BEI BIE BOGUE BUE GIE GIO GOBE GUE GUI OBEI OIE OUE UBI UGO",
+"CHALET|9|6|chalet,3,0,h;tâche,0,1,v;lâche,1,0,h;éclat,3,4,v;halte,7,1,h;cela,5,2,h;chat,5,2,v|ACH ACTE AEC ATH CAE CALE CATE CATH CEA CEL CELTA CETA CHALE CHATEL CHE CLA CLE CTE ECT ELA ETA ETAL HAC HAL HATE HEC HET HTC LAC LACET LAH LAT LECH LHC TAC TACLE TAL TALC TCE TCL TEC TEL THE THEA TLE",
+"REVEIL|6|8|réveil,5,1,h;levier,0,1,v;livrée,0,4,v;lièvre,3,0,h;livre,1,3,h;lever,0,7,v|EELV ELE ELIRE ERE EVE EVEIL EVIER ILE IRE IRL IVRE LEI LER LEV LEVE LEVI LEVRE LIE LIEE LIER LIRE LIV REEL REI RELIE REVE REVEL RIE RIEL RIVE VEL VER VIE VIEL VIER VIL VIR VIRE VIREE",
+"SOLEIL|7|6|soleil,2,0,h;isolé,1,0,v;lois,2,2,v;oeil,0,4,v;soie,5,2,h;les,4,5,v|ELIO ELO ELOI ELS ESO IES ILE ILES ILS IOS ISO LEI LEL LIE LIES LIO LIS LISLE LLS LOI OIE OIES OIS OLE OLI OSE OSI SEI SEL SIE SIL SILO SOI SOL SOLI",
+"TISANE|9|6|tisane,2,0,h;sainte,0,1,v;tenais,5,0,h;saint,0,1,h;santé,4,3,v;tiens,8,1,h|AES AIE AIES AIN AINE AINES AINS AIS AISE AISNE ANE ANES ANIS ANS ANSE ANTI ASE ASI ASIE ASN ASTI EAN ENA ENI ENS ENT ESA EST ESTA ESTI ETA ETAI ETAIN ETAIS ETI ETNA ETS IAE IEN IENA IES INE INSA INTE IST ITA NAIS NAIT NAS NAT NES NET NETS NIE NIES NIET NIS NSA SAIN SAINE SAIT SAN SANT SANTI SATIN SEI SENT SENTI SIA SIE SIEN SINE SINT SITA SITE SNA STAN STI TAIS TAISE TAS TES TIAN TIEN TNS TSE",
+"SOIREE|5|7|soirée,3,1,h;série,0,3,v;soir,0,3,h;rose,0,6,v;rois,0,1,v;soie,1,0,h|EES ERE EROS ESO ESR IES IOS IRE ISO ISR OIE OIES OIS OREE ORES ORI ORS OSE OSEE OSER OSI OSIER REI REIS RES RIE RIES RIO RIOS RIS RISEE ROI ROSEE RSE RSI SEI SER SIE SIRE SOI SOR",
+"ORANGE|8|7|orange,4,1,h;organe,2,5,v;orage,7,1,h;nager,0,2,v;rangé,0,0,h;rang,0,0,v|AERO AGE AGRO ANE ANGE ANO ANR ARG ARGO ARGON ARN ARNO ARON EAN ENA ENORA ENR EON ERGO GAN GAO GAR GARE GEA GER GNA GORAN GRA GRAN GRE NAGE NAO NGA NOA OGRE ONG ORA ORANG ORGA ORGE RAGE REA REGNA REN RENO ROG ROGNE RONA RONGE",
+"MOUFLE|8|6|moufle,3,0,h;foule,3,3,v;moule,2,1,v;floue,5,0,h;fume,0,5,v;oeuf,0,2,h;feu,7,2,h|ELO ELU EMU FEM FLE FLO FLOU FLUO FOL FOU LEM LEU LOM LOME LOUE LUE MEL MELO MEU MLE MOL MOLE MOU MOUE MUE MULE OLE OUE OUM ULM",
+"BONNET|5|8|bonnet,1,2,h;bonne,0,3,v;béton,0,6,v;tonne,3,0,h;bonté,0,0,v;ont,4,5,h|BEN BENTO BON BONN BOT ENT EON NEN NEON NET NON NOTE OTE TON",
+"PATINS|7|8|patins,4,2,h;saint,0,4,v;tapis,0,7,v;sapin,2,2,v;pains,0,0,h;sait,2,2,h;anti,6,1,h;pain,0,0,v|AIN AINS AIS ANIS ANS APS ASI ASN ASP ASTI ATP INSA IST ITA NAIS NAIT NAS NAT NIS NPA NSA PAI PAIS PANS PAS PATIN PIA PINA PINS PISA PSA PTAIN PTI PTIN PTS SAIN SAN SANT SANTI SATIN SIA SINT SITA SNA SPA SPI STAN STI STP TAIS TAS TIAN TNS TPS",
+"TRAINE|7|8|traîne,3,0,h;naître,0,0,v;train,0,3,v;tenir,2,5,v;inter,6,1,h;taire,0,3,h;entra,0,7,v|AIE AIN AINE AIR AIRE ANE ANR ANTI ANTRE ARI ARN ART ARTE ARTI ATR EAN ENA ENI ENR ENT ENTR ETA ETAI ETAIN ETI ETNA IAE IEN IENA INE INRA INTE INTRA IRAN IRE ITA ITER NAIT NAT NET NIE NIER NIET RAIE RAT RATE REA REI REIN REINA REN RENAIT RIA RIANT RIE RIEN RIENT RIT RITA RITE RTE TARI TARN TERNI TIAN TIEN TIR TIRA TIRE TRA TRAN TRI TRIE",
+"NUAGES|7|9|nuages,0,3,h;usage,0,4,v;anges,2,4,h;nuage,4,0,h;gens,2,6,v;ange,3,0,v;sage,3,2,v|AES AGE AGES ANE ANES ANS ANSE ANUS ASE ASN AUGE AUNE AUS EAN EAU ENA ENS ESA EUN EUS GAN GEA GES GNA GNU GUE GUEN GUS NAGE NAGES NAS NES NEU NGA NSA NUES SAN SAU SAUGE SEAU SEGA SEU SNA SUA UNA UNE UNES UNG UNS UNSA USE",
+"SAPINS|5|9|sapins,0,3,h;sapin,0,3,v;pains,0,5,v;sains,0,8,v;sans,4,5,h;pain,2,3,h;sain,4,0,h;pins,1,0,v|AIN AINS AIS ANIS ANS ANSSI APS ASI ASN ASP INSA ISS ISSA ISSN NAIS NAS NIS NPA NSA PAI PAIS PANS PAS PIA PINA PISA PSA SAIS SAN SAS SIA SIS SNA SPA SPAS SPI SSI",
+"TRACES|8|7|traces,0,1,h;cartes,0,4,v;écarts,2,1,h;carte,2,2,v;actes,5,0,h;sacré,2,6,v;écart,3,0,v|ACER ACTE AEC AES ARC ARCS ARES ARS ART ARTE ARTS ASC ASE ASTER ASTRE ATR CAE CAR CAS CASER CASTE CASTRE CATE CEA CER CESAR CEST CETA CRA CRASE CRE CREA CRS CSA CST CTE CTS ECT ERC ESA ESC ESR EST ESTA ETA ETS RAC RACE RASE RAT RATE RATES RATS RCA RCS RCT REA REAC RES RESTA RSA RSE RTC RTE RTS SAC SAR SART SCA SEC SER SERA SERT SRC STAR TAC TARSE TAS TASER TCE TEC TES TRA TRAC TRACE TRES TSAR TSE TSR",
+"BRUINE|7|7|bruine,2,1,h;réuni,2,2,v;brune,4,0,h;nuire,0,4,v;ruine,6,0,h;bien,0,1,h;rien,0,6,v|BEI BEIN BEN BENI BENIR BER BERN BEUR BIE BIR BRE BRI BRIE BRIN BRU BRUN BRUNI BUE BURE BURIN ENI ENR EUN IBN IEN INE IRE NEU NIE NIER NUI NUR REI REIN REN RIE RNB RUBEN RUE RUI UBER UBI UNE UNI UNIE UNIR URNE",
+"FRIMAS|7|9|frimas,1,3,h;frais,0,4,v;maris,0,7,v;mais,3,2,h;mars,3,2,v;mari,5,0,h;faim,2,0,v|AFM AIR AIRS AIS AMF AMI AMIR AMIS AMR ARF ARI ARIF ARIS ARS ASF ASI ASM FAI FAIS FIA FIS FMI FRA FRAI FRS IAM IFA IFRS IMA IRAS IRM IRMA ISF ISR MAI MAS MIA MIRA MIS MSA MSF MSI RAIS RAMI RFA RFI RIA RIF RIMA RIS RMI RSA RSF RSI SAFI SAMI SAR SARI SFR SIA SIAM SIM",
+"ENCORE|6|9|encore,3,1,h;encre,1,3,v;corne,1,5,v;ornée,0,1,v;créé,1,0,h;cône,1,5,h;née,0,8,v;ère,5,3,h|CEE CEN CENE CER CERN CERNE CNE CNR COE COEN COR CORNEE CRE CRO EEN ENC ENR EON ERC EREN NEC NOCE OCRE OREE REN RENO ROC",
+"AUTRES|8|7|autres,2,0,h;sauter,1,0,v;saturé,2,5,v;autre,7,1,h;saute,4,2,h;ratés,0,2,v;très,0,1,h|AES ARES ARS ART ARTE ARTS ARTUS ARU ASE ASTER ASTRE ATR AURE AUS EAU ESA ESR EST ESTA ETA ETAU ETS EUS RASE RAT RATE RATS REA RES RESTA REUS RSA RSE RTE RTS RUE RUES RUS RUSE RUT SAR SART SAU SAUT SEAU SER SERA SERT SEU STAR STU SUA SUER SUR SURE SUT SUTRA TARSE TAS TASER TES TRA TSAR TSE TSR TUA TUERA TUS URS USE",
+"CONTRE|7|9|contre,2,0,h;cornet,0,4,v;notre,4,0,h;noter,2,2,v;trône,5,4,h;conte,2,0,v;tronc,0,0,h;corne,2,7,v|CEN CENT CENTRO CER CERN CNE CNR CNT COE COEN CONE CONTER CONTR COR CORTE COT COTE COTER CRE CRO CTE ECT ENC ENR ENT ENTR EON ERC NEC NET NOCE NOTE OCRE ONT OTE OTER OTRE RCT RECTO REN RENO ROC ROTE RTC RTE TCE TEC TENOR TOC TON TRO TROC TRON",
+"DEPUIS|6|9|depuis,4,0,h;pieds,0,5,v;puis,1,3,h;pied,2,1,v;dise,3,5,h;dupe,0,8,v;sud,3,3,v|DEI DEP DES DEU DEUS DIE DIS DIU DPS DSI DSP DUE DUPES DUS EDI EPI EPIS EUS IDE IDES IEP IES PDS PEI PES PEU PIEU PISE PIU PSE PUE PUES PUISE PUS SED SEI SEU SID SIE SIED SPD SPE SPI SUI SUIE SUP UDI USE",
+"JAMAIS|7|8|jamais,2,1,h;mais,0,5,v;amis,1,3,v;amas,4,0,h;mis,0,5,h;mai,3,0,v;ami,4,2,v|AIS AJA ASI ASM IAM IMA JAI JAIS JAMA JIA MAA MAIA MAJ MAS MIA MSA MSI SAMI SAMIA SIA SIAM SIM",
+"LUMIERE|8|7|lumière,5,0,h;élire,3,3,v;mêler,3,0,v;relié,3,2,h;réélu,7,2,h;leur,0,2,v;lieu,1,0,h;mère,2,6,v|ELE ELU ELUE EMI EMIL EMIR EMU EMUE ERE EUE EULER EURE IEME ILE IME IRE IRL IRM LEI LEM LEMIRE LER LEU LIE LIEE LIER LIEUE LIRE LREM LUE LUI MEI MEIER MEL MELE MER MERLE MEU MEULE MEUR MEURE MIE MIEL MIEU MIRE MLE MUE MUER MULE MUR MURE MURI REEL REI RELU REMUE RIE RIEL RIME RMI RUE RUEE RUEIL RUEL RUI ULM UMR UREE URL",
+"DOUCEUR|8|9|douceur,2,1,h;coudre,0,6,v;coeur,1,2,v;douce,0,3,h;odeur,5,4,h;corde,3,8,v;coude,7,4,h;cour,4,0,h;code,4,0,v|CDR CDU CER CODER COE COR COU COURE COURU COURUE CRE CREDO CRO CRU CRUE CURE DECO DECOR DECU DEO DEU DOC DOCU DOR DORE DOU DOUE DOUR DRU DUC DUE DUO DUR DURE ECROU ECU EDO ERC EURO OCDE OCRE ODE ODER OUD OUE OUED RDC RECU REDUC ROC RODE ROU ROUE RUE UDC",
+"SILENCE|9|7|silence,3,0,h;siècle,3,0,v;scène,2,5,v;liens,5,2,h;liées,7,0,h;lien,5,2,v;ciel,0,2,v;liés,1,1,h|CEE CEI CEL CELI CEN CENE CENI CENS CENSE CESE CIELS CIL CILS CIN CINE CISELE CLE CLES CLI CLIN CLINS CNE CNES CNIL CSI CSN EEN EES EINE ELE ELEC ELS ENC ENI ENS ESC IEN IES ILE ILES ILS INE LCI LCS LEI LES LESE LICE LIE LIEE LIN LIS LISEE NCIS NEC NEE NEES NEL NES NICEE NIE NIECE NIECES NIEL NIELS NIES NIL NILS NIS SCIE SEC SEI SEL SENILE SIC SIE SIEN SIL SINE SNC",
+"BISCUIT|7|8|biscuit,3,0,h;subit,2,4,v;buts,3,0,v;suit,3,2,v;subi,0,1,v;cuit,0,6,v;ici,5,2,h;but,1,0,h;bus,1,5,h|BIC BIS BUIS CIT CSI CST CSU CTS CUI CUITS IBIS IIS IST IUT SIC SITU STI STIB STU STUC SUC SUI SUT TIC TICS TUI TUS UBI UBS UCI UIT USB",
+"ECHARPE|9|8|écharpe,8,1,h;perche,3,1,v;pêcher,3,1,h;parce,4,7,v;pêche,2,5,v;chère,6,1,h;percé,0,3,v;harpe,0,0,h|ACER ACH ACP AEC AERE APEC APRE ARC ARCEP ARCHE ARP CAE CAP CAR CARPE CEA CEE CEP CER CHAPE CHAR CHE CHER CHR CRA CRE CREA CREE CREPE EPR ERC ERE ERP HAC HAP HCR HEC HEP HERA PAR PARC PARE PAREE PEC PERE PEREC PHARE PRA PRE PRECHE RAC RACE RAH RAP RAPE RCA REA REAC RECAP RECEP RECH REP RPC",
+"MANTEAU|8|7|manteau,1,0,h;amant,1,1,v;tenu,5,1,h;menu,0,4,v;muet,3,3,h;une,5,4,v;eau,5,2,v;net,6,4,h|AAN AMAN AMANTE AME AMENA AMT ANA ANE ANTA AUNE EAN EMA EMU ENA ENT ETA ETAU ETNA EUN MAA MANA MANET MANTA MANTE MAT MATANE MATE MAU MEA MENT MET MEU MEUT MTN MUE MUN MUTE NAT NEM NEU NTM NUM NUMA TAM TEM TMA TUA UMA UNA",
+"VILLAGE|8|8|village,3,1,h;vaille,0,3,v;ville,0,3,h;aille,3,5,v;villa,3,1,v;légal,2,7,v;allié,7,1,h;allé,5,0,h|AGE AGI AGILE AIE AIG AIGLE AIL AILE AVI EGAL ELA ELIA ELLA GAI GAIE GALL GALLE GAV GAVE GEA GEL GIA GIE GIL GILLE GLAIVE GLI IAE IGA ILA ILE IVG LAI LAVE LEI LEL LEV LEVA LEVI LGV LIA LIE LIGA LILA LIV LVL VAE VAI VAL VALLE VEGA VEL VIA VIE VIEL VIL VILA VLA",
+"CLOCHER|8|9|clocher,3,2,h;cloche,0,5,v;cocher,0,3,h;chlore,5,0,h;roche,3,0,v;rôle,3,8,v;écho,7,0,h;clé,6,6,h|CCE CEC CEL CER CHE CHER CHO CHOC CHR CLC CLEO CLERC CLORE COC COCHE COE COL COR CRC CRE CRO CROC CROCE CROCHE ELO ERC HCR HEC HERO HOC LCR LECH LER LHC LOC LOR OCH OCRE OLE ORL RECH RHO ROC ROH",
+"SOMMEIL|8|7|sommeil,4,0,h;isolé,0,4,v;mois,2,3,h;mise,0,3,h;lois,1,0,v;oeil,4,1,v;liés,4,6,v;îles,6,1,h;miel,4,3,v|ELIO ELO ELOI ELS EMI EMIL EMIS EMOI ESO IES ILE ILS IME IMMO IOS ISO LEI LEM LES LIE LIMES LIO LIS LOI LOM LOME MEI MEL MELO MEM MEMO MES MIE MILOS MIME MIO MIS MLE MMES MMO MMS MOI MOL MOLE MOME MOMES MOMIE MOMIES MSI OIE OIES OIM OIS OLE OLI OMIS OSE OSI OSM SEI SEL SELIM SEM SIE SIL SILO SIM SOI SOIE SOL SOLI SOM",
+"ETOILES|8|9|étoiles,6,2,h;étoile,1,7,v;élites,1,3,h;toiles,2,2,v;isolée,3,0,h;liste,2,0,v;liées,0,5,v;soit,4,5,h|EES ELE ELIO ELIT ELITE ELO ELOI ELS ESO EST ESTE ESTI ETE ETES ETI ETS IES ILE ILES ILOT ILOTS ILS IOS ISO ISOLE IST ITELE LEI LES LESE LESTE LETO LIE LIEE LIES LIO LIS LISEE LIT LITS LOI LOIS LOTI LOTIS OEIL OIE OIES OIS OIT OLE OLI OSE OSEE OSI OST OSTIE OTE SEI SEL SETE SIE SIL SILO SITE SLT SOI SOIE SOL SOLI SOT STELE STI STO TEE TEL TELE TELES TELS TES TLE TOI TOILE TOLE TOLES TSE",
+"CHALEUR|9|7|chaleur,7,0,h;lâcher,3,4,v;lâche,5,2,h;recul,3,0,h;cruel,0,1,v;arche,1,0,h;hurle,1,6,v;reçu,5,0,v|ACER ACH AEC ALU ALUR ARC ARU AUCH AURE AUREL CAE CALE CALER CAR CARL CARLE CEA CEL CELA CER CHALE CHAR CHARLE CHAU CHE CHER CHR CLA CLE CRA CRAU CRE CREA CRU CRUE CURA CURE EAU ECU ELA ELU ERC HAC HAL HAREL HARU HAU HCR HEC HERA HEU HEUR HUE HUER LAC LAH LAR LARUE LAU LCR LEAU LECH LER LEU LEUR LHC LUCA LUCE LUE RAC RACE RACLE RAH RAL RALE RAUL RCA REA REAC REAL RECH RELU RUCHE RUE RUEL UCL URL",
+"VANILLE|8|9|vanille,4,2,h;vaille,0,7,v;ville,3,5,v;aille,6,2,h;villa,0,3,v;allié,1,0,h;laine,0,0,v;lave,0,5,h|AIE AIL AILE AIN AINE ALINE ALLE ANE AVEN AVI EAN ELA ELAN ELIA ELLA ENA ENI ENV ENVI EVIAN IAE IEN IENA ILA ILAN ILE INE INV LAI LAN LEI LEL LEV LEVA LEVAIN LEVI LIA LIANE LIE LIEN LILA LIN LINA LIV LVL NAIVE NAVI NEL NELLA NIE NIEL NIL VAE VAI VAIN VAINE VAL VALLE VAN VEL VELIN VEN VIA VIAN VIE VIEL VIEN VIL VILA VIN VLA VLAN"
+].map(s=>{const[b,h,c,w,x]=s.split('|');return{b,h:+h,c:+c,W:w.split(';').map(t=>{const[d,r,cc,o]=t.split(',');return{d,k:nk(d),r:+r,c:+cc,h:o==='h'}}),X:new Set(x.split(' ').filter(Boolean))}});
+function pAna2(r){
+ const A=ANL2[lv],W=A.W,b0=A.b,n=b0.length,KS=new Set(W.map(o=>o.k)),rd=rng((lv+11)*2654435761);
+ const ck=(o,j)=>(o.r+(o.h?0:j))+','+(o.c+(o.h?j:0));
+ const CL={};W.forEach((o,i)=>[...o.k].forEach((ch,j)=>{const q=ck(o,j);(CL[q]=CL[q]||{ch,w:[]}).w.push(i)}));
+ /* lettres de la roue mélangées de façon stable, jamais dans l’ordre d’un mot à trouver */
+ const a0=[...b0];let base;for(let t=0;t<40;t++){const a=a0.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rd()*(i+1));[a[i],a[j]]=[a[j],a[i]]}base=a.join('');if(!KS.has(base))break}
+ const ok=r&&r.v===2;
+ let got=ok?r.got.filter(i=>i<W.length):[],rev=ok?r.rev.filter(q=>q in CL):[],bn=ok&&r.bn?r.bn:[],order=[...base].map((_,i)=>i),sel=[],down=false,cu=null;
+ snap=()=>({v:2,got,rev,bn});
+ const full=()=>W.every((o,i)=>got.includes(i));
+ const shown=q=>rev.includes(q)||CL[q].w.some(i=>got.includes(i));
+ /* un mot dont toutes les cases sont visibles (croisements + indices) compte comme trouvé */
+ const auto=()=>W.forEach((o,i)=>{if(!got.includes(i)&&[...o.k].every((_,j)=>shown(ck(o,j))))got.push(i)});
+ const T=()=>Math.max(20,Math.min(42,Math.floor((Math.min(innerWidth,460)-84)/A.c)-4,Math.floor(innerHeight*.4/A.h)-4));
+ const grid=(nw,fl)=>{const e=$('#agr');e.style.setProperty('--t',T()+'px');e.style.gridTemplateColumns=`repeat(${A.c},var(--t))`;
+  e.innerHTML=Object.entries(CL).map(([q,c])=>{const[y,x]=q.split(',').map(Number),on=c.w.some(i=>got.includes(i)),rv=!on&&rev.includes(q),
+   k=nw?nw.indexOf(q):-1,f=fl&&fl.includes(q);
+   return`<i class="${on?'on':rv?'rv':''}${k>=0?' nw':''}${f?' fl':''}" style="grid-row:${y+1};grid-column:${x+1}${k>=0?';--d:'+k*70+'ms':''}">${on||rv?c.ch:''}</i>`}).join('')};
+ frame(`<div class="agr" id="agr"></div><div class="pv" id="pv"></div><div class="whw"><button class="shf" data-a="shuf" aria-label="Mélanger les lettres" title="Mélanger"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></button><div class="whl" id="whl"><svg viewBox="0 0 100 100"><polyline id="ln" points=""/></svg>${[...base].map(c=>`<b>${c}</b>`).join('')}</div></div>`,1);
+ const wh=$('#whl'),bs=[...wh.querySelectorAll('b')],P=[];
+ const place=()=>order.forEach((j,p)=>{const a=-Math.PI/2+p*2*Math.PI/n;P[j]=[50+35*Math.cos(a),50+35*Math.sin(a)];bs[j].style.left=P[j][0]+'%';bs[j].style.top=P[j][1]+'%'});
+ const draw=()=>{bs.forEach((b,j)=>b.classList.toggle('s',sel.includes(j)));$('#pv').textContent=sel.map(j=>base[j]).join('');const p=sel.map(j=>P[j].join(','));if(down&&cu&&sel.length)p.push(cu.join(','));$('#ln').setAttribute('points',p.join(' '))};
+ const hit=e=>{const b=wh.getBoundingClientRect(),x=(e.clientX-b.left)/b.width*100,y=(e.clientY-b.top)/b.height*100;cu=[x,y];for(let j=0;j<n;j++)if(Math.hypot(x-P[j][0],y-P[j][1])<10){const k=sel.indexOf(j);if(k<0)sel.push(j);else if(k===sel.length-2)sel.pop();break}draw()};
+ const cells=i=>[...W[i].k].map((_,j)=>ck(W[i],j));
+ const submit=()=>{const k=sel.map(j=>base[j]).join('');if(!k)return;if(k.length<3)return msg('Trois lettres au moins');
+  const i=W.findIndex(o=>o.k===k);
+  if(i>=0){if(got.includes(i)){grid(null,cells(i));return msg('Déjà trouvé')}
+   const nw=cells(i).filter(q=>!shown(q));got.push(i);auto();sfx(660,.4);vib(15);grid(nw.length?nw:cells(i));msg('✦ '+W[i].d);sv();if(full())setTimeout(win,1100)}
+  else if(A.X.has(k)||GW.has(k)){if(bn.includes(k))return msg('Déjà trouvé');bn.push(k);fl++;st.set('fl',fl);chip();sv();msg('Mot bonus · +1 ❄')}
+  else{const p=$('#pv');p.classList.remove('bad');void p.offsetWidth;p.classList.add('bad');msg('Ce mot dort encore…')}};
+ wh.addEventListener('pointerdown',e=>{down=true;sel=[];try{wh.setPointerCapture(e.pointerId)}catch(_){}hit(e);e.preventDefault()});
+ wh.addEventListener('pointermove',e=>{if(down)hit(e)});
+ const end=()=>{if(!down)return;down=false;submit();sel=[];draw()};
+ wh.addEventListener('pointerup',end);wh.addEventListener('pointercancel',end);wh.addEventListener('contextmenu',e=>e.preventDefault());
+ act.shuf=()=>{order.sort(()=>Math.random()-.5);place();sel=[];draw()};
+ /* indice : une lettre d’un mot encore caché apparaît dans la grille */
+ act.hint=()=>{const c=W.map((_,i)=>i).filter(i=>!got.includes(i));if(!c.length||!spend(1))return;const i=c[Math.random()*c.length|0],h=cells(i).filter(q=>!shown(q)),q=h[Math.random()*h.length|0];
+  rev.push(q);const g0=got.length;auto();grid([q]);sv();if(got.length>g0)msg('✦ '+W[got[got.length-1]].d);if(full())setTimeout(win,1100)};
+ window.__anT=T;if(!window.__anR){window.__anR=1;addEventListener('resize',()=>{const e=$('#agr');if(e&&window.__anT)e.style.setProperty('--t',window.__anT()+'px')})}
+ place();auto();grid();draw();
+}
 function pCross(r){
  const E=CW[lv].map((a,i)=>({w:a[0],c:a[1],r:a[2],x:a[3],h:a[4]==='h',i})),cells={},ok=new Set(r?r.ok:[]);
  const keys=e=>[...e.w].map((_,k)=>(e.r+(e.h?0:k))+','+(e.x+(e.h?k:0)));
@@ -6332,7 +6435,7 @@ act.skip=()=>{const w=$('#skw');if(w)w.innerHTML='<span>Passer ce niveau sans r�
 act.skipn=()=>{const w=$('#skw');if(w)w.innerHTML=''};
 act.skipy=()=>{const g=cur,l=lv;if(!g||daily)return;st.set('k:'+g+':'+l,true);st.set('last',{g,daily:false,lv:l,date:today,done:1});
  if(isX(g,l)?l<nl(g)+NLX-1:l<nl(g)-1){start(g,false,l+1);msg('Niveau passé, sans flocons : tu pourras y revenir.')}else hub(g)};
-function start(g,d,l,r){if(g==='ana'&&(!anaOn()||l>=nl(g)))return hub(anaOn()?'ana':'mots');if(!d&&l>=nl(g)&&!xmasOn())return hub(g);cur=g;daily=d;lv=l;playing=true;wsG=null;if(!r&&!d&&!st.get(ckey(g)+':'+l,false))r=st.get('p:'+g+':'+l,null)||undefined;theme(g,!d&&l>=nl(g));({ana:pAna,mots:pRoue,croises:pCross,phrase:pPhrase,tournade:pTourne,maze:pMaze,memo:pMemo,sudoku:pSudoku,caches:pSearch,match3:pMatch,demenage:pDemen2,quiz:pQuiz,cherche:pCherche})[g](r);window.scrollTo(0,0)}
+function start(g,d,l,r){if(g==='ana'&&(!anaOn()||l>=nl(g)))return hub(anaOn()?'ana':'mots');if(!d&&l>=nl(g)&&!xmasOn())return hub(g);cur=g;daily=d;lv=l;playing=true;wsG=null;if(!r&&!d&&!st.get(ckey(g)+':'+l,false))r=st.get('p:'+g+':'+l,null)||undefined;theme(g,!d&&l>=nl(g));({ana:pAna2,mots:pRoue,croises:pCross,phrase:pPhrase,tournade:pTourne,maze:pMaze,memo:pMemo,sudoku:pSudoku,caches:pSearch,match3:pMatch,demenage:pDemen2,quiz:pQuiz,cherche:pCherche})[g](r);window.scrollTo(0,0)}
 function theme(id,x){const xa=xmAll();m3Mus(id==='match3'&&!x&&!xa);xmMus(!!x||xa);const g=ALL.find(x=>x.id===id),s=document.body.style;s.setProperty('--a',x?'#d9453d':g?g.a:'#a99cf0');s.setProperty('--b',x?'#1f8a52':g?g.b:'#5458AB');$('#tint').classList.toggle('on',!!g);document.body.classList.toggle('g',!!g);document.body.classList.toggle('xm',!!x);const p=$('#pat');if(g)p.className='pt-'+id+' on';else p.classList.remove('on')}
 function nv(t){if(t!=='aqua')['#aqsh','#aqbd'].forEach(q=>{const e=$(q);if(e){e.classList.remove('open');e.style.visibility='hidden';e.style.transition='none'}});playing=false;wsG=null;theme(null);if(t!=='set'){rc=false;Sy.done='';Sy.pv=null;Sy.err=''}const n=$('#nav');n.hidden=false;n.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===t))}
 function resume(){const l=st.get('last',null);if(!l||l.daily||l.g==='melange'||!(G.some(g=>g.id===l.g)||l.g==='ana'))return;const X=isX(l.g,l.lv);if(X&&!xmasOn())return;if(l.done)return(X?l.lv<nl(l.g)+NLX-1:l.lv<nl(l.g)-1)?start(l.g,false,l.lv+1):hub(l.g);start(l.g,false,l.lv,l.s)}
@@ -8321,6 +8424,11 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches)snow();
  for(let i=9;i>=0;i--)mv(60+i,65+i);for(let i=59;i>=54;i--)mv(i,i+5);
  const l=st.get('last',null);if(l&&l.g==='match3'&&!l.daily&&l.lv>=54){l.lv+=5;st.set('last',l)}
  st.set('mig:m365',1)}catch(e){}})();
+(()=>{try{if(st.get('mig:m370',0))return;const P=[ckey('match3')+':','p:match3:','k:match3:'],mv=(a,b)=>P.forEach(pf=>{const o=st.get(pf+a,null);st.set(pf+b,o);st.set(pf+a,null)});
+ for(let i=9;i>=0;i--)mv(65+i,70+i);
+ const M={59:55,55:56,60:57,61:58,56:59,62:60,57:61,63:62,64:63,58:64},V={};P.forEach(pf=>Object.keys(M).forEach(k=>{V[pf+k]=st.get(pf+k,null)}));P.forEach(pf=>Object.keys(M).forEach(k=>st.set(pf+M[k],V[pf+k])));
+ const l=st.get('last',null);if(l&&l.g==='match3'&&!l.daily){if(l.lv>=65)l.lv+=5;else if(M[l.lv]!==undefined)l.lv=M[l.lv];st.set('last',l)}
+ st.set('mig:m370',1)}catch(e){}})();
 
 (()=>{try{if(st.get('mig:dm11',0))return;const P=[ckey('demenage')+':','p:demenage:','k:demenage:'];for(let i=9;i>=0;i--)P.forEach(pf=>{const o=st.get(pf+(10+i),null);st.set(pf+(11+i),o);st.set(pf+(10+i),null)});for(let i=0;i<10;i++)st.set('p:demenage:'+i,null);st.set('mig:dm11',1)}catch(e){}})();
 
