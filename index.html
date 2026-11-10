@@ -4630,10 +4630,10 @@ function unCs(k,dl){try{if(typeof AC==='undefined'||!AC||!mg||!prefs().sfx)retur
   g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(v,t0+att);g.gain.exponentialRampToValueAtTime(.0001,t0+att+dec);s.connect(f);f.connect(g);g.connect(mg);s.start(t0,Math.random()*.3);s.stop(t0+att+dec+.03)};
  const thud=(t0,v)=>{const o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.setValueAtTime(160,t0);o.frequency.exponentialRampToValueAtTime(80,t0+.06);g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(v,t0+.01);g.gain.exponentialRampToValueAtTime(.0001,t0+.09);o.connect(g);g.connect(mg);o.start(t0);o.stop(t0+.08)};
  /* sons doux : bruit filtré grave, attaques lentes, volume bas */
- if(k==='slide')nz(t,700,1700,.6,.022,.04,.14,'lowpass');
- else if(k==='place'){nz(t,1500,700,.6,.035,.006,.07,'lowpass');thud(t,.035)}
- else if(k==='deal')nz(t,1100,2200,.6,.026,.012,.07,'lowpass');
- else if(k==='shuffle'){let x=t;for(let i=0;i<12;i++){nz(x,1300+Math.random()*500,900,.7,.016+Math.random()*.008,.006,.03,'lowpass');x+=.034-i*.001}nz(x+.03,500,1500,.5,.025,.08,.16,'lowpass')}
+ if(k==='slide')nz(t,700,1700,.6,.06,.04,.14,'lowpass');
+ else if(k==='place'){nz(t,1500,700,.6,.13,.006,.07,'lowpass');thud(t,.08)}
+ else if(k==='deal')nz(t,1100,2200,.6,.085,.012,.07,'lowpass');
+ else if(k==='shuffle'){let x=t;for(let i=0;i<12;i++){nz(x,1300+Math.random()*500,900,.7,.06+Math.random()*.03,.006,.03,'lowpass');x+=.034-i*.001}nz(x+.03,500,1500,.5,.07,.08,.16,'lowpass')}
 }catch(e){}}
 function unFly(html,a,b,dl,done,J,du){J=J||{r:0,x:0,y:0};
  if(!a||!b||!b.width){done&&done();return}
