@@ -1740,7 +1740,10 @@ html:has(.pg-tetris),body:has(.pg-tetris){touch-action:none;overscroll-behavior:
 .play.pg-tetris{margin-inline:-12px}
 .ttrow{display:flex;align-items:stretch;justify-content:center;gap:6px}
 .ttrow .ttw{margin:0}
-.ttrow .ttc{flex-direction:column;justify-content:flex-end;margin:0;gap:10px}
+.ttrow .ttc{flex-direction:column;justify-content:center;margin:0;gap:10px;padding-bottom:12%}
+.ttrow .ttc [data-k=l],.ttrow .ttc [data-k=r]{margin-bottom:14px;height:72px}
+.ttrow.nob .ttc{display:none}
+.ttch{font-size:12px;opacity:.75;max-width:240px;margin:4px 0 0!important}
 .ttrow .ttc button{width:clamp(40px,10.5vw,50px);height:62px;border-radius:13px}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
@@ -6557,12 +6560,13 @@ function pTetris(r){
  frame(`<div class="tth"><button class="ttbx" data-a="ttHold" aria-label="Garder la pièce"><small>Garde</small><canvas id="tthc"></canvas></button>
   <div class="ttmid"><div class="ttl"><span id="ttln">0</span> / ${L.goal} lignes</div><div class="ttbar"><i id="ttbr"></i></div><div class="tts"><span id="ttsc">0</span> pts</div></div>
   <div class="ttbx ttnx"><small>Suivante</small><canvas id="ttnc"></canvas></div></div>
-  <div class="ttrow"><div class="ttc ttcl"><button data-k="t" aria-label="Tourner"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button><button data-k="l" aria-label="Gauche"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button></div><div class="ttw" id="ttw"><canvas id="ttcv" class="ttcv"></canvas><div class="ttpop" id="ttpop"></div><div class="ttov" id="ttov" hidden></div>
+  <div class="ttrow"><div class="ttc ttcl"><button data-k="l" aria-label="Gauche"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button data-k="t" aria-label="Tourner"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button><button data-k="g" aria-label="Garder ou échanger la pièce"><svg viewBox="0 0 24 24"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg></button></div><div class="ttw" id="ttw"><canvas id="ttcv" class="ttcv"></canvas><div class="ttpop" id="ttpop"></div><div class="ttov" id="ttov" hidden></div>
    <button class="ttpz" data-a="ttPause" aria-label="Pause"><svg viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg></button></div>
-  <div class="ttc ttcr"><button data-k="d" aria-label="Descendre"><svg viewBox="0 0 24 24"><path d="M12 5v13M6 12l6 6 6-6"/></svg></button><button data-k="h" aria-label="Faire tomber"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></button><button data-k="r" aria-label="Droite"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div></div>`,1);
+  <div class="ttc ttcr"><button data-k="r" aria-label="Droite"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button><button data-k="d" aria-label="Descendre"><svg viewBox="0 0 24 24"><path d="M12 5v13M6 12l6 6 6-6"/></svg></button><button data-k="h" aria-label="Faire tomber"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></button></div></div>`,1);
  const cv=$('#ttcv'),ctx=cv.getContext('2d'),wr=$('#ttw'),hc=$('#tthc'),nc=$('#ttnc');
  /* tailles */
- const size=()=>{const avW=Math.min(($('.ttrow')||wr.parentElement).clientWidth||320,520)-2*(Math.min(50,Math.max(40,innerWidth*.105))+6)-6,avH=Math.max(300,innerHeight-168);cell=Math.max(14,Math.floor(Math.min(avW/W,avH/H)));
+ const ctl=()=>st.get('tt:ctl',''),applyCtl=()=>{const r=$('.ttrow');if(r)r.classList.toggle('nob',ctl()==='g')};
+ const size=()=>{applyCtl();const avW=Math.min(($('.ttrow')||wr.parentElement).clientWidth||320,520)-(ctl()==='g'?4:2*(Math.min(50,Math.max(40,innerWidth*.105))+6)+6),avH=Math.max(300,innerHeight-168);cell=Math.max(14,Math.floor(Math.min(avW/W,avH/H)));
   cv.width=W*cell*dpr;cv.height=H*cell*dpr;cv.style.width=W*cell+'px';cv.style.height=H*cell+'px';
   const s=Math.max(8,Math.round(cell*.42));hc.width=4*s*dpr;hc.height=2.4*s*dpr;hc.style.width=4*s+'px';hc.style.height=2.4*s+'px';
   nc.width=4*s*dpr;nc.height=2.4*s*dpr;nc.style.width=4*s+'px';nc.style.height=2.4*s+'px';SP={};side()};
@@ -6607,7 +6611,7 @@ function pTetris(r){
  const winNow=()=>{done=true;cur=null;const now=performance.now();for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(Bd[y][x]){flash.push([x,y,now+(H-y)*25]);if(Math.random()<.5)parts.push({x:x+.5,y:y+.5,vx:(Math.random()-.5)*6,vy:-Math.random()*8-2,l:1.3,c:'#ffffff',s:.1+Math.random()*.12})}
   pop('Bravo !',4);setTimeout(win,1600)};
  act.ttHold=doHold;
- act.ttPause=()=>{if(done||over)return;paused=!paused;const o=$('#ttov');if(paused){o.hidden=false;o.innerHTML='<div><b>Pause</b><p>Les flocons attendent.</p><button class="btn" data-a="ttPause">Reprendre</button></div>';requestAnimationFrame(()=>o.classList.add('on'))}else hideOv()};
+ act.ttPause=()=>{if(done||over)return;paused=!paused;const o=$('#ttov');if(paused){o.hidden=false;o.innerHTML=`<div><b>Pause</b><p>Les flocons attendent.</p><button class="btn" data-a="ttPause">Reprendre</button><button class="btn alt" data-a="ttCtl" data-v="${ctl()==='g'?'b':'g'}">${ctl()==='g'?'Jouer avec les boutons':'Jouer au doigt seulement'}</button></div>`;requestAnimationFrame(()=>o.classList.add('on'))}else hideOv()};
  act.ttCont=()=>{if(!over||!spend(1))return;for(let y=0;y<10;y++)Bd[y].fill(null);
   /* la moitié haute s’envole en flocons */
   hideOv();over=false;for(let i=0;i<40;i++)parts.push({x:Math.random()*W,y:Math.random()*10,vx:(Math.random()-.5)*4,vy:-Math.random()*5,l:1,c:'#ffffff',s:.1+Math.random()*.1});spawn()};
@@ -6623,7 +6627,7 @@ function pTetris(r){
  /* commandes : boutons (appui long répété), gestes sur la grille, clavier */
  const rep={};
  document.querySelectorAll('.ttc button').forEach(b=>{const k=b.dataset.k;
-  const fire=()=>{if(k==='l')mv(-1);else if(k==='r')mv(1);else if(k==='t')rot(1);else if(k==='d'){soft=true;down()}else if(k==='h')hard()};
+  const fire=()=>{if(k==='l')mv(-1);else if(k==='r')mv(1);else if(k==='t')rot(1);else if(k==='d'){soft=true;down()}else if(k==='h')hard();else if(k==='g')doHold()};
   b.addEventListener('pointerdown',e=>{e.preventDefault();b.classList.add('on');fire();if('lrd'.includes(k)){clearTimeout(rep[k]);rep[k]=setTimeout(function f(){fire();rep[k]=setTimeout(f,k==='d'?45:55)},170)}});
   const up=()=>{b.classList.remove('on');clearTimeout(rep[k]);if(k==='d')soft=false};['pointerup','pointerleave','pointercancel'].forEach(t=>b.addEventListener(t,up))});
  /* jeu au doigt sur tout l’écran : toucher = tourner, glisser à gauche/droite = déplacer (case par case), glisser vers le bas = tout en bas, vers le haut = garder */
@@ -6684,7 +6688,11 @@ function pTetris(r){
   draw(now)};
  const rs=()=>{if(!cv.isConnected){removeEventListener('resize',rs);return}size()};addEventListener('resize',rs);
  window.__TTDBG={fill:()=>{const cs=cellsOf(cur.k,cur.r,cur.x,0),my=Math.max(...cs.map(c=>c[1]));for(let x=0;x<W;x++)Bd[H-1][x]=cs.some(c=>c[0]===x&&c[1]===my)?null:'T'},st:()=>({lines,clr:!!clr,cur:cur&&{...cur},done})};
- fresh();size();hud();if(L.gb)msg('Des rangées de glace attendent au fond : creuse jusqu’à elles.');requestAnimationFrame(tick);
+ /* au premier lancement : choisir de jouer avec ou sans boutons */
+ act.ttCtl=v=>{st.set('tt:ctl',v==='g'?'g':'b');size();if(paused){paused=false;hideOv()}};
+ fresh();size();hud();
+ if(!ctl()){paused=true;const o=$('#ttov');o.hidden=false;o.innerHTML='<div><b>Comment veux-tu jouer ?</b><p>Tu pourras changer plus tard dans la pause.</p><button class="btn" data-a="ttCtl" data-v="b">Avec les boutons</button><button class="btn alt" data-a="ttCtl" data-v="g">Au doigt seulement</button><p class="ttch">Au doigt : touche pour tourner, glisse à gauche ou à droite pour déplacer, glisse vers le bas pour lâcher, vers le haut pour garder.</p></div>';requestAnimationFrame(()=>o.classList.add('on'))}
+if(L.gb)msg('Des rangées de glace attendent au fond : creuse jusqu’à elles.');requestAnimationFrame(tick);
 }
 function pCross(r){
  const E=CW[lv].map((a,i)=>({w:a[0],c:a[1],r:a[2],x:a[3],h:a[4]==='h',i})),cells={},ok=new Set(r?r.ok:[]);
