@@ -4619,6 +4619,7 @@ function unUiAnim(S,myT){
     if(c)c.animate([{filter:'saturate(.75) brightness(.9)'},{filter:e.classList.contains('no')?'saturate(.5) brightness(.8)':'saturate(1) brightness(1)'}],{duration:350,delay:dl,fill:'backwards'})}
    else{if(P.ok[i])e.animate([{transform:'translateY(-12px)'},{transform:'translateY(0)'}],{duration:320,delay:dl,easing:'ease-in-out',fill:'backwards'});
     if(c)c.animate([{filter:P.no[i]?'saturate(.5) brightness(.8)':'saturate(1) brightness(1)'},{filter:'saturate(.75) brightness(.9)'}],{duration:320,delay:dl,fill:'backwards'})}})}
+ if(P.d!==undefined&&P.d!==S.d)unCs('rev',250);
  if(P.d!==undefined&&P.d!==S.d)document.querySelectorAll('.unar').forEach(e=>e.animate([{transform:'scale(1) rotate(0)',opacity:1},{transform:'scale(.2) rotate(-180deg)',opacity:.2,offset:.5},{transform:'scale(1.15) rotate(-360deg)',opacity:1,offset:.8},{transform:'scale(1) rotate(-360deg)',opacity:1}],{duration:700,easing:'ease-in-out'}))}
 /* animations : la carte jouée part de la main du joueur vers le talon ; les cartes piochées partent de la pioche vers le joueur */
 const unJ=i=>{const h=Math.abs(Math.sin(i*12.9898+4.1)*43758.5453)%1,g=Math.abs(Math.sin(i*78.233+1.7)*12543.11)%1,k=Math.abs(Math.sin(i*39.425+.3)*9871.7)%1;return{r:(h-.5)*12,x:(g-.5)*8,y:(k-.5)*6}};
@@ -4631,7 +4632,11 @@ function unCs(k,dl){try{if(typeof AC==='undefined'||!AC||!mg||!prefs().sfx)retur
  const thud=(t0,v)=>{const o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.setValueAtTime(160,t0);o.frequency.exponentialRampToValueAtTime(80,t0+.06);g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(v,t0+.01);g.gain.exponentialRampToValueAtTime(.0001,t0+.09);o.connect(g);g.connect(mg);o.start(t0);o.stop(t0+.08)};
  /* sons de cartes : frottement net, petit « toc » boisé, rondeur douce */
  const wood=(t0,f,v,d)=>{[[1,1],[2.3,.35]].forEach(([m,k])=>{const o=a.createOscillator(),g=a.createGain();o.type=m>1?'triangle':'sine';o.frequency.setValueAtTime(f*m*1.25,t0);o.frequency.exponentialRampToValueAtTime(f*m,t0+.03);g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(v*k,t0+.003);g.gain.exponentialRampToValueAtTime(.0001,t0+d);o.connect(g);g.connect(mg);o.start(t0);o.stop(t0+d+.02)})};
- if(k==='slide'){nz(t,900,2600,.9,.028,.025,.09);nz(t,3000,3000,.5,.0055,.03,.07,'highpass')}
+ const tone=(t0,f0,f1,v,d)=>{const o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.setValueAtTime(f0,t0);o.frequency.exponentialRampToValueAtTime(f1,t0+d);g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(v,t0+.015);g.gain.exponentialRampToValueAtTime(.0001,t0+d);o.connect(g);g.connect(mg);o.start(t0);o.stop(t0+d+.02)};
+ /* tour passé : deux petites notes qui descendent ; changement de sens : un souffle qui tourne et deux notes qui montent */
+ if(k==='skip'){tone(t,620,560,.05,.12);tone(t+.11,440,390,.045,.18)}
+ else if(k==='rev'){nz(t,500,2200,.8,.03,.12,.14);nz(t+.2,2200,600,.8,.025,.04,.2);tone(t+.05,392,400,.035,.14);tone(t+.2,523,530,.04,.22)}
+ else if(k==='slide'){nz(t,900,2600,.9,.028,.025,.09);nz(t,3000,3000,.5,.0055,.03,.07,'highpass')}
  else if(k==='place'){nz(t,2000,1400,1.2,.032,.002,.03)}
  else if(k==='deal'){nz(t,2400,1800,1.3,.07,.002,.028);wood(t,300,.05,.06)}
  else if(k==='shuffle'){let x=t;for(let i=0;i<16;i++){nz(x,2200+Math.random()*900,1800,1.5,.045+Math.random()*.02,.002,.02);x+=.03-i*.0009}nz(x+.02,800,2800,.8,.06,.05,.12);wood(x+.2,220,.1,.1)}
@@ -4654,7 +4659,7 @@ function unAnim(S){
  if(pl>=0){const tg=$('.untop>.untc');if(tg){tg.style.visibility='hidden';const from=pl===me&&fr?fr:R(seat(pl)),fx=UN.flyX=N.X;
   const tr=tg.style.transform;tg.style.transform='none';const tgr=R(tg.firstElementChild||tg);tg.style.transform=tr;
   unFly(unCard(N.top,'big'+(N.top[0]==='k'?' ukc u-'+S.c:'')),from,tgr,0,()=>{if(UN.flyX===fx)UN.flyX=0;const t2=$('.untop>.untc');if(t2)t2.style.visibility=''},unJ(N.X-1));dl=330}}
- if(pl>=0&&['s','d','f'].includes(N.top[1])){const n=S.S.length,v=((pl+S.d)%n+n)%n;if(v!==pl){UN.hit={i:v,u:Date.now()+750+dl,t:N.top[1]==='s'?'Passe !':N.top[1]==='d'?'+2':'+4'};setTimeout(()=>{const e=v===me?$('.unme'):$(`.unp[data-i="${v}"]`);if(e&&!e.classList.contains('hit')){e.classList.add('hit');e.insertAdjacentHTML('afterbegin',`<em class="unhb">${UN.hit.t}</em>`)}},dl);document.querySelectorAll('.unp.on,.unme.on').forEach(e=>e.classList.remove('on'));document.querySelectorAll('.ucd').forEach(e=>{e.classList.remove('ok','no');e.classList.add('wt')});setTimeout(()=>{document.querySelectorAll('.unp.hit,.unme.hit').forEach(e=>e.classList.remove('hit'));document.querySelectorAll('.unhb').forEach(e=>e.remove());if($('#ung')&&UN.g)unDraw()},dl+760)}}
+ if(pl>=0&&['s','d','f'].includes(N.top[1])){const n=S.S.length,v=((pl+S.d)%n+n)%n;if(v!==pl){UN.hit={i:v,u:Date.now()+750+dl,t:N.top[1]==='s'?'Passe !':N.top[1]==='d'?'+2':'+4'};if(N.top[1]==='s')unCs('skip',dl+60);setTimeout(()=>{const e=v===me?$('.unme'):$(`.unp[data-i="${v}"]`);if(e&&!e.classList.contains('hit')){e.classList.add('hit');e.insertAdjacentHTML('afterbegin',`<em class="unhb">${UN.hit.t}</em>`)}},dl);document.querySelectorAll('.unp.on,.unme.on').forEach(e=>e.classList.remove('on'));document.querySelectorAll('.ucd').forEach(e=>{e.classList.remove('ok','no');e.classList.add('wt')});setTimeout(()=>{document.querySelectorAll('.unp.hit,.unme.hit').forEach(e=>e.classList.remove('hit'));document.querySelectorAll('.unhb').forEach(e=>e.remove());if($('#ung')&&UN.g)unDraw()},dl+760)}}
  const src=R($('.unk .ucard')||$('.unk'));
  N.H.forEach((h,i)=>{const k=Math.min(4,h-P.H[i]+(i===pl?1:0));if(k<=0)return;
   for(let j=0;j<k;j++){
