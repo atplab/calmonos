@@ -6929,7 +6929,9 @@ var ttMu={on:false,L:null,T:0,s:0,t:0,rep:0,
    this.t+=E;this.s=(this.s+1)%128;if(this.s===0)this.rep++}},
  loop(){clearTimeout(this.T);if(!this.on)return;if(!this.L&&typeof AC!=='undefined'&&AC){this.build();apply()}if(this.L&&!document.hidden&&prefs().music)this.tick();this.T=setTimeout(()=>this.loop(),110)},
  vol(m){if(!this.L||typeof AC==='undefined'||!AC)return;this.L.out.gain.setTargetAtTime(m&&this.on?.85:0,AC.currentTime,.6)},
- set(v){v=!!v;if(v===this.on)return;this.on=v;if(v){this.t=0;this.s=0;this.rep=0;this.build();this.loop()}else clearTimeout(this.T);if(typeof AC!=='undefined'&&AC&&typeof music!=='undefined'&&music)apply()}};
+ set(v){v=!!v;if(v===this.on)return;this.on=v;
+  /* entre la partie et l’accueil du jeu, la musique reprend là où elle était au lieu de recommencer */
+  if(v){this.t=0;if(Date.now()-(this.off||0)>45000){this.s=0;this.rep=0}this.build();this.loop()}else{clearTimeout(this.T);this.off=Date.now()}if(typeof AC!=='undefined'&&AC&&typeof music!=='undefined'&&music)apply()}};
 function ttMus(v){if(typeof ttMu==='object')ttMu.set(v)}
 function pCross(r){
  const E=CW[lv].map((a,i)=>({w:a[0],c:a[1],r:a[2],x:a[3],h:a[4]==='h',i})),cells={},ok=new Set(r?r.ok:[]);
