@@ -6553,11 +6553,10 @@ function pTetris(r){
   <div class="ttbx ttnx"><small>Suivante</small><canvas id="ttnc"></canvas></div></div>
   <div class="ttw" id="ttw"><canvas id="ttcv" class="ttcv"></canvas><div class="ttpop" id="ttpop"></div><div class="ttov" id="ttov" hidden></div>
    <button class="ttpz" data-a="ttPause" aria-label="Pause"><svg viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg></button></div>
-  <div class="ttc"><button data-k="l" aria-label="Gauche"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button data-k="r" aria-label="Droite"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button><button data-k="t" aria-label="Tourner"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button><button data-k="d" aria-label="Descendre"><svg viewBox="0 0 24 24"><path d="M12 5v13M6 12l6 6 6-6"/></svg></button><button data-k="h" aria-label="Faire tomber"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></button></div>
-  <p class="ttk">Touche l’écran pour tourner, glisse à gauche ou à droite pour déplacer, glisse vers le bas pour lâcher.</p>`,1);
+  <div class="ttc"><button data-k="l" aria-label="Gauche"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button data-k="r" aria-label="Droite"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button><button data-k="t" aria-label="Tourner"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button><button data-k="d" aria-label="Descendre"><svg viewBox="0 0 24 24"><path d="M12 5v13M6 12l6 6 6-6"/></svg></button><button data-k="h" aria-label="Faire tomber"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></button></div>`,1);
  const cv=$('#ttcv'),ctx=cv.getContext('2d'),wr=$('#ttw'),hc=$('#tthc'),nc=$('#ttnc');
  /* tailles */
- const size=()=>{const avW=Math.min(wr.parentElement.clientWidth||320,460)-8,avH=Math.max(300,innerHeight-250);cell=Math.max(14,Math.floor(Math.min(avW/W,avH/H)));
+ const size=()=>{const avW=Math.min(wr.parentElement.clientWidth||320,460)-8,avH=Math.max(300,innerHeight-218);cell=Math.max(14,Math.floor(Math.min(avW/W,avH/H)));
   cv.width=W*cell*dpr;cv.height=H*cell*dpr;cv.style.width=W*cell+'px';cv.style.height=H*cell+'px';
   const s=Math.max(8,Math.round(cell*.42));hc.width=4*s*dpr;hc.height=2.4*s*dpr;hc.style.width=4*s+'px';hc.style.height=2.4*s+'px';
   nc.width=4*s*dpr;nc.height=2.4*s*dpr;nc.style.width=4*s+'px';nc.style.height=2.4*s+'px';SP={};side()};
