@@ -6668,14 +6668,16 @@ function pTetris(r){
  let g0=null;
  const gd=e=>{if(!cv.isConnected){document.removeEventListener('pointerdown',gd,true);return}
   if(e.button>0||done||over||paused||!$('#ttw'))return;const t=e.target;if(t.closest&&t.closest('button,a,input,.top,.ttov,.nav,nav,dialog'))return;
-  e.preventDefault();g0={x:e.clientX,y:e.clientY,t:performance.now(),ax:0,ax0:0,m:false,v:false,id:e.pointerId}};
+  e.preventDefault();g0={x:e.clientX,y:e.clientY,t:performance.now(),ax:0,ax0:0,m:false,v:false,id:e.pointerId,hd:false};
+  /* maintenir le doigt sans bouger : la pièce descend plus vite */
+  const g1=g0;clearTimeout(g0.ht);g0.ht=setTimeout(()=>{if(g0===g1&&!g1.m&&!g1.v&&cv.isConnected){g1.hd=true;soft=true}},260)};
  const gm=e=>{if(!g0||e.pointerId!==g0.id)return;if(!cv.isConnected){g0=null;return}const c=Math.max(18,cell*.9),DX=e.clientX-g0.x,DY=e.clientY-g0.y;
-  if(!g0.m&&!g0.v&&Math.hypot(DX,DY)>10)g0.v=Math.abs(DY)>Math.abs(DX)*1.2;
+  if(!g0.m&&!g0.v&&!g0.hd&&Math.hypot(DX,DY)>10)g0.v=Math.abs(DY)>Math.abs(DX)*1.2;
   if(g0.v)return;let dx=DX/c-g0.ax;while(dx>=1){mv(1);g0.ax++;dx--;g0.m=true}while(dx<=-1){mv(-1);g0.ax--;dx++;g0.m=true}};
- const gu=e=>{if(!g0||e.pointerId!==g0.id)return;const dt=performance.now()-g0.t,dx=e.clientX-g0.x,dy=e.clientY-g0.y,v=g0.v;g0=null;if(!cv.isConnected)return;
+ const gu=e=>{if(!g0||e.pointerId!==g0.id)return;const dt=performance.now()-g0.t,dx=e.clientX-g0.x,dy=e.clientY-g0.y,v=g0.v,hd=g0.hd;clearTimeout(g0.ht);g0=null;if(hd){soft=false;return}if(!cv.isConnected)return;
   if(v&&dy>30)hard();else if(v&&dy<-40)doHold();else if(Math.hypot(dx,dy)<12&&dt<350)rot(1)};
  document.addEventListener('pointerdown',gd,true);
- const gM=e=>{if(!gclean())gm(e)},gU=e=>{if(!gclean())gu(e)},gc=()=>{g0=null;gclean()};
+ const gM=e=>{if(!gclean())gm(e)},gU=e=>{if(!gclean())gu(e)},gc=()=>{if(g0){clearTimeout(g0.ht);if(g0.hd)soft=false}g0=null;gclean()};
  const gclean=()=>{if(!cv.isConnected){document.removeEventListener('pointermove',gM);document.removeEventListener('pointerup',gU);document.removeEventListener('pointercancel',gc);return true}};
  document.addEventListener('pointermove',gM);document.addEventListener('pointerup',gU);document.addEventListener('pointercancel',gc);
  const kd=e=>{if(!cv.isConnected){removeEventListener('keydown',kd);removeEventListener('keyup',ku);return}
