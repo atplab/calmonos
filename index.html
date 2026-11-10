@@ -6735,8 +6735,8 @@ const BKH=[[0,0,1,1,0,0,1,1,0,0],[0,1,1,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1,1,1],[1,
 function bkLv(l){const f=l%BKN,k=Math.floor(l/BKN),sp=f%4===3?BKS[((f-3)/4)%BKS.length]:'',R=rng((l+11)*7919+3);
  return{f,sp,R,rows:Math.min(9,4+Math.floor(f/7)),pat:f<3?f:(f*5+k)%9,h2:Math.min(.42,f*.011),h3:f>24?Math.min(.22,(f-24)*.012):0,v:330*(1+Math.min(.22,f*.005)+k*.05)}}
 function pBrick(r){
- const L=bkLv(lv),LW=360,LH=600,C=10,M=12,GP=5,BW=(LW-2*M-GP*(C-1))/C,BH=17,TOP=34,PY=560,BR=6.5;
- let bricks=[],balls=[],caps=[],parts=[],pops=[],state='aim',aimA=0,aiming=false,lives=3,score=0,combo=0,paused=false,over=false,done=false,shield=false;
+ const L=bkLv(lv),LW=360,LH=600,C=10,M=12,GP=5,BW=(LW-2*M-GP*(C-1))/C,BH=17,TOP=34,PY=530,BR=6.5,NY=566,BKP=(lv>=24?'mwns':lv>=14?'mwn':lv>=7?'mw':lv>=2?'m':'');
+ let net=null,bricks=[],balls=[],caps=[],parts=[],pops=[],state='aim',aimA=0,aiming=false,lives=3,score=0,combo=0,paused=false,over=false,done=false,shield=false;
  let px=LW/2,ptx=LW/2,pw=84,pwT=84,wideT=0,slowT=0,squash=0,hits=0,dropY=0,dropT=0,lastT=0,sc=1,dpr=Math.min(2,devicePixelRatio||1),total=0,t0=performance.now();
  snap=()=>({});
  const R=L.R;
@@ -6783,7 +6783,7 @@ function pBrick(r){
  const breakB=(b,now,chain)=>{if(b.dead)return;b.dead=now;combo++;score+=10*b.max+(combo>2?combo*2:0);
   burst(b.x+b.w/2,b.y+b.h/2,b.t==='cry'?'#ffe38a':b.t==='bomb'?'#ff8f7a':b.c,b.t==='cry'?22:12,b.t==='cry'?150:90);sfx(520+Math.min(12,combo)*35,.05);
   if(b.t==='cry')pop('Cristal libéré !',1);
-  if(!chain&&b.t!=='cry'&&Math.random()<.1)caps.push({x:b.x+b.w/2,y:b.y+b.h/2,k:'mws'[Math.random()*3|0]});
+  if(!chain&&b.t!=='cry'&&BKP&&Math.random()<.1)caps.push({x:b.x+b.w/2,y:b.y+b.h/2,k:BKP[Math.random()*BKP.length|0]});
   if(b.t==='bomb'){wr.classList.remove('bump');void wr.offsetWidth;wr.classList.add('bump');vib(15);pops.push({x:b.x+b.w/2,y:b.y+b.h/2,t:now});
    setTimeout(()=>bricks.forEach(o=>{if(!o.dead&&o.t!=='ice'&&Math.abs(o.row-b.row)<=1&&Math.abs(o.col-b.col)<=1)hitB(o,performance.now(),1,true)}),90)}
   if(combo>=5&&combo%5===0)pop('Enchaînement ×'+combo)};
@@ -6793,7 +6793,7 @@ function pBrick(r){
  const lose=()=>{over=true;const o=$('#bkov');o.hidden=false;o.innerHTML=`<div><b>La balle s’est envolée</b><p>Il reste ${goalLeft()} brique${goalLeft()>1?'s':''}.</p><button class="btn" data-a="bkCont">Continuer · 1 ❄</button><button class="btn alt" data-a="bkRe">Recommencer</button></div>`;requestAnimationFrame(()=>o.classList.add('on'))};
  const hideOv=()=>{const o=$('#bkov');o.classList.remove('on');o.hidden=true};
  act.bkCont=()=>{if(!over||!spend(1))return;hideOv();over=false;lives=3;resetBall();hud()};
- act.bkRe=()=>{hideOv();fresh()};
+ act.bkRe=()=>{hideOv();net=null;fresh()};
  act.bkPause=()=>{if(done||over)return;paused=!paused;const o=$('#bkov');if(paused){o.hidden=false;o.innerHTML='<div><b>Pause</b><p>La balle attend.</p><button class="btn" data-a="bkPause">Reprendre</button></div>';requestAnimationFrame(()=>o.classList.add('on'))}else hideOv()};
  /* indice : un filet de neige protège le sol pour un rebond */
  act.hint=()=>{if(done||over||shield)return;if(!spend(1))return;shield=true;msg('Un filet de neige protège le sol pour un rebond.')};
@@ -6828,6 +6828,9 @@ function pBrick(r){
     if(dx*dx+dy*dy<BR*BR){const ox=Math.min(bl.x+BR-b.x,b.x+b.w-(bl.x-BR)),oy=Math.min(bl.y+BR-b.y,b.y+b.h-(bl.y-BR));
      if(ox<oy){bl.vx=bl.x<b.x+b.w/2?-Math.abs(bl.vx):Math.abs(bl.vx);bl.x+=bl.x<b.x+b.w/2?-ox:ox}else{bl.vy=bl.y<b.y+b.h/2?-Math.abs(bl.vy):Math.abs(bl.vy);bl.y+=bl.y<b.y+b.h/2?-oy:oy}
      hitB(b,now,1);break}}
+   /* petite plateforme de secours : un rebond, puis elle se brise */
+   if(net&&!net.br&&bl.vy>0&&bl.y+BR>=NY&&bl.y-BR<=NY+8&&Math.abs(bl.x-net.x)<net.w/2+BR){bl.vy=-Math.abs(bl.vy);bl.y=NY-BR;net.br=now;sfx(560,.08);vib(8);
+    for(let q=0;q<16;q++)parts.push({x:net.x+(Math.random()-.5)*net.w,y:NY+4,vx:(Math.random()-.5)*120,vy:-Math.random()*120,l:1,c:'#c9f0ff',s:1.2+Math.random()*2})}
    /* jamais trop à plat */
    const s=Math.hypot(bl.vx,bl.vy);if(Math.abs(bl.vy)<s*.28){bl.vy=Math.sign(bl.vy||-1)*s*.28;bl.vx=Math.sign(bl.vx)*Math.sqrt(s*s-bl.vy*bl.vy)}
    if(bl.y-BR>LH){if(shield){shield=false;bl.y=LH-BR;bl.vy=-Math.abs(bl.vy);burst(bl.x,LH-4,'#ffffff',20,120);sfx(700,.08)}else return false}}
@@ -6842,8 +6845,11 @@ function pBrick(r){
   /* ondes des briques qui éclatent */
   pops=pops.filter(p=>now-p.t<420);pops.forEach(p=>{const t=(now-p.t)/420;ctx.strokeStyle='rgba(255,170,140,'+(.7*(1-t))+')';ctx.lineWidth=3*(1-t)+.5;ctx.beginPath();ctx.arc(p.x,p.y,10+70*ease(t),0,7);ctx.stroke()});
   /* capsules bonus */
-  caps.forEach(c=>{const col={m:'#93d8f5',w:'#b3e8a6',s:'#c8adff'}[c.k];ctx.fillStyle=col;ctx.shadowColor=col;ctx.shadowBlur=10;ctx.beginPath();ctx.roundRect(c.x-15,c.y-7,30,14,7);ctx.fill();ctx.shadowBlur=0;
-   ctx.fillStyle='#24305e';ctx.font='800 10px "Nunito Sans",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText({m:'×3',w:'↔',s:'◔'}[c.k],c.x,c.y+.5)});
+  caps.forEach(c=>{const col={m:'#93d8f5',w:'#b3e8a6',s:'#c8adff',n:'#ffdc8f'}[c.k];ctx.fillStyle=col;ctx.shadowColor=col;ctx.shadowBlur=10;ctx.beginPath();ctx.roundRect(c.x-15,c.y-7,30,14,7);ctx.fill();ctx.shadowBlur=0;
+   ctx.fillStyle='#24305e';ctx.font='800 10px "Nunito Sans",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText({m:'×3',w:'↔',s:'◔',n:'▁'}[c.k],c.x,c.y+.5)});
+  /* petite plateforme de secours */
+  if(net){const t=net.br?(now-net.br)/320:0,ap=net.t?Math.min(1,(now-net.t)/250):1;if(t>=1)net=null;else{ctx.globalAlpha=(1-t)*ap;ctx.fillStyle='#c9f0ff';ctx.shadowColor='rgba(150,220,255,.9)';ctx.shadowBlur=10;
+   const w=net.w*(net.br?1+.3*t:.6+.4*ease(ap));ctx.beginPath();ctx.roundRect(net.x-w/2,NY+(net.br?t*10:0),w,7,3.5);ctx.fill();ctx.shadowBlur=0;ctx.globalAlpha=1}}
   /* filet */
   if(shield){ctx.strokeStyle='rgba(200,235,255,'+(.55+.25*Math.sin(now/260))+')';ctx.lineWidth=3;ctx.setLineDash([2,6]);ctx.lineCap='round';ctx.beginPath();ctx.moveTo(6,LH-4);ctx.lineTo(LW-6,LH-4);ctx.stroke();ctx.setLineDash([])}
   /* visée */
@@ -6865,13 +6871,13 @@ function pBrick(r){
    if(state==='aim'&&balls[0]){balls[0].x=px;balls[0].y=PY-BR-1}
    if(state==='play'){balls=balls.filter(bl=>{bl.tr.push([bl.x,bl.y]);if(bl.tr.length>9)bl.tr.shift();return stepBall(bl,dt,now)});
     if(!balls.length&&!done&&!over){lives--;hud();sfx(200,.25);vib(20);if(lives<=0)lose();else{msg('La balle est tombée. Vise à nouveau.');resetBall()}}}
-   caps=caps.filter(c=>{c.y+=110*dt;if(c.y>PY-6&&c.y<PY+14&&Math.abs(c.x-px)<pw/2+12){sfx(780,.08);burst(c.x,c.y,'#ffffff',10,80);
-     if(c.k==='w'){wideT=12;pop('Plateforme large')}else if(c.k==='s'){slowT=10;pop('Balle douce')}else if(balls[0]&&state==='play'){const b=balls[0],s=Math.hypot(b.vx,b.vy),a=Math.atan2(b.vx,-b.vy);[-.35,.35].forEach(d=>balls.push({x:b.x,y:b.y,vx:s*Math.sin(a+d),vy:-s*Math.cos(a+d),tr:[]}));pop('Trois balles !')}return false}return c.y<LH+20})}
+   caps=caps.filter(c=>{c.y+=110*dt;if(c.y>PY-6&&c.y<PY+16&&Math.abs(c.x-px)<pw/2+12){sfx(780,.08);burst(c.x,c.y,'#ffffff',10,80);
+     if(c.k==='n'){net={x:Math.max(40,Math.min(LW-40,px)),w:72,t:performance.now(),br:0};pop('Petite plateforme')}else if(c.k==='w'){wideT=12;pop('Plateforme large')}else if(c.k==='s'){slowT=10;pop('Balle douce')}else if(balls[0]&&state==='play'){const b=balls[0],s=Math.hypot(b.vx,b.vy),a=Math.atan2(b.vx,-b.vy);[-.35,.35].forEach(d=>balls.push({x:b.x,y:b.y,vx:s*Math.sin(a+d),vy:-s*Math.cos(a+d),tr:[]}));pop('Trois balles !')}return false}return c.y<LH+20})}
   draw(now)};
  const rs=()=>{if(!cv.isConnected){removeEventListener('resize',rs);return}size()};addEventListener('resize',rs);
- window.__BKDBG={st:()=>({state,lives,left:goalLeft(),balls:balls.length,done}),clear:()=>{bricks.forEach(b=>{if(b.t!=='ice')b.dead=performance.now()});checkWin()}};
+ window.__BKDBG={st:()=>({state,lives,left:goalLeft(),balls:balls.length,done}),net:()=>{net={x:px+120,w:72,t:performance.now(),br:0};state='play';balls=[{x:px+120,y:400,vx:0,vy:300,tr:[]}]},st2:()=>({net:net&&{...net},b:balls[0]&&{...balls[0],tr:0}}),clear:()=>{bricks.forEach(b=>{if(b.t!=='ice')b.dead=performance.now()});checkWin()}};
  size();fresh();
- msg({multi:'Trois balles partent ensemble.',ice:'Les briques grises sont en glace : elles ne cassent pas.',move:'Les rangées glissent doucement.',bomb:'Les briques rouges éclatent et cassent leurs voisines.',cry:'Libère seulement les cristaux.',down:'Les briques descendent un peu tous les 6 rebonds.'}[L.sp]||'Glisse pour viser, lâche pour tirer, puis glisse pour déplacer la plateforme.');
+ msg({multi:'Trois balles partent ensemble.',ice:'Les briques grises sont en glace : elles ne cassent pas.',move:'Les rangées glissent doucement.',bomb:'Les briques rouges éclatent et cassent leurs voisines.',cry:'Libère seulement les cristaux.',down:'Les briques descendent un peu tous les 6 rebonds.'}[L.sp]||{2:'Nouveau bonus ×3 : attrape la capsule bleue pour trois balles.',7:'Nouveau bonus ↔ : la capsule verte élargit la plateforme.',14:'Nouveau bonus : la capsule jaune pose une petite plateforme en dessous, pour un rebond.',24:'Nouveau bonus ◔ : la capsule mauve ralentit la balle.'}[lv]||'Glisse pour viser, lâche pour tirer, puis glisse pour déplacer la plateforme.');
  requestAnimationFrame(tick);
 }
 function pCross(r){
