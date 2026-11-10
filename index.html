@@ -1728,6 +1728,14 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 html:has(.pg-tetris),body:has(.pg-tetris){touch-action:none;overscroll-behavior:none}
 .pg-tetris{user-select:none;-webkit-user-select:none}
 .ttov[hidden],.g2ov[hidden]{display:none}
+/* Blocs : sans carte autour, grille plus grande */
+.play.pg-tetris{background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;padding:4px 0 0}
+.pg-tetris>p:first-child:empty{display:none}
+.pg-tetris .tth{margin:0 0 8px}
+.pg-tetris .ttbx{padding:4px 7px;gap:2px}
+.pg-tetris .ttbx small{font-size:9px}
+.pg-tetris .ttw{padding:3px}
+.pg-tetris .ttk{font-size:11px;margin-top:4px}
 
 .soc .m{margin:10px 0 0}.soc .m:empty{min-height:0;margin:0}
 .sb.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:var(--soft)}
@@ -6542,17 +6550,17 @@ function pTetris(r){
   nxt=[...bag(),...bag()];hold=null;held=false;lines=0;score=0;combo=-1;parts=[];flash=[];clr=null;rowOff=null;hintP=null;over=false;spawn()};
  frame(`<div class="tth"><button class="ttbx" data-a="ttHold" aria-label="Garder la pièce"><small>Garde</small><canvas id="tthc"></canvas></button>
   <div class="ttmid"><div class="ttl"><span id="ttln">0</span> / ${L.goal} lignes</div><div class="ttbar"><i id="ttbr"></i></div><div class="tts"><span id="ttsc">0</span> pts</div></div>
-  <div class="ttbx ttnx"><small>Suivantes</small><canvas id="ttnc"></canvas></div></div>
+  <div class="ttbx ttnx"><small>Suivante</small><canvas id="ttnc"></canvas></div></div>
   <div class="ttw" id="ttw"><canvas id="ttcv" class="ttcv"></canvas><div class="ttpop" id="ttpop"></div><div class="ttov" id="ttov" hidden></div>
    <button class="ttpz" data-a="ttPause" aria-label="Pause"><svg viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg></button></div>
   <div class="ttc"><button data-k="l" aria-label="Gauche"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button data-k="r" aria-label="Droite"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button><button data-k="t" aria-label="Tourner"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button><button data-k="d" aria-label="Descendre"><svg viewBox="0 0 24 24"><path d="M12 5v13M6 12l6 6 6-6"/></svg></button><button data-k="h" aria-label="Faire tomber"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></button></div>
   <p class="ttk">Touche l’écran pour tourner, glisse à gauche ou à droite pour déplacer, glisse vers le bas pour lâcher.</p>`,1);
  const cv=$('#ttcv'),ctx=cv.getContext('2d'),wr=$('#ttw'),hc=$('#tthc'),nc=$('#ttnc');
  /* tailles */
- const size=()=>{const avW=Math.min(wr.parentElement.clientWidth||320,420),avH=Math.max(300,innerHeight-400);cell=Math.max(14,Math.floor(Math.min(avW/W,avH/H)));
+ const size=()=>{const avW=Math.min(wr.parentElement.clientWidth||320,460)-8,avH=Math.max(300,innerHeight-250);cell=Math.max(14,Math.floor(Math.min(avW/W,avH/H)));
   cv.width=W*cell*dpr;cv.height=H*cell*dpr;cv.style.width=W*cell+'px';cv.style.height=H*cell+'px';
-  const s=Math.max(9,Math.round(cell*.5));hc.width=4*s*dpr;hc.height=2.4*s*dpr;hc.style.width=4*s+'px';hc.style.height=2.4*s+'px';
-  nc.width=4*s*dpr;nc.height=7.2*s*dpr;nc.style.width=4*s+'px';nc.style.height=7.2*s+'px';SP={};side()};
+  const s=Math.max(8,Math.round(cell*.42));hc.width=4*s*dpr;hc.height=2.4*s*dpr;hc.style.width=4*s+'px';hc.style.height=2.4*s+'px';
+  nc.width=4*s*dpr;nc.height=2.4*s*dpr;nc.style.width=4*s+'px';nc.style.height=2.4*s+'px';SP={};side()};
  /* petites images de bloc, prêtes à dessiner */
  let SP={};const spr=(k,c)=>{const id=k+c;if(SP[id])return SP[id];const o=document.createElement('canvas'),s=Math.ceil(c*dpr);o.width=o.height=s;const g=o.getContext('2d'),col=TTC[k],p=s*.06,rr=s*.22;
   g.beginPath();g.roundRect(p,p,s-2*p,s-2*p,rr);const gr=g.createLinearGradient(0,0,0,s);gr.addColorStop(0,'#ffffff');gr.addColorStop(.18,col);gr.addColorStop(1,col);g.fillStyle=gr;g.globalAlpha=.95;g.fill();
@@ -6636,7 +6644,7 @@ function pTetris(r){
  function side(){const s=hc.width/4;const dp=(g,k,ox,oy,a)=>{if(!k)return;const cs=TTR[k][0],mx=Math.min(...cs.map(c=>c[0])),Mx=Math.max(...cs.map(c=>c[0])),my=Math.min(...cs.map(c=>c[1])),My=Math.max(...cs.map(c=>c[1]));
    const w=(Mx-mx+1)*s,h=(My-my+1)*s,im=spr(k,s/dpr);g.globalAlpha=a;cs.forEach(([x,y])=>g.drawImage(im,ox-w/2+(x-mx)*s,oy-h/2+(y-my)*s,s,s));g.globalAlpha=1};
   let g=hc.getContext('2d');g.clearRect(0,0,hc.width,hc.height);dp(g,hold,hc.width/2,hc.height/2,held?.4:1);
-  g=nc.getContext('2d');g.clearRect(0,0,nc.width,nc.height);nxt.slice(0,3).forEach((k,i)=>dp(g,k,nc.width/2,s*(1.2+i*2.4),i?.75:1))}
+  g=nc.getContext('2d');g.clearRect(0,0,nc.width,nc.height);dp(g,nxt[0],nc.width/2,nc.height/2,1)}
  /* boucle de dessin */
  const ease=t=>1-Math.pow(1-Math.min(1,Math.max(0,t)),3);
  const draw=now=>{const c=cell*dpr;ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);
