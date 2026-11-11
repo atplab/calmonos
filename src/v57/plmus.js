@@ -83,3 +83,12 @@ act.socPlay=v=>{const[k,f]=String(v).split(':');if(!f||!SO.P[f])return;const w=(
  else if(k==='scrabble'){act.scrOpen(f);w(()=>{const o=SC.G[f];if(SC.fid===f&&(!o||o.e))act.scNew()},1000)}
  else if(k==='uno'){act.open('uno');w(()=>{UN.cfg.fr=[f];act.unMake()},80)}
  else if(k==='airhockey'){act.open('airhockey');w(()=>act.ahAsk(f),80)}};
+
+const INFN={g2048:1,tetris:1,planetes:1};
+const infKey=g=>g==='planetes'?(st.get('pl:mode','')==='orbite'?'o':'c'):'s';
+const infBest=g=>{try{return(st.get('inf:'+g,{})||{})[infKey(g)]||0}catch(e){return 0}};
+const infSave=(g,s)=>{try{const o=Object.assign({},st.get('inf:'+g,{})||{}),k=infKey(g);if(s>(o[k]||0)){o[k]=s;st.set('inf:'+g,o);return true}}catch(e){}return false};
+const infDone=g=>{let n=0;try{for(let l=0;l<nl(g);l++)if(st.get(ckey(g)+':'+l,false))n++}catch(e){}return n};
+const infOk=g=>UNL()||infDone(g)>=20;
+function infCard(g){const b=infBest(g);if(!infOk(g))return`<section class="rc plmode" data-g="🔒"><div class="rc-t"><small>Mode infini</small><b>Verrouillé</b><span>Termine 20 niveaux pour le débloquer (${infDone(g)} / 20).</span></div></section>`;return`<section class="rc plmode" data-g="∞"><div class="rc-t"><small>Mode infini</small><b>Sans fin</b><span>Joue normalement, jusqu’à la fin de partie.${g==='planetes'?' Avec le mode choisi ci-dessus.':''}${b?' Record : '+b+' pts.':''}</span></div><div class="plseg"><button class="on" data-a="infGo" data-v="${g}">Jouer</button></div></section>`}
+act.infGo=v=>{if(!INFN[v]||gLock(v)||gHid(v)||!infOk(v))return;INFG=v;cur=v;daily=false;lv=0;playing=true;wsG=null;theme(v,false);({g2048:p2048,tetris:pTetris,planetes:pPlan})[v](undefined);window.scrollTo(0,0)};

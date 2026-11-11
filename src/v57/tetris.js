@@ -14,10 +14,10 @@ const ttLv=l=>{const f=l%TTN,k=Math.floor(l/TTN),[t,j]=TTO[f],i=t==='s'?Math.rou
  const b={goal:Math.min(30,10+Math.floor(i/4)*2),ms:Math.max(170,880-i*17-k*60),gb:t==='n'&&i%5===4?Math.min(8,3+Math.floor(i/8)):0};
  return t==='s'?Object.assign(b,TTS[j]):b};
 function pTetris(r){
- const L=ttLv(lv),W=L.w||10,H=20,R0=rng((lv+5)*40503+9),GT=L.pc?'p':L.cr?'c':L.mc?'m':'l',G=L.pc||L.cr||L.mc||L.goal,UN={p:'pièces posées',c:'cristaux',m:'coups multiples',l:'lignes'}[GT];
+ const INF=INFG==='tetris',L=INF?{goal:1e9,ms:800,gb:0}:ttLv(lv),W=L.w||10,H=20,R0=rng((lv+5)*40503+9),GT=L.pc?'p':L.cr?'c':L.mc?'m':'l',G=L.pc||L.cr||L.mc||L.goal,UN={p:'pièces posées',c:'cristaux',m:'coups multiples',l:'lignes'}[GT];
  let pcs=0,crs=0,mcs=0,placed=0,Bd,cur=null,nxt=[],hold=null,held=false,lines=0,score=0,acc=0,lockT=0,lockN=0,soft=false,done=false,over=false,paused=false,clr=null,combo=-1;
  let vx=0,vy=0,fadeIn=0,rotT=0,trail=null,parts=[],flash=[],rowOff=null,hintP=null,lastT=0,cell=24,dpr=Math.min(2,devicePixelRatio||1);
- snap=()=>({});
+ snap=INF?null:()=>({});
  const bag=()=>{const a=L.bag?[...L.bag,...L.bag]:Object.keys(TTP);for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
  const fresh=()=>{Bd=[...Array(H)].map(()=>Array(W).fill(null));
   for(let g=0;g<L.gb;g++){const y=H-1-g,h=R0()*W|0;for(let x=0;x<W;x++)if(x!==h&&R0()<.86)Bd[y][x]='G'}
@@ -25,7 +25,7 @@ function pTetris(r){
   if(L.cr){const rs=[...Array(L.gb).keys()].sort(()=>R0()-.5);for(let c=0;c<L.cr;c++){const y=H-1-rs[c%rs.length],xs=[...Array(W).keys()].filter(x=>Bd[y][x]==='G');if(xs.length)Bd[y][xs[R0()*xs.length|0]]='C'}}
   nxt=[...bag(),...bag()];hold=null;held=false;lines=0;pcs=0;crs=0;mcs=0;placed=0;score=0;combo=-1;parts=[];flash=[];clr=null;rowOff=null;hintP=null;over=false;spawn()};
  frame(`<div class="tth"><button class="ttbx" data-a="ttHold" aria-label="Garder la pièce"><small>Garde</small><canvas id="tthc"></canvas></button>
-  <div class="ttmid"><div class="ttl"><span id="ttln">0</span> / ${G} ${UN}</div><div class="ttbar"><i id="ttbr"></i></div><div class="tts"><span id="ttsc">0</span> pts</div></div>
+  <div class="ttmid"><div class="ttl"><span id="ttln">0</span>${INF?'':' / '+G} ${UN}</div><div class="ttbar"><i id="ttbr"></i></div><div class="tts"><span id="ttsc">0</span> pts</div></div>
   <div class="ttbx ttnx"><small>Suivante</small><canvas id="ttnc"></canvas></div></div>
   <div class="ttrow"><div class="ttc ttcl"><button data-k="l" aria-label="Gauche"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button data-k="t" aria-label="Tourner"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button><button data-k="g" aria-label="Garder ou échanger la pièce"><svg viewBox="0 0 24 24"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg></button></div><div class="ttw" id="ttw"><canvas id="ttcv" class="ttcv"></canvas><div class="ttpop" id="ttpop"></div><div class="ttov" id="ttov" hidden></div>
    <button class="ttpz" data-a="ttPause" aria-label="Pause"><svg viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg></button></div>
@@ -80,8 +80,8 @@ function pTetris(r){
   lines+=n;hud();if(prog()>=G){winNow();return}next()};
  function prog(){return GT==='p'?pcs:GT==='c'?crs:GT==='m'?mcs:lines}
  const pop=(t,n)=>{if(!t)return;const e=$('#ttpop');e.textContent=t;e.className='ttpop';void e.offsetWidth;e.className='ttpop on'+(n>=4?' big':'')};
- const hud=()=>{const v=prog();$('#ttln').textContent=Math.min(v,G);$('#ttsc').textContent=score;$('#ttbr').style.width=Math.min(100,v*100/G)+'%'};
- const lose=()=>{over=true;cur=null;sfx(200,.3);const o=$('#ttov');o.hidden=false;o.innerHTML=`<div><b>La pile touche le ciel</b><p>${prog()} ${UN} sur ${G}.</p><button class="btn" data-a="ttCont">Continuer · 1 ❄</button><button class="btn alt" data-a="ttRe">Recommencer</button></div>`;requestAnimationFrame(()=>o.classList.add('on'))};
+ const hud=()=>{const v=prog();if(INF)L.ms=Math.max(110,800-Math.floor(v/10)*50);$('#ttln').textContent=Math.min(v,G);$('#ttsc').textContent=score;$('#ttbr').style.width=(INF?v%10*10:Math.min(100,v*100/G))+'%'};
+ const lose=()=>{over=true;cur=null;sfx(200,.3);const o=$('#ttov');o.hidden=false;if(INF){const nb=infSave('tetris',score);o.innerHTML=`<div><b>La pile touche le ciel</b><p>${lines} ligne${lines>1?'s':''} · ${score} pts${nb?' · nouveau record !':' · record : '+infBest('tetris')+' pts'}</p><button class="btn" data-a="ttRe">Rejouer</button></div>`;requestAnimationFrame(()=>o.classList.add('on'));return}o.innerHTML=`<div><b>La pile touche le ciel</b><p>${prog()} ${UN} sur ${G}.</p><button class="btn" data-a="ttCont">Continuer · 1 ❄</button><button class="btn alt" data-a="ttRe">Recommencer</button></div>`;requestAnimationFrame(()=>o.classList.add('on'))};
  const hideOv=()=>{const o=$('#ttov');o.classList.remove('on');o.hidden=true};
  const winNow=()=>{done=true;cur=null;const now=performance.now();for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(Bd[y][x]){flash.push([x,y,now+(H-y)*25]);if(Math.random()<.5)parts.push({x:x+.5,y:y+.5,vx:(Math.random()-.5)*6,vy:-Math.random()*8-2,l:1.3,c:'#ffffff',s:.1+Math.random()*.12})}
   pop('Bravo !',4);setTimeout(win,1600)};

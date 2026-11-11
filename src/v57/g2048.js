@@ -7,17 +7,17 @@ const G2L=[[4,64],[4,128],[4,128],[4,256],[3,64],[4,256],[5,256],[4,512],[3,128]
 [5,256,{rk:[6,18]}],[5,128,{cnt:3}],[4,512,{g4:1}],[5,0,{sc:2000,mv:300}],[5,1024,{rk:[24]}]];
 const G2C={2:['#eef4fb','#3b4a6b'],4:['#d9e7f7','#3b4a6b'],8:['#aed3f6','#24406b'],16:['#82b8f0','#fff'],32:['#6895ea','#fff'],64:['#7a6ee6','#fff'],128:['#9a62d8','#fff'],256:['#c45cc4','#fff'],512:['#e0609a','#fff'],1024:['#f0846a','#fff'],2048:['#f5b942','#fff'],4096:['#ffd96a','#6b4a10']};
 function p2048(r){
- const [n,T,O={}]=G2L[lv%G2L.length],D=110,RK=new Set(O.rk||[]),CN=O.cnt||1,MV=O.mv||0,SG=O.sc||0;
+ const INF=INFG==='g2048',[n,T,O={}]=INF?[4,0,{}]:G2L[lv%G2L.length],D=110,RK=new Set(O.rk||[]),CN=O.cnt||1,MV=O.mv||0,SG=O.sc||0;
  let mu=0,tiles=[],id=0,sc=0,prev=null,busy=false,q=null,done=false,over=false,S=0,GP=0;
  const mk=(v,r,c)=>{const t={id:++id,v,r,c,el:null};tiles.push(t);return t};
  const free=()=>{const o=[];for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(!RK.has(r*n+c)&&!tiles.some(t=>t.r===r&&t.c===c))o.push([r,c]);return o};
  const spawn=()=>{const f=free();if(!f.length)return null;const [r,c]=f[Math.random()*f.length|0];return mk(O.g4?(Math.random()<.9?4:8):Math.random()<.9?2:4,r,c)};
  const spawnAll=()=>{const a=[spawn()];if(O.st)a.push(spawn());return a.filter(Boolean)};
- const goal=()=>SG?sc>=SG:tiles.filter(t=>t.v>=T).length>=CN;
+ const goal=()=>INF?false:SG?sc>=SG:tiles.filter(t=>t.v>=T).length>=CN;
  const vals=()=>{const g=Array(n*n).fill(0);tiles.forEach(t=>g[t.r*n+t.c]=t.v);return g};
  if(r&&r.g&&r.g.length===n*n){r.g.forEach((v,i)=>{if(v)mk(v,i/n|0,i%n)});sc=r.sc||0;prev=r.pv||null;mu=r.mu||0}else{spawn();spawn()}
- snap=()=>({g:vals(),sc,pv:prev,mu});
- frame(`<div class="g2h"><div class="g2t"><small>Objectif</small>${SG?`<b>${SG} pts</b>`:`<b class="g2o" style="--tb:${G2C[T][0]};--tf:${G2C[T][1]}">${CN>1?CN+' × ':''}${T}</b>`}</div><div class="g2t"><small>Score</small><b id="g2s">${sc}</b></div>${MV?`<div class="g2t"><small>Coups</small><b id="g2m">${MV-mu}</b></div>`:''}<button class="g2u" data-a="g2u" aria-label="Annuler le dernier coup, 1 flocon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg><span>1 ❄</span></button></div>
+ snap=()=>({g:vals(),sc,pv:prev,mu});if(INF)snap=null;
+ frame(`<div class="g2h"><div class="g2t"><small>${INF?'Mode':'Objectif'}</small>${INF?'<b>Infini</b>':SG?`<b>${SG} pts</b>`:`<b class="g2o" style="--tb:${G2C[T][0]};--tf:${G2C[T][1]}">${CN>1?CN+' × ':''}${T}</b>`}</div><div class="g2t"><small>Score</small><b id="g2s">${sc}</b></div>${MV?`<div class="g2t"><small>Coups</small><b id="g2m">${MV-mu}</b></div>`:''}<button class="g2u" data-a="g2u" aria-label="Annuler le dernier coup, 1 flocon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg><span>1 ❄</span></button></div>
   <div class="g2b" id="g2b" style="--n:${n}">${[...Array(n*n).keys()].map(i=>RK.has(i)?'<i class="rk"></i>':'<i></i>').join('')}<div class="g2ar" id="g2ar"></div><div class="g2ov" id="g2ov" hidden></div></div><p class="g2k">${O.rk?'Les glaçons ne bougent pas : les flocons s’arrêtent contre eux.':O.st?'Tempête : deux flocons tombent à chaque glissement.':O.g4?'Neige épaisse : les nouveaux flocons valent 4.':MV?'Atteins l’objectif avant la fin des coups.':CN>1?'Fais naître '+CN+' flocons '+T+' en même temps.':SG?'Atteins '+SG+' points de score.':'Glisse dans une direction : tous les flocons partent ensemble.'}</p>`,1);
  const B=$('#g2b');
  const geo=()=>{const w=B.clientWidth;GP=Math.max(6,Math.round(w*.025));S=(w-GP*(n+1))/n;B.style.setProperty('--s',S+'px');B.style.setProperty('--gp',GP+'px')};
@@ -59,7 +59,7 @@ function p2048(r){
    if(!can()){over=true;showOver();return}
    if(MV&&mu>=MV){over=true;showOver(1);return}
    if(q!==null){const d2=q;q=null;move(d2)}},D)};
- const showOver=m=>{const o=$('#g2ov');o.hidden=false;o.innerHTML=`<div><b>${m?'Plus de coups…':'Plus de place…'}</b><p>${m?'Les '+MV+' coups sont joués.':'Aucun flocon ne peut encore bouger.'}</p><button class="btn" data-a="g2u">Annuler le dernier coup · 1 ❄</button><button class="btn alt" data-a="g2r">Recommencer</button></div>`;requestAnimationFrame(()=>o.classList.add('on'))};
+ const showOver=m=>{const o=$('#g2ov');o.hidden=false;if(INF){const nb=infSave('g2048',sc);o.innerHTML=`<div><b>Fin de partie</b><p>Score : ${sc} pts${nb?' · nouveau record !':' · record : '+infBest('g2048')+' pts'}</p><button class="btn" data-a="g2r">Rejouer</button></div>`;requestAnimationFrame(()=>o.classList.add('on'));return}o.innerHTML=`<div><b>${m?'Plus de coups…':'Plus de place…'}</b><p>${m?'Les '+MV+' coups sont joués.':'Aucun flocon ne peut encore bouger.'}</p><button class="btn" data-a="g2u">Annuler le dernier coup · 1 ❄</button><button class="btn alt" data-a="g2r">Recommencer</button></div>`;requestAnimationFrame(()=>o.classList.add('on'))};
  const load=(g,s,m)=>{mu=m||0;tiles.forEach(t=>t.el&&t.el.remove());tiles=[];g.forEach((v,i)=>{if(v)mk(v,i/n|0,i%n)});sc=s;layout();tiles.forEach(t=>{t.el.classList.add('nw')});hud();over=false;const o=$('#g2ov');o.classList.remove('on');o.hidden=true};
  act.g2u=()=>{if(done||busy)return;if(!prev)return msg('Rien à annuler pour l’instant.');if(!spend(1))return;load(prev.g,prev.sc,prev.mu);prev=null;sv();msg('Dernier coup annulé.')};
  act.g2r=()=>{if(done)return;const g=Array(n*n).fill(0);load(g,0,0);spawn();spawn();layout();tiles.forEach(t=>t.el.classList.add('nw'));prev=null;sv()};

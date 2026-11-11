@@ -9,20 +9,20 @@ function plModeCard(){let m='';try{m=st.get('pl:mode','')}catch(e){}
  return`<section class="rc plmode" data-g="●"><div class="rc-t"><small>Mode de jeu</small><b>${m==='orbite'?'Orbite':'Classique'}</b><span>${m==='orbite'?'Un bocal rond : les planètes sont attirées vers le centre.':'Les planètes tombent au fond du bocal.'}</span></div><div class="plseg"><button class="${m?'':'on'}" data-a="plMode" data-v="">Classique</button><button class="${m==='orbite'?'on':''}" data-a="plMode" data-v="orbite">Orbite</button></div></section>`}
 function pPlan(r){
  const OR=(()=>{try{return st.get('pl:mode','')==='orbite'}catch(e){return false}})(),RK=OR?.84:1,PR=k=>PLR[k]*RK,CX=180,CY=312,RA=152,GC=1000,PI=Math.PI;
- const L=plLv(lv),LW=360,LH=560,WL=24,WR=336,FL=528,LINEY=118,DY=70,G=1500,E=.14;
+ const INF=INFG==='planetes',L=INF?{T:0,N:0,sc:0,km:2,pre:0}:plLv(lv),LW=360,LH=560,WL=24,WR=336,FL=528,LINEY=118,DY=70,G=1500,E=.14;
  let ps=[],parts=[],pops=[],id=0,score=0,made=Array(10).fill(0),hx=LW/2,aimA=-PI/2,aim=false,held=0,nxt=0,cd=0,over=false,done=false,paused=false,lastT=0,sc=1,dpr=Math.min(2,devicePixelRatio||1),SP={},danger=0;
- snap=()=>({});
+ snap=INF?null:()=>({});
  const R=rng((lv+5)*6007+11);
- const pick=()=>{const w=[];for(let k=0;k<=L.km;k++)w.push(Math.pow(.62,k));const s=w.reduce((a,b)=>a+b);let x=Math.random()*s;for(let k=0;k<w.length;k++){x-=w[k];if(x<=0)return k}return 0};
+ const pick=()=>{const w=[];const km=INF?Math.min(4,2+Math.floor(score/2500)):L.km;for(let k=0;k<=km;k++)w.push(Math.pow(.62,k));const s=w.reduce((a,b)=>a+b);let x=Math.random()*s;for(let k=0;k<w.length;k++){x-=w[k];if(x<=0)return k}return 0};
  const mk=(k,x,y,vx,vy)=>{const p={id:++id,k,r:PR(k),x,y,vx:vx||0,vy:vy||0,a:Math.random()*6,w:0,born:performance.now(),age:0,ov:0,dead:false};ps.push(p);return p};
- const goalDone=()=>L.sc?score>=L.sc:made[L.T]>=L.N;
+ const goalDone=()=>INF?false:L.sc?score>=L.sc:made[L.T]>=L.N;
  frame(`<div class="bkh"><div class="pntg" id="plg"></div><div class="ttmid"><div class="ttbar"><i id="plbr"></i></div><div class="tts"><span id="plsc">0</span> pts</div></div>
   <button class="bkpz" data-a="plPause" aria-label="Pause"><svg viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg></button></div>
   <div class="ttw pntw" id="pntw"><canvas id="plcv" class="ttcv"></canvas><div class="ttpop" id="plpop"></div><div class="ttov" id="plov" hidden></div></div>`,1);
  const cv=$('#plcv'),ctx=cv.getContext('2d'),wr=$('#pntw');
  const size=()=>{const avW=Math.min(wr.parentElement.clientWidth||340,460)-8,avH=Math.max(380,innerHeight-178);sc=Math.min(avW/LW,avH/LH);
   cv.width=Math.round(LW*sc*dpr);cv.height=Math.round(LH*sc*dpr);cv.style.width=LW*sc+'px';cv.style.height=LH*sc+'px';SP={}};
- const hud=()=>{const g=L.sc?L.sc:L.N,v=L.sc?Math.min(score,L.sc):Math.min(made[L.T],L.N);
+ const hud=()=>{if(INF){$('#plg').innerHTML='<b>Mode infini</b>';$('#plbr').style.width=Math.min(100,score%2500/25)+'%';$('#plsc').textContent=score;return}const g=L.sc?L.sc:L.N,v=L.sc?Math.min(score,L.sc):Math.min(made[L.T],L.N);
   $('#plg').innerHTML=L.sc?`<b>Objectif</b> ${L.sc} pts`:`<i class="pntgi" style="background:radial-gradient(circle at 35% 30%,${PLCL[L.T][0]},${PLCL[L.T][1]})"></i><span>${PLN[L.T]} ${v}/${L.N}</span>`;
   $('#plbr').style.width=(v*100/g)+'%';$('#plsc').textContent=score};
  const pop=(t,big)=>{const e=$('#plpop');e.textContent=t;e.className='ttpop';void e.offsetWidth;e.className='ttpop on'+(big?' big':'')};
@@ -53,7 +53,7 @@ function pPlan(r){
   burst(x,y,PLCL[k+1][1],10+k*3,90+k*12);pops.push({x,y,r:n.r,t:performance.now(),c:PLCL[k+1][0]});sfx(300+k*55,.14);vib(k>5?[12,30,12]:6);
   if(k+1>=6)pop(PLN[k+1]+' !',k+1>=8);hud();checkWin()};
  const checkWin=()=>{if(done||over)return;if(goalDone()){done=true;pop('Bravo !',1);ps.forEach(p=>burst(p.x,p.y,PLCL[p.k][0],6,120));setTimeout(win,1600)}};
- const lose=()=>{over=true;const o=$('#plov');o.hidden=false;o.innerHTML=`<div><b>Le bocal déborde</b><p>Les planètes dépassent la ligne.</p><button class="btn" data-a="plCont">Continuer · 1 ❄</button><button class="btn alt" data-a="plRe">Recommencer</button></div>`;requestAnimationFrame(()=>o.classList.add('on'))};
+ const lose=()=>{over=true;const o=$('#plov');o.hidden=false;if(INF){const nb=infSave('planetes',score);o.innerHTML=`<div><b>Fin de partie</b><p>Score : ${score} pts${nb?' · nouveau record !':' · record : '+infBest('planetes')+' pts'}</p><button class="btn" data-a="plRe">Rejouer</button></div>`;requestAnimationFrame(()=>o.classList.add('on'));return}o.innerHTML=`<div><b>Le bocal déborde</b><p>Les planètes dépassent la ligne.</p><button class="btn" data-a="plCont">Continuer · 1 ❄</button><button class="btn alt" data-a="plRe">Recommencer</button></div>`;requestAnimationFrame(()=>o.classList.add('on'))};
  const hideOv=()=>{const o=$('#plov');o.classList.remove('on');o.hidden=true};
  const fresh=()=>{ps=[];parts=[];pops=[];score=0;made=Array(10).fill(0);over=done=false;danger=0;
   for(let i=0;i<L.pre;i++){const k=Math.floor(R()*3);if(OR){const a=R()*PI*2,d=R()*70;const p=mk(k,CX+Math.cos(a)*d,CY+Math.sin(a)*d,0,0);p.in=true}else{const x=WL+PR(k)+R()*(WR-WL-2*PR(k));mk(k,x,FL-30-i*26-R()*20,0,0)}}
