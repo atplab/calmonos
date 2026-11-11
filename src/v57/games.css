@@ -1340,3 +1340,4 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 @media(prefers-reduced-motion:reduce){.s67 b,.s67 i{animation:none}}
 .fr-av.fi{padding:0;background:linear-gradient(160deg,color-mix(in srgb,var(--fb) 30%,#3a6ab8),#17306e);overflow:hidden}.fr-av.fi svg{width:88%;height:auto;display:block}
 .pf-f{padding:4px;position:relative;display:grid;place-items:center}.pf-f svg{width:100%;height:auto;display:block}.pf-f.lk{opacity:.38;filter:grayscale(1);cursor:not-allowed}.pf-f i{position:absolute;right:3px;bottom:2px;font-size:.7rem;font-style:normal}
+.sgt{position:fixed;left:0;right:0;margin:0 auto;width:fit-content;max-width:calc(100% - 28px);bottom:calc(88px + 58px + env(safe-area-inset-bottom,0px));z-index:5;padding:6px 14px;border-radius:999px;font-size:13px;color:#fff;text-align:center;background:var(--gb);border:1px solid var(--gbd);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 8px 24px var(--gsh)}
