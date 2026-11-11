@@ -51,6 +51,7 @@ h,nn=_re.subn(r"(\w+Mus)\(id==='(\w+)'&&!x&&!xa\)",lambda m:m.group(1)+"((PLK&&!
 assert nn==10,nn
 exec(open('fv_block.py').read())
 exec(open('cach_block.py').read())
+exec(open('cach2_block.py').read())
 B='<button class="shb" data-a="sbook"'
 PB='<button class="plfab${(PLK&&!PLPA)?\' on\':\'\'}" data-a="plr" aria-label="Lecteur de musique"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l11-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg></button>'
 SB='return`<div class="sbar" id="sbar">'
