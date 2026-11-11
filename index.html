@@ -1,8 +1,9 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!doctype html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0e0f34"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Nuit de neige"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Nuit de neige 2</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -1246,14 +1247,6 @@ body[data-tx=d] .orb.xm .ring u.on{background:#d8303c;box-shadow:none}
 body.xm .sd-c.pc.sel{background:var(--pc);color:inherit}
 body[data-tx=d] .sd-c.pc.pl{color:#fff}
 body[data-tx=d] .sd-c.pc.pk{color:#2a2550}
-/* sudoku, le jour : les chiffres donnés étaient blanc crème (règle générale « le jour ») même sur les blocs clairs, donc invisibles sur un bloc blanc. On redonne à chaque chiffre la couleur qui contraste avec son bloc. */
-body[data-tx=d] .sd .sd-c.gv.pc.pk{color:#2a2550;text-shadow:none}
-body[data-tx=d] .sd .sd-c.gv.pc.pl{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.45)}
-body[data-tx=d] .sd .sd-c.pc.pl.pd,body[data-tx=d] .sd .sd-c.gv.pc.pl.pd{color:#2a2550;text-shadow:none}
-/* Noël : la case sélectionnée héritait la couleur du conteneur (blanc crème sur bloc clair) ; elle garde maintenant celle de son bloc */
-body.xm .sd .sd-c.pc.sel.pk{color:#2a2550}
-body.xm .sd .sd-c.pc.sel.pl{color:#fff}
-body.xm .sd .sd-c.pc.sel.pl.pd{color:#2a2550}
 .sd{transition:gap .6s}
 .sd.sdpxr{gap:0}
 .sd.sdpxr .sd-c{color:transparent!important;text-shadow:none!important;border-radius:0;margin:0!important;box-shadow:none!important;filter:none!important;transition:all .6s}
@@ -1986,13 +1979,171 @@ body.xm :is(.whl b,.rw i,.cl,.sc,.sd-c){text-shadow:none}
 <main id="app"></main>
 <nav id="nav" class="glass" aria-label="Navigation"><button data-a="tab" data-v="aqua"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12c2.5-4.5 7-6 11.5-3.2L19.5 6v12l-5-2.8C10 18 5.5 16.5 3 12z"/><circle cx="8.3" cy="11" r=".9" fill="currentColor" stroke="none"/></svg><span>Aquarium</span><i class="ndot" hidden></i></button><button data-a="tab" data-v="games"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg><span>Jeux</span></button><button data-a="tab" data-v="daily"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg><span>Histoire</span></button><button data-a="tab" data-v="soc"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8.5" r="3"/><path d="M3.5 19c.5-3.3 2.9-5 5.5-5s5 1.7 5.5 5"/><circle cx="17" cy="9" r="2.4"/><path d="M16.2 14.1c2.5-.2 4.4 1.3 4.9 4.4"/></svg><span>Social</span><i class="ndot sdot" hidden></i></button><button data-a="tab" data-v="set"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14M5 16h14"/><circle cx="9" cy="8" r="2.2"/><circle cx="15" cy="16" r="2.2"/></svg><span>Réglages</span></button></nav>
 <script>
+/* Firebase : à l’extérieur de Claude, ce petit adaptateur fournit la même interface « claude.use('db' | 'user') » que l’appli utilise déjà,
+   avec de vrais comptes (e-mail ou Google) et la base Firestore. Chaque document est stocké sous la forme { j : "<JSON>" }. */
+(()=>{
+if(window.claude)return;
+const CFG={apiKey:"AIzaSyDi7m8lfhpeSHjX-dvIuFkD8oL0PhO-o08",authDomain:"calmonus.firebaseapp.com",projectId:"calmonus",storageBucket:"calmonus.firebasestorage.app",messagingSenderId:"219014024976",appId:"1:219014024976:web:dcaa4e350cbfaf174c9f95"};
+const B='https://www.gstatic.com/firebasejs/10.14.1/';
+const fb=window.__fb={u:null,ready:false,failed:false};
+let P=null;
+const load=()=>P||(P=(async()=>{
+ const [A,Au,Fs]=await Promise.all([import(B+'firebase-app.js'),import(B+'firebase-auth.js'),import(B+'firebase-firestore.js')]);
+ const app=A.initializeApp(CFG),auth=Au.getAuth(app),db=Fs.getFirestore(app);
+ try{auth.languageCode='fr'}catch(e){}
+ await auth.authStateReady();
+ fb.u=auth.currentUser?(auth.currentUser.email||'compte'):null;fb.ready=true;
+ Au.onAuthStateChanged(auth,u=>{fb.u=u?(u.email||'compte'):null});
+ return{A,Au,Fs,app,auth,db};
+})().catch(e=>{fb.failed=true;P=null;throw e}));
+setTimeout(()=>{load().catch(()=>{})},0);
+const code=e=>{const c=e&&e.code;return c==='permission-denied'||c==='unauthenticated'?'not_granted':'unavailable'};
+const parse=d=>{try{const v=d&&d.j!=null?JSON.parse(d.j):null;return v&&typeof v==='object'?v:{}}catch(e){return{}}};
+window.claude={use:async n=>{
+ let F;try{F=await load()}catch(e){return null}
+ const {Fs,auth,db}=F;
+ if(n==='user')return{id:async()=>auth.currentUser?auth.currentUser.uid:null,can:async()=>true,isOwner:async()=>false,canEdit:async()=>false};
+ if(n==='db'){
+  if(!auth.currentUser)return null;
+  return{collection:cp=>cp==='profiles'?profilesCol(F):({
+   doc:id=>({
+    set:async d=>{try{await Fs.setDoc(Fs.doc(db,cp+'/'+id),{j:JSON.stringify(d)})}catch(e){const x=new Error(e&&e.message||'x');x.code=code(e);throw x}},
+    get:async()=>{try{const s=await Fs.getDoc(Fs.doc(db,cp+'/'+id));return{exists:s.exists(),data:()=>parse(s.data())}}catch(e){const x=new Error(e&&e.message||'x');x.code=code(e);throw x}},
+    delete:async()=>{try{await Fs.deleteDoc(Fs.doc(db,cp+'/'+id))}catch(e){const x=new Error(e&&e.message||'x');x.code=code(e);throw x}},
+    onSnapshot:(next,err)=>Fs.onSnapshot(Fs.doc(db,cp+'/'+id),s=>next({id,exists:s.exists(),data:()=>s.exists()?parse(s.data()):undefined,metadata:{fromCache:s.metadata.fromCache,hasPendingWrites:s.metadata.hasPendingWrites}}),e=>{if(err)err(e)})}),
+   onSnapshot:(next,err)=>Fs.onSnapshot(Fs.collection(db,cp),sn=>next({docs:sn.docs.map(d=>({id:d.id,data:()=>parse(d.data())})),metadata:{fromCache:sn.metadata.fromCache,hasPendingWrites:sn.metadata.hasPendingWrites}}),e=>{if(err)err(e)})
+  })}}
+ return null}};
+
+/* ---- Social : on ne lit plus tous les profils, seulement le sien, ceux de mes amis et de ceux qui m’ont ajouté ou offert un cadeau ----
+   Index d’appoint : codes/<CODE> = { u: uid } (recherche d’un ami par son code) ; inbox/<uid> = { <expéditeur>: 1 } (qui m’a ajouté ou gâté). */
+const OKID=/^[A-Za-z0-9_-]{1,128}$/,OKC=/^[A-HJKMNP-Z2-9]{8}$/,MK='fb:mk:',tried=new Set();
+let LIVE=null;
+async function index(F,uid,d){
+ if(!d||typeof d!=='object')return;const {Fs,db}=F;let S;
+ try{S=new Set(JSON.parse(localStorage.getItem(MK+uid))||[])}catch(e){S=new Set()}
+ const T=[];
+ if(typeof d.code==='string'&&OKC.test(d.code))T.push(['c:'+d.code,()=>Fs.setDoc(Fs.doc(db,'codes/'+d.code),{u:uid})]);
+ const R=new Set();
+ Object.entries(d.fr||{}).forEach(([k,t])=>{if(+t>0&&OKID.test(k))R.add(k)});
+ Object.values(d.s||{}).forEach(m=>{if(m&&typeof m==='object')Object.entries(m).forEach(([k,n])=>{if(+n>0&&OKID.test(k))R.add(k)})});
+ R.forEach(k=>{if(k!==uid)T.push(['i:'+k,()=>Fs.setDoc(Fs.doc(db,'inbox/'+k),{[uid]:1},{merge:true})])});
+ let ch=false;
+ for(const [key,fn] of T.filter(t=>!S.has(t[0])&&!tried.has(uid+t[0])).slice(0,40)){
+  tried.add(uid+key);
+  try{await fn();S.add(key);ch=true}catch(e){tried.delete(uid+key)}
+ }
+ if(ch){try{localStorage.setItem(MK+uid,JSON.stringify([...S]))}catch(e){}}
+}
+function profilesCol(F){
+ const {Fs,db,auth}=F,uid=auth.currentUser.uid;
+ return{
+  doc:id=>({
+   set:async d=>{try{await Fs.setDoc(Fs.doc(db,'profiles/'+id),{j:JSON.stringify(d)})}catch(e){const x=new Error(e&&e.message||'x');x.code=code(e);throw x}if(id===uid)index(F,uid,d).catch(()=>{})},
+   get:async()=>{try{const s=await Fs.getDoc(Fs.doc(db,'profiles/'+id));return{exists:s.exists(),data:()=>parse(s.data())}}catch(e){const x=new Error(e&&e.message||'x');x.code=code(e);throw x}},
+   delete:async()=>{try{await Fs.deleteDoc(Fs.doc(db,'profiles/'+id))}catch(e){const x=new Error(e&&e.message||'x');x.code=code(e);throw x}}}),
+  onSnapshot:(next,err)=>{
+   const docs=new Map(),subs=new Map(),loaded=new Set(),extra=new Set();
+   let own=null,inbox=[],gotOwn=false,gotInbox=false,late=false,dead=false,tm=0,pw=0;
+   const ready=()=>gotOwn&&(late||(gotInbox&&[...subs.keys()].every(k=>loaded.has(k))));
+   const emit=()=>{tm=0;if(dead||!gotOwn)return;next({docs:[...docs].map(([id,v])=>({id,data:()=>v})),metadata:{fromCache:false,hasPendingWrites:false}})};
+   const sched=()=>{if(dead||tm||!ready())return;tm=setTimeout(emit,40)};
+   const watch=id=>{if(subs.has(id)||id===uid)return;
+    subs.set(id,Fs.onSnapshot(Fs.doc(db,'profiles/'+id),s=>{if(dead)return;loaded.add(id);if(s.exists())docs.set(id,parse(s.data()));else docs.delete(id);sched()},()=>{loaded.add(id);sched()}))};
+   const want=()=>{
+    const ids=[];const add=k=>{if(OKID.test(k)&&k!==uid&&!ids.includes(k))ids.push(k)};
+    if(own&&own.fr&&typeof own.fr==='object')Object.entries(own.fr).forEach(([k,t])=>{if(+t>0)add(k)});
+    extra.forEach(add);inbox.forEach(add);
+    const keep=new Set(ids.slice(0,80));
+    keep.forEach(watch);
+    subs.forEach((u,id)=>{if(!keep.has(id)){u();subs.delete(id);docs.delete(id);loaded.delete(id)}});
+   };
+   const u0=Fs.onSnapshot(Fs.doc(db,'profiles/'+uid),{includeMetadataChanges:true},s=>{
+    if(dead)return;
+    if(s.metadata.fromCache&&!s.exists())return;
+    own=s.exists()?parse(s.data()):null;
+    if(own)docs.set(uid,own);else docs.delete(uid);
+    gotOwn=true;want();
+    /* une écriture du profil qui traîne ne doit pas cacher les amis : on les montre quand même après 6 s */
+    if(s.metadata.hasPendingWrites){clearTimeout(pw);pw=setTimeout(()=>{if(!dead)sched()},6000);return}
+    clearTimeout(pw);
+    sched();if(own)index(F,uid,own).catch(()=>{});
+   },e=>{if(!dead&&err)err(e)});
+   const u1=Fs.onSnapshot(Fs.doc(db,'inbox/'+uid),s=>{if(dead)return;const v=s.exists()?s.data():null;inbox=v&&typeof v==='object'?Object.keys(v):[];gotInbox=true;want();sched()},()=>{gotInbox=true;sched()});
+   const tl=setTimeout(()=>{late=true;sched()},3000);
+   const live={addExtra:(id,v)=>{extra.add(id);docs.set(id,v);loaded.add(id);want();if(gotOwn)emit()},
+    stop:()=>{dead=true;clearTimeout(tm);clearTimeout(tl);clearTimeout(pw);try{u0()}catch(e){}try{u1()}catch(e){}subs.forEach(u=>{try{u()}catch(e){}});subs.clear()}};
+   LIVE=live;
+   return()=>{live.stop();if(LIVE===live)LIVE=null};
+  }};
+}
+/* recherche d’un ami par son code : renvoie son identifiant (et charge son profil), ou null */
+fb.lookup=async c=>{
+ const F=await load(),{Fs,db,auth}=F;
+ if(!auth.currentUser||!OKC.test(c))return null;
+ const s=await Fs.getDoc(Fs.doc(db,'codes/'+c));if(!s.exists())return null;
+ const d=s.data(),id=d&&d.u;if(typeof id!=='string'||!OKID.test(id))return null;
+ const p=await Fs.getDoc(Fs.doc(db,'profiles/'+id));if(!p.exists())return null;
+ if(LIVE)LIVE.addExtra(id,parse(p.data()));
+ return id;
+};
+/* ---- fenêtre de connexion ---- */
+const MSG={'auth/invalid-credential':'Adresse ou mot de passe incorrect.','auth/wrong-password':'Adresse ou mot de passe incorrect.','auth/user-not-found':'Adresse ou mot de passe incorrect.','auth/invalid-email':'Cette adresse e-mail n’est pas valide.','auth/email-already-in-use':'Un compte existe déjà avec cette adresse : connecte-toi.','auth/weak-password':'Mot de passe trop court : 6 caractères au moins.','auth/missing-password':'Entre ton mot de passe.','auth/too-many-requests':'Trop d’essais. Réessaie dans quelques minutes.','auth/network-request-failed':'Pas de connexion à internet.','auth/unauthorized-domain':'Ce site n’est pas encore autorisé dans Firebase (domaines autorisés).','auth/operation-not-allowed':'Cette méthode de connexion n’est pas activée dans Firebase.','auth/popup-blocked':'La fenêtre Google a été bloquée par le navigateur.','auth/account-exists-with-different-credential':'Un compte existe déjà avec cette adresse, avec une autre méthode.'};
+const CSS=`.fbo{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;padding:16px;background:rgba(8,10,40,.6);backdrop-filter:blur(4px);font-family:inherit}
+.fbo *{box-sizing:border-box}.fbc{width:min(100%,360px);background:#f6f2fc;color:#2e2a63;border-radius:20px;padding:22px 20px 18px;box-shadow:0 18px 50px rgba(0,0,20,.5);max-height:calc(100dvh - 32px);overflow:auto}
+.fbc h2{margin:0 0 4px;font:600 21px/1.25 Fraunces,Georgia,serif}.fbc p{margin:0 0 12px;font-size:14px;line-height:1.45;color:#4d4986}
+.fbc label{display:block;font-size:13px;font-weight:700;margin:10px 0 4px}.fbc input{width:100%;font:inherit;font-size:16px;padding:11px 12px;border-radius:12px;border:1.5px solid #b9b3e2;background:#fff;color:#2e2a63}
+.fbc input:focus{outline:2px solid #5458ab;outline-offset:1px}.fbc button{display:block;width:100%;font:inherit;font-weight:700;font-size:15px;min-height:46px;margin-top:10px;border-radius:14px;border:0;cursor:pointer}
+.fbc .p{background:#3d3a85;color:#fff}.fbc .g{background:#fff;color:#2e2a63;border:1.5px solid #b9b3e2}.fbc .l{background:none;color:#3d3a85;font-weight:600;text-decoration:underline;min-height:40px;margin-top:2px}
+.fbc button:disabled{opacity:.55}.fbc .e{margin:10px 0 0;color:#a12b2b;font-size:14px;font-weight:600}.fbc .o{margin:10px 0 0;color:#1b6b3d;font-size:14px;font-weight:600}.fbc .sp{margin:12px 0 2px;text-align:center;font-size:12px;color:#8a86c4}`;
+let ov=null,mode='in';
+const $=s=>ov&&ov.querySelector(s);
+function close(){if(ov){ov.remove();ov=null}}
+function draw(){
+ if(!ov)return;const up=mode==='up';
+ ov.innerHTML=`<div class="fbc" role="dialog" aria-modal="true" aria-labelledby="fbt"><h2 id="fbt">${up?'Créer un compte':'Se connecter'}</h2><p>${up?'Un compte te permet de retrouver tes flocons, ton aquarium et tes amis sur tous tes appareils.':'Retrouve ta progression sur cet appareil.'}</p><form id="fbf" novalidate><label for="fbe">Adresse e-mail</label><input id="fbe" type="email" autocomplete="email" inputmode="email" autocapitalize="off"><label for="fbp">Mot de passe</label><input id="fbp" type="password" autocomplete="${up?'new-password':'current-password'}"><div class="e" id="fbm" role="alert" hidden></div><button class="p" type="submit" id="fbs">${up?'Créer mon compte':'Me connecter'}</button></form><div class="sp">ou</div><button class="g" type="button" id="fbg">Continuer avec Google</button>${up?'':'<button class="l" type="button" id="fbr">Mot de passe oublié ?</button>'}<button class="l" type="button" id="fbw">${up?'J’ai déjà un compte':'Créer un compte'}</button><button class="l" type="button" id="fbx">Plus tard</button></div>`;
+ $('#fbw').onclick=()=>{mode=up?'in':'up';draw()};$('#fbx').onclick=close;
+ const r=$('#fbr');if(r)r.onclick=reset;
+ $('#fbf').onsubmit=e=>{e.preventDefault();go(up)};$('#fbg').onclick=google;
+ ov.onclick=e=>{if(e.target===ov)close()};
+ const f=$('#fbe');if(f)f.focus();
+}
+const say=(t,ok)=>{const m=$('#fbm');if(!m)return;m.className=ok?'o':'e';m.hidden=!t;m.textContent=t||''};
+const busy=b=>{ov&&ov.querySelectorAll('button').forEach(x=>x.disabled=b)};
+const fail=e=>{busy(false);const c=e&&e.code;if(c==='auth/popup-closed-by-user'||c==='auth/cancelled-popup-request')return say('');say(MSG[c]||'Connexion impossible pour l’instant. Réessaie dans un moment.')};
+async function done(){close();try{if(window.__fbDone)window.__fbDone()}catch(e){}}
+async function go(up){
+ const em=($('#fbe').value||'').trim(),pw=$('#fbp').value||'';
+ if(!em)return say('Entre ton adresse e-mail.');if(!pw)return say('Entre ton mot de passe.');
+ say('');busy(true);
+ try{const F=await load(),Au=F.Au;if(up)await Au.createUserWithEmailAndPassword(F.auth,em,pw);else await Au.signInWithEmailAndPassword(F.auth,em,pw);done()}catch(e){fail(e)}
+}
+async function google(){
+ say('');busy(true);
+ try{const F=await load(),Au=F.Au;await Au.signInWithPopup(F.auth,new Au.GoogleAuthProvider());done()}catch(e){fail(e)}
+}
+async function reset(){
+ const em=($('#fbe').value||'').trim();if(!em)return say('Entre d’abord ton adresse e-mail.');
+ busy(true);
+ try{const F=await load();await F.Au.sendPasswordResetEmail(F.auth,em);busy(false);say('Un e-mail pour changer ton mot de passe vient d’être envoyé.',true)}catch(e){fail(e)}
+}
+fb.open=(m)=>{
+ if(ov)return;mode=m==='up'?'up':'in';
+ if(!document.getElementById('fbcss')){const s=document.createElement('style');s.id='fbcss';s.textContent=CSS;document.head.appendChild(s)}
+ ov=document.createElement('div');ov.className='fbo';document.body.appendChild(ov);draw();
+ document.addEventListener('keydown',function k(e){if(!ov){document.removeEventListener('keydown',k);return}if(e.key==='Escape')close()});
+};
+fb.out=async()=>{try{const F=await load();await F.Au.signOut(F.auth)}catch(e){}try{if(window.__fbOut)window.__fbOut()}catch(e){}};
+})();
+</script>
+<script>
 const $=s=>document.querySelector(s),app=$('#app'),mem={};
 let onSet=null;
 const st={get(k,d){if(k in mem)return mem[k];try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){mem[k]=v;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}if(onSet)onSet(k)}};
 const sh=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const today=new Date().toLocaleDateString('sv'),di=Math.floor(Date.now()/864e5);
 const dkey=g=>'d:'+g+':'+today,ckey=g=>'c:'+g;
-const NLS={mots:60,memo:30,caches:60,phrase:40,maze:30,match3:70,demenage:11,quiz:1,cherche:20,tournade:40,sudoku:50,ana:50,flow:75,g2048:50,tetris:66,brick:50},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
+const NLS={mots:60,memo:30,caches:60,phrase:40,maze:30,match3:70,demenage:11,quiz:1,cherche:20,tournade:40,sudoku:40,ana:50,flow:75,g2048:50,tetris:66,brick:50},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
 /* Section temporaire « fêtes » : 10 niveaux spéciaux de plus par jeu (indices nl, nl+1 … nl+9), disponible tout de suite et jusqu’au 11 janvier 2027 inclus ; #noel dans l’adresse force l’affichage.
    Ils ne font pas partie du code de sauvegarde ni de la synchronisation. */
 const NLX=10,xmasOn=()=>{const d=new Date(),m=d.getMonth();return UNL()||location.hash==='#noel'||m===11||(m===0&&d.getDate()<12)},isX=(g,l)=>l>=nl(g),xn=(g,l)=>l-nl(g)+1;
@@ -2902,7 +3053,7 @@ function pSearch(r){
  };
  d();
 }
-/* ---------- Sudoku : grilles à solution unique, générées à la volée (40 niveaux + 10 de fêtes) ---------- */
+/* ---------- Sudoku : grilles à solution unique, générées à la volée (8 niveaux) ---------- */
 const SDK={};
 function sdkSolve(g,lim){
  const R=new Int16Array(9),C=new Int16Array(9),B=new Int16Array(9),a=g.slice(),bx=i=>((i/27)|0)*3+(((i%9)/3)|0);let n=0,first=null;
@@ -2923,13 +3074,13 @@ function sdkPuzzle(l){
  const NS=nl('sudoku'),X=l>=NS,sk=X?8+(l-NS):(l<8?l:1000+l),rnd=rng(sk*7919+101),sf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
  const dg=sf([1,2,3,4,5,6,7,8,9]),ro=sf([0,1,2]).flatMap(b=>sf([0,1,2]).map(x=>b*3+x)),co=sf([0,1,2]).flatMap(b=>sf([0,1,2]).map(x=>b*3+x)),sol=[];
  for(const r of ro)for(const c of co)sol.push(dg[(3*(r%3)+((r/3)|0)+c)%9]);
- const goal=X?[44,41,38,36,34,32,31,30,29,28][Math.min(9,l-NS)]:[46,42,38,35,33,31,29,27,27,27,26,26,26,25,25,25,25,24,24,24,24,24,23,23,23,23,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,21,21,21,21,21][Math.min(49,Math.max(0,l))],g=sol.slice();let left=81;
+ const goal=X?[44,41,38,36,34,32,31,30,29,28][Math.min(9,l-NS)]:[46,42,38,35,33,31,29,27,27,27,26,26,26,25,25,25,25,24,24,24,24,24,23,23,23,23,22,22,22,22,22,22,22,22,22,22,22,22,22,22][Math.min(39,Math.max(0,l))],g=sol.slice();let left=81;
  for(const i of sf([...Array(81).keys()])){if(left<=goal)break;const v=g[i];g[i]=0;if(sdkSolve(g,2).n!==1)g[i]=v;else left--}
  return SDK[l]={g,sol};
 }
 /* Sudoku : chaque case a sa couleur ; une fois remplie, la grille dessine une image (un objet, un animal, un décor) */
-const SDPAL={"p": "#f7c6d5", "r": "#e04f5f", "w": "#ffffff", "g": "#4caf6e", "G": "#c4ebc0", "s": "#a9d8f5", "b": "#4a86dc", "o": "#f39c3d", "k": "#3a3550", "y": "#ffd45a", "Y": "#fff1b8", "d": "#9a6a3e", "c": "#9aa3b5", "e": "#5fd38a", "n": "#26306a", "m": "#fff2c2", "l": "#2f8a54", "v": "#a67ce6", "u": "#d8b48a", "z": "#222033", "a": "#5fd0d0", "i": "#5b5fc7", "h": "#e6e8f0"},SDPX=[["un cœur", ["prrppprrp", "rrrrprrrr", "rwrrrrrrr", "rrrrrrrrr", "prrrrrrrp", "pprrrrrpp", "ppprrrppp", "pppprpppp", "ppppppppp"]], ["un champignon", ["GGGrrrGGG", "GGrwrrrGG", "GrrrrwrrG", "rwrrrrrrr", "rrrrwrrwr", "GGwwwwwGG", "GGGwwwGGG", "GGGwwwGGG", "ggggggggg"]], ["un poisson", ["bbbbbbbsb", "bbbooobbb", "bbooooobo", "bokooooob", "booooooob", "bboooooob", "bbbooobbo", "bsbbbbbbb", "bbbbbsbbb"]], ["un chat", ["cYYYYYYYc", "ccYYYYYcc", "ccccccccc", "ceeccccee", "ccccccccc", "ccccpcccc", "YcckcckcY", "YYcccccYY", "YYYcccYYY"]], ["une fleur", ["ssspppsss", "sppppppps", "pppyyyppp", "pppyyyppp", "pppyyyppp", "sppppppss", "ssssgssss", "sslggglss", "ggggggggg"]], ["une maison", ["ssssrssss", "sssrrrsss", "ssrrrrrss", "srrrrrrrs", "swwwwwwws", "swywwwyws", "swwwdwwws", "swwwdwwws", "ggggggggg"]], ["une lune étoilée", ["nnmmmnnyn", "nmmnnnnnn", "mmnnnnynn", "mmnnnnnnn", "mmnnnnnny", "mmnnnnnnn", "nmmnnnynn", "nnmmmnnnn", "nnnnnnnnn"]], ["un voilier", ["sssskssyy", "sssskwsyy", "sssskwwss", "sssskwwws", "sssskssss", "dddddddds", "bbdddddbb", "bbbbbbbbb", "bwbbbwbbb"]], ["un lapin", ["GGwwGwwGG", "GGwpGpwGG", "GGwpGpwGG", "GwwwwwwwG", "wwkwwwkww", "wwwwpwwww", "GwwwwwwwG", "GGwwwwwGG", "ggggggggg"]], ["un pingouin", ["ssszzzsss", "sszzzzzss", "szkwwwkzs", "szwwowwzs", "zzwwwwwzz", "zzwwwwwzz", "szwwwwwzs", "ssoosooss", "hhhhhhhhh"]], ["un papillon", ["GGzGGGzGG", "GGGzGzGGG", "vvvGzGvvv", "vyvvzvvyv", "vvvvzvvvv", "GvvvzvvvG", "GvyvzvyvG", "GGvGzGvGG", "GGGGGGGGG"]], ["une tortue", ["YYYYYYYYY", "YYYYYYYYY", "YYYgggYYY", "YYgglggYY", "Yglgglgee", "egggggggY", "YeeYYYeeY", "YYYYYYYYY", "aaaaaaaaa"]], ["une abeille", ["sssssssss", "sswwswwss", "ssswwwsss", "ssyzyzyss", "kyyzyzyzz", "ssyzyzyss", "sssssssss", "sssssssss", "ggggggggg"]], ["un escargot", ["GGGGGGGGG", "zGzGGGGGG", "uGuGooooG", "uuuoddooG", "uuuodoooG", "uuuuuuuuu", "GGGGGGGGG", "GGGGGGGGG", "ggggggggg"]], ["une grenouille", ["aaaaaaaaa", "aeeaaaeea", "ewkeeewke", "eeeeeeeee", "ellllllle", "eeeeeeeee", "aeeeeeeea", "geegggeeg", "ggggggggg"]], ["un ourson", ["puupppuup", "udduuuddu", "uuuuuuuuu", "uuzuuuzuu", "uuuYYYuuu", "uuuYzYuuu", "puuuuuuup", "ppuuuuupp", "ppppppppp"]], ["un parapluie", ["sssrrrsss", "srrrwrrrs", "rrwrrrwrr", "rrrrrrrrr", "sbssdssbs", "ssssdssss", "sbssdsbss", "sssddssss", "sssssssss"]], ["une tasse de thé", ["pphpphppp", "pppphpphp", "pphpphppp", "pwwwwwwpp", "pwwwwwwww", "pwwrwwwpw", "pwwwwwwww", "ppwwwwwpp", "ccccccccc"]], ["une montgolfière", ["sssryrsss", "ssryryrss", "sryryryrs", "sryryryrs", "ssryryrss", "sssryrsss", "sssksksss", "sssdddsss", "swwssssss"]], ["une fusée", ["nnnnwnnny", "nnnwwwnnn", "ynnwawnnn", "nnnwwwnnn", "nnnwwwnyn", "nnrwwwrnn", "nrrwwwrrn", "nnnoyonnn", "ynnnonnnn"]], ["une ampoule", ["iiiyyyiii", "iiyyyyyii", "iyyYyyyyi", "iyYyyyyyi", "iyyyyyyyi", "iiyyyyyii", "iiiccciii", "iiiccciii", "iiiikiiii"]], ["un livre", ["GGGGGGGGG", "GbbbbbbbG", "bwwwbwwwb", "bwccbccwb", "bwwwbwwwb", "bwccbccwb", "bwwwbwwwb", "bbbbrbbbb", "GGGGrGGGG"]], ["un arc-en-ciel", ["ssrrrrrss", "srooooors", "royyyyyor", "roygggyor", "roygsgyor", "roygsgyor", "wwygsgyww", "wwwssswww", "sssssssss"]], ["un soleil", ["osssossso", "soyyyyyos", "syyyyyyys", "syydyydys", "oyyyyyyyo", "syyyyyyys", "syydddyys", "soyyyyyos", "osssossso"]], ["une montagne", ["sssssssss", "sssswssss", "ssswwwsss", "sswcwcwss", "sscccccss", "scccccccs", "ccccccccc", "glgcccglg", "GGGGGGGGG"]], ["un cactus", ["sssspssss", "sssgggsss", "gssgggssg", "gssgggssg", "ggggggggg", "sssgggsss", "sssgggsss", "uuuuuuuuu", "uuuuuuuuu"]], ["une pomme", ["GGGGdggGG", "GGGGdGGGG", "GrrrGrrrG", "rrwrrrrrr", "rwrrrrrrr", "rrrrrrrrr", "rrrrrrrrr", "GrrrrrrrG", "GGrrGrrGG"]], ["une glace", ["pppprpppp", "pppmmmppp", "ppmmmmmpp", "ppvvvvvpp", "pvvvvvvvp", "puduuudup", "ppududupp", "pppuduppp", "ppppupppp"]], ["un hibou", ["nunnnnnun", "nuuuuuuun", "uwwuuuwwu", "uwzuouzwu", "uuuYYYuuu", "uuYYYYYuu", "nuuYYYuun", "dddododdd", "nnnnnnnnn"]], ["une baleine", ["ssswswsss", "sssswssss", "ibiiiiibb", "iiiiiiwib", "biiiiiiii", "bbhhhhhhb", "bbbbbbbbb", "bwbbbbwbb", "bbbbbbbbb"]], ["un renard", ["oGGGGGGGo", "ooGGGGGoo", "ooooooooo", "oozooozoo", "wwoooooww", "GwwwzwwwG", "GGwwwwwGG", "GGGwwwGGG", "GGGGGGGGG"]], ["un dinosaure", ["ssssseees", "ssssseeze", "ssssseeee", "sgsgseess", "eeeeeeess", "sseeeeess", "ssessesss", "ssessesss", "uuuuuuuuu"]], ["une guitare", ["ppppdpppp", "ppppdpppp", "ppppdpppp", "pppodoppp", "ppooooopp", "ppoozoopp", "pooooooop", "pooodooop", "ppooooopp"]], ["un château", ["srsssssrs", "vvvsssvvv", "cccsssccc", "cccscsccc", "ccccccccc", "ckccccckc", "cccdddccc", "cccdddccc", "GGGGGGGGG"]], ["un phare", ["nnnnrnnnn", "YYnyyynYY", "nnnkkknnn", "nnnrrrnnn", "nnnwwwnnn", "nnnrrrnnn", "nnwwwwwnn", "bbbbbbbbb", "bwbbbbwbb"]], ["un arbre d’automne", ["sssooosss", "ssoyrooss", "sooryooos", "oyoooroyo", "sooyoooos", "ssssdssss", "ssssdssss", "ssssdssss", "GoGGGGoGG"]], ["des cerises", ["GGGGGdggG", "GGGGdGdGG", "GGGdGGGdG", "GGdGGGGdG", "GrrrGGrrr", "rwrrGrwrr", "rrrrGrrrr", "GrrGGGrrG", "GGGGGGGGG"]], ["un gâteau", ["ppppypppp", "ppppbpppp", "pwwwwwwwp", "wwuwwwuww", "uuuuuuuuu", "YYYYYYYYY", "uuuuuuuuu", "ccccccccc", "ppppppppp"]], ["une couronne de roi", ["vvvvvvvvv", "vvvvvvvvv", "yvvvyvvvy", "yyvyyyvyy", "yyyyyyyyy", "yryybyyry", "yyyyyyyyy", "vvvvvvvvv", "vvvvvvvvv"]], ["une fraise", ["GGGgggGGG", "GGgggggGG", "GrrrgrrrG", "rrYrrrYrr", "rrrrYrrrr", "GrYrrrYrG", "GrrrYrrrG", "GGrrrrrGG", "GGGGrGGGG"]], ["une coccinelle", ["GGkGGGkGG", "GGGkGkGGG", "GGrrkrrGG", "GrrrkrrrG", "rrkrkrkrr", "rrrrkrrrr", "GrrkrkrrG", "GGrrkrrGG", "GGGGGGGGG"]],["un ananas", ["ssslslsss", "sslllllss", "ssoyoyoss", "soyoyoyos", "syoyoyoys", "soyoyoyos", "ssoyoyoss", "sssoyosss", "ggggggggg"]],["un canard", ["sssssssss", "sssyyssss", "ssykyssss", "ooyyyssss", "sssyyyyys", "ssyYYYyyy", "bbyyyyybb", "bbbbbbbbb", "bsbbbsbbb"]],["une ancre", ["sssnnnsss", "sssnsnsss", "ssssnssss", "snnnnnnns", "ssssnssss", "nsssnsssn", "nnssnssnn", "snnnnnnns", "bbbbbbbbb"]],["un cerf-volant", ["ssssrssss", "sssrrrsss", "ssrrwrrss", "srrrwrrrs", "swwwwwwws", "ssyywyyss", "sssywysss", "ssssdssss", "sssbdbsss"]],["un hérisson", ["GGGGGGGGG", "GGGdkdkGG", "GGdkdkdkG", "Gdkdkdkdu", "dkdkdkduu", "kdkdkdkuz", "GdkdkdkuG", "GGuGGGuGG", "ggggggggg"]],["une pastèque", ["sssssssss", "ggggggggg", "gwwwwwwwg", "gwrrkrrwg", "sgwrrrwgs", "sgwrkrwgs", "ssgwrwgss", "sssgggsss", "sssssssss"]],["une voiture", ["sssssssss", "sssrrrsss", "ssraaraas", "srraaraar", "rrrrrrrry", "rrrrrrrrr", "rkkrrrkkr", "ckkccckkc", "ccccccccc"]],["une clé", ["nnnnnnnnn", "nwnnnnnwn", "nyyynnnnn", "ynnnynnnn", "ynnnyyyyy", "ynnnynnyn", "nyyynnnyn", "nnnnnnnnn", "nnnnnwnnn"]],["une citrouille", ["nnnnlnnnn", "nnnnllnnn", "nnooloonn", "nooooooon", "ooyoooyoo", "ooooooooo", "ooyyyyyoo", "nooooooon", "nnoooooon"]], ["un sapin", ["nnnnynnnn", "nnnngnnnn", "nnngrgnnn", "nngggggnn", "ngggrgggn", "ngrgggggn", "gggggrggg", "nnnndnnnn", "wwwwwwwww"]], ["un bonhomme de neige", ["ssskkksss", "ssskkksss", "sskkkkkss", "ssswwwsss", "sswkwkwss", "sswwowwss", "ssrrrrrss", "swwwwwwws", "swwwwwwws"]], ["un cadeau", ["GGyyGyyGG", "GGGyyyGGG", "rrrryrrrr", "rrrryrrrr", "yyyyyyyyy", "rrrryrrrr", "rrrryrrrr", "rrrryrrrr", "rrrryrrrr"]], ["une étoile", ["nnnnynnnn", "nnnnynnnn", "nnnyyynnn", "yyyyyyyyy", "nyyyyyyyn", "nnyyyyynn", "nnyyyyynn", "nyynnnyyn", "ynnnnnnny"]], ["une bougie", ["nnnnonnnn", "nnnoyonnn", "nnnnknnnn", "nnnrrrnnn", "nnnrrrnnn", "nnnrwrnnn", "nnnrrrnnn", "ngrgrgrgn", "ggggggggg"]], ["une boule de Noël", ["GGGyyyGGG", "GGGGyGGGG", "GGrrrrrGG", "GrwrrrrrG", "yyyyyyyyy", "GrrrrrrrG", "GrrrrrrrG", "GGrrrrrGG", "GGGrrrGGG"]], ["une chaussette", ["sswwwwsss", "sswwwwsss", "ssrrrrsss", "ssrrrrsss", "ssrrrrsss", "ssrrrrrss", "srrrrrrrs", "srrrrrggs", "sssssssss"]], ["un bonnet", ["sssssssww", "ssssssrww", "sssssrrss", "ssssrrrss", "sssrrrrss", "ssrrrrrrs", "srrrrrrrs", "wwwwwwwww", "sssssssss"]], ["une cloche", ["GGrrGrrGG", "GGGrrrGGG", "GGGyyyGGG", "GGyyyyyGG", "GGyyyyyGG", "GyyyyyyyG", "yyyyyyyyy", "GGGGoGGGG", "GGGGGGGGG"]], ["une couronne", ["sssgggsss", "sgggggggs", "ggsssssgg", "grsssssgg", "ggsssssgg", "ggssssslg", "sggsssggs", "ssgrrrgss", "sssrsrsss"]]];
-const sdPxI=l=>SDPX[((l%SDPX.length)+SDPX.length)%SDPX.length],sdPx=(l,i)=>SDPAL[sdPxI(l)[1][(i/9)|0][i%9]],sdPxN=l=>sdPxI(l)[0],sdPxC=(l,i)=>{const h=sdPx(l,i),n=parseInt(h.slice(1),16),L=(.299*(n>>16)+.587*(n>>8&255)+.114*(n&255))/255;if(L>.62)return'pk';const f=v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)},R=.2126*f(n>>16)+.7152*f(n>>8&255)+.0722*f(n&255);return(R+.05)/.07395>1.05/(R+.05)?'pl pd':'pl'};
+const SDPAL={"p": "#f7c6d5", "r": "#e04f5f", "w": "#ffffff", "g": "#4caf6e", "G": "#c4ebc0", "s": "#a9d8f5", "b": "#4a86dc", "o": "#f39c3d", "k": "#3a3550", "y": "#ffd45a", "Y": "#fff1b8", "d": "#9a6a3e", "c": "#9aa3b5", "e": "#5fd38a", "n": "#26306a", "m": "#fff2c2", "l": "#2f8a54", "v": "#a67ce6", "u": "#d8b48a", "z": "#222033", "a": "#5fd0d0", "i": "#5b5fc7", "h": "#e6e8f0"},SDPX=[["un cœur", ["prrppprrp", "rrrrprrrr", "rwrrrrrrr", "rrrrrrrrr", "prrrrrrrp", "pprrrrrpp", "ppprrrppp", "pppprpppp", "ppppppppp"]], ["un champignon", ["GGGrrrGGG", "GGrwrrrGG", "GrrrrwrrG", "rwrrrrrrr", "rrrrwrrwr", "GGwwwwwGG", "GGGwwwGGG", "GGGwwwGGG", "ggggggggg"]], ["un poisson", ["bbbbbbbsb", "bbbooobbb", "bbooooobo", "bokooooob", "booooooob", "bboooooob", "bbbooobbo", "bsbbbbbbb", "bbbbbsbbb"]], ["un chat", ["cYYYYYYYc", "ccYYYYYcc", "ccccccccc", "ceeccccee", "ccccccccc", "ccccpcccc", "YcckcckcY", "YYcccccYY", "YYYcccYYY"]], ["une fleur", ["ssspppsss", "sppppppps", "pppyyyppp", "pppyyyppp", "pppyyyppp", "sppppppss", "ssssgssss", "sslggglss", "ggggggggg"]], ["une maison", ["ssssrssss", "sssrrrsss", "ssrrrrrss", "srrrrrrrs", "swwwwwwws", "swywwwyws", "swwwdwwws", "swwwdwwws", "ggggggggg"]], ["une lune étoilée", ["nnmmmnnyn", "nmmnnnnnn", "mmnnnnynn", "mmnnnnnnn", "mmnnnnnny", "mmnnnnnnn", "nmmnnnynn", "nnmmmnnnn", "nnnnnnnnn"]], ["un voilier", ["sssskssyy", "sssskwsyy", "sssskwwss", "sssskwwws", "sssskssss", "dddddddds", "bbdddddbb", "bbbbbbbbb", "bwbbbwbbb"]], ["un lapin", ["GGwwGwwGG", "GGwpGpwGG", "GGwpGpwGG", "GwwwwwwwG", "wwkwwwkww", "wwwwpwwww", "GwwwwwwwG", "GGwwwwwGG", "ggggggggg"]], ["un pingouin", ["ssszzzsss", "sszzzzzss", "szkwwwkzs", "szwwowwzs", "zzwwwwwzz", "zzwwwwwzz", "szwwwwwzs", "ssoosooss", "hhhhhhhhh"]], ["un papillon", ["GGzGGGzGG", "GGGzGzGGG", "vvvGzGvvv", "vyvvzvvyv", "vvvvzvvvv", "GvvvzvvvG", "GvyvzvyvG", "GGvGzGvGG", "GGGGGGGGG"]], ["une tortue", ["YYYYYYYYY", "YYYYYYYYY", "YYYgggYYY", "YYgglggYY", "Yglgglgee", "egggggggY", "YeeYYYeeY", "YYYYYYYYY", "aaaaaaaaa"]], ["une abeille", ["sssssssss", "sswwswwss", "ssswwwsss", "ssyzyzyss", "kyyzyzyzz", "ssyzyzyss", "sssssssss", "sssssssss", "ggggggggg"]], ["un escargot", ["GGGGGGGGG", "zGzGGGGGG", "uGuGooooG", "uuuoddooG", "uuuodoooG", "uuuuuuuuu", "GGGGGGGGG", "GGGGGGGGG", "ggggggggg"]], ["une grenouille", ["aaaaaaaaa", "aeeaaaeea", "ewkeeewke", "eeeeeeeee", "ellllllle", "eeeeeeeee", "aeeeeeeea", "geegggeeg", "ggggggggg"]], ["un ourson", ["puupppuup", "udduuuddu", "uuuuuuuuu", "uuzuuuzuu", "uuuYYYuuu", "uuuYzYuuu", "puuuuuuup", "ppuuuuupp", "ppppppppp"]], ["un parapluie", ["sssrrrsss", "srrrwrrrs", "rrwrrrwrr", "rrrrrrrrr", "sbssdssbs", "ssssdssss", "sbssdsbss", "sssddssss", "sssssssss"]], ["une tasse de thé", ["pphpphppp", "pppphpphp", "pphpphppp", "pwwwwwwpp", "pwwwwwwww", "pwwrwwwpw", "pwwwwwwww", "ppwwwwwpp", "ccccccccc"]], ["une montgolfière", ["sssryrsss", "ssryryrss", "sryryryrs", "sryryryrs", "ssryryrss", "sssryrsss", "sssksksss", "sssdddsss", "swwssssss"]], ["une fusée", ["nnnnwnnny", "nnnwwwnnn", "ynnwawnnn", "nnnwwwnnn", "nnnwwwnyn", "nnrwwwrnn", "nrrwwwrrn", "nnnoyonnn", "ynnnonnnn"]], ["une ampoule", ["iiiyyyiii", "iiyyyyyii", "iyyYyyyyi", "iyYyyyyyi", "iyyyyyyyi", "iiyyyyyii", "iiiccciii", "iiiccciii", "iiiikiiii"]], ["un livre", ["GGGGGGGGG", "GbbbbbbbG", "bwwwbwwwb", "bwccbccwb", "bwwwbwwwb", "bwccbccwb", "bwwwbwwwb", "bbbbrbbbb", "GGGGrGGGG"]], ["un arc-en-ciel", ["ssrrrrrss", "srooooors", "royyyyyor", "roygggyor", "roygsgyor", "roygsgyor", "wwygsgyww", "wwwssswww", "sssssssss"]], ["un soleil", ["osssossso", "soyyyyyos", "syyyyyyys", "syydyydys", "oyyyyyyyo", "syyyyyyys", "syydddyys", "soyyyyyos", "osssossso"]], ["une montagne", ["sssssssss", "sssswssss", "ssswwwsss", "sswcwcwss", "sscccccss", "scccccccs", "ccccccccc", "glgcccglg", "GGGGGGGGG"]], ["un cactus", ["sssspssss", "sssgggsss", "gssgggssg", "gssgggssg", "ggggggggg", "sssgggsss", "sssgggsss", "uuuuuuuuu", "uuuuuuuuu"]], ["une pomme", ["GGGGdggGG", "GGGGdGGGG", "GrrrGrrrG", "rrwrrrrrr", "rwrrrrrrr", "rrrrrrrrr", "rrrrrrrrr", "GrrrrrrrG", "GGrrGrrGG"]], ["une glace", ["pppprpppp", "pppmmmppp", "ppmmmmmpp", "ppvvvvvpp", "pvvvvvvvp", "puduuudup", "ppududupp", "pppuduppp", "ppppupppp"]], ["un hibou", ["nunnnnnun", "nuuuuuuun", "uwwuuuwwu", "uwzuouzwu", "uuuYYYuuu", "uuYYYYYuu", "nuuYYYuun", "dddododdd", "nnnnnnnnn"]], ["une baleine", ["ssswswsss", "sssswssss", "ibiiiiibb", "iiiiiiwib", "biiiiiiii", "bbhhhhhhb", "bbbbbbbbb", "bwbbbbwbb", "bbbbbbbbb"]], ["un renard", ["oGGGGGGGo", "ooGGGGGoo", "ooooooooo", "oozooozoo", "wwoooooww", "GwwwzwwwG", "GGwwwwwGG", "GGGwwwGGG", "GGGGGGGGG"]], ["un dinosaure", ["ssssseees", "ssssseeze", "ssssseeee", "sgsgseess", "eeeeeeess", "sseeeeess", "ssessesss", "ssessesss", "uuuuuuuuu"]], ["une guitare", ["ppppdpppp", "ppppdpppp", "ppppdpppp", "pppodoppp", "ppooooopp", "ppoozoopp", "pooooooop", "pooodooop", "ppooooopp"]], ["un château", ["srsssssrs", "vvvsssvvv", "cccsssccc", "cccscsccc", "ccccccccc", "ckccccckc", "cccdddccc", "cccdddccc", "GGGGGGGGG"]], ["un phare", ["nnnnrnnnn", "YYnyyynYY", "nnnkkknnn", "nnnrrrnnn", "nnnwwwnnn", "nnnrrrnnn", "nnwwwwwnn", "bbbbbbbbb", "bwbbbbwbb"]], ["un arbre d’automne", ["sssooosss", "ssoyrooss", "sooryooos", "oyoooroyo", "sooyoooos", "ssssdssss", "ssssdssss", "ssssdssss", "GoGGGGoGG"]], ["des cerises", ["GGGGGdggG", "GGGGdGdGG", "GGGdGGGdG", "GGdGGGGdG", "GrrrGGrrr", "rwrrGrwrr", "rrrrGrrrr", "GrrGGGrrG", "GGGGGGGGG"]], ["un gâteau", ["ppppypppp", "ppppbpppp", "pwwwwwwwp", "wwuwwwuww", "uuuuuuuuu", "YYYYYYYYY", "uuuuuuuuu", "ccccccccc", "ppppppppp"]], ["une couronne de roi", ["vvvvvvvvv", "vvvvvvvvv", "yvvvyvvvy", "yyvyyyvyy", "yyyyyyyyy", "yryybyyry", "yyyyyyyyy", "vvvvvvvvv", "vvvvvvvvv"]], ["une fraise", ["GGGgggGGG", "GGgggggGG", "GrrrgrrrG", "rrYrrrYrr", "rrrrYrrrr", "GrYrrrYrG", "GrrrYrrrG", "GGrrrrrGG", "GGGGrGGGG"]], ["un sapin", ["nnnnynnnn", "nnnngnnnn", "nnngrgnnn", "nngggggnn", "ngggrgggn", "ngrgggggn", "gggggrggg", "nnnndnnnn", "wwwwwwwww"]], ["un bonhomme de neige", ["ssskkksss", "ssskkksss", "sskkkkkss", "ssswwwsss", "sswkwkwss", "sswwowwss", "ssrrrrrss", "swwwwwwws", "swwwwwwws"]], ["un cadeau", ["GGyyGyyGG", "GGGyyyGGG", "rrrryrrrr", "rrrryrrrr", "yyyyyyyyy", "rrrryrrrr", "rrrryrrrr", "rrrryrrrr", "rrrryrrrr"]], ["une étoile", ["nnnnynnnn", "nnnnynnnn", "nnnyyynnn", "yyyyyyyyy", "nyyyyyyyn", "nnyyyyynn", "nnyyyyynn", "nyynnnyyn", "ynnnnnnny"]], ["une bougie", ["nnnnonnnn", "nnnoyonnn", "nnnnknnnn", "nnnrrrnnn", "nnnrrrnnn", "nnnrwrnnn", "nnnrrrnnn", "ngrgrgrgn", "ggggggggg"]], ["une boule de Noël", ["GGGyyyGGG", "GGGGyGGGG", "GGrrrrrGG", "GrwrrrrrG", "yyyyyyyyy", "GrrrrrrrG", "GrrrrrrrG", "GGrrrrrGG", "GGGrrrGGG"]], ["une chaussette", ["sswwwwsss", "sswwwwsss", "ssrrrrsss", "ssrrrrsss", "ssrrrrsss", "ssrrrrrss", "srrrrrrrs", "srrrrrggs", "sssssssss"]], ["un bonnet", ["sssssssww", "ssssssrww", "sssssrrss", "ssssrrrss", "sssrrrrss", "ssrrrrrrs", "srrrrrrrs", "wwwwwwwww", "sssssssss"]], ["une cloche", ["GGrrGrrGG", "GGGrrrGGG", "GGGyyyGGG", "GGyyyyyGG", "GGyyyyyGG", "GyyyyyyyG", "yyyyyyyyy", "GGGGoGGGG", "GGGGGGGGG"]], ["une couronne", ["sssgggsss", "sgggggggs", "ggsssssgg", "grsssssgg", "ggsssssgg", "ggssssslg", "sggsssggs", "ssgrrrgss", "sssrsrsss"]]];
+const sdPxI=l=>SDPX[((l%SDPX.length)+SDPX.length)%SDPX.length],sdPx=(l,i)=>SDPAL[sdPxI(l)[1][(i/9)|0][i%9]],sdPxN=l=>sdPxI(l)[0],sdPxC=(l,i)=>{const h=sdPx(l,i),n=parseInt(h.slice(1),16),L=(.299*(n>>16)+.587*(n>>8&255)+.114*(n&255))/255;return L>.62?'pk':'pl'};
 let SDRE=false;
 function pSudoku(r){
  if(!r&&!daily&&!SDRE&&st.get(ckey('sudoku')+':'+lv,false)){const {sol:S0}=sdkPuzzle(lv);snap=null;frame(`<p class="lit">Niveau terminé : tu avais fait apparaître ${sdPxN(lv)}.</p><div class="sd sdpxr sdview" aria-label="Image de ${sdPxN(lv)}">${S0.map((x,i)=>`<span class="sd-c pc ${sdPxC(lv,i)}" style="--pc:${sdPx(lv,i)}">${x}</span>`).join('')}</div><button class="btn" data-a="sdre">Recommencer le niveau</button>`);act.sdre=()=>{SDRE=true;pSudoku(null)};return}
@@ -8749,7 +8900,7 @@ onSet=k=>{if(quiet||!/^(fl|c:|aq$|fav$|wd$|sty$)/.test(k))return;schedulePush()}
 function accText(){
  if(!st.get('sync:acc',false))return'Désactivée. Active-la pour retrouver ta progression automatiquement sur tes appareils.';
  const hm=Sy.at?new Date(Sy.at).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}):'';
- return({conn:'Connexion en cours…',ok:'Synchronisée'+(hm?' · '+hm:'')+'. Visible par toi seul(e).',slow:'Pas de réponse pour l’instant : la progression reste ici et partira dès que possible.',na:'Indisponible ici : ouvre la page connecté(e) à Claude. En attendant, utilise le code.',err:'Synchro interrompue. Elle reprendra à la prochaine ouverture.',ro:'Ton accès est en lecture seule : la sauvegarde par compte demande le rôle Contributeur. Utilise le code.'})[Sy.state]||''}
+ return({conn:'Connexion en cours…',ok:'Synchronisée'+(hm?' · '+hm:'')+'. Visible par toi seul(e).',slow:'Pas de réponse pour l’instant : la progression reste ici et partira dès que possible.',na:'Connecte-toi (bouton ci-dessous) pour synchroniser ta progression sur tes appareils. En attendant, utilise le code.',err:'Synchro interrompue. Elle reprendra à la prochaine ouverture.',ro:'Ton accès est en lecture seule : la sauvegarde par compte demande le rôle Contributeur. Utilise le code.'})[Sy.state]||''}
 function sRefresh(){const e=$('#accs');if(e)e.textContent=accText()}
 async function accInit(){
  if(Sy.ref||Sy.state==='conn')return;
@@ -8806,10 +8957,11 @@ function syncHTML(){
   const why=nochg?'Cet appareil a déjà tout : rien à changer.':cnt(R)>cnt(L)?'Ce code est le plus avancé : ses flocons sont repris, tes niveaux terminés sont gardés.':cnt(R)===cnt(L)?'Même avancement : tu gardes le plus de flocons, et les niveaux du code sont ajoutés.':'Cet appareil est plus avancé : tes flocons restent, les niveaux du code sont ajoutés.';
   low=`<div class="syv"><b>Le code</b><span>${cnt(R)} niveaux · ${R.fl} ❄</span><b>Cet appareil</b><span>${cnt(L)} niveaux · ${L.fl} ❄</span><i class="sep"></i><b>Après la reprise</b><span>${cnt(M)} niveaux · ${M.fl} ❄</span><p>${why}</p></div>${nochg?'':'<button class="btn" data-a="syOk">Reprendre cette progression</button>'}<button class="btn alt" data-a="syNo">${nochg?'Fermer':'Annuler'}</button>`;
  }else low=`<button class="btn alt" data-a="syChk">Vérifier le code</button>`;
- return`<h2 class="s">Sauvegarde</h2><section class="glass play sy"><p class="note">Ta sauvegarde suit ton compte : connecte-toi sur un autre appareil pour retrouver tes niveaux et tes flocons.</p><button class="tg ${acc?'on':''}" role="switch" aria-checked="${acc}" data-a="syAcc"><span>Synchroniser avec mon compte</span><i></i></button><p class="note" id="accs" style="margin-top:8px">${accText()}</p></section>`;
+ return`<h2 class="s">Sauvegarde</h2><section class="glass play sy"><p class="note">Ta sauvegarde suit ton compte : connecte-toi sur un autre appareil pour retrouver tes niveaux et tes flocons.</p><button class="tg ${acc?'on':''}" role="switch" aria-checked="${acc}" data-a="syAcc"><span>Synchroniser avec mon compte</span><i></i></button><p class="note" id="accs" style="margin-top:8px">${accText()}</p>${window.__fb?`<button class="btn alt" data-a="${window.__fb.u?'fbOut':'fbIn'}">${window.__fb.u?'Me déconnecter ('+esc(window.__fb.u)+')':'Se connecter ou créer un compte'}</button>`:''}</section>`;
 }
 Object.assign(act,{
- syAcc:()=>{const on=!st.get('sync:acc',false);st.set('sync:acc',on);if(on)accInit();else accOff();prefScreen()},
+ fbIn:()=>window.__fb&&window.__fb.open(),fbOut:()=>window.__fb&&window.__fb.out(),
+ syAcc:()=>{const on=!st.get('sync:acc',false);st.set('sync:acc',on);if(on){accInit();if(window.__fb&&window.__fb.ready&&!window.__fb.u)window.__fb.open()}else accOff();prefScreen()},
  syCp:async()=>{const c=encode(readState());let ok=false;try{await navigator.clipboard.writeText(c);ok=true}catch(e){}
   if(!ok){try{const r=document.createRange();r.selectNodeContents($('#code'));const g=getSelection();g.removeAllRanges();g.addRange(r)}catch(e){}}
   const b=$('#cpb');if(b){b.textContent=ok?'Copié ✓':'Code sélectionné : copie-le';setTimeout(()=>{const b2=$('#cpb');if(b2)b2.textContent='Copier le code'},2200)}},
@@ -8820,6 +8972,7 @@ Object.assign(act,{
 });
 document.addEventListener('input',e=>{if(e.target.id==='ci'){Sy.in=e.target.value;if(Sy.err){Sy.err='';const m=$('.sy .m.err');if(m)m.remove()}}});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='ci'){e.preventDefault();act.syChk()}});
+window.__fbDone=()=>{st.set('sync:acc',true);location.reload()};window.__fbOut=()=>{st.set('sync:acc',false);accOff();location.reload()};
 if(st.get('sync:acc',false))setTimeout(accInit,0);
 
 /* ---------- Social : code ami, amis, flocons offerts ----------
@@ -8940,7 +9093,7 @@ function socProfile(id,M,p,av,nameOf){
  return`<button class="lnk fr-bk" data-a="socPb">${self?'‹ Social':'‹ Mes amis'}</button><section class="glass play soc-i pf-c"><button class="pf-h" data-a="socPb" aria-label="Fermer le profil de ${esc(self?(M.name||'moi'):nameOf(id))}">${av(id)}<span class="pf-n">${esc(self?(M.name||'Moi'):nameOf(id))}</span></button>${self?socAvEd(M):''}<div class="sy-h">Progression</div>${pr}<div class="sy-h">Aquarium</div>${q?`<div class="ftk">${socTank(q)}</div><p class="note" style="margin:10px 0 0">${q.f.length} poisson${q.f.length>1?'s':''} · ${q.d.length} décor${q.d.length>1?'s':''}</p>`:'<p class="note" style="margin:0">Pas encore visible : ton ami doit rouvrir l’onglet Social avec la dernière version du jeu.</p>'}<div class="sy-h">Mot du jour</div>${wd}${self?'':scrProf(id)+`<button class="lnk fr-rm" data-a="socRm" data-v="${esc(id)}">${SO.rm===id?'Confirmer le retrait':'Retirer de mes amis'}</button>`}</section>`}
 function socBody(){
  const M=st.get('soc:me',null),crd=(t,b)=>`<section class="glass play soc-i"><h2>${t}</h2><p class="note" style="margin:0">${b}</p></section>`;
- if(SO.st==='na')return crd('Une connexion est nécessaire','Ouvre cette page connecté(e) à Claude, avec un accès en écriture (rôle Contributeur ou plus), pour ajouter des amis et leur offrir des flocons.');
+ if(SO.st==='na')return crd('Une connexion est nécessaire','Connecte-toi pour ajouter des amis et leur offrir des flocons.<br><button class="btn" style="margin-top:12px" data-a="fbIn">Se connecter ou créer un compte</button>');
  if(!SO.can&&!(M&&M.code))return crd('Accès en lecture seule','Pour ajouter des amis et envoyer des flocons, il faut le rôle Contributeur sur cette page. Demande à la personne qui te l’a partagée de changer ton accès.');
  if(!SO.got||!M||!M.code){const w=SO.st==='slow'||SO.st==='err';return crd(w?'Pas de réponse pour l’instant':'Un instant…',w?'Le Social se connectera dès que possible : il réessaie tout seul. Tes flocons et tes niveaux ne bougent pas.'+(SO.ec?' <small style="opacity:.7">('+esc(SO.ec)+')</small>':'')+'</p><button class="btn" style="margin-top:14px" data-a="socRetry">Réessayer maintenant</button><p style="display:none">':'Ton profil se prépare.')}
  const me=SO.uid,P=SO.P,live=SO.can&&SO.got&&!!SO.col;
@@ -9002,12 +9155,16 @@ Object.assign(act,{
   if(!c)return bad('Saisis le code de ton ami.');
   if(!SOR.test(c))return bad('Ce code n’est pas valide : il fait 8 lettres et chiffres, comme '+socFmt('KQ7M4XD2')+'.');
   if(c===M.code)return bad('C’est ton propre code ! Donne-le plutôt à un ami.');
-  const hit=Object.keys(SO.P).find(id=>id!==SO.uid&&SO.P[id].code===c);
-  if(!hit)return bad('Aucun ami avec ce code. Vérifie-le, et demande-lui d’ouvrir d’abord l’onglet Social.');
-  const r=socAddId(hit),n=SO.P[hit].name;
-  if(r==='dup')return bad(n+' est déjà dans tes amis.');
-  if(r==='max')return bad('Tu as atteint la limite de '+SMAX+' amis.');
-  SO.in='';SO.m=n+' ajouté(e) à tes amis ✓';SO.merr=false;SO.h='';socRefresh()},
+  const fin=hit=>{
+   if(!hit)return bad('Aucun ami avec ce code. Vérifie-le, et demande-lui d’ouvrir d’abord l’onglet Social.');
+   const r=socAddId(hit),n=(SO.P[hit]&&SO.P[hit].name)||'Ton ami';
+   if(r==='dup')return bad(n+' est déjà dans tes amis.');
+   if(r==='max')return bad('Tu as atteint la limite de '+SMAX+' amis.');
+   SO.in='';SO.m=n+' ajouté(e) à tes amis ✓';SO.merr=false;SO.h='';socRefresh()};
+  const hit0=Object.keys(SO.P).find(id=>id!==SO.uid&&SO.P[id].code===c);
+  if(hit0||!(window.__fb&&window.__fb.lookup))return fin(hit0);
+  SO.m='Recherche…';SO.merr=false;socRefresh();
+  return window.__fb.lookup(c).then(id=>fin(id&&id!==SO.uid?id:null),()=>bad('Recherche impossible pour l’instant : réessaie dans un moment.'))},
  socBack:id=>{
   const M=st.get('soc:me',null);if(!M||!SO.can||!SO.got||!SO.col||!SO.P[id])return;
   const r=socAddId(id);
@@ -9095,11 +9252,6 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches)snow();
  mv('tournade',24,38,'mig:tn38');mv('sudoku',28,40,'mig:sd40')}catch(e){}})();
 (()=>{try{if(st.get('mig:tn40',0))return;const P=[ckey('tournade')+':','p:tournade:','k:tournade:'];for(let i=9;i>=0;i--)P.forEach(pf=>{const o=st.get(pf+(38+i),null);if(o){st.set(pf+(40+i),o);st.set(pf+(38+i),null)}});st.set('mig:tn40',1)}catch(e){}})();
 (()=>{try{if(st.get('mig:ph40',0))return;const P=[ckey('phrase')+':','p:phrase:','k:phrase:'];for(let i=9;i>=0;i--)P.forEach(pf=>{const o=st.get(pf+(20+i),null);if(o){st.set(pf+(40+i),o);st.set(pf+(20+i),null)}});st.set('mig:ph40',1)}catch(e){}})();
-/* Sudoku passe de 40 à 50 niveaux : les 10 niveaux de fêtes (40 à 49) glissent vers 50 à 59, une seule fois */
-(()=>{try{if(st.get('mig:sd50',0))return;const P=[ckey('sudoku')+':','p:sudoku:','k:sudoku:'];
- for(let i=9;i>=0;i--)P.forEach(pf=>{const o=st.get(pf+(40+i),null);if(o){st.set(pf+(50+i),o);st.set(pf+(40+i),null)}});
- const L=st.get('last',null);if(L&&L.g==='sudoku'&&L.lv>=40&&L.lv<50)st.set('last',Object.assign({},L,{lv:L.lv+10}));
- st.set('mig:sd50',1)}catch(e){}})();
 
 (()=>{try{if(st.get('mig:memo30',0))return;const P=[ckey('memo')+':','p:memo:','k:memo:'];for(let i=9;i>=0;i--)P.forEach(pf=>{const o=st.get(pf+(20+i),null);if(o){st.set(pf+(30+i),o);st.set(pf+(20+i),null)}});st.set('mig:memo30',1)}catch(e){}})();
 
@@ -9207,7 +9359,6 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches)snow();
 })();
 
 </script>
+<script>if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});</script>
 </body>
 </html>
-
-</body></html>
