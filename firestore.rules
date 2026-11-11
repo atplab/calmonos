@@ -54,6 +54,19 @@ service cloud.firestore {
       allow delete: if request.auth != null && request.auth.uid == uid;
     }
 
+    // Classements du mode infini : lb/<plateau>/e/<uid> = { s: score, n: pseudo, t: date }. Chacun n'écrit que sa ligne ;
+    // la lecture se fait par liste de 30 au plus (les meilleurs).
+    match /lb/{board}/e/{uid} {
+      allow get: if request.auth != null && board in ['g2048','tetris','pc','po'];
+      allow list: if request.auth != null && board in ['g2048','tetris','pc','po'] && request.query.limit <= 30;
+      allow create, update: if request.auth != null && request.auth.uid == uid && board in ['g2048','tetris','pc','po']
+        && request.resource.data.keys().hasOnly(['s','n','t'])
+        && request.resource.data.s is int && request.resource.data.s > 0 && request.resource.data.s <= 10000000
+        && request.resource.data.n is string && request.resource.data.n.size() <= 24
+        && request.resource.data.t is int;
+      allow delete: if request.auth != null && request.auth.uid == uid;
+    }
+
     // Tout le reste est fermé.
     match /{document=**} {
       allow read, write: if false;

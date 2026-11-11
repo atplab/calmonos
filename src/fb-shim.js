@@ -152,5 +152,9 @@ fb.open=(m)=>{
  ov=document.createElement('div');ov.className='fbo';document.body.appendChild(ov);draw();
  document.addEventListener('keydown',function k(e){if(!ov){document.removeEventListener('keydown',k);return}if(e.key==='Escape')close()});
 };
+/* Classements du mode infini (collection lb/<plateau>/e/<uid>) */
+fb.lbTop=async b=>{const F=await load(),{Fs,db}=F;const r=await Fs.getDocs(Fs.query(Fs.collection(db,'lb/'+b+'/e'),Fs.orderBy('s','desc'),Fs.limit(30)));return r.docs.map(d=>{const x=d.data();return{id:d.id,s:x.s,n:x.n}})};
+fb.lbPut=async(b,s,n)=>{const F=await load(),{Fs,db,auth}=F;if(!auth.currentUser)return;await Fs.setDoc(Fs.doc(db,'lb/'+b+'/e/'+auth.currentUser.uid),{s:Math.floor(s),n:String(n||'').slice(0,24),t:Date.now()})};
+fb.lbDel=async b=>{const F=await load(),{Fs,db,auth}=F;if(!auth.currentUser)return;await Fs.deleteDoc(Fs.doc(db,'lb/'+b+'/e/'+auth.currentUser.uid))};
 fb.out=async()=>{try{const F=await load();await F.Au.signOut(F.auth)}catch(e){}try{if(window.__fbOut)window.__fbOut()}catch(e){}};
 })();

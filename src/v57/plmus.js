@@ -92,8 +92,17 @@ const infBest=g=>(infTop(g)[0]||{s:0}).s;
 const infAll=()=>{const k={};[['g2048','g2048','s'],['tetris','tetris','s'],['pc','planetes','c'],['po','planetes','o']].forEach(([q,g,m])=>{let a=null;try{a=(st.get('inf:'+g,{})||{})[m]}catch(e){}if(typeof a==='number')a=[{s:a}];const b=Array.isArray(a)&&a[0]?a[0].s:0;if(b>0)k[q]=b});return k};
 const infSave=(g,s)=>{if(!(s>0))return false;let nw=false;try{const o=Object.assign({},st.get('inf:'+g,{})||{}),k=infKey(g);let a=infTop(g).slice();nw=!a.length||s>a[0].s;a.push({s,t:Date.now()});a.sort((x,y)=>y.s-x.s);o[k]=a.slice(0,5);st.set('inf:'+g,o)}catch(e){}
  try{socMine()}catch(e){}
+ try{infLbSync()}catch(e){}
  try{if(st.get('inf:sh','')===''&&window.claude&&window.claude.use)setTimeout(infAsk,900)}catch(e){}
  return nw};
+let infLB={},infLBp={},infLbBusy=false;
+const infLbOn=()=>!!(window.__fb&&window.__fb.lbPut&&window.__fb.u);
+async function infLbSync(){if(!infLbOn()||infLbBusy)return;infLbBusy=true;
+ try{const sh=infShr(),k=sh==='p'?infAll():{},M=st.get('soc:me',null)||{},nm=(M.name||'Joueur').slice(0,24),done=Object.assign({},st.get('inf:ls',{})||{});
+  for(const q of ['g2048','tetris','pc','po']){const sig=k[q]?k[q]+'|'+nm:'',cu=done[q]||'';if(sig===cu)continue;
+   try{if(sig)await window.__fb.lbPut(q,k[q],nm);else await window.__fb.lbDel(q);done[q]=sig;infLB={};infLBp={}}catch(e){}}
+  st.set('inf:ls',done)}catch(e){}
+ infLbBusy=false}
 const infShr=()=>{try{return st.get('inf:sh','')}catch(e){return''}};
 function infDlg(){let d=$('#infd');if(!d){d=document.createElement('div');d.id='infd';d.className='infd';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');document.body.appendChild(d)}return d}
 function infAsk(){if(infShr()!==''||$('#infd'))return;const d=infDlg();d.dataset.t='ask';
@@ -108,13 +117,18 @@ function infBoard(g,tab){const d=infDlg(),M=st.get('soc:me',null)||{};if(d.datas
  const tabs=[['m','Mes scores'],['a','Amis'],['w','Monde']].map(([k,t])=>`<button class="${k===tab?'on':''}" data-a="infTab" data-v="${g}:${k}">${t}</button>`).join('');
  let b='';
  if(tab==='m'){const a=infTop(g);b=a.length?`<ol class="infl">${a.map((x,i)=>`<li><i>${i+1}</i><span>${x.t?new Date(x.t).toLocaleDateString('fr',{day:'numeric',month:'short'}):'—'}</span><b>${x.s} pts</b></li>`).join('')}</ol>`:'<p class="note">Aucun score pour l’instant : lance une partie infinie.</p>'}
+ else if(tab==='w'&&window.__fb&&window.__fb.lbTop){infLbSync();const q=infKeyP(g),c=infLB[q];
+  if(!window.__fb.u)b='<p class="note">Connecte-toi (menu du compte) pour voir le classement mondial.</p>';
+  else if(!c||Date.now()-c.t>60000){b='<p class="note">Chargement du classement…</p>';if(!infLBp[q]){infLBp[q]=1;window.__fb.lbTop(q).then(r=>{infLB[q]={t:Date.now(),r}},()=>{infLB[q]={t:Date.now(),r:null}}).finally(()=>{infLBp[q]=0;const e=$('#infd');if(e&&e.dataset.g===g&&e.dataset.t==='w')infBoard(g,'w')})}}
+  else if(!c.r)b='<p class="note">Classement indisponible pour l’instant.</p>';
+  else b=c.r.length?`<ol class="infl">${c.r.map((x,i)=>{let h=0;for(const ch of x.id)h=(h*31+ch.charCodeAt(0))%360;return`<li class="${x.id===SO.uid?'me':''}"><i>${i+1}</i><span class="fr-av em" style="--h:${h}" aria-hidden="true">${esc((x.n||'?')[0])}</span><span>${esc(x.n||'Joueur')}</span><b>${x.s} pts</b></li>`}).join('')}</ol>`:'<p class="note">Aucun score public pour l’instant.</p>'}
  else if(!(window.claude&&window.claude.use)||SO.st==='na')b='<p class="note">Les classements sont offerts dans l’app Claude, connecté(e).</p>';
  else if(!SO.got){if(!SO.col&&SO.st!=='conn')socInit();b='<p class="note">Chargement du classement…</p>';const n=+d.dataset.n+1;d.dataset.n=n;if(n<10)setTimeout(()=>{const e=$('#infd');if(e&&e.dataset.g===g&&e.dataset.t===tab)infBoard(g,tab)},1200)}
  else{const rows=infRows(g,tab);b=rows.length?`<ol class="infl">${rows.map(([id,s],i)=>`<li class="${id===SO.uid?'me':''}"><i>${i+1}</i>${socAv(id)}<span>${esc(id===SO.uid?(M.name||'Moi'):(SO.P[id]&&SO.P[id].name)||'Ami')}</span><b>${s} pts</b></li>`).join('')}</ol>`:`<p class="note">${tab==='a'?'Aucun score d’ami à afficher pour l’instant.':'Aucun score public pour l’instant.'}</p>`}
  const sh=infShr();
  d.innerHTML=`<div class="infb"><button class="infx" data-a="infX" aria-label="Fermer">×</button><h2>${N}</h2><div class="plseg infs">${tabs}</div>${b}<div class="infsh"><small>Partage de mes scores</small><div class="plseg">${[['p','Tout le monde'],['f','Amis'],['n','Privé']].map(([k,t])=>`<button class="${(sh||'n')===k?'on':''}" data-a="infSh" data-v="${k}">${t}</button>`).join('')}</div></div></div>`}
 Object.assign(act,{infBd:v=>infBoard(v,'m'),infTab:v=>{const[g,t]=v.split(':');infBoard(g,t)},infX:()=>{const d=$('#infd');if(d)d.remove()},
- infSh:v=>{if(!/^[pfn]$/.test(v))return;try{st.set('inf:sh',v);socMine()}catch(e){}const d=$('#infd');if(!d)return;if(d.dataset.t==='ask'){d.remove()}else infBoard(d.dataset.g,d.dataset.t)}});
+ infSh:v=>{if(!/^[pfn]$/.test(v))return;try{st.set('inf:sh',v);socMine()}catch(e){}try{infLbSync()}catch(e){}const d=$('#infd');if(!d)return;if(d.dataset.t==='ask'){d.remove()}else infBoard(d.dataset.g,d.dataset.t)}});
 const infDone=g=>{let n=0;try{for(let l=0;l<nl(g);l++)if(st.get(ckey(g)+':'+l,false))n++}catch(e){}return n};
 const infOk=g=>UNL()||infDone(g)>=20;
 function infCard(g){const b=infBest(g);if(!infOk(g))return`<section class="rc plmode" data-g="🔒"><div class="rc-t"><small>Mode infini</small><b>Verrouillé</b><span>Termine 20 niveaux pour le débloquer (${infDone(g)} / 20).</span></div></section>`;
