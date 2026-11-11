@@ -1201,3 +1201,8 @@ html:has(.pg-brick),body:has(.pg-brick){touch-action:none;overscroll-behavior:no
 .albp u{display:block;height:100%;background:linear-gradient(90deg,#ffd27a,#ff8fb8);text-decoration:none}
 .albt em{font-style:normal;font-size:.8rem;opacity:.85}
 .albg{font-size:1.8rem;opacity:.7}
+/* barre de navigation : elle glisse vers le bas et disparaît dans l’accueil d’un jeu */
+#nav{transition:transform .45s cubic-bezier(.4,0,.2,1),opacity .35s ease}
+body.g #nav{transform:translateX(-50%) translateY(calc(100% + 30px));opacity:0;pointer-events:none}
+body.g #app{padding-bottom:28px}
+@media (prefers-reduced-motion:reduce){#nav{transition:none}}
