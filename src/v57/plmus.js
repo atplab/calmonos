@@ -90,6 +90,7 @@ const infKeyP=g=>g==='planetes'?'p'+infKey(g):g;
 const infTop=g=>{let a=null;try{a=(st.get('inf:'+g,{})||{})[infKey(g)]}catch(e){}if(typeof a==='number')a=[{s:a,t:0}];return Array.isArray(a)?a:[]};
 const infBest=g=>(infTop(g)[0]||{s:0}).s;
 const infAll=()=>{const k={};[['g2048','g2048','s'],['tetris','tetris','s'],['pc','planetes','c'],['po','planetes','o']].forEach(([q,g,m])=>{let a=null;try{a=(st.get('inf:'+g,{})||{})[m]}catch(e){}if(typeof a==='number')a=[{s:a}];const b=Array.isArray(a)&&a[0]?a[0].s:0;if(b>0)k[q]=b});return k};
+const infAll5=()=>{const m={};[['g2048','g2048','s'],['tetris','tetris','s'],['pc','planetes','c'],['po','planetes','o']].forEach(([q,g,k])=>{let a=null;try{a=(st.get('inf:'+g,{})||{})[k]}catch(e){}if(typeof a==='number')a=[{s:a}];if(Array.isArray(a)&&a.length)m[q]=a.slice(0,5).map(x=>x.s).filter(n=>n>0)});return m};
 const infSave=(g,s)=>{if(!(s>0))return false;let nw=false;try{const o=Object.assign({},st.get('inf:'+g,{})||{}),k=infKey(g);let a=infTop(g).slice();nw=!a.length||s>a[0].s;a.push({s,t:Date.now()});a.sort((x,y)=>y.s-x.s);o[k]=a.slice(0,5);st.set('inf:'+g,o)}catch(e){}
  try{socMine()}catch(e){}
  try{infLbSync()}catch(e){}
@@ -108,8 +109,8 @@ function infDlg(){let d=$('#infd');if(!d){d=document.createElement('div');d.id='
 function infAsk(){if(infShr()!==''||$('#infd'))return;const d=infDlg();d.dataset.t='ask';
  d.innerHTML=`<div class="infb"><h2>Partager tes scores ?</h2><p>Tes records du mode infini peuvent apparaître dans les classements. Choisis qui peut les voir : tu pourras changer plus tard dans le classement.</p><button class="btn" data-a="infSh" data-v="p">Tout le monde</button><button class="btn alt" data-a="infSh" data-v="f">Mes amis seulement</button><button class="btn alt" data-a="infSh" data-v="n">Ne pas partager</button></div>`}
 function infRows(g,scope){const q=infKeyP(g),M=st.get('soc:me',null)||{},fr=M.fr||{},rows=[],sh=infShr();
- Object.entries(SO.P).forEach(([id,p])=>{const h=p&&p.hs;if(id===SO.uid||!h||!h.k||!h.k[q])return;if(scope==='w'?h.v==='p':(h.v==='p'||h.v==='f')&&fr[id]>0)rows.push([id,h.k[q]])});
- const mine=infBest(g);if(mine>0&&SO.uid&&(scope==='w'?sh==='p':sh==='p'||sh==='f'))rows.push([SO.uid,mine]);
+ Object.entries(SO.P).forEach(([id,p])=>{const h=p&&p.hs;if(id===SO.uid||!h||!h.k||!h.k[q])return;if(scope==='w'){if(h.v==='p')rows.push([id,h.k[q]])}else if((h.v==='p'||h.v==='f')&&fr[id]>0)((h.m&&h.m[q])||[h.k[q]]).forEach(n=>rows.push([id,n]))});
+ if(SO.uid&&(scope==='w'?sh==='p':sh==='p'||sh==='f')){if(scope==='w'){const mine=infBest(g);if(mine>0)rows.push([SO.uid,mine])}else infTop(g).forEach(x=>{if(x.s>0)rows.push([SO.uid,x.s])})}
  return rows.sort((a,b)=>b[1]-a[1]).slice(0,30)}
 function infBoard(g,tab){const d=infDlg(),M=st.get('soc:me',null)||{};if(d.dataset.t==='ask')return;
  const same=d.dataset.g===g&&d.dataset.t===tab;d.dataset.g=g;d.dataset.t=tab;if(!same)d.dataset.n='0';
