@@ -1206,3 +1206,5 @@ html:has(.pg-brick),body:has(.pg-brick){touch-action:none;overscroll-behavior:no
 body.g #nav{transform:translateX(-50%) translateY(calc(100% + 30px));opacity:0;pointer-events:none}
 body.g #app{padding-bottom:28px}
 @media (prefers-reduced-motion:reduce){#nav{transition:none}}
+/* page Jeux : titre et flocons à la même hauteur que dans les jeux */
+header.top:has(>.chip[title="Flocons"]){margin-top:-12px;margin-bottom:28px}
