@@ -61,6 +61,9 @@ RR("fv:M.fv||{l:[],t:0},","fv:M.fv||{l:[],t:0},hs:M.hs||{v:'',t:0,k:{}},")
 RR("function start(g,d,l,r){","function start(g,d,l,r){INFG='';")
 RR("const t=isX(cur,lv)?'Fêtes '+xn(cur,lv):'Niveau '+(lv+1);return daily||cur==='quiz'||cur==='match3'?","const t=INFG?'Mode infini':isX(cur,lv)?'Fêtes '+xn(cur,lv):'Niveau '+(lv+1);return daily||INFG||cur==='quiz'||cur==='match3'?")
 RR("${id==='planetes'?plModeCard():''}","${id==='planetes'?plModeCard():''}${INFN[id]?infCard(id):''}")
+RR("</button></section>${id==='mots'?anaCard():''}${id==='planetes'?plModeCard():''}${INFN[id]?infCard(id):''}","</button>${INFN[id]?infArea(id):''}</section>${id==='mots'?anaCard():''}")
+RR('<section class="rc pt-${id}" data-g="${g.ic}"><div class="rc-ic">${g.ic}</div><div class="rc-t"><small>${dn?','<section class="rc rcx pt-${id}" data-g="${g.ic}"><div class="rc-ic">${g.ic}</div><div class="rc-t"><small>${dn?')
+
 B='<button class="shb" data-a="sbook"'
 PB='<button class="plfab${(PLK&&!PLPA)?\' on\':\'\'}" data-a="plr" aria-label="Lecteur de musique"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l11-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg></button>'
 SB='return`<div class="sbar" id="sbar">'

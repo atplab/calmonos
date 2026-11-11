@@ -1305,3 +1305,6 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .infl .fr-av{width:28px;height:28px;flex:none}.infsh{margin-top:14px}.infsh small{display:block;opacity:.7;margin-bottom:6px}.infs{margin-bottom:4px}
 .infs button{display:inline-flex;align-items:center;justify-content:center;gap:5px}.infic{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .plmode:has(.infbt){flex-wrap:wrap}.infbt{display:flex;gap:8px;width:100%;margin-top:12px}.infbt .btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;margin:0}
+.rc.rcx{flex-wrap:wrap}.rcx-b{flex:0 0 100%;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.28);display:grid;gap:12px}
+.rcx-r,.rcx-m{display:flex;align-items:center;gap:10px}.rcx-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.rcx-t small{opacity:.8}.rcx-t span{font-size:.9rem;opacity:.95}
+.rcx-m .plseg{flex:none}.rcx-lb{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.2);color:inherit;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}.rcx-lb .infic{width:22px;height:22px}
