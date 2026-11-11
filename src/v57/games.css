@@ -1296,3 +1296,10 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .plseg button.on{background:rgba(255,255,255,.9);color:#2a2f6a}
 .fvl{display:flex;flex-wrap:wrap;gap:6px}.fvc{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.1);font-size:.86rem}.fvc i{font-style:normal}
 .fvp{display:grid;grid-template-columns:1fr 1fr;gap:8px}.fvp .btn{padding:10px 8px}
+.infd{position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(8,12,28,.62)}
+.infb{position:relative;width:100%;max-width:420px;max-height:82vh;overflow:auto;border-radius:22px;padding:20px 18px;background:rgba(26,32,66,.97);color:#f2f5ff;box-shadow:0 10px 40px rgba(0,0,0,.4)}
+.infb h2{margin:0 0 12px;font-size:1.2rem}.infb p{margin:0 0 14px;line-height:1.45}.infb .btn{display:block;width:100%;margin:8px 0}
+.infx{position:absolute;top:10px;right:12px;border:0;background:none;color:inherit;font-size:1.6rem;line-height:1;cursor:pointer}
+.infl{list-style:none;margin:12px 0;padding:0;display:grid;gap:6px}.infl li{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:12px;background:rgba(255,255,255,.07)}
+.infl li.me{background:rgba(255,215,120,.22)}.infl i{font-style:normal;min-width:1.6em;opacity:.7;font-weight:700}.infl span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.infl b{font-variant-numeric:tabular-nums}
+.infl .fr-av{width:28px;height:28px;flex:none}.infsh{margin-top:14px}.infsh small{display:block;opacity:.7;margin-bottom:6px}.infs{margin-bottom:4px}
