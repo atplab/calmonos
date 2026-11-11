@@ -49,8 +49,13 @@ function plTone(on){try{if(!on){if(PLA)PLA.pause();return}
 function plApply(){plTone(!!PLK&&!PLPA);PLT.forEach(t=>{try{t[3]()(PLK&&!PLPA?t[0]===PLK:!(PLK&&document.hidden)&&typeof cur!=='undefined'&&cur===(t[0]==='m3'?'match3':t[0]))}catch(e){}});apply()}
 function plTick(){const o=document.getElementById('plp');if(!o){clearInterval(PLI);PLI=0;return}const e=plEl(),a=document.getElementById('ple'),b=document.getElementById('plpb');if(a)a.textContent=plFmt(e);if(b)b.style.width=((e%240)/240*100).toFixed(1)+'%'}
 const plFav=()=>{try{const f=st.get('pl:fav',[]);return Array.isArray(f)?f:[]}catch(e){return[]}};
-const plHe=(k,f)=>`<button class="plhe${f.includes(k)?' on':''}" data-a="plfv" data-v="${k}" aria-label="${f.includes(k)?'Retirer des favoris':'Ajouter aux favoris'}" aria-pressed="${f.includes(k)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg></button>`;
-function plDraw(){let o=document.getElementById('plo');const sy=o?o.scrollTop:0;if(!o){o=document.createElement('div');o.id='plo';o.className='plo';document.body.appendChild(o)}
+const plHe=(k,f)=>`<button class="plhe${f.includes(k)?' on':''}" data-a="plfv" data-v="${k}" aria-label="${f.includes(k)?'Retirer des favoris':'Ajouter aux favoris'}" aria-pressed="${f.includes(k)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/></svg></button>`;
+function plDraw(){let o=document.getElementById('plo');const sy=o?o.scrollTop:0;if(!o){o=document.createElement('div');o.id='plo';o.className='plo';document.body.appendChild(o);
+  let y0=0,dy=0,dr=false;
+  o.addEventListener('touchstart',e=>{dr=false;dy=0;if(o.scrollTop<=0&&e.touches.length===1&&!(e.target.closest&&e.target.closest('input'))){y0=e.touches[0].clientY;dr=null}},{passive:true});
+  o.addEventListener('touchmove',e=>{if(dr===null||dr===true){const d=e.touches[0].clientY-y0;if(dr===null){if(d>8&&o.scrollTop<=0)dr=true;else if(d<-4){dr=false;return}}if(dr===true){e.preventDefault();dy=Math.max(0,d);o.style.transition='none';o.style.transform='translateY('+dy+'px)'}}},{passive:false});
+  const en=()=>{if(dr===true){o.style.transition='transform .25s ease';if(dy>110)act.plx();else o.style.transform='';}dr=false};
+  o.addEventListener('touchend',en);o.addEventListener('touchcancel',en)}
  const t=PLT[PLC],pl=!!PLK&&!PLPA,I=n=>`<svg viewBox="0 0 24 24" aria-hidden="true">${n}</svg>`,
   FV=plFav(),rw=r=>`<div class="plrw"><button class="plr${PLK===r[0]?' on':''}" data-a="plp" data-v="${r[0]}"><span class="plth">${plArt(r[0])}</span><span class="plrt"><b>${r[1]}</b><small>${r[2]}</small></span>${PLK===r[0]&&!PLPA?'<i class="pleq"><u></u><u></u><u></u></i>':''}</button>${plHe(r[0],FV)}</div>`,
   rows=PLT.map(rw).join(''),fvr=PLT.filter(r=>FV.includes(r[0])).map(rw).join('');
@@ -63,7 +68,7 @@ function plDraw(){let o=document.getElementById('plo');const sy=o?o.scrollTop:0;
  if(!PLI)PLI=setInterval(plTick,1000);plTick();o.scrollTop=sy;
  document.querySelectorAll('.plfab').forEach(b=>b.classList.toggle('on',!!PLK&&!PLPA))}
 function plStart(i){const p=prefs();if(!p.music){p.music=true;savePrefs()}PLC=(i+PLT.length)%PLT.length;PLK=PLT[PLC][0];PLPA=false;PLT0=Date.now();PLE=0;audio();plApply();plSess();plDraw()}
-Object.assign(act,{plr:plDraw,plx:()=>{const o=document.getElementById('plo');if(o)o.remove()},
+Object.assign(act,{plr:plDraw,plx:()=>{const o=document.getElementById('plo');if(!o||o.classList.contains('out'))return;o.classList.add('out');o.style.transition='transform .28s ease';o.style.transform='translateY(100%)';setTimeout(()=>{if(o.classList.contains('out'))o.remove()},290)},
  plp:v=>{const i=PLT.findIndex(t=>t[0]===v);if(PLK===v&&!PLPA){PLC=i;act.plpa();return}plStart(i)},
  plpl:()=>{if(!PLK)return plStart(PLC);if(PLPA){PLPA=false;PLT0=Date.now()-PLE*1000;audio();plApply();plSess();plDraw()}else act.plpa()},
  plpa:()=>{if(!PLK)return;PLE=plEl();PLPA=true;plApply();plSess();plDraw()},
