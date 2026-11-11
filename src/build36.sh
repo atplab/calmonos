@@ -5,8 +5,13 @@ python3 patch_v36.py && for d in remote*.diff; do patch -s -F3 --no-backup-if-mi
 import re
 h=open('/mnt/user-data/outputs/nuit-de-neige-2.html',encoding='utf-8').read()
 # bouton Accueil sur les écrans de niveau terminé
+ARR='<span class="nxi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>'
+GRD='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.8"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.8"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.8"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.8"/></svg>'
+for o,n in [('<button class="btn" data-a="next" data-v="${lv+1}">Niveau suivant</button>','<button class="nxb" data-a="next" data-v="${lv+1}"><span>Niveau suivant</span>'+ARR+'</button>'),('<button class="btn alt" data-a="pick">Choisir un niveau</button>','<button class="pkb" data-a="pick">'+GRD+'Choisir un niveau</button>'),('<button class="btn" data-a="soNext">Niveau suivant</button>','<button class="nxb" data-a="soNext"><span>Niveau suivant</span>'+ARR+'</button>')]:
+    assert o in h,o
+    h=h.replace(o,n)
 AC_='<button class="hmb" data-a="tab" data-v="games" aria-label="Retour à l’accueil des jeux"><span class="hmi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></svg></span>Accueil</button>'
-for o,n in [('data-a="pick">Choisir un niveau</button></section>`;','data-a="pick">Choisir un niveau</button>'+AC_+'</section>`;'),('data-a="soBk">Retour</button>','data-a="soBk">Retour</button>'+AC_),('data-a="cbBk">Retour</button>','data-a="cbBk">Retour</button>'+AC_),('data-a="cdBk">Retour</button>','data-a="cdBk">Retour</button>'+AC_)]:
+for o,n in [('data-a="pick">'+GRD+'Choisir un niveau</button></section>`;','data-a="pick">'+GRD+'Choisir un niveau</button>'+AC_+'</section>`;'),('data-a="soBk">Retour</button>','data-a="soBk">Retour</button>'+AC_),('data-a="cbBk">Retour</button>','data-a="cbBk">Retour</button>'+AC_),('data-a="cdBk">Retour</button>','data-a="cdBk">Retour</button>'+AC_)]:
     assert o in h,o
     h=h.replace(o,n)
 # pas de zoom : viewport verrouillé + gestes de pincement, double-tap et ctrl+molette bloqués

@@ -1213,3 +1213,10 @@ header.top:has(>.chip[title="Flocons"]){margin-top:-12px;margin-bottom:28px}
 .hmi{flex:none;display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff1c2,#ffc35e 70%,#f0a03c);color:#3b2a10;box-shadow:0 0 0 6px rgba(255,214,150,.16),0 8px 22px rgba(255,170,70,.35);transition:transform .2s ease}
 .hmb:active .hmi{transform:scale(.92)}
 .hmi svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* boutons de fin de niveau */
+.nxb{display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:14px;padding:12px 12px 12px 22px;border-radius:22px;border:0;background:linear-gradient(135deg,#9a91f0,#5b57c9);color:#fff;font:inherit;font-weight:700;font-size:1rem;box-shadow:0 8px 22px rgba(90,80,200,.45),inset 0 1px 0 rgba(255,255,255,.3);cursor:pointer;touch-action:manipulation}
+.nxi{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.22)}
+.nxi svg,.pkb svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pkb{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:10px;padding:12px 18px;border-radius:22px;border:1.5px dashed rgba(255,255,255,.42);background:rgba(255,255,255,.06);color:inherit;font:inherit;font-weight:600;cursor:pointer;touch-action:manipulation}
+.nxb:active,.pkb:active{transform:scale(.98)}
