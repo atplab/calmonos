@@ -1,6 +1,6 @@
 const HBI=n=>`<svg class="hbi" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></svg><span>${n} ❄</span>`;
 /* ordre des jeux choisi par le joueur (les nouveaux jeux se rangent à la fin) */
-const GUNL=['mots','caches','sudoku','match3','colorie','scrabble','croises','uno','cherche','chess','airhockey','demenage','memo','flow','maze','tournade','solitaire','phrase','g2048','tetris','brick','demineur','quiz'];
+const GUNL=['mots','caches','sudoku','match3','colorie','scrabble','croises','uno','cherche','chess','airhockey','demenage','memo','flow','maze','tournade','solitaire','phrase','g2048','tetris','brick','planetes','demineur','quiz'];
 function gOrd(L){const O0=st.get('g:ord',[]),O=O0.length?O0:GUNL;const ix=g=>{const i=O.indexOf(g.id);return i<0?1e3+L.indexOf(g):i};return L.slice().sort((a,b)=>ix(a)-ix(b))}
 function gOrdDraw(){const L=gOrd(GD.filter(g=>!g.soon&&!gHid(g.id))),e=$('#gordo .gorl');if(!e)return;
  e.innerHTML=L.map((g,i)=>`<li style="--a:${g.a};--b:${g.b}"><i>${g.ic}</i><b>${esc(g.n)}</b><button data-a="gMv" data-v="${g.id}:-1" aria-label="Monter ${esc(g.n)}"${i?'':' disabled'}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button><button data-a="gMv" data-v="${g.id}:1" aria-label="Descendre ${esc(g.n)}"${i<L.length-1?'':' disabled'}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></li>`).join('')}
@@ -30,7 +30,7 @@ function gUnlockShow(id){
 setTimeout(()=>Object.assign(act,{gUnlX:()=>{const e=$('#gunl');if(!e)return;e.classList.add('out');setTimeout(()=>{e.remove();if(cur===null)home()},300)},gNew:v=>gUnlockShow(v),gUnlGo:v=>{const e=$('#gunl');if(e)e.remove();act.open(v)}}));
 
 /* jeux débloqués au fil de l’histoire (étapes du voyage) ; tout est ouvert en mode illimité */
-const GSTEP={flow:0,tetris:25,brick:30,tournade:5,solitaire:10,phrase:15,g2048:20,quiz:40};
+const GSTEP={flow:0,tetris:25,brick:30,planetes:0,tournade:5,solitaire:10,phrase:15,g2048:20,quiz:40};
 const gStepNow=()=>{try{return styRead().p||0}catch(e){return 0}};
 /* un jeu déjà débloqué (ou déjà ouvert) le reste, même si son étape a changé */
 function gLock(id){return !UNL()&&(GSTEP[id]||0)>gStepNow()&&!st.get('g:unl',[]).includes(id)&&!st.get('g:tap',[]).includes(id)}

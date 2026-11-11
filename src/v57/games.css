@@ -1282,3 +1282,11 @@ body.chbg[data-chsk=f]::after{background:url("data:image/svg+xml,%3Csvg xmlns='h
 .plti{flex-direction:row!important;align-items:center;justify-content:space-between;gap:8px}.plti>div{display:flex;flex-direction:column;gap:2px;min-width:0}
 .plo{overscroll-behavior:contain;animation:plin .38s cubic-bezier(.2,.85,.25,1)}
 @keyframes plin{from{transform:translateY(100%)}to{transform:none}}
+.pntw{background:linear-gradient(180deg,rgba(18,22,58,.75),rgba(10,12,36,.75))}
+.pntg{display:flex;align-items:center;gap:6px;min-width:96px;color:#fff;font-weight:700;font-size:13px}
+.pntgi{display:inline-block;width:22px;height:22px;border-radius:50%;flex:none;box-shadow:0 0 8px rgba(255,255,255,.35)}
+.play.pg-planetes{background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;padding:4px 0 0;margin-inline:-12px}
+html:has(.pg-planetes),body:has(.pg-planetes){touch-action:none;overscroll-behavior:none}
+.pg-planetes{user-select:none;-webkit-user-select:none}
+.pg-planetes>.m{position:static;translate:none;height:2.8em;min-height:2.8em;display:flex;align-items:center;justify-content:center;overflow:hidden;margin:0 0 4px;padding:0 6px;background:none;line-height:1.35}
+body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
