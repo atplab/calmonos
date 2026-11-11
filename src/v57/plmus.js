@@ -41,9 +41,9 @@ function plSess(){const ms=navigator.mediaSession;if(!ms)return;try{const t=PLT[
 /* vraie piste audio (quasi inaudible, 25 Hz) lue en boucle par un <audio> : c’est elle qui fait reconnaître l’appli comme lecteur de musique (notification, écran verrouillé) */
 let PLA=null;
 function plTone(on){try{if(!on){if(PLA)PLA.pause();return}
- if(!PLA){const sr=8000,n=sr*60,u=new Uint8Array(44+n),dv=new DataView(u.buffer),w=(o,t)=>{for(let i=0;i<t.length;i++)dv.setUint8(o+i,t.charCodeAt(i))};
-  w(0,'RIFF');dv.setUint32(4,36+n,true);w(8,'WAVEfmt ');dv.setUint32(16,16,true);dv.setUint16(20,1,true);dv.setUint16(22,1,true);dv.setUint32(24,sr,true);dv.setUint32(28,sr,true);dv.setUint16(32,1,true);dv.setUint16(34,8,true);w(36,'data');dv.setUint32(40,n,true);
-  for(let i=0;i<n;i++)u[44+i]=128+Math.round(4*Math.sin(2*Math.PI*25*i/sr));
+ if(!PLA){const sr=8000,n=sr*60*2,u=new Uint8Array(44+n),dv=new DataView(u.buffer),w=(o,t)=>{for(let i=0;i<t.length;i++)dv.setUint8(o+i,t.charCodeAt(i))};
+  w(0,'RIFF');dv.setUint32(4,36+n,true);w(8,'WAVEfmt ');dv.setUint32(16,16,true);dv.setUint16(20,1,true);dv.setUint16(22,1,true);dv.setUint32(24,sr,true);dv.setUint32(28,sr*2,true);dv.setUint16(32,2,true);dv.setUint16(34,16,true);w(36,'data');dv.setUint32(40,n,true);
+  for(let i=0;i<n/2;i++)dv.setInt16(44+i*2,Math.round(24*Math.sin(2*Math.PI*25*i/sr)),true);
   PLA=new Audio(URL.createObjectURL(new Blob([u],{type:'audio/wav'})));PLA.loop=true;PLA.setAttribute('playsinline','')}
  PLA.play().catch(()=>{})}catch(e){}}
 function plApply(){plTone(!!PLK&&!PLPA);PLT.forEach(t=>{try{t[3]()(PLK&&!PLPA?t[0]===PLK:!(PLK&&document.hidden)&&typeof cur!=='undefined'&&cur===(t[0]==='m3'?'match3':t[0]))}catch(e){}});apply()}
@@ -58,7 +58,7 @@ function plDraw(){let o=document.getElementById('plo');if(!o){o=document.createE
  <label class="plvo">${I('<path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/>')}<input type="range" min="0" max="100" value="${prefs().vol}" data-r="vol" aria-label="Volume"><span id="vv" hidden></span></label>
  <h3>Toutes les musiques</h3><div class="plls">${rows}</div>${PLK?'<button class="btn alt plsp" data-a="pls">Arrêter la lecture</button>':''}</div>`;
  if(!PLI)PLI=setInterval(plTick,1000);plTick();
- document.querySelectorAll('.plfab').forEach(b=>b.classList.toggle('on',!!PLK))}
+ document.querySelectorAll('.plfab').forEach(b=>b.classList.toggle('on',!!PLK&&!PLPA))}
 function plStart(i){const p=prefs();if(!p.music){p.music=true;savePrefs()}PLC=(i+PLT.length)%PLT.length;PLK=PLT[PLC][0];PLPA=false;PLT0=Date.now();PLE=0;audio();plApply();plSess();plDraw()}
 Object.assign(act,{plr:plDraw,plx:()=>{const o=document.getElementById('plo');if(o)o.remove()},
  plp:v=>{const i=PLT.findIndex(t=>t[0]===v);if(PLK===v&&!PLPA){PLC=i;act.plpa();return}plStart(i)},

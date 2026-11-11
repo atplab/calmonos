@@ -48,7 +48,7 @@ h=h.replace("!document.hidden&&prefs().music)","(!document.hidden||bgOn())&&pref
 h,nn=_re.subn(r"(\w+Mus)\(id==='(\w+)'&&!x&&!xa\)",lambda m:m.group(1)+"((PLK&&!PLPA)?PLK==='"+m.group(2)+"':id==='"+m.group(2)+"'&&!x&&!xa)",h)
 assert nn==10,nn
 B='<button class="shb" data-a="sbook"'
-PB='<button class="plfab${PLK?\' on\':\'\'}" data-a="plr" aria-label="Lecteur de musique"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l11-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg></button>'
+PB='<button class="plfab${(PLK&&!PLPA)?\' on\':\'\'}" data-a="plr" aria-label="Lecteur de musique"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l11-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg></button>'
 SB='return`<div class="sbar" id="sbar">'
 assert h.count(SB)==2
 h=h.replace(SB,'return`'+PB+'<div class="sbar" id="sbar">')
