@@ -1,0 +1,208 @@
+/* ---------- Scrabble entre amis : écrans, parties à distance, flocons ----------
+   Une partie par ami : sc/<id1>_<id2>. Celui dont c’est le tour écrit son coup ; l’autre le voit arriver en direct.
+   Le profil de chacun garde un petit repère (sg) pour que l’ami sache qu’une partie l’attend. */
+const SC={scr:'',fid:'',subs:{},G:{},got:{},err:{},slow:0,db:null,pend:[],sel:-1,mode:'',swp:[],zoom:false,jk:null,cf:'',cft:0,busy:false,m:'',rkk:'',ord:[],pay:''};
+const scrDb=()=>SC.db||(SC.db=(async()=>{const c=window.claude;if(!c||!c.use)return null;try{return await c.use('db')}catch(e){return null}})());
+const scrGid=f=>[SO.uid,f].sort().join('_');
+const scrNm=id=>(SO.P[id]&&SO.P[id].name)||'ton ami';
+const scrGain=n=>{fl=Math.min(1e8,fl+n);st.set('fl',fl);chip()};
+const scrSeen=(f,S)=>{const s=Object.assign({},st.get('scr:seen',{}));s[f]=[S.id,S.n];st.set('scr:seen',s)};
+/* repère dans mon profil : « il s’est passé quelque chose dans la partie avec cet ami » */
+function scrMark(f,S){
+ const M=st.get('soc:me',null);if(!M)return;
+ M.sg=Object.assign({},M.sg);M.sg[f]=[S.id,S.n,Date.now()];
+ const ks=Object.keys(M.sg);if(ks.length>40)ks.sort((a,b)=>M.sg[a][2]-M.sg[b][2]).slice(0,ks.length-40).forEach(k=>delete M.sg[k]);
+ st.set('soc:me',M);socLater()}
+/* flocons de fin de partie, une seule fois par partie (la partie précédente aussi, si l’ami en a lancé une autre entre-temps) */
+function scrPaid(f,S){
+ const mi=S.p.indexOf(SO.uid);if(mi<0)return;
+ const pd=Object.assign({},st.get('scr:paid',{})),g=scrGid(f);let tot=0,ch=false,last=null;
+ const pay=(id,w,rs,n)=>{const k=g+':'+id;if(pd[k])return;pd[k]=1;ch=true;if(rs>=0&&n<6)return;const r=scrReward(w,mi);tot+=r;last=r};
+ if(S.pv)pay(S.pv.id,S.pv.w,S.pv.rs,S.pv.n);
+ if(S.e)pay(S.id,S.w,S.rs,S.n);
+ if(!ch)return;
+ const ks=Object.keys(pd);if(ks.length>60)ks.slice(0,ks.length-60).forEach(k=>delete pd[k]);
+ st.set('scr:paid',pd);if(tot>0){scrGain(tot);SC.pay='+'+tot+' ❄'}}
+/* abonnement à la partie avec un ami (une seule fois par ami) */
+async function scrWatch(f){
+ if(SC.subs[f]||!SO.uid||Object.keys(SC.subs).length>=24)return;
+ const sub=SC.subs[f]={ref:null,un:null,t:0};
+ try{
+  const db=await scrDb();if(!db)throw 0;
+  const ref=sub.ref=db.collection('sc').doc(scrGid(f));
+  sub.t=setTimeout(()=>{if(!SC.got[f]){SC.slow=1;scrRefresh()}},10000);
+  sub.un=ref.onSnapshot(s=>{
+   const m=s.metadata||{};if(m.fromCache&&!s.exists)return;
+   clearTimeout(sub.t);
+   let S=null;if(s.exists){try{S=scrClean(s.data())}catch(e){}}
+   if(S&&(S.p.indexOf(SO.uid)<0||scrGid(f)!==S.p.slice().sort().join('_')))S=null;
+   if(S&&SC.G[f]&&SC.G[f].id===S.id&&SC.G[f].n!==S.n)SC.m='';
+   SC.G[f]=S;SC.got[f]=true;SC.err[f]=0;
+   if(S)scrPaid(f,S);
+   scrRefresh();scrTileUp()
+  },()=>{clearTimeout(sub.t);delete SC.subs[f];SC.err[f]=1;scrRefresh()});
+ }catch(e){delete SC.subs[f];SC.err[f]=1;scrRefresh()}
+}
+/* les parties à surveiller : celles dont j’ai laissé un repère, ou dont l’ami en a laissé un pour moi */
+function scrSync(){
+ if(!SO.uid||!SO.got)return;
+ const M=st.get('soc:me',null),ids=new Set();
+ if(M&&M.sg)Object.keys(M.sg).forEach(k=>ids.add(k));
+ Object.entries(SO.P).forEach(([id,p])=>{if(id!==SO.uid&&p.sg&&p.sg[SO.uid])ids.add(id)});
+ [...ids].slice(0,24).forEach(scrWatch)}
+/* nombre de parties qui attendent mon coup */
+function scrPend(){
+ if(!SO.uid)return 0;
+ const sn=st.get('scr:seen',{});let n=0;
+ Object.entries(SO.P).forEach(([id,p])=>{
+  if(id===SO.uid)return;const S=SC.G[id],mk=p.sg&&p.sg[SO.uid];
+  if(S)n+=!S.e&&S.t===S.p.indexOf(SO.uid)?1:0;
+  else if(mk&&!SC.got[id]){const s=sn[id];if(!s||s[0]!==mk[0]||s[1]<mk[1])n++}});
+ return n}
+const scrTile=()=>{const n=scrPend();return n?n+(n>1?' parties t’attendent':' partie t’attend'):'Entre amis'};
+function scrTileUp(){const t=$('.tile.pt-scrabble small');if(t)t.textContent=scrTile()}
+function scrOnProfiles(){scrSync();scrTileUp();scrRefresh()}
+const scrRefresh=()=>{if($('#scg'))scrDraw();else if($('#scrh'))scrHub2()};
+/* état d’une partie vu de mon côté */
+function scrStat(f){
+ const S=SC.G[f];
+ if(SC.err[f])return{k:'err',t:'Partie injoignable pour l’instant'};
+ if(!S)return SC.got[f]||!SC.subs[f]?{k:'new',t:'Pas encore de partie'}:{k:'load',t:'…'};
+ const mi=S.p.indexOf(SO.uid),sc=S.s[mi]+' – '+S.s[1-mi];
+ if(S.e)return{k:'end',t:(S.w<0?'Égalité':S.w===mi?'Gagné':'Perdu')+' · '+sc};
+ return S.t===mi?{k:'me',t:'À toi de jouer · '+sc}:{k:'them',t:'Au tour de '+scrNm(f)+' · '+sc}}
+const scrBtn=f=>{const k=scrStat(f).k;return k==='me'?'Jouer':k==='them'?'Voir':k==='end'?'Revoir':k==='err'?'Ouvrir':'Commencer'};
+/* petit bloc dans la fiche d’un ami */
+const scrProf=id=>{const s=scrStat(id);return`<div class="sy-h">Scrabble</div><p class="note" style="margin:0 0 10px">${esc(s.k==='new'?'Une partie à deux, chacun son tour, quand vous voulez.':s.t)}</p><button class="btn${s.k==='me'?'':' alt'}" data-a="scrFrom" data-v="${esc(id)}">${s.k==='new'?'Lancer une partie':s.k==='me'?'C’est ton tour !':'Ouvrir la partie'}</button>`};
+
+/* ---------- liste des parties ---------- */
+function scrHub(){
+ scrInstall();cur='scrabble';nv('games');theme('scrabble');SC.scr='hub';SC.fid='';
+ app.innerHTML=`<div class="top stk">${bk('home')}<div class="chip">❄ ${FLX()}</div></div><section class="glass story pt-scrabble"><i>Ⓢ</i><h2>La partie du soir</h2><p>Pose des mots sur le plateau avec les sept lettres de ton chevalet. Tu joues ton tour, ton ami joue le sien quand il le souhaite. Chaque mot rapporte 2 ❄ ; à la fin, le gagnant reçoit 10 ❄ et l’autre 2 ❄. Pas d’indices ici.</p></section><div id="scrh"></div>`;
+ if(!SO.col&&SO.st!=='conn')socInit();
+ scrLoad();scrSync();scrHub2();window.scrollTo(0,0)}
+function scrHub2(){
+ const root=$('#scrh');if(!root)return;
+ const crd=(t,b,btn)=>`<section class="glass play soc-i"><h2>${t}</h2><p class="note" style="margin:0">${b}</p>${btn?`<button class="btn" style="margin-top:14px" data-a="scrSoc">${btn}</button>`:''}</section>`;
+ const M=st.get('soc:me',null);
+ if(SO.st==='na')return void(root.innerHTML=crd('Une connexion est nécessaire','Le Scrabble se joue avec tes amis. Il faut d’abord être connecté(e) et avoir ajouté un ami : tout se passe dans l’onglet Social.','Ouvrir Social'));
+ if(!SO.uid||!SO.got||!M||!M.code){const w=SO.st==='slow'||SO.st==='err';return void(root.innerHTML=crd(w?'Pas de réponse pour l’instant':'Un instant…',w?'Les parties se chargeront dès que possible.':'Tes amis arrivent.'))}
+ const ids=new Set(Object.keys(M.fr).filter(i=>M.fr[i]>0));
+ Object.entries(SO.P).forEach(([id,p])=>{if(id!==SO.uid&&p.sg&&p.sg[SO.uid]&&SC.G[id])ids.add(id)});
+ [...ids].forEach(i=>{if(!SO.P[i])ids.delete(i)});
+ if(!ids.size)return void(root.innerHTML=crd('Il te faut un ami','Ajoute un ami avec son code ami, dans l’onglet Social : vous pourrez alors lancer une partie.','Ouvrir Social'));
+ const rk={me:0,them:1,new:2,load:2,err:3,end:3};
+ const L=[...ids].sort((a,b)=>rk[scrStat(a).k]-rk[scrStat(b).k]||scrNm(a).localeCompare(scrNm(b),'fr'));
+ const row=id=>{const s=scrStat(id);
+  return`<div class="fr-i"><button class="fr-o" data-a="scrOpen" data-v="${esc(id)}">${socAv(id)}<span class="fr-t"><b>${esc(scrNm(id))}</b><small${s.k==='me'?' class="scgo"':''}>${esc(s.t)}</small></span></button><div class="fr-b"><button class="sb${s.k==='me'?' buy':''}" data-a="scrOpen" data-v="${esc(id)}">${scrBtn(id)}</button></div></div>`};
+ root.innerHTML=`<h2 class="s">Mes parties</h2><section class="glass play soc-i">${L.map(row).join('')}</section>`}
+
+/* ---------- la partie ---------- */
+function scrOpen(f){
+ scrInstall();if(!SO.uid)return scrHub();
+ cur='scrabble';nv('games');theme('scrabble');$('#nav').hidden=true;
+ Object.assign(SC,{scr:'game',fid:f,pend:[],sel:-1,mode:'',swp:[],jk:null,cf:'',m:'',rkk:'',pay:'',slow:0});
+ app.innerHTML=`<div class="top stk"><button class="back" data-a="scrBk">‹ Parties</button><span class="tl">${esc(scrNm(f))}</span><div class="tr"><div class="chip">❄ ${FLX()}</div></div></div><section class="glass play pg-scrabble" id="scg" aria-label="Scrabble avec ${esc(scrNm(f))}"></section>`;
+ scrWatch(f);scrLoad().then(()=>{if($('#scg'))scrDraw()});scrDraw();window.scrollTo(0,0)}
+const scrCl=(S,mi)=>{const k=S.id+':'+S.r[mi];if(SC.rkk!==k){SC.rkk=k;SC.pend=[];SC.sel=-1;SC.mode='';SC.swp=[];SC.jk=null;SC.ord=[...S.r[mi]].map((_,i)=>i)}
+ SC.pend=SC.pend.filter(p=>S.b[p.i]==='.')};
+function scrPrev(S,mi){
+ if(!SC.pend.length)return SC.mode==='swap'?'Choisis les lettres à échanger.':'<span class="hint">Touche une lettre de ton chevalet, puis une case du plateau.</span>';
+ const ev=scrEval(S.b,SC.pend.map(p=>[p.i,p.c,p.j]),scrHas);
+ if(ev.e)return`<span class="hint">${esc(ev.e)}</span>`;
+ if(!ev.ok)return`<span class="bad">${ev.bad.map(w=>'« '+esc(w)+' »').join(', ')} ${ev.bad.length>1?'ne sont pas dans':'n’est pas dans'} le dictionnaire.</span>`;
+ return`<span class="okp">${ev.words.map(w=>esc(w.w)).join(' · ')} — <b>${ev.total}</b> pts${SC.pend.length===7?' · Scrabble ! +50':''}</span>`}
+function scrDraw(){
+ const root=$('#scg');if(!root||SC.scr!=='game')return;
+ const f=SC.fid,S=SC.G[f],nm=scrNm(f),me=SO.uid,mi=S?S.p.indexOf(me):-1;
+ const w=$('#scbw'),sx=w?w.scrollLeft:0,sy=w?w.scrollTop:0,z0=w&&w.classList.contains('z');
+ const crd=(t,b)=>`<h2 style="margin:0 0 6px">${t}</h2><p class="note" style="margin:0 0 14px">${b}</p>`;
+ let h;
+ if(SC.err[f])h=crd('Partie injoignable','La partie avec '+esc(nm)+' ne répond pas pour l’instant. Réessaie dans un moment.');
+ else if(!SC.got[f])h=`<p class="note" style="margin:0">${SC.slow?'Pas de réponse pour l’instant…':'Un instant…'}</p>`;
+ else if(!S||mi<0)h=crd('Scrabble avec '+esc(nm),'Chacun reçoit sept lettres. Tu commences : pose un premier mot qui passe par l’étoile, au centre. '+esc(nm)+' jouera son tour quand il le voudra, et tu verras sa réponse ici. Chaque mot rapporte 2 ❄ ; en fin de partie, le gagnant reçoit 10 ❄ et l’autre 2 ❄. Pas d’indices.')+`<button class="btn" data-a="scNew"${SC.busy?' disabled':''}>Lancer la partie</button>`;
+ else{
+  scrCl(S,mi);
+  const my=S.t===mi&&!S.e,rk=S.r[mi],used=new Set(SC.pend.map(p=>p.k)),pm=new Map(SC.pend.map(p=>[p.i,p])),lm=new Set(S.lm||[]);
+  const pt=(c)=>c===c.toUpperCase()?SCP[c]:0;
+  let cells='';
+  for(let i=0;i<225;i++){
+   const c=S.b[i],p=pm.get(i),b=SCB[i];
+   if(c!=='.'||p){const L=p?p.c:c.toUpperCase(),jk=p?p.j:c!==c.toUpperCase();
+    cells+=`<div class="scc t${p?' pd':''}${lm.has(i)?' lm':''}${jk?' jk':''}" role="gridcell" ${p?`data-a="scc" data-v="${i}" `:''}aria-label="${L}${jk?' (joker)':''}"><b>${L}</b>${jk?'':`<small>${SCP[L]}</small>`}</div>`}
+   else cells+=`<div class="scc${b!=='.'?' pm-'+b:''}" role="gridcell" data-a="scc" data-v="${i}">${i===112?'<i class="st">★</i>':b==='l'?'<i>LD</i>':b==='L'?'<i>LT</i>':b==='m'?'<i>MD</i>':b==='M'?'<i>MT</i>':''}</div>`}
+  const rack=SC.ord.map(k=>used.has(k)?'<span class="sct emp"></span>':`<button class="sct${SC.sel===k&&SC.mode!=='swap'?' on':''}${SC.mode==='swap'&&SC.swp.includes(k)?' sw':''}${rk[k]==='?'?' jk':''}" data-a="scr" data-v="${k}" aria-label="Lettre ${rk[k]==='?'?'joker':rk[k]}"><b>${rk[k]==='?'?'★':rk[k]}</b>${rk[k]==='?'?'':`<small>${SCP[rk[k]]}</small>`}</button>`).join('');
+  const ev=SC.pend.length?scrEval(S.b,SC.pend.map(p=>[p.i,p.c,p.j]),scrHas):null,can=my&&ev&&ev.ok&&!SC.busy;
+  const cf=k=>SC.cf===k;
+  let btn;
+  if(S.e)btn=`<button class="btn" data-a="scNew"${SC.busy?' disabled':''}>Nouvelle partie</button>`;
+  else if(SC.mode==='swap')btn=`<button class="btn" data-a="scSwOk"${SC.swp.length&&my&&!SC.busy?'':' disabled'}>Échanger ${SC.swp.length||''} lettre${SC.swp.length>1?'s':''}</button><button class="btn alt" data-a="scSwNo">Annuler</button>`;
+  else btn=`<button class="btn" data-a="scOk"${can?'':' disabled'}>${my?'Valider'+(can?' · '+ev.total+' pts':''):'Au tour de '+esc(nm)}</button><div class="scx"><button class="sb" data-a="scRe"${SC.pend.length?'':' disabled'}>Reprendre</button><button class="sb" data-a="scSh">Mélanger</button><button class="sb" data-a="scSwap"${my&&S.g.length>=7&&!SC.busy?'':' disabled'}>Échanger</button><button class="sb${cf('pass')?' cf':''}" data-a="scPass"${my&&!SC.busy?'':' disabled'}>${cf('pass')?'Confirmer ?':'Passer'}</button><button class="sb${SC.zoom?' buy':''}" data-a="scZ" aria-pressed="${SC.zoom}">Zoom</button></div>`;
+  const hist=S.h.slice(-8).reverse().map(e=>{const [i,wd,p]=e.split('|'),who=+i===mi?'Toi':esc(nm);return`<li><b>${who}</b> ${wd==='-'?'passe son tour':wd==='~'?'échange des lettres':wd==='x'?'abandonne':esc(wd)+' · '+p+' pts'}</li>`}).join('');
+  let st1;
+  if(S.e){
+   const early=S.rs>=0&&S.n<6;
+   st1=`<div class="scend"><b>${S.rs>=0?(S.rs===mi?'Tu as abandonné.':esc(nm)+' a abandonné.'):S.w<0?'Égalité !':S.w===mi?'Bravo, tu as gagné !':esc(nm)+' a gagné.'}</b><span>${S.s[mi]} – ${S.s[1-mi]}</span><small>${early?'Partie abandonnée trop tôt : pas de flocons.':'Tu reçois '+scrReward(S.w,mi)+' ❄'+(SC.pay&&!early?'':'')}</small></div>`}
+  else st1=`<p class="m" id="m" role="status" aria-live="polite">${esc(SC.m||(my?'À toi de jouer.':'Au tour de '+nm+'. Prépare ton prochain mot en attendant.'))}</p>`;
+  h=`${S.e?st1:''}<div class="scs"><div class="scpl${my?' on':''}"><small>Toi</small><b>${S.s[mi]}</b></div><div class="scmid"><small>Sac</small><b>${S.g.length}</b></div><div class="scpl${!my&&!S.e?' on':''}"><small>${esc(nm)}</small><b>${S.s[1-mi]}</b></div></div>${S.e?'':st1}<div class="scbw${SC.zoom?' z':''}" id="scbw"><div class="scb" role="grid" aria-label="Plateau">${cells}</div></div><div class="scpv" id="scpv" role="status" aria-live="polite">${SC.m&&!S.e?'':scrPrev(S,mi)}</div><div class="scrk" role="group" aria-label="Ton chevalet">${rack}</div><div class="sca">${btn}</div>${hist?`<details class="sch"><summary>Derniers coups</summary><ul>${hist}</ul></details>`:''}${S.e?'':`<button class="lnk scq" data-a="scQuit"${SC.busy?' disabled':''}>${cf('quit')?'Confirmer l’abandon':'Abandonner la partie'}</button>`}${SC.jk?`<div class="scjo" role="dialog" aria-label="Lettre du joker"><div class="scjc"><b>Quelle lettre pour le joker ?</b><div class="scjg">${[...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'].map(L=>`<button data-a="scJ" data-v="${L}">${L}</button>`).join('')}</div><button class="btn alt" data-a="scJx">Annuler</button></div></div>`:''}`;
+ }
+ root.innerHTML=h;
+ const w2=$('#scbw');if(w2){if(SC.zoom&&!z0){w2.scrollLeft=(w2.scrollWidth-w2.clientWidth)/2;w2.scrollTop=(w2.scrollHeight-w2.clientHeight)/2}else{w2.scrollLeft=sx;w2.scrollTop=sy}}
+}
+/* envoi d’un nouvel état ; renvoie vrai si l’ami pourra le lire */
+async function scrSend(T,words){
+ const f=SC.fid,sub=SC.subs[f];
+ if(!sub||!sub.ref||SC.busy)return false;
+ SC.busy=true;scrDraw();
+ try{await sub.ref.set(T)}catch(e){SC.busy=false;SC.m='Ton coup n’est pas parti : réessaie dans un instant.';scrDraw();return false}
+ SC.busy=false;SC.G[f]=T;SC.got[f]=true;
+ scrMark(f,T);scrSeen(f,T);if(words)scrGain(2);scrPaid(f,T);
+ return true}
+const scrCf=k=>{if(SC.cf===k){clearTimeout(SC.cft);SC.cf='';return true}SC.cf=k;clearTimeout(SC.cft);SC.cft=setTimeout(()=>{SC.cf='';scrDraw()},3500);scrDraw();return false};
+const scrMine=()=>{const S=SC.G[SC.fid];if(!S||SC.scr!=='game')return null;const mi=S.p.indexOf(SO.uid);return mi<0?null:{S,mi,my:S.t===mi&&!S.e}};
+const SCA={
+ scrSoc:()=>socScreen(),
+ scrOpen:f=>scrOpen(f),
+ scrFrom:f=>scrOpen(f),
+ scrBk:()=>{SC.scr='hub';scrHub()},
+ scr:v=>{const x=scrMine();if(!x||x.S.e)return;const k=+v;
+  if(SC.mode==='swap'){const i=SC.swp.indexOf(k);if(i>=0)SC.swp.splice(i,1);else SC.swp.push(k)}
+  else SC.sel=SC.sel===k?-1:k;
+  SC.m='';scrDraw()},
+ scc:v=>{const x=scrMine();if(!x||x.S.e||SC.mode==='swap')return;const i=+v,q=SC.pend.findIndex(p=>p.i===i);
+  SC.m='';
+  if(q>=0){SC.pend.splice(q,1);return scrDraw()}
+  if(x.S.b[i]!=='.')return;
+  if(SC.sel<0){SC.m='Touche d’abord une lettre de ton chevalet.';return scrDraw()}
+  const c=x.S.r[x.mi][SC.sel];if(!c)return;
+  if(c==='?'){SC.jk={k:SC.sel,i};return scrDraw()}
+  SC.pend.push({i,k:SC.sel,c,j:false});SC.sel=-1;scrDraw()},
+ scJ:L=>{if(!SC.jk)return;SC.pend.push({i:SC.jk.i,k:SC.jk.k,c:L,j:true});SC.jk=null;SC.sel=-1;scrDraw()},
+ scJx:()=>{SC.jk=null;scrDraw()},
+ scRe:()=>{SC.pend=[];SC.sel=-1;SC.m='';scrDraw()},
+ scSh:()=>{const x=scrMine();if(!x)return;scrShuf(SC.ord);SC.m='';scrDraw()},
+ scZ:()=>{SC.zoom=!SC.zoom;scrDraw()},
+ scNew:async()=>{
+  const f=SC.fid,old=SC.G[f];if(SC.busy||(old&&!old.e)||!SO.uid)return;
+  const T=scrNew(SO.uid,f,old&&old.e?{id:old.id,w:old.w,rs:old.rs,n:old.n}:null);
+  SC.pend=[];SC.sel=-1;SC.mode='';SC.pay='';SC.m='';SC.rkk='';
+  if(await scrSend(T,0)){sfx(523,.4);vib(15)}scrDraw()},
+ scOk:async()=>{
+  const x=scrMine();if(!x||!x.my||SC.busy)return;
+  await scrLoad();
+  const pl=SC.pend.map(p=>[p.i,p.c,p.j]),ev=scrEval(x.S.b,pl,scrHas);
+  if(ev.e||!ev.ok){SC.m=ev.e||'Ce mot n’est pas dans le dictionnaire.';return scrDraw()}
+  const keep=SC.pend.slice(),T=scrPlay(x.S,x.mi,pl,ev);
+  SC.pend=[];SC.sel=-1;SC.m='';
+  if(await scrSend(T,1)){SC.m=ev.words[0].w+' · +'+ev.total+' pts · +2 ❄';sfx(660,.4);vib(20)}else SC.pend=keep;
+  scrDraw()},
+ scPass:()=>{const x=scrMine();if(!x||!x.my||SC.busy)return;if(!scrCf('pass'))return;
+  SC.pend=[];SC.sel=-1;scrSend(scrPass(x.S,x.mi),0).then(o=>{if(o)SC.m='Tu passes ton tour.';scrDraw()})},
+ scSwap:()=>{const x=scrMine();if(!x||!x.my||x.S.g.length<7)return;SC.mode='swap';SC.swp=[];SC.pend=[];SC.sel=-1;SC.m='';scrDraw()},
+ scSwNo:()=>{SC.mode='';SC.swp=[];scrDraw()},
+ scSwOk:()=>{const x=scrMine();if(!x||!x.my||SC.busy||!SC.swp.length)return;const T=scrSwap(x.S,x.mi,SC.swp);if(!T)return;
+  SC.mode='';SC.swp=[];scrSend(T,0).then(o=>{if(o)SC.m='Lettres échangées.';scrDraw()})},
+ scQuit:()=>{const x=scrMine();if(!x||x.S.e||SC.busy)return;if(!scrCf('quit'))return;
+  SC.pend=[];SC.sel=-1;scrSend(scrResign(x.S,x.mi),0).then(()=>scrDraw())}
+};
+const scrInstall=()=>{Object.assign(act,SCA)};

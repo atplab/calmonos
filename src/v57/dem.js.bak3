@@ -1,0 +1,290 @@
+/* ---------- Déménagement : des pièces en perspective isométrique, des boîtes à vider ---------- */
+const DU=21,DZ=24;
+const dSh=(h,k)=>{const n=parseInt(h.slice(1),16),f=v=>Math.max(0,Math.min(255,Math.round(v*k)));return'#'+[n>>16,(n>>8)&255,n&255].map(f).map(v=>v.toString(16).padStart(2,'0')).join('')};
+const dHull=a=>{const p=a.slice().sort((u,v)=>u[0]-v[0]||u[1]-v[1]),cr=(o,u,v)=>(u[0]-o[0])*(v[1]-o[1])-(u[1]-o[1])*(v[0]-o[0]),lo=[],up=[];for(const q of p){while(lo.length>1&&cr(lo[lo.length-2],lo[lo.length-1],q)<=0)lo.pop();lo.push(q)}for(const q of p.reverse()){while(up.length>1&&cr(up[up.length-2],up[up.length-1],q)<=0)up.pop();up.push(q)}return lo.slice(0,-1).concat(up.slice(0,-1))};
+const dIn=(p,a)=>{let c=false;for(let i=0,j=a.length-1;i<a.length;j=i++){const[xi,yi]=a[i],[xj,yj]=a[j];if((yi>p[1])!==(yj>p[1])&&p[0]<(xj-xi)*(p[1]-yi)/(yj-yi)+xi)c=!c}return c};
+const dCen=a=>[a.reduce((s,p)=>s+p[0],0)/a.length,a.reduce((s,p)=>s+p[1],0)/a.length];
+/* ramène un point à l’intérieur d’un polygone (vers son centre) */
+const dClamp=(p,a)=>{if(dIn(p,a))return p;const c=dCen(a);let q=p;for(let i=0;i<24&&!dIn(q,a);i++)q=[q[0]+(c[0]-q[0])*.15,q[1]+(c[1]-q[1])*.15];return q};
+function dNew(W,D,Hh,wl,wr,fl,fl2){
+ const OX=D*DU+18,OY=Hh*DZ+18,P=(x,y,z=0)=>[OX+(x-y)*DU,OY+(x+y)*DU/2-z*DZ],f1=a=>a.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+ const o={P,W,D,Hh,s:'',zs:[],st:[],vw:Math.round((W+D)*DU+36),vh:Math.round(Hh*DZ+(W+D)*DU/2+44)};
+ o.pg=(a,f,st,w)=>{o.s+=`<polygon points="${f1(a)}" fill="${f}"${st?` stroke="${st}" stroke-width="${w||.8}" stroke-linejoin="round"`:''}/>`};
+ o.ln=(a,b,c,w)=>{o.s+=`<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" stroke="${c}" stroke-width="${w||1}" stroke-linecap="round"/>`};
+ /* socle du décor et sol */
+ o.pg([P(0,D),P(W,D),P(W,D,-.4),P(0,D,-.4)],dSh(fl,.72));o.pg([P(W,0),P(W,D),P(W,D,-.4),P(W,0,-.4)],dSh(fl,.56));
+ o.pg([P(0,0),P(W,0),P(W,D),P(0,D)],fl);
+ if(fl2)for(let i=0;i<W;i++)for(let j=0;j<D;j++)if((i+j)%2)o.pg([P(i,j),P(i+1,j),P(i+1,j+1),P(i,j+1)],fl2);
+ o.pg([P(0,0),P(0,D),P(0,D,Hh),P(0,0,Hh)],wl);o.pg([P(0,0),P(W,0),P(W,0,Hh),P(0,0,Hh)],wr);
+ o.pg([P(0,D,0),P(-.35,D,0),P(-.35,D,Hh),P(0,D,Hh)],dSh(wl,.62));o.pg([P(W,0,0),P(W,-.35,0),P(W,-.35,Hh),P(W,0,Hh)],dSh(wr,.6));
+ o.pg([P(0,0,Hh),P(0,D,Hh),P(-.35,D,Hh),P(-.35,0,Hh)],dSh(wl,.8));o.pg([P(0,0,Hh),P(W,0,Hh),P(W,-.35,Hh),P(0,-.35,Hh)],dSh(wr,.8));
+ o.ln(P(0,0,0),P(0,0,Hh),dSh(wl,.6),1.4);
+ o.qL=(y0,y1,z0,z1)=>[P(0,y0,z0),P(0,y1,z0),P(0,y1,z1),P(0,y0,z1)];
+ o.qR=(x0,x1,z0,z1)=>[P(x0,0,z0),P(x1,0,z0),P(x1,0,z1),P(x0,0,z1)];
+ o.zone=(k,top,hull,anchor)=>{o.zs.push({k,top,hull:hull||top,a:anchor||'b'})};
+ o.zone('floor',[P(0,0),P(W,0),P(W,D),P(0,D)],null,'b');
+ o.zone('wall',o.qL(0,D,.2,Hh-.2),null,'c');o.zone('wall',o.qR(0,W,.2,Hh-.2),null,'c');
+ /* un pavé : dessus, face gauche (côté +y), face droite (côté +x) */
+ o.box=(x,y,z,w,d,h,c,opt={})=>{
+  const T=[P(x,y,z+h),P(x+w,y,z+h),P(x+w,y+d,z+h),P(x,y+d,z+h)],Lf=[P(x,y+d,z),P(x+w,y+d,z),P(x+w,y+d,z+h),P(x,y+d,z+h)],Rf=[P(x+w,y,z),P(x+w,y+d,z),P(x+w,y+d,z+h),P(x+w,y,z+h)],st=opt.st||dSh(c,.62);
+  if(!opt.noL)o.pg(Lf,opt.l||c,st);if(!opt.noR)o.pg(Rf,opt.r||dSh(c,.8),st);o.pg(T,opt.t||dSh(c,1.12),st);
+  return{top:T,hull:dHull([...T,...Lf,...Rf]),L:Lf,R:Rf};
+ };
+ /* un cylindre (pot, cuvette) vu de dessus */
+ o.cyl=(x,y,z,r,h,c)=>{const[cx,cy]=P(x,y,z),rx=r*DU*1.41,ry=rx/2,hh=h*DZ;o.s+=`<path d="M${(cx-rx).toFixed(1)} ${cy.toFixed(1)}v${-hh.toFixed(1)}a${rx.toFixed(1)} ${ry.toFixed(1)} 0 0 1 ${(2*rx).toFixed(1)} 0v${hh.toFixed(1)}a${rx.toFixed(1)} ${ry.toFixed(1)} 0 0 1 ${(-2*rx).toFixed(1)} 0z" fill="${c}" stroke="${dSh(c,.62)}" stroke-width=".8"/><ellipse cx="${cx.toFixed(1)}" cy="${(cy-hh).toFixed(1)}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}" fill="${dSh(c,1.12)}" stroke="${dSh(c,.62)}" stroke-width=".8"/>`};
+ return o;
+}
+/* ---- les objets : 32 × 32, sans contour, couleurs douces ---- */
+const DIT={
+ teddy:['Toutou','<ellipse cx="16" cy="22.5" rx="8" ry="7" fill="#c98f5e"/><circle cx="16" cy="12" r="7.4" fill="#d9a06c"/><circle cx="10" cy="6.4" r="2.8" fill="#d9a06c"/><circle cx="22" cy="6.4" r="2.8" fill="#d9a06c"/><circle cx="10" cy="6.4" r="1.3" fill="#f1d3ad"/><circle cx="22" cy="6.4" r="1.3" fill="#f1d3ad"/><ellipse cx="16" cy="14.4" rx="3.4" ry="2.6" fill="#f1d3ad"/><circle cx="13" cy="11" r=".95" fill="#3a2a22"/><circle cx="19" cy="11" r=".95" fill="#3a2a22"/><ellipse cx="16" cy="13.2" rx="1.1" ry=".8" fill="#3a2a22"/><ellipse cx="8.4" cy="21.5" rx="2.4" ry="3.6" fill="#c98f5e"/><ellipse cx="23.6" cy="21.5" rx="2.4" ry="3.6" fill="#c98f5e"/><ellipse cx="16" cy="23" rx="4.4" ry="4" fill="#e3b68a"/>',['bed','crib','shelf','sofa']],
+ pillow:['Oreiller','<path d="M3 11q13-5 26 0l-1 11q-12 5-24 0z" fill="#f5f2ff"/><path d="M3 11q13-5 26 0l-1 11q-12 5-24 0z" fill="none" stroke="#c9c2e6" stroke-width="1.2"/><path d="M9 14q7-3 14 0" stroke="#dcd6f2" stroke-width="1.2" fill="none"/>',['bed','crib','sofa']],
+ computer:['Ordinateur','<rect x="4" y="3" width="24" height="17" rx="2.5" fill="#e9e3cf"/><rect x="7" y="6" width="18" height="11" rx="1.5" fill="#34406e"/><path d="M9 9h8M9 12h5" stroke="#8fb6f0" stroke-width="1.2"/><rect x="12" y="20" width="8" height="4" fill="#d3ccb3"/><rect x="7" y="24" width="18" height="3.5" rx="1.5" fill="#e9e3cf"/>',['desk']],
+ lamp:['Lampe','<path d="M9 5h14l3 11H6z" fill="#ffd978"/><path d="M9 5h14l1 4H8z" fill="#ffe9a8"/><rect x="15" y="16" width="2" height="9" fill="#8d7a63"/><ellipse cx="16" cy="27" rx="6" ry="2.2" fill="#8d7a63"/>',['desk','side','shelf','tv','dresser','coffee']],
+ books:['Livres','<rect x="4" y="14" width="24" height="5.5" rx="1" fill="#d96f6f"/><rect x="6" y="19.5" width="22" height="5.5" rx="1" fill="#6f9fd9"/><rect x="3" y="8.5" width="22" height="5.5" rx="1" fill="#7fc48a"/><path d="M7 11h8M9 22h8M8 16.5h9" stroke="#fff8" stroke-width="1"/>',['shelf','desk','side','coffee']],
+ shirt:['Chemise','<path d="M10 6l-6 5 3 4 3-2v13h12V13l3 2 3-4-6-5-3 2q-3 2-6 0z" fill="#cf4e55"/><path d="M13 8l3 3 3-3" fill="#e57a80"/><path d="M10 17h12M10 22h12M16 11v17M10 12v16M22 12v16" stroke="#a63a41" stroke-width=".9" opacity=".6"/>',['wardrobe']],
+ poster:['Affiche','<rect x="6" y="2" width="20" height="28" rx="1.5" fill="#f3efe6"/><rect x="8" y="4" width="16" height="15" fill="#7a8fe0"/><circle cx="16" cy="11" r="4" fill="#ffd978"/><path d="M8 19q4-5 8-1t8-3v4H8z" fill="#4a5db0"/><rect x="9" y="22" width="14" height="2" fill="#c9c2b0"/><rect x="11" y="26" width="10" height="1.6" fill="#d8d2c2"/>',['wall']],
+ clock:['Réveil','<ellipse cx="16" cy="17" rx="10.5" ry="10.5" fill="#f4efe0" stroke="#d95f5f" stroke-width="3"/><path d="M16 17V10M16 17l5 3" stroke="#3a3350" stroke-width="1.8" stroke-linecap="round"/><circle cx="9.5" cy="5.5" r="3" fill="#d95f5f"/><circle cx="22.5" cy="5.5" r="3" fill="#d95f5f"/><path d="M8 28l3-4M24 28l-3-4" stroke="#d95f5f" stroke-width="2" stroke-linecap="round"/>',['side','desk','shelf','dresser']],
+ frame:['Cadre','<rect x="3" y="4" width="26" height="24" rx="1.5" fill="#b88a58"/><rect x="6" y="7" width="20" height="18" fill="#cfe5f5"/><path d="M6 25l6-8 5 5 4-4 5 7z" fill="#79b58d"/><circle cx="21" cy="12" r="2.4" fill="#ffd978"/>',['wall','shelf','dresser','side']],
+ plant:['Plante','<path d="M16 17Q8 14 7 5q8 1 9 12z" fill="#69b87a"/><path d="M16 17Q24 14 25 6q-8 0-9 11z" fill="#4fa266"/><path d="M16 18Q15 9 16 3q3 7 0 15z" fill="#7cca8b"/><path d="M9 18h14l-2 10q-5 2-10 0z" fill="#d98c63"/><rect x="8" y="16.5" width="16" height="3" rx="1" fill="#e9a37b"/>',['shelf','side','desk','tv','counter','table','coffee','sink','dresser','ptable']],
+ toothbrush:['Brosse à dents','<rect x="12" y="2" width="4.4" height="26" rx="2" transform="rotate(18 16 15)" fill="#5bb7e8"/><rect x="18" y="2.5" width="5" height="9" rx="1.2" transform="rotate(18 16 15)" fill="#fff"/><path d="M19.2 4h3M19.2 6h3M19.2 8h3" stroke="#e86f8a" stroke-width="1" transform="rotate(18 16 15)"/>',['sink']],
+ soap:['Savon','<rect x="5" y="12" width="22" height="13" rx="5" fill="#f4c8d8"/><rect x="5" y="12" width="22" height="7" rx="4" fill="#fbe0ea"/><circle cx="23" cy="8" r="3.2" fill="#e9f6ff" stroke="#b9dcf2"/><circle cx="26" cy="12" r="1.8" fill="#e9f6ff" stroke="#b9dcf2"/>',['sink','tub']],
+ towel:['Serviette','<rect x="5" y="3" width="22" height="3.4" rx="1.6" fill="#a9a9b8"/><path d="M8 6h16l1.5 21H6.5z" fill="#5fa9e0"/><path d="M7 21h18v3H7zM7 15h18" fill="#7fc0ee"/><path d="M8 11h16" stroke="#7fc0ee" stroke-width="2"/>',['rail']],
+ shampoo:['Shampoing','<rect x="9" y="9" width="14" height="19" rx="4" fill="#58c0b0"/><rect x="12" y="3" width="8" height="7" rx="2" fill="#e9f6f3"/><rect x="11" y="15" width="10" height="7" rx="1.5" fill="#e9f6f3"/><circle cx="16" cy="18.5" r="2" fill="#58c0b0"/>',['tub','sink']],
+ paper:['Papier toilette','<ellipse cx="16" cy="9" rx="9.5" ry="4" fill="#fff"/><path d="M6.5 9v14c0 2.2 4.2 4 9.5 4s9.5-1.8 9.5-4V9" fill="#f1eee6"/><ellipse cx="16" cy="9" rx="9.5" ry="4" fill="#fff" stroke="#e2dccf"/><ellipse cx="16" cy="9" rx="3.2" ry="1.4" fill="#c6a982"/><path d="M7 16q9 4 18 0M7 21q9 4 18 0" stroke="#e2dccf" stroke-width="1" fill="none"/>',['toilet','rail']],
+ duck:['Canard','<ellipse cx="14" cy="21" rx="10" ry="6.5" fill="#ffd54a"/><circle cx="21" cy="11" r="6.4" fill="#ffd54a"/><path d="M26 11.4l5 1.4-5 2z" fill="#f0883e"/><circle cx="22.6" cy="9.4" r="1.1" fill="#3a3030"/><path d="M6 20q6-5 10-1" stroke="#f0b92a" stroke-width="1.6" fill="none"/>',['tub','shelf','bed','sink']],
+ mirror:['Miroir','<rect x="6" y="2" width="20" height="27" rx="10" fill="#7c6a58"/><rect x="8.4" y="4.4" width="15.2" height="22" rx="8" fill="#cfe6f4"/><path d="M12 8q4-2 8 0M11 13l5-5" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".8"/>',['wall']],
+ bathmat:['Tapis de bain','<path d="M3 14q13-6 26 0l-3 10q-10 4-20 0z" fill="#8fd0c8"/><path d="M3 14q13-6 26 0l-1 4q-12-5-24 0z" fill="#a9ded7"/><path d="M8 21q8 3 16 0" stroke="#6bb8ae" stroke-width="1.2" fill="none"/>',['floor']],
+ pot:['Casserole','<path d="M5 13h22l-2 12q-9 3-18 0z" fill="#9aa6b8"/><ellipse cx="16" cy="13" rx="11" ry="3.4" fill="#c4cedc"/><ellipse cx="16" cy="13.4" rx="8.5" ry="2.2" fill="#7b889c"/><rect x="26" y="13" width="5" height="2.6" rx="1.2" fill="#6a5a4a"/><path d="M5 13H1.5" stroke="#6a5a4a" stroke-width="2.4"/>',['stove']],
+ pan:['Poêle','<ellipse cx="13" cy="17" rx="11" ry="6" fill="#3e4352"/><ellipse cx="13" cy="16" rx="9" ry="4.4" fill="#5c6376"/><rect x="21" y="15" width="10" height="3.4" rx="1.6" fill="#8a5a36" transform="rotate(-12 21 15)"/>',['stove']],
+ kettle:['Bouilloire','<path d="M8 12q-1 14 2 15h12q3-1 2-15z" fill="#e2e6ee"/><rect x="9" y="8" width="14" height="5" rx="2" fill="#c0c8d6"/><circle cx="16" cy="6.5" r="2" fill="#d96f6f"/><path d="M24 14q6 1 4 8" stroke="#6a5a4a" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 16l-4-3" stroke="#c0c8d6" stroke-width="2.4" stroke-linecap="round"/>',['stove','counter']],
+ toaster:['Grille-pain','<rect x="4" y="11" width="24" height="15" rx="4" fill="#4fa88a"/><rect x="4" y="11" width="24" height="6" rx="3" fill="#6fc4a6"/><rect x="8" y="9" width="7" height="3" rx="1" fill="#2e3a38"/><rect x="17" y="9" width="7" height="3" rx="1" fill="#2e3a38"/><rect x="24" y="17" width="5" height="2.4" rx="1" fill="#2e3a38"/>',['counter','table']],
+ mug:['Tasse','<path d="M6 8h16v13q0 6-8 6t-8-6z" fill="#f2a65a"/><path d="M22 11q7 0 6 6t-6 4" stroke="#f2a65a" stroke-width="3" fill="none"/><ellipse cx="14" cy="8" rx="8" ry="2.4" fill="#fff3dc"/><ellipse cx="14" cy="8.4" rx="6.4" ry="1.7" fill="#7a4a2e"/>',['counter','table','desk','side','coffee','tv','sink','ptable','dresser','shelf']],
+ fruit:['Fruits','<path d="M4 15h24q-1 12-12 12T4 15z" fill="#b98c5b"/><circle cx="11" cy="11" r="5" fill="#e0524f"/><circle cx="19" cy="10" r="5" fill="#f0a93a"/><circle cx="15" cy="7.5" r="4.6" fill="#8fce5f"/><path d="M11 6.4q1-2 2-2" stroke="#6a3a2a" stroke-width="1.2" fill="none"/>',['table','counter','ptable']],
+ plate:['Assiettes','<ellipse cx="16" cy="21" rx="13" ry="5.4" fill="#e9eef6"/><ellipse cx="16" cy="19" rx="13" ry="5.4" fill="#f6f9fd" stroke="#cfd8e6"/><ellipse cx="16" cy="18.6" rx="8" ry="3" fill="#e4eaf4"/><ellipse cx="16" cy="14" rx="11" ry="4.4" fill="#f6f9fd" stroke="#cfd8e6"/><ellipse cx="16" cy="13.7" rx="6.6" ry="2.4" fill="#e4eaf4"/>',['table','counter']],
+ magnet:['Aimant','<path d="M16 28S4 19 4 11a6.4 6.4 0 0 1 12-3 6.4 6.4 0 0 1 12 3c0 8-12 17-12 17z" fill="#e35d7a"/><path d="M9 10q1-3 4-3" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".7"/>',['fridge']],
+ tv:['Télé','<rect x="2" y="4" width="28" height="19" rx="2.4" fill="#2c303f"/><rect x="4.4" y="6.4" width="23.2" height="14.2" rx="1" fill="#46526e"/><path d="M6 9l8 5" stroke="#6f7fa3" stroke-width="1.2" opacity=".7"/><rect x="11" y="23" width="10" height="3" fill="#2c303f"/><rect x="7" y="26" width="18" height="2.4" rx="1" fill="#2c303f"/>',['tv']],
+ gamepad:['Manette','<path d="M5 12q3-5 8-4h6q5-1 8 4l3 10q0 4-4 3l-4-4h-12l-4 4q-4 1-4-3z" fill="#6c6f88"/><path d="M9 14v5M6.5 16.5h5" stroke="#e8e8f0" stroke-width="1.8" stroke-linecap="round"/><circle cx="22" cy="14.5" r="1.6" fill="#e8667a"/><circle cx="25" cy="17.5" r="1.6" fill="#6fcf9a"/>',['tv','coffee','sofa','side']],
+ remote:['Télécommande','<rect x="11" y="3" width="10" height="26" rx="3" fill="#3f4358" transform="rotate(14 16 16)"/><circle cx="16" cy="9" r="1.8" fill="#e8667a" transform="rotate(14 16 16)"/><g fill="#9aa3c4" transform="rotate(14 16 16)"><circle cx="14" cy="15" r="1.2"/><circle cx="18" cy="15" r="1.2"/><circle cx="14" cy="19" r="1.2"/><circle cx="18" cy="19" r="1.2"/><circle cx="14" cy="23" r="1.2"/><circle cx="18" cy="23" r="1.2"/></g>',['coffee','sofa','side','tv']],
+ book:['Livre','<path d="M3 9q6-3 13 1 7-4 13-1v17q-6-3-13 1-7-4-13-1z" fill="#f5efe0"/><path d="M16 10v17" stroke="#c9b894" stroke-width="1.2"/><path d="M6 13q4-1.4 8 .6M6 17q4-1.4 8 .6M18 13.6q4-2 8-.6M18 17.6q4-2 8-.6" stroke="#b8a888" stroke-width="1" fill="none"/><path d="M3 9q6-3 13 1v17q-7-4-13-1z" fill="none" stroke="#6f87d9" stroke-width="1.6"/>',['coffee','side','shelf','desk','table','counter','sofa','ptable']],
+ cushion:['Coussin','<path d="M4 8q12-4 24 0 3 8 0 16-12 4-24 0-3-8 0-16z" fill="#e8946c"/><path d="M4 8q12-4 24 0M4 24q12 4 24 0" stroke="#c9774f" stroke-width="1.4" fill="none"/><path d="M10 12l12 8M22 12L10 20" stroke="#f3b693" stroke-width="1.4" opacity=".8"/>',['sofa','bed']],
+ blanket:['Couverture','<path d="M3 11q13-6 26 0l-1 14q-12 5-24 0z" fill="#8f7fe0"/><path d="M3 11q13-6 26 0l-.3 3q-12-5-25.4 0z" fill="#a89af0"/><path d="M6 17q10 4 20 0M6 21q10 4 20 0" stroke="#7667c8" stroke-width="1.2" fill="none"/>',['sofa','bed','crib']],
+ vase:['Vase','<path d="M12 12q-5 6-1 15h10q4-9-1-15z" fill="#6fb6d9"/><path d="M12 6h8l-1 6h-6z" fill="#8fcbe6"/><path d="M16 6q-3-4-6-3M16 6q0-5 3-5M16 6q3-3 6-1" stroke="#69b87a" stroke-width="1.6" fill="none"/><circle cx="10" cy="3" r="2" fill="#f08aa8"/><circle cx="19" cy="1.4" r="2" fill="#f4c24a"/><circle cx="22" cy="5" r="2" fill="#f08aa8"/>',['side','coffee','shelf','tv','table','dresser','ptable']],
+ quilt:['Édredon','<path d="M2 12q14-7 28 0l-1 13q-13 5-26 0z" fill="#7fb8c9"/><path d="M2 12q14-7 28 0v3q-14-6-28 0z" fill="#a3d0de"/><path d="M10 12v15M16 11v16M22 12v15" stroke="#5f9aad" stroke-width="1.1"/>',['bed']],
+ perfume:['Parfum','<rect x="8" y="12" width="16" height="15" rx="4" fill="#e9a0c8"/><rect x="12" y="6" width="8" height="6" rx="1.5" fill="#f3d4e6"/><rect x="13.5" y="2.5" width="5" height="4" rx="1.4" fill="#c9a96c"/><rect x="11" y="16" width="10" height="6" rx="1" fill="#fbe6f1"/>',['dresser','side','sink']],
+ jewel:['Boîte à bijoux','<rect x="4" y="14" width="24" height="13" rx="3" fill="#8e5fb0"/><path d="M4 17q12-9 24 0v-3q-12-9-24 0z" fill="#a87bc9"/><circle cx="16" cy="19" r="2.2" fill="#ffd978"/><circle cx="16" cy="9.6" r="1.8" fill="#9fe0f4"/>',['dresser','side']],
+ blocks:['Cubes','<rect x="3" y="16" width="12" height="12" rx="1.4" fill="#e8667a"/><rect x="15.5" y="16" width="12" height="12" rx="1.4" fill="#5fa9e0"/><rect x="9" y="4" width="12" height="12" rx="1.4" fill="#f4c24a"/><text x="9" y="26" font-size="9" font-weight="700" fill="#fff" font-family="Arial">A</text><text x="21" y="26" font-size="9" font-weight="700" fill="#fff" font-family="Arial">B</text><text x="15" y="14" font-size="9" font-weight="700" fill="#fff" font-family="Arial">C</text>',['floor','shelf','crib']],
+ ball:['Ballon','<circle cx="16" cy="16" r="12.5" fill="#f2f2f6" stroke="#cfcfdc" stroke-width="1"/><path d="M16 9l5 3.6-2 6h-6l-2-6z" fill="#3a3d52"/><path d="M16 9V3.6M21 12.6l5-1.8M19 18.6l3.4 4.6M13 18.6l-3.4 4.6M11 12.6L6 10.8" stroke="#3a3d52" stroke-width="1.4"/>',['floor']],
+ train:['Petit train','<rect x="2" y="14" width="13" height="9" rx="2" fill="#e8667a"/><rect x="4" y="8" width="7" height="7" rx="1" fill="#e8667a"/><rect x="15" y="16" width="9" height="7" rx="1.6" fill="#5fa9e0"/><rect x="25" y="16" width="6" height="7" rx="1.6" fill="#f4c24a"/><circle cx="6" cy="25" r="2.6" fill="#3a3d52"/><circle cx="12" cy="25" r="2.6" fill="#3a3d52"/><circle cx="18" cy="25" r="2.2" fill="#3a3d52"/><circle cx="28" cy="25" r="2.2" fill="#3a3d52"/><rect x="6" y="4" width="3" height="5" fill="#8a8aa0"/>',['floor','shelf']],
+ horse:['Cheval à bascule','<path d="M2 25q14 5 28 0" stroke="#b88a58" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M9 22l-1-9q-3-6 4-9 4-1 6 2l5 5q4 3 3 9l-2 2-3-4-4 1 1 5z" fill="#d9a06c"/><path d="M12 6q-5 3-3 9" stroke="#8a5a36" stroke-width="2.4" fill="none"/><circle cx="17" cy="8" r="1" fill="#3a2a22"/><path d="M11 6l-1-3 3 1z" fill="#d9a06c"/>',['floor']],
+ nightlight:['Veilleuse','<circle cx="16" cy="13" r="9" fill="#ffe9a8"/><circle cx="16" cy="13" r="12" fill="#ffe9a8" opacity=".3"/><path d="M19 8a5 5 0 1 0 2 8 4 4 0 0 1-2-8z" fill="#f4c24a"/><rect x="11" y="21" width="10" height="4" rx="1.4" fill="#8f7fe0"/><rect x="9" y="25" width="14" height="3" rx="1.4" fill="#6c5cc0"/>',['side','shelf','dresser','desk']],
+ bucket:['Seau','<path d="M7 11h18l-2.4 15q-6.6 2.4-13.2 0z" fill="#e8667a"/><path d="M7 11h18l-.4 3H7.4z" fill="#f08aa0"/><path d="M8 11q8-12 16 0" stroke="#8a8aa0" stroke-width="1.6" fill="none"/>',['sandbox','floor']],
+ shovel:['Pelle','<rect x="14.4" y="2" width="3.2" height="17" rx="1.4" fill="#b88a58"/><rect x="12" y="1.4" width="8" height="3" rx="1.4" fill="#b88a58"/><path d="M10 19h12l-1 9q-5 2.4-10 0z" fill="#5fa9e0"/><path d="M10 19h12l-.4 3H10.4z" fill="#8fc4f0"/>',['sandbox','floor']],
+ can:['Arrosoir','<path d="M5 12h16l-1.6 14H6.6z" fill="#5fb08a"/><path d="M21 15l9-7 1.6 2.4-9 7z" fill="#5fb08a"/><path d="M5 14q-4 0-3 5t5 4" stroke="#4a9473" stroke-width="2.4" fill="none"/><path d="M7 12q4-6 12 0" stroke="#4a9473" stroke-width="2.2" fill="none"/><circle cx="31" cy="8.4" r="1.6" fill="#8fd0f0"/>',['flowerbed','floor','ptable']],
+ flowerpot:['Pot de fleurs','<path d="M9 18h14l-2 10q-5 1.6-10 0z" fill="#d98c63"/><rect x="8" y="16.5" width="16" height="3.4" rx="1.2" fill="#e9a37b"/><path d="M16 17V8M16 12q-5-1-5-5M16 10q5 0 5-5" stroke="#4fa266" stroke-width="1.8" fill="none"/><circle cx="11" cy="6" r="3.2" fill="#f08aa8"/><circle cx="21" cy="4.6" r="3.2" fill="#f4c24a"/><circle cx="16" cy="6.4" r="3" fill="#f2f2f6"/>',['ptable','flowerbed','floor','table','shelf']],
+ bike:['Vélo','<circle cx="7" cy="22" r="6" fill="none" stroke="#3a3d52" stroke-width="2"/><circle cx="25" cy="22" r="6" fill="none" stroke="#3a3d52" stroke-width="2"/><path d="M7 22l6-11h8l4 11M13 11l5 11H7M21 11l-1-4h4" stroke="#e8667a" stroke-width="2.2" fill="none" stroke-linejoin="round" stroke-linecap="round"/><rect x="11" y="9" width="6" height="2.4" rx="1" fill="#3a3d52"/>',['shed','floor']],
+ chair:['Chaise de jardin','<path d="M9 4q-2 0-1 6l1 9" stroke="#e9e3d0" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M9 11h14v4H9z" fill="#f4efe0"/><path d="M9 4h14v7H9z" fill="#5fa9e0"/><path d="M9 15h14l1 13M9 15l-2 13M23 15v13" stroke="#e9e3d0" stroke-width="2.6" fill="none" stroke-linecap="round"/>',['floor']],
+ tree:['Sapin','<path d="M16 2l9 11h-4l7 9h-6l5 6H5l5-6H4l7-9H7z" fill="#3f9a62"/><path d="M16 2l9 11h-4l7 9h-6l5 6H16z" fill="#35875a"/><rect x="14" y="27" width="4" height="4" fill="#8a5a36"/><circle cx="12" cy="14" r="1.6" fill="#e8667a"/><circle cx="20" cy="19" r="1.6" fill="#f4c24a"/><circle cx="11" cy="22" r="1.6" fill="#5fa9e0"/><path d="M16 1l1 2.4 2.6.2-2 1.7.7 2.5-2.3-1.4-2.3 1.4.7-2.5-2-1.7 2.6-.2z" fill="#ffd978"/>',['floor']],
+ gift:['Cadeau','<rect x="4" y="12" width="24" height="16" rx="2" fill="#e8667a"/><rect x="4" y="12" width="24" height="5" rx="1.6" fill="#f08aa0"/><rect x="14" y="12" width="4" height="16" fill="#ffd978"/><path d="M16 12q-7-9-9-4t9 4zM16 12q7-9 9-4t-9 4z" fill="#ffd978"/>',['floor']],
+ gift2:['Cadeau','<rect x="5" y="14" width="22" height="14" rx="2" fill="#5fa9e0"/><rect x="5" y="14" width="22" height="4.4" rx="1.6" fill="#8fc4f0"/><rect x="14.4" y="14" width="3.2" height="14" fill="#fff"/><path d="M16 14q-6-8-8-4t8 4zM16 14q6-8 8-4t-8 4z" fill="#fff"/>',['floor']],
+ garland:['Guirlande','<path d="M2 8q7 12 14 4t14-4" stroke="#3f9a62" stroke-width="3.4" fill="none" stroke-linecap="round"/><circle cx="7" cy="14" r="2" fill="#e8667a"/><circle cx="16" cy="12.6" r="2" fill="#ffd978"/><circle cx="25" cy="10" r="2" fill="#5fa9e0"/><circle cx="11" cy="16" r="1.4" fill="#ffd978"/><circle cx="21" cy="14" r="1.4" fill="#e8667a"/>',['wall']],
+ stocking:['Chaussette','<path d="M9 3h12v14l7 7q2 5-3 5-4 0-6-4l-10-7z" fill="#e8667a"/><rect x="8" y="2" width="14" height="6" rx="2" fill="#fff"/><path d="M22 24q3 3 5 1" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>',['wall']],
+ globe:['Boule à neige','<circle cx="16" cy="13" r="10.5" fill="#cfe9fa" stroke="#9fc8e0" stroke-width="1.2"/><path d="M8 19q8-5 16 0v3H8z" fill="#fff"/><path d="M16 9l4 6h-8z" fill="#3f9a62"/><circle cx="11" cy="9" r="1" fill="#fff"/><circle cx="21" cy="12" r="1" fill="#fff"/><rect x="8" y="22" width="16" height="7" rx="2.4" fill="#8f6a46"/>',['desk','side','shelf','sink','counter','table','coffee','tv','dresser','ptable']],
+ candle:['Bougie','<rect x="11" y="11" width="10" height="16" rx="2" fill="#f4efe0"/><rect x="11" y="11" width="10" height="4" rx="2" fill="#fff"/><path d="M16 10V7" stroke="#6a5a4a" stroke-width="1.2"/><path d="M16 1q4 4 0 7-4-3 0-7z" fill="#f4a24a"/><path d="M16 3.6q2 2.4 0 4-2-1.6 0-4z" fill="#ffe9a8"/><ellipse cx="16" cy="28" rx="8" ry="2" fill="#c9774f"/>',['desk','side','shelf','sink','counter','table','coffee','tv','dresser','ptable']],
+ cocoa:['Chocolat chaud','<path d="M6 10h16v11q0 6-8 6t-8-6z" fill="#e8667a"/><path d="M22 13q7 0 6 5t-6 3" stroke="#e8667a" stroke-width="3" fill="none"/><ellipse cx="14" cy="10" rx="8" ry="2.4" fill="#fff3dc"/><ellipse cx="14" cy="10.4" rx="6.4" ry="1.7" fill="#6a3a22"/><circle cx="11" cy="9" r="2" fill="#fff"/><circle cx="16" cy="8.4" r="2" fill="#fff"/><path d="M10 6q-2-3 1-4M16 5q-2-3 1-4" stroke="#fff" stroke-width="1" fill="none" opacity=".7"/>',['desk','side','shelf','sink','counter','table','coffee','tv','dresser','ptable']],
+ wreath:['Couronne','<circle cx="16" cy="16" r="11" fill="none" stroke="#3f9a62" stroke-width="6"/><circle cx="16" cy="16" r="11" fill="none" stroke="#35875a" stroke-width="2" stroke-dasharray="3 3"/><circle cx="9" cy="10" r="1.8" fill="#e8667a"/><circle cx="23" cy="12" r="1.8" fill="#e8667a"/><circle cx="18" cy="26" r="1.8" fill="#e8667a"/><path d="M16 27l-4 4 4-1 4 1z" fill="#e8667a"/>',['wall']],
+ cshirt:['Chemise sur cintre','<path d="M16 2.6a2.3 2.3 0 1 1 2.3 2.3L16 6.6 4 14h24L16 6.6" fill="none" stroke="#9aa0ad" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 13l-5 4 2.5 3.5L9 19v10h14V19l2.5 1.5L28 17l-5-4-2.4 1.6q-2.6 1.6-5.2 0z" fill="#4f86d9"/><path d="M13 14.6l3 3 3-3" fill="#8fb4ee"/><path d="M16 17.6V29" stroke="#3a69b8" stroke-width=".9"/>',['wardrobe']],
+ dress:['Robe sur cintre','<path d="M16 2.6a2.3 2.3 0 1 1 2.3 2.3L16 6.6 6 13h20L16 6.6" fill="none" stroke="#9aa0ad" stroke-width="1.4" stroke-linejoin="round"/><path d="M12 12h8l1.6 6L27 30H5l5.4-12z" fill="#d9689a"/><path d="M10.4 18q5.6 2.6 11.2 0" stroke="#b34b7e" stroke-width="1.4" fill="none"/><path d="M12 12h8v2.4h-8z" fill="#ec8db6"/>',['wardrobe']],
+ sweater:['Chandail','<path d="M10 5l-7 6.4 2.6 5.4 3.2-1.6V27h14.4V15.2l3.2 1.6 2.6-5.4L22 5q-3 3.4-6 3.4T10 5z" fill="#e8a24a"/><rect x="8.8" y="24" width="14.4" height="3.2" fill="#cf8a34"/><path d="M12 5q4 5 8 0" fill="none" stroke="#cf8a34" stroke-width="1.6"/><path d="M10 14v8M16 12v10M22 14v8" stroke="#f3c07e" stroke-width="1" opacity=".7"/>',['wardrobe']],
+ socks:['Bas','<path d="M4 3h9v15l5 5q2.4 4.6-2.4 5.4-4 .2-6.4-3.4L4 18z" fill="#8fc4f0"/><rect x="4" y="3" width="9" height="4" fill="#fff"/><path d="M19 7h8v10l3.4 3.6q2 4.4-2.4 5-3.6 0-5.6-3L19 17z" fill="#e8667a"/><rect x="19" y="7" width="8" height="3.6" fill="#fff"/>',['wardrobe']]
+};
+DIT.cutlery=['Ustensiles','<path d="M8 3v9q0 3 2.2 3.6V29h2.6V15.6Q15 15 15 12V3h-1.6v8h-1.2V3h-1.6v8H9.4V3z" fill="#b9c3d2"/><path d="M19 3q4 1 4 9v4h-2V29h-2.6z" fill="#cdd5e1"/><path d="M26.5 3q3 2 2.6 8-.4 3-2.2 3.6V29h-2.6V14.6q-1.8-.6-2.1-3.6-.3-6 2.6-8z" fill="#aab4c4" opacity=".0"/><rect x="10" y="20" width="2.6" height="9" rx="1.2" fill="#8a6a4a"/><rect x="19" y="20" width="2.6" height="9" rx="1.2" fill="#8a6a4a"/>',['kdrawer']];
+DIT.spatula=['Spatule','<rect x="10" y="3" width="12" height="12" rx="3" fill="#e2833f"/><path d="M13 6v6M16 6v6M19 6v6" stroke="#b9612a" stroke-width="1.4" stroke-linecap="round"/><rect x="14.5" y="14" width="3" height="15" rx="1.5" fill="#6b4a35"/>',['kdrawer','counter']];
+DIT.towel2=DIT.towel2||null;delete DIT.towel2;
+['shirt','cshirt','dress'].forEach(k=>{DIT[k][2]=['wardrobe']});DIT.sweater[2]=['wardrobe','drawer'];DIT.socks[2]=['drawer','wardrobe'];
+DIT.pot[2]=['stove','cab'];DIT.pan[2]=['stove','cab'];DIT.plate[2]=['table','counter','cab'];
+const dSpr=(id,s)=>`<svg viewBox="0 0 32 32" width="${s}" height="${s}" aria-hidden="true">${DIT[id][1]}</svg>`;
+/* ---- meubles : chacun dessine ses pavés et déclare ses zones d’accueil ---- */
+const dWood='#c58a54',dDark='#8a5a36',dWhite='#f1f2f7';
+const dWinR=(o,x0,x1,z0,z1,sky='#a9d6f2')=>{o.pg(o.qR(x0-.12,x1+.12,z0-.12,z1+.12),'#f4f1ea','#cfc8b8');o.pg(o.qR(x0,x1,z0,z1),sky);const m=(x0+x1)/2,zm=(z0+z1)/2;o.ln(o.P(m,0,z0),o.P(m,0,z1),'#f4f1ea',1.6);o.ln(o.P(x0,0,zm),o.P(x1,0,zm),'#f4f1ea',1.6);o.pg([o.P(x0,0,z0),o.P(x0+(x1-x0)*.45,0,z0),o.P(x0+(x1-x0)*.2,0,z1),o.P(x0,0,z1)],'#fff',null);o.s=o.s.replace(/(<polygon [^>]*fill="#fff"\/>)$/,'<g opacity=".35">$1</g>')};
+const dWinL=(o,y0,y1,z0,z1,sky='#a9d6f2')=>{o.pg(o.qL(y0-.12,y1+.12,z0-.12,z1+.12),'#f4f1ea','#cfc8b8');o.pg(o.qL(y0,y1,z0,z1),sky);const m=(y0+y1)/2,zm=(z0+z1)/2;o.ln(o.P(0,m,z0),o.P(0,m,z1),'#f4f1ea',1.6);o.ln(o.P(0,y0,zm),o.P(0,y1,zm),'#f4f1ea',1.6)};
+const dDoorR=(o,x0,x1,h,c)=>{o.pg(o.qR(x0-.1,x1+.1,0,h+.1),dSh(c,.7));o.pg(o.qR(x0,x1,0,h),c,dSh(c,.7));const g=o.P(x1-.25,0,h*.48);o.s+=`<circle cx="${g[0].toFixed(1)}" cy="${g[1].toFixed(1)}" r="2.2" fill="#e8d9a8"/>`};
+const dRug=(o,x,y,w,d,c)=>{o.pg([o.P(x,y),o.P(x+w,y),o.P(x+w,y+d),o.P(x,y+d)],c,dSh(c,.8),1);o.pg([o.P(x+.25,y+.25),o.P(x+w-.25,y+.25),o.P(x+w-.25,y+d-.25),o.P(x+.25,y+d-.25)],dSh(c,1.12))};
+const dBed=(o,x,y,w,d,blank,hb='#a9744a',lin='#f3f0fa')=>{
+ o.box(x,y-.1,0,w,.3,1.9,hb);
+ const f=o.box(x,y,0,w,d,.6,hb),m=o.box(x+.1,y+.2,.6,w-.2,d-.3,.45,lin,{t:dSh(lin,1.04)});
+ const b=o.box(x+.06,y+d*.4,1.05,w-.12,d*.6-.08,.16,blank,{t:dSh(blank,1.1)});
+ o.zone('bed',m.top,dHull([...f.hull,...m.hull,...b.hull]));
+};
+const dDesk=(o,x,y,w,d,c=dWood)=>{
+ o.box(x+.05,y,0,.22,d,2.0,dSh(c,.8));o.box(x+w-.27,y,0,.22,d,2.0,dSh(c,.8));
+ const t=o.box(x,y,2.0,w,d,.24,c);o.zone('desk',t.top,dHull([...t.hull,...o.box(x,y,0,.01,.01,.01,c,{noL:1,noR:1}).hull,o.P(x+.05,y+d,0),o.P(x+w-.05,y+d,0)]));
+};
+const dChairOf=(o,x,y,c='#6f8fd8')=>{o.box(x+.35,y+.35,0,.2,.2,.8,'#555a6a');o.box(x,y,.8,1,1,.25,c);o.box(x,y,1.05,1,.2,.9,dSh(c,.9))};
+/* ---- rangements qui s’ouvrent : portes (armoires, armoires de cuisine) et tiroirs ----
+   face L : façade dans le plan y = y+d (u suit x) · face R : plan x = x+w (u suit y) */
+const dStore=(o,x,y,w,d,face,c,parts)=>{const L=face!=='R',bx=L?0:x+w,by=L?y+d:0,u0=L?x:y,
+ fp=(u,z,e=0,s=0)=>L?o.P(u+s,by+e,z):o.P(bx+e,u+s,z);
+ o.st.push({c,fp,parts:parts.map(q=>Object.assign({},q,{u0:u0+q.a*(L?w:d),u1:u0+q.b*(L?w:d)}))})};
+const dWard=(o,x,y,w,d,h,c,face='R')=>{
+ const b=o.box(x,y,0,w,d,h,c),F=face==='R'?b.R:b.L;
+ const a=F[0],bb=F[1],cc=F[2],dd=F[3],mx=(p,q,t)=>[p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t];
+ o.ln(mx(a,bb,.5),mx(dd,cc,.5),dSh(c,.55),1.2);const k=mx(mx(a,bb,.44),mx(dd,cc,.44),.5),k2=mx(mx(a,bb,.56),mx(dd,cc,.56),.5);o.s+=`<circle cx="${k[0].toFixed(1)}" cy="${k[1].toFixed(1)}" r="1.3" fill="#e8d9a8"/><circle cx="${k2[0].toFixed(1)}" cy="${k2[1].toFixed(1)}" r="1.3" fill="#e8d9a8"/>`;
+ dStore(o,x,y,w,d,face,c,w>=1.4?[{t:'door',k:'wardrobe',a:.03,b:.5,z0:.15,z1:h-.2,hg:'l',cap:3},{t:'door',k:'wardrobe',a:.5,b:.97,z0:.15,z1:h-.2,hg:'r',cap:3}]:[{t:'door',k:'wardrobe',a:.04,b:.96,z0:.15,z1:h-.2,hg:'l',cap:3}]);
+};
+const dShelf=(o,x,y,w,d,h,c=dWood,face='R')=>{
+ const b=o.box(x,y,0,w,d,h,c,{t:dSh(c,1.12)}),F=face==='R'?b.R:b.L,mx=(p,q,t)=>[p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t];
+ for(let k=1;k<4;k++){const t=k/4;o.ln(mx(F[0],F[3],t),mx(F[1],F[2],t),dSh(c,.55),1.6)}
+ const bk=[['#d96f6f','#6f9fd9','#7fc48a'],['#e8c24a','#a98fe0','#d96f6f']];
+ o.zone('shelf',F.map(p=>[p[0],p[1]]),b.hull,'b');
+};
+const dSide=(o,x,y,w,d,h=1.25,c=dWood)=>{const b=o.box(x,y,0,w,d,h,c);o.zone('side',b.top,b.hull)};
+const dDresser=(o,x,y,w,d,h=1.7,c=dWood,face='L')=>{const b=o.box(x,y,0,w,d,h,c),F=face==='R'?b.R:b.L,mx=(p,q,t)=>[p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t];for(let k=1;k<3;k++){const t=k/3;o.ln(mx(F[0],F[3],t),mx(F[1],F[2],t),dSh(c,.55),1.2)}o.zone('dresser',b.top,b.hull);
+ dStore(o,x,y,w,d,face,c,[0,1,2].map(k=>({t:'drawer',k:'drawer',a:.04,b:.96,z0:k*h/3+.06,z1:(k+1)*h/3-.06,cap:2})))};
+const dTable=(o,x,y,w,d,h,c=dWood,k='table')=>{[[0,0],[w-.22,0],[0,d-.22],[w-.22,d-.22]].forEach(([a,b])=>o.box(x+a,y+b,0,.22,.22,h,dSh(c,.8)));const t=o.box(x,y,h,w,d,.22,c);o.zone(k,t.top,t.hull)};
+const dSofa=(o,x,y,w,d,c,faceR=true)=>{
+ o.box(x,y,0,.5,d,1.7,c);const s=o.box(x+.5,y,0,w-.5,d,.9,dSh(c,1.05));o.box(x+.5,y,0,w-.5,.4,1.4,dSh(c,.95),{noL:1});o.box(x+.5,y+d-.4,0,w-.5,.4,1.3,dSh(c,.9));
+ const st=[o.P(x+.5,y+.4,.9),o.P(x+w,y+.4,.9),o.P(x+w,y+d-.4,.9),o.P(x+.5,y+d-.4,.9)];o.zone('sofa',st,dHull([...s.hull,o.P(x,y+d,1.7),o.P(x,y,1.7)]));
+};
+const dTV=(o,x,y,w,d,h=1.1,c='#5b4636')=>{const b=o.box(x,y,0,w,d,h,c);o.zone('tv',b.top,b.hull)};
+const dCounter=(o,x,y,w,d,h=1.9,c='#e8e4da',k='counter',base='#7a8896')=>{const b=o.box(x,y,0,w,d,h,base,{t:c});o.box(x-.03,y-.03,h,w+.06,d+.06,.18,c);const T=o.box(x,y,h+.18,.001,.001,.001,c,{noL:1,noR:1});const top=[o.P(x,y,h+.18),o.P(x+w,y,h+.18),o.P(x+w,y+d,h+.18),o.P(x,y+d,h+.18)];o.zone(k,top,b.hull);
+ if(k==='counter')dStore(o,x,y,w,d,'L',base,[{t:'drawer',k:'kdrawer',a:.04,b:.96,z0:h-.5,z1:h-.06,cap:2},...(w>=1.7?[{t:'door',k:'cab',a:.04,b:.5,z0:.1,z1:h-.6,hg:'l',cap:2},{t:'door',k:'cab',a:.5,b:.96,z0:.1,z1:h-.6,hg:'r',cap:2}]:[{t:'door',k:'cab',a:.04,b:.96,z0:.1,z1:h-.6,hg:'l',cap:2}])]);
+ return top};
+const dStove=(o,x,y,w,d,h=1.9)=>{const b=o.box(x,y,0,w,d,h,'#4a4f5c',{t:'#2e323c'});const T=[o.P(x,y,h),o.P(x+w,y,h),o.P(x+w,y+d,h),o.P(x,y+d,h)];
+ [[.28,.28],[.72,.28],[.28,.72],[.72,.72]].forEach(([a,c])=>{const p=o.P(x+w*a,y+d*c,h);o.s+=`<ellipse cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" rx="6" ry="3" fill="#1a1c22" stroke="#555b6c" stroke-width=".8"/>`});
+ const F=b.L,mx=(p,q,t)=>[p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t];o.pg([mx(mx(F[0],F[3],.2),mx(F[1],F[2],.2),.15),mx(mx(F[0],F[3],.2),mx(F[1],F[2],.2),.85),mx(mx(F[0],F[3],.7),mx(F[1],F[2],.7),.85),mx(mx(F[0],F[3],.7),mx(F[1],F[2],.7),.15)],'#6b7385','#2e323c');
+ o.zone('stove',T,b.hull)};
+const dFridge=(o,x,y,w,d,h=4.4)=>{const b=o.box(x,y,0,w,d,h,'#dfe6ee'),F=b.L,mx=(p,q,t)=>[p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t];o.ln(mx(F[3],F[2],0)&&mx(F[0],F[3],.62),mx(F[1],F[2],.62),'#9aa6b6',1.2);o.pg([mx(mx(F[0],F[3],.3),mx(F[1],F[2],.3),.1),mx(mx(F[0],F[3],.3),mx(F[1],F[2],.3),.14),mx(mx(F[0],F[3],.55),mx(F[1],F[2],.55),.14),mx(mx(F[0],F[3],.55),mx(F[1],F[2],.55),.1)],'#9aa6b6');o.zone('fridge',F.map(p=>[p[0],p[1]]),b.hull,'c')};
+const dTub=(o,x,y,w,d,c='#f4f6fa')=>{const b=o.box(x,y,0,w,d,1.3,c);const T=[o.P(x+.22,y+.22,1.3),o.P(x+w-.22,y+.22,1.3),o.P(x+w-.22,y+d-.22,1.3),o.P(x+.22,y+d-.22,1.3)];o.pg(T,'#b9d9ec',dSh(c,.7));o.pg([o.P(x+.3,y+.3,1.3),o.P(x+w-.3,y+.3,1.3),o.P(x+w-.3,y+d*.55,1.3),o.P(x+.3,y+d*.55,1.3)],'#cfe8f6');
+ const f=o.P(x+w-.4,y+.1,1.3);o.s+=`<rect x="${(f[0]-2).toFixed(1)}" y="${(f[1]-9).toFixed(1)}" width="4" height="9" rx="1.5" fill="#aab4c4"/><rect x="${(f[0]-6).toFixed(1)}" y="${(f[1]-11).toFixed(1)}" width="12" height="3" rx="1.5" fill="#aab4c4"/>`;o.zone('tub',T,b.hull)};
+const dToilet=(o,x,y,c='#f6f8fb')=>{o.box(x,y+.15,0,.7,1.3,1.9,c);const b=o.box(x+.7,y,0,1.0,1.6,.9,c);const T=[o.P(x+.82,y+.12,.9),o.P(x+1.58,y+.12,.9),o.P(x+1.58,y+1.48,.9),o.P(x+.82,y+1.48,.9)];o.pg(T,'#dfe6ee',dSh(c,.7));const q=o.P(x+1.2,y+.8,.9);o.s+=`<ellipse cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" rx="9" ry="5" fill="#c9d4e0"/>`;const tt=[o.P(x,y+.15,1.9),o.P(x+.7,y+.15,1.9),o.P(x+.7,y+1.45,1.9),o.P(x,y+1.45,1.9)];o.zone('toilet',tt,dHull([...b.hull,...tt]))};
+const dVanity=(o,x,y,w,d,c='#9a7050',top='#f1f2f7')=>{const b=o.box(x,y,0,w,d,1.9,c,{t:top});const T=[o.P(x,y,1.9),o.P(x+w,y,1.9),o.P(x+w,y+d,1.9),o.P(x,y+d,1.9)];const q=o.P(x+w/2,y+d/2,1.9);o.s+=`<ellipse cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" rx="10" ry="5" fill="#cfd9e4" stroke="#aab4c4" stroke-width=".8"/>`;o.zone('sink',T,b.hull)};
+const dRail=(o,y0,y1,z)=>{o.ln(o.P(.08,y0,z),o.P(.08,y1,z),'#aab4c4',2.2);o.zone('rail',o.qL(y0-.1,y1+.1,z-1.2,z+.3),null,'c')};
+const dRailR=(o,x0,x1,z)=>{o.ln(o.P(x0,.08,z),o.P(x1,.08,z),'#aab4c4',2.2);o.zone('rail',o.qR(x0-.1,x1+.1,z-1.2,z+.3),null,'c')};
+const dUpper=(o,x0,x1,c='#e8e4da')=>{const b=o.box(x0,0,3.2,x1-x0,.8,1.4,c);const F=b.L,mx=(p,q,t)=>[p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t];const n=Math.max(1,Math.round((x1-x0)/1.3));for(let k=1;k<n;k++)o.ln(mx(F[0],F[1],k/n),mx(F[3],F[2],k/n),dSh(c,.6),1)};
+const dCrib=(o,x,y,w,d)=>{const f=o.box(x,y,0,w,d,.6,'#f4efe6'),m=o.box(x+.1,y+.2,.6,w-.2,d-.3,.4,'#dfeaf6');const b=o.box(x+.06,y+d*.45,.98,w-.12,d*.55-.08,.14,'#a9d6c8',{t:'#bfe6da'});o.box(x,y-.1,0,w,.25,1.5,'#f4efe6');o.zone('bed',m.top,dHull([...f.hull,...m.hull,...b.hull]))};
+const dChest=(o,x,y,w,d,c='#5fa9e0')=>{const b=o.box(x,y,0,w,d,.9,c);o.zone('shelf',b.top,b.hull)};
+/* ---- les dix pièces : quatre au condo, six dans la petite maison ---- */
+const dBath=p=>o=>{dWinR(o,3.3,5.5,2.3,4.5);dVanity(o,0,.3,1.6,2.2,p.cab);dTub(o,2.2,0,4.6,2.2);dRailAt(o);dToilet(o,0,3.6);};
+const dRailAt=o=>dRail(o,3.4,5.2,3.0);
+const DRM=[
+ {h:'Condo',n:'La chambre',W:7,D:7,Hh:5.2,c:['#c9d3f0','#b7c3ea','#d8b58a'],b:o=>{dWinR(o,3.0,4.8,2.3,4.4);dRug(o,3.1,2.8,2.8,2.6,'#b9a6e0');dSide(o,0,.1,.9,.9);dBed(o,0,1.2,2.6,4.2,'#8f7fe0');dDesk(o,3.0,0,2.2,1.3);dChairOf(o,3.7,1.7);dWard(o,5.4,0,1.6,1.3,4.2,'#d8c9ae','L');dShelf(o,0,5.7,1.1,1.3,3.4,dWood,'R')},
+  items:['teddy','pillow','computer','lamp','books','shirt','poster','clock']},
+ {h:'Condo',n:'La salle de bain',W:7,D:7,Hh:5.2,c:['#cfe6ee','#bcd9e4','#e6eef2','#cfdde4'],b:dBath({cab:'#a9825a'}),
+  items:['toothbrush','soap','towel','shampoo','paper','duck','mirror','bathmat']},
+ {h:'Condo',n:'La cuisine',W:7,D:7,Hh:5.2,c:['#efe6d2','#e2d8c2','#b98a5a'],b:o=>{dWinL(o,2.3,4.5,2.0,4.3);dUpper(o,.4,3.3);dUpper(o,3.3,5.2);dRug(o,1.6,3.0,3.6,3.2,'#e9c9b0');dCounter(o,.4,0,1.5,1.3);dStove(o,1.9,0,1.4,1.3);dCounter(o,3.3,0,1.9,1.3);dFridge(o,5.4,0,1.4,1.3);dChairOf(o,1.3,3.6,'#e8946c');dTable(o,2.5,3.3,2.0,1.8,1.7);dChairOf(o,4.9,3.6,'#e8946c')},
+  items:['pot','kettle','toaster','mug','fruit','plate','magnet','plant','cutlery']},
+ {h:'Condo',n:'Le salon',W:7,D:7,Hh:5.2,c:['#e8d9c4','#dccbb2','#b08e6a'],b:o=>{dWinR(o,2.9,4.9,2.4,4.4);dRug(o,2.4,2.0,3.6,3.4,'#8fb0c9');dSide(o,0,.2,1,1);dSofa(o,0,1.8,2.1,3.8,'#6f86a8');dTV(o,2.4,0,2.8,1.2);dShelf(o,5.6,0,1.4,1.0,3.4,dWood,'L');dTable(o,3.3,2.7,1.6,1.7,.9,dWood,'coffee')},
+  items:['tv','gamepad','remote','book','cushion','plant','lamp','frame']},
+ {h:'Maison',n:'La chambre des parents',W:7,D:7,Hh:5.2,c:['#d8e6d8','#c5d8c8','#d3ae82'],b:o=>{dWinR(o,2.8,4.6,2.6,4.5);dRug(o,3.6,2.8,3,3,'#e0bfa0');dSide(o,0,.3,.9,1.1);dBed(o,0,1.6,3.2,4.2,'#7fb8c9','#8a5a36');dDresser(o,2.6,0,2.2,1.1);dWard(o,5.3,0,1.7,1.3,4.2,'#c8b08c','L')},
+  items:['pillow','quilt','lamp','clock','perfume','jewel','shirt','frame','cshirt','dress','sweater','socks']},
+ {h:'Maison',n:'Ta chambre',W:7,D:7,Hh:5.2,c:['#f6d9e4','#eecbda','#e7cfae'],b:o=>{dWinR(o,5.2,6.6,2.4,4.4);dRug(o,2.6,2.4,3.2,3.2,'#b9d9a0');dSide(o,0,.2,.9,.9);dBed(o,0,1.2,2.2,3.2,'#7fb8c9','#f4efe6');dShelf(o,2.8,0,2.4,.9,2.8,'#f1e6d4','L');dChest(o,5.0,4.8,1.6,1.1)},
+  items:['teddy','blocks','ball','train','horse','book','nightlight','duck','pillow','poster']},
+ {h:'Maison',n:'La salle de bain',W:7,D:7,Hh:5.2,c:['#e9dff4','#d9cdeb','#efe9f6','#dcd2ea'],b:dBath({cab:'#8b6fb0'}),
+  items:['toothbrush','soap','towel','shampoo','paper','duck','bathmat','plant','mirror','perfume']},
+ {h:'Maison',n:'La cuisine',W:7,D:7,Hh:5.2,c:['#f3e4c6','#e8d6b0','#c59a68'],b:o=>{dWinL(o,2.3,4.5,2.0,4.3);dUpper(o,.4,3.3,'#8a6a4a');dUpper(o,3.3,5.2,'#8a6a4a');dRug(o,1.6,3.0,3.6,3.2,'#d98c63');dCounter(o,.4,0,1.5,1.3,1.9,'#d9cdb6','counter','#8a6a4a');dStove(o,1.9,0,1.4,1.3);dCounter(o,3.3,0,1.9,1.3,1.9,'#d9cdb6','counter','#8a6a4a');dFridge(o,5.4,0,1.4,1.3);dChairOf(o,1.3,3.6,'#5fa9a0');dTable(o,2.5,3.3,2.0,1.8,1.7);dChairOf(o,4.9,3.6,'#5fa9a0')},
+  items:['pot','pan','mug','plate','fruit','kettle','magnet','book','toaster','plant','cutlery','spatula']},
+ {h:'Maison',n:'Le salon',W:7,D:7,Hh:5.2,c:['#e4e8f4','#d4daea','#a98d6c'],b:o=>{dWinR(o,2.9,4.9,2.4,4.4);dRug(o,2.4,2.0,3.6,3.4,'#e0a99a');dSide(o,0,.2,1,1);dSofa(o,0,1.8,2.1,3.8,'#c97b6a');dTV(o,2.4,0,2.8,1.2);dShelf(o,5.6,0,1.4,1.0,3.4,dWood,'L');dTable(o,3.3,2.7,1.6,1.7,.9,dWood,'coffee')},
+  items:['tv','remote','cushion','blanket','vase','book','plant','frame','gamepad','lamp']},
+ {h:'Maison',n:'La cour',W:7,D:7,Hh:2.2,yard:1,c:['#d9c8a6','#cdbb98','#8fcf8a'],b:o=>{
+   const fz=(F,k)=>{};
+   for(let k=.25;k<7;k+=.5){o.ln(o.P(0,k,.05),o.P(0,k,2.0),'#b9a782',1.1);o.ln(o.P(k,0,.05),o.P(k,0,2.0),'#b9a782',1.1)}
+   dRug(o,1.0,3.0,3.2,3.4,'#cfc4ae');
+   const fb=o.box(.5,.5,0,3.0,1.1,.5,'#6b4a35',{t:'#5a3d2c'});const fl=[o.P(.7,.7,.5),o.P(3.3,.7,.5),o.P(3.3,1.4,.5),o.P(.7,1.4,.5)];o.pg(fl,'#4a3426');[[1,1],[1.6,1.1],[2.2,.95],[2.8,1.15]].forEach(([a,c],k)=>{const q=o.P(a,c,.5);o.s+=`<circle cx="${q[0].toFixed(1)}" cy="${(q[1]-4).toFixed(1)}" r="3" fill="${['#f08aa8','#f4c24a','#fff','#a98fe0'][k]}"/>`});o.zone('flowerbed',fl,fb.hull);
+   const sh=o.box(5.0,.4,0,1.8,1.7,2.4,'#b98a5a');o.pg([o.P(4.9,.3,2.4),o.P(6.9,.3,2.4),o.P(6.9,2.2,2.4),o.P(4.9,2.2,2.4)].map(p=>p),'#8a4a3a','#6a3a2a');o.zone('shed',sh.L,dHull([...sh.hull]),'c');
+   dTable(o,1.4,3.5,1.6,1.4,1.5,'#b98a5a','ptable');
+   const sb=o.box(4.4,4.2,0,2.2,2.2,.55,'#c9a36a');const sd=[o.P(4.55,4.35,.55),o.P(6.45,4.35,.55),o.P(6.45,6.25,.55),o.P(4.55,6.25,.55)];o.pg(sd,'#f0d9a0');o.zone('sandbox',sd,sb.hull)},
+  items:['ball','bucket','shovel','can','flowerpot','bike','chair','book','train','blocks']}
+];
+const dPool=['tree','gift','gift2','garland','stocking','wreath','globe','candle','cocoa'];
+const DXI=DRM.map((_,i)=>dPool.filter((_,j)=>j!==i%9));
+G.find(g=>g.id==='demenage').wl=['La chambre est prête. Le lit attend déjà ses premières nuits.','La salle de bain sent le savon frais. Le canard a trouvé son bain.','La cuisine est rangée. Ça sent presque le café du matin.','Le condo est prêt : quatre pièces, et déjà un chez-soi. Mais le temps passe vite…','La chambre des parents est prête. Un grand lit, une fenêtre, un peu de silence.','Ta chambre est prête. Le toutou veille déjà sur tes premières nuits.','La salle de bain est en place, avec un tapis tout doux pour tes petits pieds.','La cuisine fume déjà de promesses : des repas, des rires, des matins.','Le salon est prêt. On y fera des câlins, des histoires et des siestes.','La cour est prête. Les ballons, le sable et les fleurs t’attendent. La petite maison est complète !'];
+function dScene(i,w){
+ const R=DRM[i],o=dNew(R.W,R.D,R.Hh,R.c[0],R.c[1],R.yard?R.c[2]:R.c[2],R.c[3]);
+ if(R.yard){}
+ R.b(o);return o;
+}
+const dStory={0:['Année 1 · Le condo','Tes parents emménagent dans leur tout premier condo : quatre pièces, beaucoup de boîtes et la douce lumière de la fin d’été. Toi, tu n’existes pas encore… mais déjà, cet endroit pense à toi. Range chaque objet là où il va.'],4:['Année 3 · La petite maison','Deux ans ont passé, et te voilà : tu viens de naître. Le condo est devenu trop petit pour une famille qui grandit. Tes parents choisissent une petite maison, avec deux chambres, un salon, une cuisine, une salle de bain… et une petite cour. Ta toute première chambre t’attend.']};
+function dmOv(h,b){const e=$('#dmo');if(e)e.remove();const d=document.createElement('div');d.className='sfr';d.id='dmo';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.innerHTML=`<div class="glass sfc">${h}<button class="btn" data-a="dmx">${b||'Commencer'}</button></div>`;app.appendChild(d)}
+function pDemen(r){
+ const X=isX('demenage',lv),i=X?xn('demenage',lv)-1:lv,R=DRM[i],ids=X?DXI[i]:R.items,sc=dScene(i);
+ let placed=r&&r.p?r.p.filter(q=>ids.includes(q[0])):[],selId=null,hintT=0,done=false,bad=new Set();
+ /* rangements : chaque porte ou tiroir est un compartiment (id « s.j ») ; ouvert ou fermé */
+ const CP=[];sc.st.forEach((S,si)=>S.parts.forEach((q,j)=>CP.push(Object.assign({id:si+'.'+j,S},q))));
+ const op=new Set(r&&r.o?r.o.filter(id=>CP.some(c=>c.id===id)):[]);
+ placed=placed.filter(q=>!q[6]||CP.some(c=>c.id===q[6]));
+ snap=()=>({p:placed,o:[...op]});
+ const f2=a=>a.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+ const SW=.34,cg=c=>{const F=c.S.fp,{u0,u1,z0,z1}=c,g={front:[F(u0,z0),F(u1,z0),F(u1,z1),F(u0,z1)]};
+  if(c.t==='door'){const wd=(u1-u0)*.96,sg=c.hg==='l'?-1:1,uh=c.hg==='l'?u0:u1,an=c.hg==='l'?SW:1.15,du=sg*wd*Math.sin(an),de=wd*Math.cos(an);g.panel=[F(uh,z0),F(uh,z0,de,du),F(uh,z1,de,du),F(uh,z1)];g.zone=g.front;
+   g.slots=[...Array(c.cap)].map((_,k)=>F((u0+u1)/2,z1-(k+.5)*(z1-z0)/c.cap));g.an='c'}
+  else{const e=.8,zf=z0+.06;g.floor=[F(u0,zf),F(u1,zf),F(u1,zf,e),F(u0,zf,e)];g.fr=[F(u0,z0,e),F(u1,z0,e),F(u1,z1,e),F(u0,z1,e)];g.sl=[F(u0,z0),F(u0,z0,e),F(u0,z1,e),F(u0,z1)];g.sr=[F(u1,z0),F(u1,z0,e),F(u1,z1,e),F(u1,z1)];g.panel=g.fr;g.zone=dHull([...g.floor,...g.fr]);
+   g.slots=[...Array(c.cap)].map((_,k)=>F(u0+(k+1)*(u1-u0)/(c.cap+1),zf,e*.5));g.an='b'}
+  return g};
+ CP.forEach(c=>c.g=cg(c));
+ const inC=id=>placed.filter(q=>q[6]===id);
+ const csz=c=>c.t==='door'?(c.k==='wardrobe'?20:15):15;
+ const knob=(p,c)=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="1.4" fill="#e8d9a8" stroke="${dSh(c,.5)}" stroke-width=".4"/>`;
+ const stores=()=>{const h=$('#dmst');if(!h)return;let o='';
+  CP.slice().sort((a,b)=>(a.S===b.S?b.z0-a.z0:0)).forEach(c=>{const g=c.g,col=c.S.c,O=op.has(c.id),mid=(a,b,t)=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];
+   if(!O){o+=`<polygon class="dmd" data-c="${c.id}" points="${f2(g.front)}" fill="${dSh(col,c.t==='door'?.96:.92)}" stroke="${dSh(col,.55)}" stroke-width=".9" stroke-linejoin="round"/>`;
+    if(c.t==='door'){const e=c.hg==='l'?mid(g.front[1],g.front[2],.5):mid(g.front[0],g.front[3],.5),q=mid(e,c.hg==='l'?mid(g.front[0],g.front[3],.5):mid(g.front[1],g.front[2],.5),.14);o+=knob(q,col)}
+    else{const a=mid(mid(g.front[0],g.front[3],.5),mid(g.front[1],g.front[2],.5),.4),b=mid(mid(g.front[0],g.front[3],.5),mid(g.front[1],g.front[2],.5),.6);o+=`<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" stroke="#e8d9a8" stroke-width="1.8" stroke-linecap="round"/>`}
+    return}
+   const its=inC(c.id).map(q=>sp(q[0],q[1],q[2],q[3],(q[4]?'pop ':'')+(bad.has(q[0])?'bad':''),csz(c))).join('');
+   if(c.t==='door'){o+=`<polygon points="${f2(g.front)}" fill="#3b2a20" stroke="${dSh(col,.5)}" stroke-width=".9"/>`;
+    const a=mid(g.front[3],g.front[2],0),b=mid(g.front[3],g.front[2],1),t1=mid(mid(g.front[0],g.front[3],.88),mid(g.front[1],g.front[2],.88),0),t2=mid(mid(g.front[0],g.front[3],.88),mid(g.front[1],g.front[2],.88),1);
+    o+=c.k==='wardrobe'?`<line x1="${t1[0].toFixed(1)}" y1="${t1[1].toFixed(1)}" x2="${t2[0].toFixed(1)}" y2="${t2[1].toFixed(1)}" stroke="#b9c3d2" stroke-width="1.6"/>`:`<polygon points="${f2([mid(g.front[0],g.front[3],.5),mid(g.front[1],g.front[2],.5),mid(g.front[1],g.front[2],.54),mid(g.front[0],g.front[3],.54)])}" fill="#6b4c38"/>`;
+    o+=its+`<polygon class="dmd o" data-c="${c.id}" points="${f2(g.panel)}" fill="${dSh(col,1.05)}" stroke="${dSh(col,.55)}" stroke-width=".9" stroke-linejoin="round"/>`}
+   else{o+=`<polygon points="${f2(g.front)}" fill="#2e2018"/><polygon points="${f2(g.sl)}" fill="${dSh(col,.7)}" stroke="${dSh(col,.5)}" stroke-width=".6"/><polygon points="${f2(g.floor)}" fill="#5a4030" stroke="${dSh(col,.5)}" stroke-width=".6"/>`+its+`<polygon points="${f2(g.sr)}" fill="${dSh(col,.8)}" stroke="${dSh(col,.5)}" stroke-width=".6"/><polygon class="dmd o" data-c="${c.id}" points="${f2(g.fr)}" fill="${dSh(col,.95)}" stroke="${dSh(col,.55)}" stroke-width=".9" stroke-linejoin="round"/>`;
+    const m1=mid(mid(g.fr[0],g.fr[3],.5),mid(g.fr[1],g.fr[2],.5),.4),m2=mid(mid(g.fr[0],g.fr[3],.5),mid(g.fr[1],g.fr[2],.5),.6);o+=`<line x1="${m1[0].toFixed(1)}" y1="${m1[1].toFixed(1)}" x2="${m2[0].toFixed(1)}" y2="${m2[1].toFixed(1)}" stroke="#e8d9a8" stroke-width="1.8" stroke-linecap="round"/>`}
+  });h.innerHTML=o};
+ /* quel compartiment sous le doigt ? */
+ const cAt=pt=>{for(const c of CP.slice().reverse()){const g=c.g,O=op.has(c.id);if(O&&dIn(pt,g.panel))return{c,panel:1};if(O&&dIn(pt,g.zone))return{c,inside:1};if(!O&&dIn(pt,g.front))return{c,closed:1}}return null};
+ const toggle=(c,v)=>{if(v)op.add(c.id);else op.delete(c.id);sfx(v?420:330,.18);vib(6);stores();layer();sv()};act.dmx=()=>{const d=$('#dmo');if(d)d.remove()};
+ const left=()=>ids.filter(id=>!placed.some(q=>q[0]===id));
+ const sp=(id,x,y,c,cls='',z=27)=>`<svg class="dmp ${cls}" data-id="${id}" x="${(x-z/2).toFixed(1)}" y="${(y-(c==='c'?z/2:z*.937)).toFixed(1)}" width="${z}" height="${z}" viewBox="0 0 32 32"><title>${DIT[id][0]}</title>${DIT[id][1]}</svg>`;
+ const layer=()=>{const rr=$('#dmr');if(rr)rr.classList.toggle('hb',bad.size>0);stores();const g=$('#dml');if(g)g.innerHTML=placed.filter(q=>!q[6]).sort((a,b)=>a[2]-b[2]).map(q=>sp(q[0],q[1],q[2],q[3],(q[4]?'pop':'')+(bad.has(q[0])?' bad':''))).join('')};
+ const tray=()=>{const t=$('#dmt'),n=left();if(!t)return;const K=Math.max(3,Math.floor(((t.clientWidth||320)-12+6)/62)),vis=n.slice(0,K);if(selId&&!vis.includes(selId))selId=null;t.innerHTML=vis.map(id=>`<button class="dmi${selId===id?' sel':''}" data-id="${id}" aria-label="${DIT[id][0]}"><span>${dSpr(id,32)}</span><small>${DIT[id][0]}</small></button>`).join('')||(bad.size?'<p class="note" style="margin:0;text-align:center">Touche un objet en surbrillance pour le reprendre et le ranger au bon endroit.</p>':'<p class="note" style="margin:0;text-align:center">La boîte est vide.</p>');const c=$('#dmn');if(c)c.textContent=n.length?n.length+' objet'+(n.length>1?'s':'')+' à ranger':bad.size?bad.size+' objet'+(bad.size>1?'s':'')+' à replacer':'Boîte vide ✓'};
+ frame(`<div class="dm"><p class="lit">${X?'Fêtes · ':R.h+' · '}${R.n}</p><div class="dmw"><svg id="dmr" viewBox="0 0 ${sc.vw} ${sc.vh}" role="img" aria-label="${R.n}">${sc.s}<g id="dmst"></g><g id="dml"></g><g id="dmh"></g></svg></div><div class="dmb"><div class="dmc"><i>📦</i><b id="dmn"></b></div><div class="dmt" id="dmt"></div></div></div>`,3);
+ const svg=$('#dmr'),ptr=e=>{const m=svg.getScreenCTM();if(!m)return null;const p=new DOMPoint(e.clientX,e.clientY).matrixTransform(m.inverse());return[p.x,p.y]};
+ const alive=()=>$('#dmr')===svg&&playing;
+ const put=(id,pt)=>{
+  const h=cAt(pt);
+  if(h&&h.inside){const c=h.c,used=new Set(inC(c.id).map(q=>q[7])),k=[...Array(c.cap).keys()].find(i=>!used.has(i));
+   if(k===undefined){const tw=CP.find(o=>o.S===c.S&&o!==c&&o.t==='door'&&c.t==='door');msg(tw&&!op.has(tw.id)?'Plus de place de ce côté : ouvre l’autre porte.':'Plus de place ici.');sfx(260,.2);return false}
+   const s0=c.g.slots[k];placed.push([id,+s0[0].toFixed(1),+s0[1].toFixed(1),c.g.an,1,c.k,c.id,k]);selId=null;msg('');sfx(520,.2);vib(8);bad.delete(id);layer();tray();placed.forEach(q=>q[4]=0);sv();
+   if(!left().length)setTimeout(()=>{if(alive())verify()},350);return true}
+  if(h&&h.closed&&DIT[id][2].includes(h.c.k)){msg(h.c.t==='door'?'C’est fermé : touche la porte pour l’ouvrir.':'Touche le tiroir pour l’ouvrir.');return false}
+  const z=[...sc.zs].reverse().find(z=>dIn(pt,z.hull));
+  if(!z){msg('Pose-le dans la pièce.');return false}
+  const a=dClamp(pt,z.top);placed.push([id,+a[0].toFixed(1),+a[1].toFixed(1),z.a,1,z.k]);selId=null;msg('');sfx(520,.2);vib(8);bad.delete(id);layer();tray();placed.forEach(q=>q[4]=0);sv();
+  if(!left().length)setTimeout(()=>{if(alive())verify()},350);
+  return true;
+ };
+ /* fin de niveau : on regarde si chaque objet est au bon endroit */
+ const okAt=q=>{let k=q[5];if(!k){const z=[...sc.zs].reverse().find(z=>dIn([q[1],q[2]],z.hull));k=z&&z.k}return!k||DIT[q[0]][2].includes(k)};
+ const verify=()=>{if(left().length||done)return;bad=new Set(placed.filter(q=>!okAt(q)).map(q=>q[0]));placed.forEach(q=>{if(bad.has(q[0])&&q[6])op.add(q[6])});layer();tray();
+  if(bad.size){msg(bad.size>1?bad.size+' objets ne sont pas au bon endroit : touche-les pour les replacer.':'Un objet n’est pas au bon endroit : touche-le pour le replacer.');vib(14);sfx(260,.25);return}
+  done=true;confetti($('#dmr'));setTimeout(()=>{if(alive())win()},900)};
+ /* toucher ou glisser */
+ let dr=null;
+ const ghost=(id,x,y)=>{let g=$('#dmg');if(!g){g=document.createElement('div');g.id='dmg';g.className='dmg';document.body.appendChild(g)}g.innerHTML=dSpr(id,40);g.style.left=x+'px';g.style.top=y+'px'};
+ const noGhost=()=>{const g=$('#dmg');if(g)g.remove()};
+ const tt=$('#dmt');
+ const mvH=e=>{if(!dr)return;if(!dr.mv&&Math.hypot(e.clientX-dr.x,e.clientY-dr.y)>8){dr.mv=true;selId=dr.id;tt.querySelectorAll('.dmi').forEach(b=>b.classList.toggle('sel',b.dataset.id===selId))}if(dr.mv)ghost(dr.id,e.clientX,e.clientY)};
+ const up=e=>{document.removeEventListener('pointermove',mvH);document.removeEventListener('pointerup',up);document.removeEventListener('pointercancel',cn);if(!dr)return;const d=dr;dr=null;noGhost();
+  if(d.mv){const r0=svg.getBoundingClientRect();if(e.clientX>=r0.left&&e.clientX<=r0.right&&e.clientY>=r0.top&&e.clientY<=r0.bottom){const p=ptr(e);if(p&&!put(d.id,p)){selId=null;tray()}}else{selId=null;tray()}}
+  else{selId=selId===d.id?null:d.id;tray();msg(selId?'Touche l’endroit où le ranger.':'')}};
+ const cn=()=>{document.removeEventListener('pointermove',mvH);document.removeEventListener('pointerup',up);document.removeEventListener('pointercancel',cn);dr=null;noGhost()};
+ tt.addEventListener('pointerdown',e=>{const b=e.target.closest('.dmi');if(!b)return;dr={id:b.dataset.id,x:e.clientX,y:e.clientY,mv:false};document.addEventListener('pointermove',mvH);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',cn)});
+ svg.addEventListener('pointerdown',e=>{const s=e.target.closest&&e.target.closest('.dmp.bad');if(!s||dr)return;e.preventDefault();const id=s.dataset.id,k=placed.findIndex(q=>q[0]===id);if(k<0)return;placed.splice(k,1);bad.delete(id);selId=null;layer();tray();sv();dr={id,x:e.clientX,y:e.clientY,mv:false};document.addEventListener('pointermove',mvH);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',cn)});
+ svg.addEventListener('pointerup',e=>{if(dr)return;const p=ptr(e);if(!p)return;const h=cAt(p);
+  if(h&&h.closed){toggle(h.c,true);msg(selId?'':(h.c.t==='door'?'La porte est ouverte.':'Le tiroir est ouvert.'));return}
+  if(h&&h.panel&&!selId){toggle(h.c,false);msg('');return}
+  if(selId)put(selId,p)});
+ act.hint=()=>{const id=selId||left()[0]||[...bad][0];if(!id||!spend(3))return;const h=$('#dmh');if(!h)return;h.innerHTML=sc.zs.filter(z=>DIT[id][2].includes(z.k)&&z.k!=='wall'&&z.k!=='floor'||DIT[id][2].includes(z.k)&&(z.k==='wall'||z.k==='floor')).map(z=>`<polygon class="dmhz" points="${z.hull.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')}"/>`).join('')+CP.filter(c=>DIT[id][2].includes(c.k)).map(c=>`<polygon class="dmhz" points="${f2(op.has(c.id)?c.g.zone:c.g.front)}"/>`).join('');msg(`Indice : « ${DIT[id][0]} » se range sur la zone qui brille.`);clearTimeout(hintT);hintT=setTimeout(()=>{const g=$('#dmh');if(g)g.innerHTML=''},3200)};
+ layer();tray();
+ if(!r&&!X&&dStory[lv]&&!st.get(ckey('demenage')+':'+lv,false))dmOv(`<small>${dStory[lv][0]}</small><p class="sfq">${dStory[lv][1]}</p>`,'Ouvrir les boîtes');
+ else if(!r&&!left().length)setTimeout(()=>{if(alive())win()},300);
+ if(r&&!left().length)setTimeout(()=>{if(alive())verify()},400);
+}

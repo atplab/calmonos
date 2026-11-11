@@ -1,0 +1,184 @@
+diff --git a/index.html b/index.html
+index f652c09..5d1c496 100644
+--- a/nuit-de-neige-2.html
++++ b/nuit-de-neige-2.html
+@@ -245,7 +245,7 @@ body{--a:#a99cf0;--b:#5458AB}
+ .story,.play{border-color:color-mix(in srgb,var(--a) 35%,rgba(255,255,255,.2))}
+ #pat{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0;transition:opacity .8s;-webkit-mask-image:linear-gradient(180deg,#000,rgba(0,0,0,.3));mask-image:linear-gradient(180deg,#000,rgba(0,0,0,.3))}
+ #pat.on{opacity:calc(.6 + .4*var(--gs,1))}
+-.pt-mots,.pt-melange{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cg fill='white' fill-opacity='.11' font-family='Georgia,serif' font-size='24'%3E%3Ctext x='10' y='34' transform='rotate(-12 10 34)'%3EA%3C/text%3E%3Ctext x='72' y='52' transform='rotate(10 72 52)'%3Eo%3C/text%3E%3Ctext x='30' y='104' transform='rotate(8 30 104)'%3EL%3C/text%3E%3Ctext x='88' y='110' transform='rotate(-15 88 110)'%3Ee%3C/text%3E%3C/g%3E%3C/svg%3E");background-size:120px}
++.pt-mots,.pt-ana,.pt-melange{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cg fill='white' fill-opacity='.11' font-family='Georgia,serif' font-size='24'%3E%3Ctext x='10' y='34' transform='rotate(-12 10 34)'%3EA%3C/text%3E%3Ctext x='72' y='52' transform='rotate(10 72 52)'%3Eo%3C/text%3E%3Ctext x='30' y='104' transform='rotate(8 30 104)'%3EL%3C/text%3E%3Ctext x='88' y='110' transform='rotate(-15 88 110)'%3Ee%3C/text%3E%3C/g%3E%3C/svg%3E");background-size:120px}
+ .pt-sudoku{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cg fill='white' fill-opacity='.1' font-family='Georgia,serif' font-size='26'%3E%3Ctext x='8' y='34'%3E7%3C/text%3E%3Ctext x='80' y='56'%3E3%3C/text%3E%3Ctext x='38' y='104'%3E9%3C/text%3E%3Ctext x='106' y='128'%3E5%3C/text%3E%3Ctext x='110' y='20'%3E1%3C/text%3E%3C/g%3E%3Cpath d='M0 50H150M0 100H150M50 0V150M100 0V150' stroke='white' stroke-opacity='.05' fill='none'/%3E%3C/svg%3E")}
+ .pt-croises{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cg fill='white' fill-opacity='.08'%3E%3Crect x='40' width='40' height='40'/%3E%3Crect x='120' y='80' width='40' height='40'/%3E%3C/g%3E%3Cpath d='M0 0H160V160H0ZM40 0V160M80 0V160M120 0V160M0 40H160M0 80H160M0 120H160' fill='none' stroke='white' stroke-opacity='.11'/%3E%3C/svg%3E");background-size:160px}
+ .pt-phrase{background-image:repeating-linear-gradient(180deg,transparent 0,transparent 33px,rgba(255,255,255,.1) 33px,rgba(255,255,255,.1) 34px),linear-gradient(90deg,transparent 40px,rgba(240,170,215,.3) 40px,rgba(240,170,215,.3) 41px,transparent 41px)}
+@@ -319,6 +319,7 @@ body.g #pat{filter:blur(2px)}
+ @keyframes shk{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+ .rw{--t:34px;display:flex;flex-wrap:wrap;gap:8px 14px;justify-content:center;margin:12px 0}
+ .rw .w{display:flex;gap:3px}
++.ac{margin:2px 0 0;text-align:center;font-size:14px;line-height:1.4;opacity:.85}
+ .rw i{width:var(--t);height:var(--t);border-radius:24%;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);display:grid;place-items:center;font:700 calc(var(--t)*.52) "Nunito Sans",sans-serif;font-style:normal;color:#fff}
+ .rw i.on{background:color-mix(in srgb,var(--a) 75%,#fff);color:var(--b);animation:pop .4s}
+ .pv{min-height:40px;text-align:center;font:600 1.5rem/1.6 Fraunces,Georgia,serif;letter-spacing:.2em}
+@@ -1997,7 +1998,7 @@ const st={get(k,d){if(k in mem)return mem[k];try{const v=localStorage.getItem(k)
+ const sh=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+ const today=new Date().toLocaleDateString('sv'),di=Math.floor(Date.now()/864e5);
+ const dkey=g=>'d:'+g+':'+today,ckey=g=>'c:'+g;
+-const NLS={mots:60,memo:30,caches:60,phrase:40,maze:30,match3:70,demenage:11,quiz:1,cherche:20,tournade:40,sudoku:40},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
++const NLS={mots:60,memo:30,caches:60,phrase:40,maze:30,match3:70,demenage:11,quiz:1,cherche:20,tournade:40,sudoku:40,ana:46},nl=id=>NLS[id]||8,NLM=Math.max(8,...Object.values(NLS));
+ /* Section temporaire « fêtes » : 10 niveaux spéciaux de plus par jeu (indices nl, nl+1 … nl+9), disponible tout de suite et jusqu’au 11 janvier 2027 inclus ; #noel dans l’adresse force l’affichage.
+    Ils ne font pas partie du code de sauvegarde ni de la synchronisation. */
+ const NLX=10,xmasOn=()=>{const d=new Date(),m=d.getMonth();return UNL()||location.hash==='#noel'||m===11||(m===0&&d.getDate()<12)},isX=(g,l)=>l>=nl(g),xn=(g,l)=>l-nl(g)+1;
+@@ -2575,7 +2576,8 @@ const ORD=['mots','caches','croises','phrase','tournade','maze','memo','sudoku',
+ const DL=[
+ {id:'wordle',n:'Le mot du jour',ic:'✺',a:'#cfd6ff',b:'#4a5a9a',t:'Le mot du jour',w:'Le mot du jour est trouvé.'}
+ ];
+-const ALL=[...G,...DL,...SP],lh=g=>DL.some(x=>x.id===g)?dayScreen():hub(g);
++const ANA={id:'ana',n:'Anagramme',ic:'⇄',a:'#c9a2f0',b:'#6b4aa8',t:'Le vent brouille les lettres',s:'Le vent a mélangé les lettres de la roue. Utilise-les toutes, sans en oublier une, pour retrouver le mot caché. Parfois, plusieurs mots se cachent dans les mêmes lettres.',w:'Les lettres retrouvent leur place. Au village de Givre, le vent s’apaise.',nox:1};
++const ALL=[...G,ANA,...DL,...SP],lh=g=>DL.some(x=>x.id===g)?dayScreen():hub(g);
+ const Q=['Chaque flocon tombe sans se presser, et pourtant la neige couvre tout.','Ce soir, il suffit de respirer lentement. Le reste attendra le matin.','Le silence n’est pas un vide : c’est une couverture.','Tout ce qui est doux prend le temps d’arriver.','Dépose ta journée comme on pose un manteau mouillé près du feu.','Même la forêt la plus dense dort quand la neige tombe.','Tu as fait assez aujourd’hui.','Fermer les yeux, c’est ouvrir la porte aux rêves.','La lune ne se presse jamais, et pourtant elle fait le tour du ciel.','Une pensée à la fois, comme on allume une seule bougie dans le noir.','Les arbres ne s’inquiètent pas de l’hiver : ils savent que le printemps reviendra.','Ce qui n’a pas été fait aujourd’hui attendra sagement demain.','Laisse tes soucis sur le pas de la porte, comme des bottes pleines de neige.','La nuit n’éteint pas le monde, elle le berce.','Respirer lentement, c’est déjà se faire un cadeau.','Même le plus petit feu réchauffe une grande pièce.','Le calme n’est pas l’absence de bruit, c’est un endroit en toi.','Les étoiles brillent mieux quand on cesse de courir.','Chaque soir est une page blanche que le sommeil écrit pour toi.','Tu n’as pas besoin de tout comprendre ce soir. Repose-toi.','La neige efface les traces de la journée et prépare un chemin tout neuf.','Sois doux avec toi-même, comme avec un ami qui rentre du froid.','Le vent peut souffler dehors : ici, la lampe reste allumée.','Ce n’est pas grave d’avancer lentement, tant que tu avances avec douceur.','Une tasse chaude entre les mains, et le monde paraît plus léger.','Les rivières gelées continuent de couler, tout bas, sous la glace.','Demain sera un autre jour, et il saura t’attendre.','Le sommeil est une forêt tranquille où personne ne te presse.','Ferme les volets, éteins les écrans, et laisse la nuit faire le reste.','Il y a de la beauté dans les choses qui prennent leur temps.'];
+ const D={
+ mots:[{w:'LUNE',c:'Elle éclaire la nuit.'},{w:'GIVRE',c:'Il blanchit la vitre au petit matin.'},{w:'FLOCON',c:'Il tombe en silence du ciel.'},{w:'ETOILE',c:'Elle veille dans la nuit.'},{w:'SILENCE',c:'Il enveloppe la forêt enneigée.'},{w:'TRAINEAU',c:'Il glisse sur la neige.'},{w:'CHEMINEE',c:'Elle crépite quand il fait froid.'},{w:'BONHOMME',c:'Il a un nez en carotte.'}]
+@@ -2668,7 +2670,7 @@ const frame=(h,hint)=>{if(!playing)return;mt='m';$('#nav').hidden=true;keep();ap
+ /* favoris : une étoile sur chaque jeu */
+ const favs=()=>{const f=st.get('fav',null);return f&&Array.isArray(f.l)?f.l:[]};
+ function lastCard(){
+- const l0=st.get('last',null),l=l0&&!l0.daily&&l0.g!=='melange'&&G.some(g=>g.id===l0.g)?l0:null,g=l?ALL.find(x=>x.id===l.g):null;if(!g||gHid(g.id))return'';
++ const l0=st.get('last',null),l=l0&&!l0.daily&&l0.g!=='melange'&&(G.some(g=>g.id===l0.g)||l0.g==='ana')?l0:null,g=l?ALL.find(x=>x.id===l.g):null;if(!g||gHid(g.id))return'';
+  const X=isX(l.g,l.lv);if(X&&!xmasOn())return'';const nxt=l.done&&(X?l.lv<nl(l.g)+NLX-1:l.lv<nl(l.g)-1),sub=X?'Fêtes '+(xn(l.g,l.lv)+(nxt?1:0)):'Niveau '+(l.lv+1+(nxt?1:0)),btn=nxt?'Continuer':l.done?'Niveaux':'Reprendre';
+  return`<section class="rc xl pt-${g.id}" style="--a:${g.a};--b:${g.b}" data-g="${g.ic}"><div class="rc-ic">${g.ic}</div><div class="rc-t"><small>Dernière partie</small><b>${g.n}</b><span>${sub}</span></div><button class="rc-go" data-a="resume">${btn}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>`;
+ }
+@@ -2720,10 +2722,17 @@ setTimeout(()=>Object.assign(act,{gLk:v=>{const g=ALL.find(x=>x.id===v),n=GSTEP[
+ /* au premier lancement de cette version, les jeux déjà ouverts ne refont pas la fête */
+ setTimeout(()=>{try{if(!st.get('g:unl0',false)){const s0=st.get('g:unl',[]);Object.keys(GSTEP).forEach(id=>{if(!gLock(id)&&!gHid(id)&&!s0.includes(id))s0.push(id)});st.set('g:unl',s0);st.set('g:unl0',true)}}catch(e){}},0);
+ 
+-function hub(id){if(id==='quiz')return home();
+- cur=id;nv('games');theme(id);const g=G.find(x=>x.id===id),N=nl(id),dd=st.get(dkey(id),false),ok=i=>st.get(ckey(id)+':'+i,false),sk=i=>!ok(i)&&st.get('k:'+id+':'+i,false),nx=[...Array(N).keys()].findIndex(i=>!ok(i)&&!sk(i)),ns=[...Array(N).keys()].findIndex(sk),nsk=[...Array(N).keys()].filter(sk).length,tg=nx>=0?nx:ns>=0?ns:N-1,dn=[...Array(N).keys()].filter(i=>st.get(ckey(id)+':'+i,false)).length;
++/* Anagramme : débloqué quand le niveau 12 du Jeu de mots est atteint (niveaux 1 à 11 terminés ou passés) */
++const anaOn=()=>UNL()||[...Array(11).keys()].every(i=>st.get(ckey('mots')+':'+i,false)||st.get('k:mots:'+i,false));
++function anaCard(){
++ const N=nl('ana'),dn=[...Array(N).keys()].filter(i=>st.get(ckey('ana')+':'+i,false)).length,arrow='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
++ if(!anaOn()){const k=[...Array(60).keys()].findIndex(i=>!st.get(ckey('mots')+':'+i,false)&&!st.get('k:mots:'+i,false));
++  return`<section class="rc xlk" data-g="${ANA.ic}"><div class="rc-ic">🔒</div><div class="rc-t"><small>Anagramme</small><b>Débloqué au niveau 12</b><span>Tu en es au niveau ${Math.max(1,k+1)} du Jeu de mots</span></div></section>`}
++ return`<section class="rc pt-ana" style="--a:${ANA.a};--b:${ANA.b}" data-g="${ANA.ic}"><div class="rc-ic">${ANA.ic}</div><div class="rc-t"><small>Nouveau mode</small><b>Anagramme</b><span>${dn} sur ${N} terminés · +${rw('ana')} ❄</span></div><button class="rc-go" data-a="open" data-v="ana">${dn?'Continuer':'Jouer'}${arrow}</button></section>`}
++function hub(id){if(id==='quiz')return home();if(id==='ana'&&!anaOn())return hub('mots');
++ cur=id;nv('games');theme(id);const g=ALL.find(x=>x.id===id),N=nl(id),dd=st.get(dkey(id),false),ok=i=>st.get(ckey(id)+':'+i,false),sk=i=>!ok(i)&&st.get('k:'+id+':'+i,false),nx=[...Array(N).keys()].findIndex(i=>!ok(i)&&!sk(i)),ns=[...Array(N).keys()].findIndex(sk),nsk=[...Array(N).keys()].filter(sk).length,tg=nx>=0?nx:ns>=0?ns:N-1,dn=[...Array(N).keys()].filter(i=>st.get(ckey(id)+':'+i,false)).length;
+  const xon=xLvOn()&&!g.soon&&!g.nox,xok=i=>st.get(ckey(id)+':'+(N+i),false),xsk=i=>!xok(i)&&st.get('k:'+id+':'+(N+i),false),xnx=[...Array(NLX).keys()].findIndex(i=>!xok(i)&&!xsk(i)),xdn=[...Array(NLX).keys()].filter(xok).length,xns=[...Array(NLX).keys()].findIndex(xsk),xtg=xnx>=0?xnx:xns>=0?xns:NLX-1,xpr=xdn+[...Array(NLX).keys()].filter(xsk).length;
+- app.innerHTML=`<div class="top stk">${bk('home')}<div class="chip">❄ ${FLX()}</div></div><section class="glass story pt-${id}"><i>${g.ic}</i><h2>${g.t}</h2><p>${g.s}</p></section>`+(g.soon?`<p class="note">Ce jeu arrive dans la prochaine version de la maquette.</p>`:`<div class="opts"><section class="rc pt-${id}" data-g="${g.ic}"><div class="rc-ic">${g.ic}</div><div class="rc-t"><small>${dn?'Continuer':'Commencer'}</small><b>${nx>=0?'Niveau '+(nx+1):ns>=0?'Niveau '+(ns+1)+' (passé)':'Rejouer le niveau '+N}</b><span>${nx>=0?dn+' sur '+N+' terminés · +'+rw(id)+' ❄'+(nsk?' · '+nsk+' passé'+(nsk>1?'s':''):''):ns>=0?'Un niveau passé t’attend · +'+rw(id)+' ❄':'Tous les niveaux sont terminés'}</span></div><button class="rc-go" data-a="play" data-v="${tg}">Jouer<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>${id==='demenage'?`<section class="rc" data-g="📖"><div class="rc-ic">📖</div><div class="rc-t"><small>Le livre</small><b>Revoir l’histoire</b><span>Les pages que tu as déjà écrites</span></div><button class="rc-go" data-a="dbook">Ouvrir<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>`:''}${xon?`<section class="rc xm" data-g="✦"><div class="rc-ic">✦</div><div class="rc-t"><small>Spécial Noël</small><b>${xnx<0&&xns<0?'Rejouer Fêtes '+NLX:'Fêtes '+(xtg+1)+(xnx<0?' (passé)':'')}</b><span>${xdn} / ${NLX} terminés</span></div><button class="rc-go" data-a="play" data-v="${N+xtg}" title="Jusqu’au 11 janvier">${xnx<0&&xns<0?'Rejouer':xpr?'Continuer':'Commencer'}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>`:(!g.soon&&!g.nox?`<section class="rc xm xlk" data-g="✦"><div class="rc-ic">🔒</div><div class="rc-t"><small>Spécial Noël</small><b>${NLX} niveaux de fêtes</b><span>${xmasOn()?'Étape 10 de l’histoire':'Disponible le 1er décembre'}</span></div></section>`:'')}<div class="dd pt-${id}${lvOpen?' open':''}"><button class="dd-h" data-a="dd" aria-expanded="${lvOpen}" aria-controls="lvl"><span><b>Choisir un niveau</b><small>${dn} / ${N} terminés</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="dd-l" id="lvl"><div class="dd-i"><div class="lvg">${Array.from({length:N},(_,i)=>{const o=ok(i),p=sk(i);return`<button class="lv ${o?'d':p?'sk':i===nx?'nx':'far'}" data-a="play" data-v="${i}" aria-label="Niveau ${i+1}${o?', terminé':p?', passé, à refaire pour les flocons':''}">${i+1}</button>`}).join('')}</div></div></div></div></div>`);
++ app.innerHTML=`<div class="top stk">${bk(id==='ana'?'mots':'home')}<div class="chip">❄ ${FLX()}</div></div><section class="glass story pt-${id}"><i>${g.ic}</i><h2>${g.t}</h2><p>${g.s}</p></section>`+(g.soon?`<p class="note">Ce jeu arrive dans la prochaine version de la maquette.</p>`:`<div class="opts"><section class="rc pt-${id}" data-g="${g.ic}"><div class="rc-ic">${g.ic}</div><div class="rc-t"><small>${dn?'Continuer':'Commencer'}</small><b>${nx>=0?'Niveau '+(nx+1):ns>=0?'Niveau '+(ns+1)+' (passé)':'Rejouer le niveau '+N}</b><span>${nx>=0?dn+' sur '+N+' terminés · +'+rw(id)+' ❄'+(nsk?' · '+nsk+' passé'+(nsk>1?'s':''):''):ns>=0?'Un niveau passé t’attend · +'+rw(id)+' ❄':'Tous les niveaux sont terminés'}</span></div><button class="rc-go" data-a="play" data-v="${tg}">Jouer<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>${id==='mots'?anaCard():''}${id==='demenage'?`<section class="rc" data-g="📖"><div class="rc-ic">📖</div><div class="rc-t"><small>Le livre</small><b>Revoir l’histoire</b><span>Les pages que tu as déjà écrites</span></div><button class="rc-go" data-a="dbook">Ouvrir<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>`:''}${xon?`<section class="rc xm" data-g="✦"><div class="rc-ic">✦</div><div class="rc-t"><small>Spécial Noël</small><b>${xnx<0&&xns<0?'Rejouer Fêtes '+NLX:'Fêtes '+(xtg+1)+(xnx<0?' (passé)':'')}</b><span>${xdn} / ${NLX} terminés</span></div><button class="rc-go" data-a="play" data-v="${N+xtg}" title="Jusqu’au 11 janvier">${xnx<0&&xns<0?'Rejouer':xpr?'Continuer':'Commencer'}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></section>`:(!g.soon&&!g.nox?`<section class="rc xm xlk" data-g="✦"><div class="rc-ic">🔒</div><div class="rc-t"><small>Spécial Noël</small><b>${NLX} niveaux de fêtes</b><span>${xmasOn()?'Étape 10 de l’histoire':'Disponible le 1er décembre'}</span></div></section>`:'')}<div class="dd pt-${id}${lvOpen?' open':''}"><button class="dd-h" data-a="dd" aria-expanded="${lvOpen}" aria-controls="lvl"><span><b>Choisir un niveau</b><small>${dn} / ${N} terminés</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="dd-l" id="lvl"><div class="dd-i"><div class="lvg">${Array.from({length:N},(_,i)=>{const o=ok(i),p=sk(i);return`<button class="lv ${o?'d':p?'sk':i===nx?'nx':'far'}" data-a="play" data-v="${i}" aria-label="Niveau ${i+1}${o?', terminé':p?', passé, à refaire pour les flocons':''}">${i+1}</button>`}).join('')}</div></div></div></div></div>`);
+ }
+ function quote(){
+  cur='quote';nv('soc');let i=di%Q.length;
+@@ -2735,7 +2744,7 @@ function win(){
+  nv('games');theme(cur,isX(cur,lv));const g=ALL.find(x=>x.id===cur),lk=ckey(cur)+':'+lv,first=!st.get(lk,false),r=first?rw(cur):1;
+  fl+=r;st.set('fl',fl);(isX(cur,lv)?xGain(r):styGain(r))
+  st.set(lk,true);st.set('last',{g:cur,daily:false,lv,date:today,done:1});[523,659,784].forEach((f,i)=>setTimeout(()=>sfx(f,.7),i*200));vib([30,60,30]);
+- app.innerHTML=`<div class="top"><span></span><div class="chip">❄ ${FLX()}</div></div><section class="glass story"><h2>Bien joué</h2><p>${(g.wl&&g.wl[lv])||g.w}</p><p class="big">${first?'+'+r+' flocons':'Niveau refait : +1 flocon'}</p><p class="sdu">${isX(cur,lv)?'🎄 +'+r+' boule'+(r>1?'s':'')+' de Noël':'✦ +'+r+' poussière'+(r>1?'s':'')+' d’étoile'}</p>${(isX(cur,lv)?lv<nl(cur)+NLX-1:lv<nl(cur)-1)?`<button class="btn" data-a="next" data-v="${lv+1}">Niveau suivant</button>`:''}<button class="btn alt" data-a="pick">Choisir un niveau</button></section>`;
++ app.innerHTML=`<div class="top"><span></span><div class="chip">❄ ${FLX()}</div></div><section class="glass story"><h2>Bien joué</h2><p>${(g.wl&&g.wl[lv])||g.w}</p><p class="big">${first?'+'+r+' flocons':'Niveau refait : +1 flocon'}</p><p class="sdu">${isX(cur,lv)?'🎄 +'+r+' boule'+(r>1?'s':'')+' de Noël':'✦ +'+r+' poussière'+(r>1?'s':'')+' d’étoile'}</p>${cur==='mots'&&lv===10&&first&&anaOn()?'<p class="note">🔓 Nouveau mode débloqué : Anagramme, dans la page du Jeu de mots.</p>':''}${(isX(cur,lv)?lv<nl(cur)+NLX-1:lv<nl(cur)-1)?`<button class="btn" data-a="next" data-v="${lv+1}">Niveau suivant</button>`:''}<button class="btn alt" data-a="pick">Choisir un niveau</button></section>`;
+ }
+ 
+ let msP=null,wsG=null,wsSw=false;
+@@ -6035,6 +6044,83 @@ function pRoue(r){
+  act.hint=()=>{const c=W.map((_,i)=>i).filter(i=>!got.includes(i));if(!c.length||!spend(1))return;const i=c[Math.random()*c.length|0];rev[i]=(rev[i]||0)+1;if(rev[i]>=W[i].k.length)got.push(i);wd();sv();if(full())setTimeout(win,900)};
+  place();wd();draw();
+ }
++/* ---------- Anagramme : toutes les lettres de la roue, un ou plusieurs mots à retrouver ---------- */
++/* [mots à trouver, autres mots acceptés en bonus, indice] */
++const ANL=[
++['lune','','Elle éclaire la nuit.'],
++['nuit unit','','Deux mots, mêmes lettres.'],
++['ange nage','gena','Deux mots, mêmes lettres.'],
++['ciel lice','','Deux mots, mêmes lettres.'],
++['soir rois','rosi','Deux mots, mêmes lettres.'],
++['miel lime','mile','Deux mots, mêmes lettres.'],
++['lion loin','lino','Deux mots, mêmes lettres.'],
++['lait','lita liat','On le boit tiède avant de dormir.'],
++['luge','','Elle glisse sur la neige.'],
++['fête','','On la célèbre en décembre.'],
++['givre','grive','Il blanchit la vitre au petit matin.'],
++['pluie','','Elle tape doucement sur le toit.'],
++['neige génie','ignee','Deux mots, mêmes lettres.'],
++['laine liane','enlia','Deux mots, mêmes lettres.'],
++['bruit tribu','','Deux mots, mêmes lettres.'],
++['rêver verre','','Deux mots, mêmes lettres.'],
++['sapin','pains pians','Il se pare de guirlandes.'],
++['douce coude','','Deux mots, mêmes lettres.'],
++['poule loupe','','Deux mots, mêmes lettres.'],
++['poire proie','','Deux mots, mêmes lettres.'],
++['monde démon','','Deux mots, mêmes lettres.'],
++['épice pièce','','Deux mots, mêmes lettres.'],
++['coupe pouce','','Deux mots, mêmes lettres.'],
++['train riant','nitra tarin','Deux mots, mêmes lettres.'],
++['lampe palme ample','','Trois mots, mêmes lettres.'],
++['repos poser prose','pores spore','Trois mots, mêmes lettres.'],
++['voile olive viole','','Trois mots, mêmes lettres.'],
++['entre rente terne','enter reent','Trois mots, mêmes lettres.'],
++['étang agent géant','gante genat','Trois mots, mêmes lettres.'],
++['carte trace écart acter','creat cerat recta terca','Quatre mots, mêmes lettres.'],
++['bougie','','Elle éclaire la table à la veillée.'],
++['flocon','','Il tombe en silence du ciel.'],
++['étoile','toilee etiole','Elle veille dans la nuit.'],
++['repose opères','','Deux mots, mêmes lettres.'],
++['braise baiser','bisera braies','Deux mots, mêmes lettres.'],
++['cadeau audace','','Deux mots, mêmes lettres.'],
++['rivage virage','gravie grevai vaigre viager','Deux mots, mêmes lettres.'],
++['secret certes crêtes','terces','Trois mots, mêmes lettres.'],
++['merise remise misère','mirees rimees emeris','Trois mots, mêmes lettres.'],
++['tisane sainte','entais niates satine tanise tenais tenias etains','Deux mots, mêmes lettres.'],
++['silence','','Il enveloppe la forêt enneigée.'],
++['écharpe','pechera rechape repecha','Elle entoure le cou quand il neige.'],
++['lumière','meulier','Elle éclaire sans bruit.'],
++['traîneau','auraient','Il glisse sur la neige.'],
++['cheminée','','Elle crépite quand il fait froid.'],
++['bonhomme','','Il a un nez en carotte.']
++].map(([w,x,c])=>({W:w.split(' '),X:new Set(x.split(' ').filter(Boolean).map(nk)),c}));
++function pAna(r){
++ const A=ANL[lv],W=A.W.map(w=>({w,k:nk(w)})),n=W[0].k.length,KS=new Set(W.map(o=>o.k)),rd=rng((lv+7)*2654435761);
++ /* lettres mélangées de façon stable pour ce niveau, jamais dans l’ordre d’un mot à trouver */
++ const a0=[...W[0].k];let base;for(let t=0;t<40;t++){const a=a0.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rd()*(i+1));[a[i],a[j]]=[a[j],a[i]]}base=a.join('');if(!KS.has(base))break}
++ let got=r?r.got.filter(i=>i<W.length):[],rev=r?r.rev:{},bn=r&&r.bn?r.bn:[],order=[...base].map((_,i)=>i),sel=[],down=false,cu=null;
++ snap=()=>({got,rev,bn});
++ const full=()=>W.every((o,i)=>got.includes(i));
++ const wd=()=>{const e=$('#rw');e.style.setProperty('--t',n<=4?'38px':n<=6?'32px':'28px');e.innerHTML=W.map((o,i)=>`<div class="w">${[...o.k].map((c,j)=>{const on=got.includes(i)||j<(rev[i]||0);return`<i class="${on?'on':''}">${on?o.w[j].toUpperCase():''}</i>`}).join('')}</div>`).join('')};
++ frame(`<p class="ac">${A.c}</p><div class="rw" id="rw"></div><div class="pv" id="pv"></div><div class="whw"><button class="shf" data-a="shuf" aria-label="Mélanger les lettres" title="Mélanger"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></button><div class="whl" id="whl"><svg viewBox="0 0 100 100"><polyline id="ln" points=""/></svg>${[...base].map(c=>`<b>${c}</b>`).join('')}</div></div>`,1);
++ const wh=$('#whl'),bs=[...wh.querySelectorAll('b')],P=[];
++ const place=()=>order.forEach((j,p)=>{const a=-Math.PI/2+p*2*Math.PI/n;P[j]=[50+35*Math.cos(a),50+35*Math.sin(a)];bs[j].style.left=P[j][0]+'%';bs[j].style.top=P[j][1]+'%'});
++ const draw=()=>{bs.forEach((b,j)=>b.classList.toggle('s',sel.includes(j)));$('#pv').textContent=sel.map(j=>base[j]).join('');const p=sel.map(j=>P[j].join(','));if(down&&cu&&sel.length)p.push(cu.join(','));$('#ln').setAttribute('points',p.join(' '))};
++ const hit=e=>{const b=wh.getBoundingClientRect(),x=(e.clientX-b.left)/b.width*100,y=(e.clientY-b.top)/b.height*100;cu=[x,y];for(let j=0;j<n;j++)if(Math.hypot(x-P[j][0],y-P[j][1])<10){const k=sel.indexOf(j);if(k<0)sel.push(j);else if(k===sel.length-2)sel.pop();break}draw()};
++ const submit=()=>{const k=sel.map(j=>base[j]).join('');if(!k)return;
++  if(k.length<n)return k.length<3?0:msg('Il faut utiliser toutes les lettres');
++  const i=W.findIndex(o=>o.k===k);
++  if(i>=0){if(got.includes(i))return msg('Déjà trouvé');got.push(i);sfx(660,.4);vib(15);wd();msg('✦ '+W[i].w);sv();if(full())setTimeout(win,900)}
++  else if(A.X.has(k)||GW.has(k)){if(bn.includes(k))return msg('Déjà trouvé');bn.push(k);fl++;st.set('fl',fl);chip();sv();msg('Mot bonus · +1 ❄')}
++  else msg('Ce mot dort encore…')};
++ wh.addEventListener('pointerdown',e=>{down=true;sel=[];try{wh.setPointerCapture(e.pointerId)}catch(_){}hit(e);e.preventDefault()});
++ wh.addEventListener('pointermove',e=>{if(down)hit(e)});
++ const end=()=>{if(!down)return;down=false;submit();sel=[];draw()};
++ wh.addEventListener('pointerup',end);wh.addEventListener('pointercancel',end);wh.addEventListener('contextmenu',e=>e.preventDefault());
++ act.shuf=()=>{order.sort(()=>Math.random()-.5);place();sel=[];draw()};
++ act.hint=()=>{const c=W.map((_,i)=>i).filter(i=>!got.includes(i));if(!c.length||!spend(1))return;const i=c[Math.random()*c.length|0];rev[i]=(rev[i]||0)+1;if(rev[i]>=W[i].k.length)got.push(i);wd();sv();if(full())setTimeout(win,900)};
++ place();wd();draw();
++}
+ function pCross(r){
+  const E=CW[lv].map((a,i)=>({w:a[0],c:a[1],r:a[2],x:a[3],h:a[4]==='h',i})),cells={},ok=new Set(r?r.ok:[]);
+  const keys=e=>[...e.w].map((_,k)=>(e.r+(e.h?0:k))+','+(e.x+(e.h?k:0)));
+@@ -6227,10 +6313,10 @@ act.skip=()=>{const w=$('#skw');if(w)w.innerHTML='<span>Passer ce niveau sans r
+ act.skipn=()=>{const w=$('#skw');if(w)w.innerHTML=''};
+ act.skipy=()=>{const g=cur,l=lv;if(!g||daily)return;st.set('k:'+g+':'+l,true);st.set('last',{g,daily:false,lv:l,date:today,done:1});
+  if(isX(g,l)?l<nl(g)+NLX-1:l<nl(g)-1){start(g,false,l+1);msg('Niveau passé, sans flocons : tu pourras y revenir.')}else hub(g)};
+-function start(g,d,l,r){if(!d&&l>=nl(g)&&!xmasOn())return hub(g);cur=g;daily=d;lv=l;playing=true;wsG=null;if(!r&&!d&&!st.get(ckey(g)+':'+l,false))r=st.get('p:'+g+':'+l,null)||undefined;theme(g,!d&&l>=nl(g));({mots:pRoue,croises:pCross,phrase:pPhrase,tournade:pTourne,maze:pMaze,memo:pMemo,sudoku:pSudoku,caches:pSearch,match3:pMatch,demenage:pDemen2,quiz:pQuiz,cherche:pCherche})[g](r);window.scrollTo(0,0)}
++function start(g,d,l,r){if(g==='ana'&&(!anaOn()||l>=nl(g)))return hub(anaOn()?'ana':'mots');if(!d&&l>=nl(g)&&!xmasOn())return hub(g);cur=g;daily=d;lv=l;playing=true;wsG=null;if(!r&&!d&&!st.get(ckey(g)+':'+l,false))r=st.get('p:'+g+':'+l,null)||undefined;theme(g,!d&&l>=nl(g));({ana:pAna,mots:pRoue,croises:pCross,phrase:pPhrase,tournade:pTourne,maze:pMaze,memo:pMemo,sudoku:pSudoku,caches:pSearch,match3:pMatch,demenage:pDemen2,quiz:pQuiz,cherche:pCherche})[g](r);window.scrollTo(0,0)}
+ function theme(id,x){const xa=xmAll();m3Mus(id==='match3'&&!x&&!xa);xmMus(!!x||xa);const g=ALL.find(x=>x.id===id),s=document.body.style;s.setProperty('--a',x?'#d9453d':g?g.a:'#a99cf0');s.setProperty('--b',x?'#1f8a52':g?g.b:'#5458AB');$('#tint').classList.toggle('on',!!g);document.body.classList.toggle('g',!!g);document.body.classList.toggle('xm',!!x);const p=$('#pat');if(g)p.className='pt-'+id+' on';else p.classList.remove('on')}
+ function nv(t){if(t!=='aqua')['#aqsh','#aqbd'].forEach(q=>{const e=$(q);if(e){e.classList.remove('open');e.style.visibility='hidden';e.style.transition='none'}});playing=false;wsG=null;theme(null);if(t!=='set'){rc=false;Sy.done='';Sy.pv=null;Sy.err=''}const n=$('#nav');n.hidden=false;n.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===t))}
+-function resume(){const l=st.get('last',null);if(!l||l.daily||l.g==='melange'||!G.some(g=>g.id===l.g))return;const X=isX(l.g,l.lv);if(X&&!xmasOn())return;if(l.done)return(X?l.lv<nl(l.g)+NLX-1:l.lv<nl(l.g)-1)?start(l.g,false,l.lv+1):hub(l.g);start(l.g,false,l.lv,l.s)}
++function resume(){const l=st.get('last',null);if(!l||l.daily||l.g==='melange'||!(G.some(g=>g.id===l.g)||l.g==='ana'))return;const X=isX(l.g,l.lv);if(X&&!xmasOn())return;if(l.done)return(X?l.lv<nl(l.g)+NLX-1:l.lv<nl(l.g)-1)?start(l.g,false,l.lv+1):hub(l.g);start(l.g,false,l.lv,l.s)}
+ /* ---------- Histoire : le petit bonhomme sur son étoile filante ----------
+    1 poussière d’étoile par niveau réussi la première fois (dans n’importe quel jeu) ; il en faut 2 pour 1 pas ;
+    chaque pas : +1 ❄ · tous les 5 pas : +5 ❄ et un bout d’histoire · tous les 10 pas : un gardien (jeu provisoire), +20 ❄ et un bout d’histoire.
+@@ -6857,6 +6943,7 @@ function bossScreen(){
+ Object.assign(act,{sgo:sGo,sbook:bookOpen,bkp:()=>BKG&&BKG(-1),bkn:()=>BKG&&BKG(1),sfx:()=>{const d=$('#sfr');if(d)d.remove();const n=$('#nav');if(n)n.hidden=false},bend:()=>{sFrag=styRead().p;dayScreen()}});
+ /* « Retour » depuis le livre : il repart vers son bouton pendant que l’histoire revient */
+ {const b0=act.back;act.back=v=>v==='day'&&cur==='book'?bookClose():b0(v)}
++{const b1=act.back;act.back=v=>v==='mots'&&cur==='ana'?hub('mots'):b1(v)}
+ /* d’une section à l’autre (Aquarium · Jeux · Histoire · Social · Réglages) : l’écran glisse d’un côté, le suivant arrive de l’autre, doucement (même courbe que le décor, night.css) et vite.
+    La carte de l’histoire est fixée à l’écran : on y fait glisser chacun de ses éléments fixes. Sans animation si le mouvement est réduit. */
+ {const t0=act.tab,ORD=['aqua','games','daily','soc','set'],TMS=320,EAS='cubic-bezier(.37,0,.63,1)',root=document.documentElement;
