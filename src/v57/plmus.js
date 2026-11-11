@@ -90,8 +90,8 @@ const infKeyP=g=>g==='planetes'?'p'+infKey(g):g;
 const infTop=g=>{let a=null;try{a=(st.get('inf:'+g,{})||{})[infKey(g)]}catch(e){}if(typeof a==='number')a=[{s:a,t:0}];return Array.isArray(a)?a:[]};
 const infBest=g=>(infTop(g)[0]||{s:0}).s;
 const infAll=()=>{const k={};[['g2048','g2048','s'],['tetris','tetris','s'],['pc','planetes','c'],['po','planetes','o']].forEach(([q,g,m])=>{let a=null;try{a=(st.get('inf:'+g,{})||{})[m]}catch(e){}if(typeof a==='number')a=[{s:a}];const b=Array.isArray(a)&&a[0]?a[0].s:0;if(b>0)k[q]=b});return k};
-const infAll5=()=>{const m={};[['g2048','g2048','s'],['tetris','tetris','s'],['pc','planetes','c'],['po','planetes','o']].forEach(([q,g,k])=>{let a=null;try{a=(st.get('inf:'+g,{})||{})[k]}catch(e){}if(typeof a==='number')a=[{s:a}];if(Array.isArray(a)&&a.length)m[q]=a.slice(0,5).map(x=>x.s).filter(n=>n>0)});return m};
-const infSave=(g,s)=>{if(!(s>0))return false;let nw=false;try{const o=Object.assign({},st.get('inf:'+g,{})||{}),k=infKey(g);let a=infTop(g).slice();nw=!a.length||s>a[0].s;a.push({s,t:Date.now()});a.sort((x,y)=>y.s-x.s);o[k]=a.slice(0,5);st.set('inf:'+g,o)}catch(e){}
+const infAll5=()=>{const m={};[['g2048','g2048','s'],['tetris','tetris','s'],['pc','planetes','c'],['po','planetes','o']].forEach(([q,g,k])=>{let a=null;try{a=(st.get('inf:'+g,{})||{})[k]}catch(e){}if(typeof a==='number')a=[{s:a}];if(Array.isArray(a)&&a.length)m[q]=a.slice(0,30).map(x=>x.s).filter(n=>n>0)});return m};
+const infSave=(g,s)=>{if(!(s>0))return false;let nw=false;try{const o=Object.assign({},st.get('inf:'+g,{})||{}),k=infKey(g);let a=infTop(g).slice();nw=!a.length||s>a[0].s;a.push({s,t:Date.now()});a.sort((x,y)=>y.s-x.s);o[k]=a.slice(0,30);st.set('inf:'+g,o)}catch(e){}
  try{socMine()}catch(e){}
  try{infLbSync()}catch(e){}
  try{if(st.get('inf:sh','')===''&&window.claude&&window.claude.use)setTimeout(infAsk,900)}catch(e){}
@@ -117,7 +117,7 @@ function infBoard(g,tab){const d=infDlg(),M=st.get('soc:me',null)||{};if(d.datas
  const N={g2048:'2048',tetris:'Tèconta',planetes:'Planètes · '+(infKey(g)==='o'?'Orbite':'Classique')}[g];
  const tabs=[['m','Mes scores'],['a','Amis'],['w','Monde']].map(([k,t])=>`<button class="${k===tab?'on':''}" data-a="infTab" data-v="${g}:${k}">${t}</button>`).join('');
  let b='';
- if(tab==='m'){const a=infTop(g);b=a.length?`<ol class="infl">${a.map((x,i)=>`<li><i>${i+1}</i><span>${x.t?new Date(x.t).toLocaleDateString('fr',{day:'numeric',month:'short'}):'—'}</span><b>${x.s} pts</b></li>`).join('')}</ol>`:'<p class="note">Aucun score pour l’instant : lance une partie infinie.</p>'}
+ if(tab==='m'){const a=infTop(g).slice(0,5);b=a.length?`<ol class="infl">${a.map((x,i)=>`<li><i>${i+1}</i><span>${x.t?new Date(x.t).toLocaleDateString('fr',{day:'numeric',month:'short'}):'—'}</span><b>${x.s} pts</b></li>`).join('')}</ol>`:'<p class="note">Aucun score pour l’instant : lance une partie infinie.</p>'}
  else if(tab==='w'&&window.__fb&&window.__fb.lbTop){infLbSync();const q=infKeyP(g),c=infLB[q];
   if(!window.__fb.u)b='<p class="note">Connecte-toi (menu du compte) pour voir le classement mondial.</p>';
   else if(!c||Date.now()-c.t>60000){b='<p class="note">Chargement du classement…</p>';if(!infLBp[q]){infLBp[q]=1;window.__fb.lbTop(q).then(r=>{infLB[q]={t:Date.now(),r}},()=>{infLB[q]={t:Date.now(),r:null}}).finally(()=>{infLBp[q]=0;const e=$('#infd');if(e&&e.dataset.g===g&&e.dataset.t==='w')infBoard(g,'w')})}}
