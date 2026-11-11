@@ -18,7 +18,7 @@ const unNm=(S,i)=>S.S[i].nm,unNmD=(S,i)=>unDN(S.S[i]);
 const unCn=c=>{const v=c[1];return v==='s'?'Passe':v==='v'?'Inversion':v==='d'?'+2':v==='w'?'Joker':v==='f'?'+4':v};
 const unCnf=c=>unCn(c)+(c[0]!=='k'?' '+UNNM[c[0]]:'');
 function unNew(seats,extra){
- const D=unDeck(),H=seats.map(()=>D.splice(0,7)),k=D.findIndex(c=>/^[rygb]\d$/.test(c)),top=D.splice(k,1)[0];
+ const D=unDeck(),H=seats.map((_,i)=>D.splice(0,(extra&&extra.hs&&extra.hs[i])||7)),k=D.findIndex(c=>/^[rygb]\d$/.test(c)),top=D.splice(k,1)[0];
  return Object.assign({},extra||{},{k:'uno',v:1,id:Math.random().toString(36).slice(2,10),n:(extra&&extra.n)||0,st:'play',S:seats,H,D,X:[top],c:top[0],t:Math.floor(Math.random()*seats.length),d:1,dr:0,w:-1,lg:'La partie commence',uc:seats.map(()=>0),to:seats.map(()=>0),dl:0,at:Date.now()})}
 function unPick(S){if(!S.D.length){const top=S.X.pop();S.D=unShuf(S.X.slice());S.X=[top]}return S.D.pop()||null}
 function unGive(S,i,k){for(let j=0;j<k;j++){const c=unPick(S);if(c)S.H[i].push(c)}}
@@ -95,9 +95,9 @@ function unDraw(){
  const W=Math.max(200,(root.clientWidth||Math.min(innerWidth,440)-36)-16),cw=58,cap=1+Math.floor((W-cw)/17),rows=my.length>cap?[my.slice(0,Math.ceil(my.length/2)),my.slice(Math.ceil(my.length/2))]:[my];
  const ovOf=m=>m>1?Math.min(6,Math.floor((W-cw)/(m-1))-cw):0;
  const turn=!live?'':myT?'À toi de jouer':S.S[me].b&&S.S[me].ab?'Un bot joue à ta place':'Au tour de '+esc(unNmD(S,S.t));
- const w=S.st==='end'?S.w:-1,rw=w<0?'':UN.loc?(w===me?'+'+(2+2*(n-1))+' ❄':'+1 ❄'):(S.S[me]&&S.S[me].u===SO.uid?(w===me?'+10 ❄':'+2 ❄'):'');
+ const w=S.st==='end'?S.w:-1,rw=w<0?'':UN.loc&&S.sty!==undefined?(S.rwd?'+'+S.rwd+' ❄':''):UN.loc?(w===me?'+'+(2+2*(n-1))+' ❄':'+1 ❄'):(S.S[me]&&S.S[me].u===SO.uid?(w===me?'+10 ❄':'+2 ❄'):'');
  const host=!UN.loc&&S.h===SO.uid;
- root.innerHTML=`<div class="top stk"><button class="back" data-a="unBk">‹ Uno</button><div class="chip">❄ ${FLX()}</div></div>
+ root.innerHTML=`<div class="top stk"><button class="back" data-a="unBk">‹ Uno</button>${S.sty!==undefined?`<span class="tl">Niveau ${S.sty+1}</span>`:''}<div class="chip">❄ ${FLX()}</div></div>
  <div class="unop">${op}</div>
  <div class="unc"><span class="unar l ${S.d>0?'up':'dn'}" aria-hidden="true"><svg viewBox="0 0 28 72"><path d="M20 66Q2 36 18 8"/><path d="M9 11l9-3 1 9"/></svg></span><button class="btn ununo${UN.uc?' on':''}" data-a="unUno" ${myT&&my.length===2?'':'disabled'} aria-pressed="${UN.uc}">Uno !</button><button class="unk${myT&&!S.dr&&!UN.busy&&!my.some(c=>unOk(S,c))?' must':''}" data-a="unDraw" aria-label="Piocher" ${myT&&!S.dr?'':'disabled'}>${unBack()}<small>${S.D.length}</small><em class="unkm" aria-hidden="true">Pioche !</em></button><div class="untop" style="--cc:${UNHX[S.c]}">${S.X.length>1?`<span class="unund" style="${unJit(S.X.length-2)}" aria-hidden="true">${unCard(S.X[S.X.length-2],'big')}</span>`:''}<span style="${unJit(S.X.length-1)}" class="untc ${S.X.length!==UN.lastX&&wRM?'unpop':''}"${UN.flyX&&UN.flyX===S.X.length?' style="visibility:hidden"':''}>${unCard(unTop(S),'big'+(unTop(S)[0]==='k'?' ukc u-'+S.c:''))}</span></div><span class="unar r ${S.d>0?'dn':'up'}" aria-hidden="true"><svg viewBox="0 0 28 72"><path d="M20 66Q2 36 18 8"/><path d="M9 11l9-3 1 9"/></svg></span></div>
  <p class="unlg vh" role="status" aria-live="polite">${esc(unLg(S,me))}</p>
@@ -106,7 +106,7 @@ function unDraw(){
  ${myT&&S.dr?'<div class="unbt"><button class="btn alt" data-a="unPass">Garder et passer</button></div>':''}
  ${S.S[me]&&S.S[me].ab&&S.S[me].u===SO.uid&&live?'<button class="btn" style="margin-top:10px" data-a="unBackIn">Reprendre ma place</button>':''}
  ${UN.m?`<p class="note" style="text-align:center">${esc(UN.m)}</p>`:''}</div>
- ${w>=0?`<div class="unend"><section class="glass play"><h2>${w===me?'Tu as gagné !':esc(unNmD(S,w))+' a gagné'}</h2>${rw?`<p class="unrw">${rw}</p>`:''}<div class="chrow">${UN.loc||host?'<button class="btn" data-a="unAgain">Rejouer</button>':'<p class="note">L’hôte peut relancer une partie.</p>'}<button class="btn alt" data-a="unBk">Retour</button></div></section></div>`:''}
+ ${w>=0?`<div class="unend"><section class="glass play"><h2>${w===me?'Tu as gagné !':esc(unNmD(S,w))+' a gagné'}</h2>${rw?`<p class="unrw">${rw}</p>`:''}<div class="chrow">${UN.loc||host?'<button class="btn" data-a="unAgain">'+(S.sty!==undefined&&w===me&&S.sty+1<UNN?'Niveau suivant':'Rejouer')+'</button>':'<p class="note">L’hôte peut relancer une partie.</p>'}<button class="btn alt" data-a="unBk">Retour</button></div></section></div>`:''}
  ${UN.pk>=0?`<div class="unpk${UN.pkS?'':' in'}"><section class="glass play"><h2>Choisis une couleur</h2><div class="unpc">${UNCL.map(c=>`<button data-a="unCol" data-v="${c}" style="background:${UNHX[c]}" aria-label="${UNNM[c]}"></button>`).join('')}</div><button class="lnk" data-a="unCol" data-v="">Annuler</button></section></div>`:''}`;
  UN.lastX=S.X.length;
  const h2=$('#unh');if(h2)h2.scrollLeft=sl;
@@ -207,6 +207,17 @@ function unSolo(nb){
  const seats=[{u:SO.uid||'me',nm:'Toi',b:0}];UNBOT.slice(0,nb).forEach(([nm,e])=>seats.push({u:'',nm,e,b:1}));
  UN.loc=true;UN.me=0;UN.uc=false;UN.pk=-1;UN.m='';UN.room='';
  const S=unNew(seats);unArm(S,null,false);UN.g=S;unSave();unScreen()}
+/* mode histoire : 24 niveaux contre les bots, de plus en plus serrés */
+const UNN=24,UNTI=[['Le petit salon','Zeni t’invite près du poêle : Lapin voudrait une partie. Tu commences avec peu de cartes, le temps de te réchauffer.'],['La veillée','Renard rejoint la table. La veillée s’allonge et les cartes s’empilent.'],['Le grand tournoi','Hibou organise un tournoi. Trois adversaires, et des mains bien garnies.'],['La nuit des cartes','Dernière nuit : les bots ont peu de cartes en main. Garde ton sang-froid !']];
+const unSL=l=>{const t=Math.floor(l/6),k=l%6;return{t,k,nb:[1,2,3,3][t],hm:Math.min(9,4+k+t),hb:Math.max(4,7-t)}};
+const unSDone=i=>st.get(ckey('uno')+':'+i,false),unSNext=()=>{for(let i=0;i<UNN;i++)if(!unSDone(i))return i;return UNN-1};
+function unStory(l){
+ const c=unSL(l),seats=[{u:SO.uid||'me',nm:'Toi',b:0}];UNBOT.slice(0,c.nb).forEach(([nm,e])=>seats.push({u:'',nm,e,b:1}));
+ UN.loc=true;UN.me=0;UN.uc=false;UN.pk=-1;UN.m='';UN.room='';
+ const S=unNew(seats,{sty:l,hs:seats.map((x,i)=>i?c.hb:c.hm)});unArm(S,null,false);UN.g=S;unSave();unScreen()}
+function unStoryCard(){
+ const nx=unSNext(),dn=[...Array(UNN).keys()].filter(unSDone).length,c=unSL(nx),T=UNTI[c.t];
+ return`<section class="glass play unst"><h2>Histoire</h2><p class="note" style="margin:0 0 4px"><b>${esc(T[0])}</b> · niveau ${nx+1} sur ${UNN}</p><p class="note" style="margin:0 0 12px">${esc(T[1])} Tu as ${c.hm} cartes, ${c.nb>1?'les '+c.nb+' bots en ont':'le bot en a'} ${c.hb}.</p><button class="btn chgo" data-a="unSt" data-v="${nx}">${dn?'Continuer':'Commencer'} · niveau ${nx+1}</button><div class="unsl" role="group" aria-label="Niveaux">${[...Array(UNN).keys()].map(i=>`<button class="${unSDone(i)?'ok':i===nx?'nx':''}" data-a="unSt" data-v="${i}" ${i>nx?'disabled':''} aria-label="Niveau ${i+1}${unSDone(i)?' terminé':''}">${unSDone(i)?'✓':i+1}</button>`).join('')}</div><p class="note" style="margin:10px 0 0">${dn} sur ${UNN} terminés · +${rw('uno')} ❄ à la première victoire</p></section>`}
 function unSave(){if(!UN.loc)return;st.set('uno:sv',UN.g&&UN.g.st==='play'?UN.g:null)}
 function unScreen(){
  unActs(); cur='uno';nv('games');theme('uno');UN.scr='game';
@@ -226,6 +237,7 @@ function unAfter(prev){
  if(S.st==='end'&&(!prev||prev.st!=='end'||prev.id!==S.id)){unPay(S);const won=S.w===UN.me;sfx(won?784:330,won?.7:.3);vib(won?[20,40,20]:15);if(won)try{confetti()}catch(e){}}
  else if(prev&&prev.X.length!==S.X.length){vib(8)}}
 function unPay(S){
+ if(UN.loc&&S.sty!==undefined){const k=ckey('uno')+':'+S.sty,first=!st.get(k,false);let r=0;if(S.w===UN.me){st.set(k,true);r=first?rw('uno'):1}else r=0;S.rwd=r;if(r)scrGain(r);return}
  if(UN.loc){const n=S.S.length,r=S.w===UN.me?2+2*(n-1):1;scrGain(r);return}
  unPayN(S)}
 function unPayN(S){
@@ -256,6 +268,7 @@ function unHubDraw(){
  const root=$('#unhb');if(!root)return;const c=UN.cfg,sx=window.scrollX,sy=window.scrollY,sv=st.get('uno:sv',null);
  let h='';
  h+=unRooms();
+ h+=unStoryCard();
  if(sv&&sv.k==='uno'&&sv.st==='play')h+=`<section class="glass play"><h2>Partie en cours</h2><p class="note" style="margin:0 0 12px">Contre ${sv.S.length-1} bot${sv.S.length>2?'s':''} · ${sv.H[0].length} carte${sv.H[0].length>1?'s':''} en main</p><div class="chrow"><button class="btn" data-a="unRes">Reprendre</button><button class="btn alt" data-a="unDrop">Laisser tomber</button></div></section>`;
  h+=`<section class="glass play"><h2>Contre des bots</h2><div class="chgr"><div class="chl">Nombre de bots</div><div class="chq">${[1,2,3].map(n=>`<button class="chc${c.nb===n?' on':''}" data-a="unCfg" data-v="nb:${n}" aria-pressed="${c.nb===n}">${UNBOT.slice(0,n).map(b=>b[1]).join('')} ${n}</button>`).join('')}</div></div><p class="note" style="margin:6px 0 14px">Sans minuteur : prends ton temps.</p><button class="btn chgo" data-a="unGo">Commencer la partie</button></section>`;
  h+=unFriends();
@@ -349,10 +362,12 @@ let unAO=false;
 function unActs(){if(unAO)return;unAO=true;Object.assign(act,{
  unCfg:v=>{const[k,x]=v.split(':');UN.cfg[k]=+x;st.set('uno:cfg',{nb:UN.cfg.nb,bots:UN.cfg.bots});unHubDraw()},
  unGo:()=>unSolo(UN.cfg.nb),
+ unSt:v=>{const l=+v;if(l>=0&&l<UNN&&l<=unSNext())unStory(l)},
  unRes:()=>{const sv=st.get('uno:sv',null);if(!sv)return unHubDraw();UN.loc=true;UN.me=0;UN.g=sv;UN.uc=false;UN.pk=-1;UN.m='';unArm(UN.g,null,false);unScreen()},
  unDrop:()=>{st.set('uno:sv',null);unHubDraw()},
  unBk:()=>{if(UN.loc)unSave();UN.pk=-1;unHub()},
  unAgain:async()=>{
+  if(UN.loc&&UN.g&&UN.g.sty!==undefined){const l=UN.g.sty;return unStory(UN.g.w===UN.me&&l+1<UNN?l+1:l)}
   if(UN.loc)return unSolo(UN.g?UN.g.S.length-1:UN.cfg.nb);
   const S=UN.g;if(!S||S.h!==SO.uid)return;
   const seats=S.S.map(s=>s.ab?Object.assign({},s,{b:0,ab:0}):Object.assign({},s));
