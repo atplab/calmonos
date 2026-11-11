@@ -77,3 +77,9 @@ Object.assign(act,{plr:plDraw,plx:()=>{const o=document.getElementById('plo');if
  pls:()=>{PLK=null;PLPA=false;PLE=0;plApply();plSess();plDraw()}});
 
 act.plMode=v=>{try{st.set('pl:mode',v||'')}catch(e){}hub('planetes')};
+
+act.socPlay=v=>{const[k,f]=String(v).split(':');if(!f||!SO.P[f])return;const w=(fn,ms)=>setTimeout(fn,ms);
+ if(k==='chess'){act.open('chess');w(()=>act.chInv(f),80)}
+ else if(k==='scrabble'){act.scrOpen(f);w(()=>{const o=SC.G[f];if(SC.fid===f&&(!o||o.e))act.scNew()},1000)}
+ else if(k==='uno'){act.open('uno');w(()=>{UN.cfg.fr=[f];act.unMake()},80)}
+ else if(k==='airhockey'){act.open('airhockey');w(()=>act.ahAsk(f),80)}};
