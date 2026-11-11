@@ -1317,3 +1317,8 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .infin .infl li:nth-child(1) i{color:#ffd45e;opacity:1}.infin .infl li:nth-child(2) i{color:#dfe6f2;opacity:1}.infin .infl li:nth-child(3) i{color:#e8a878;opacity:1}
 .infin .infl li.me{background:rgba(255,255,255,.26)}.infin .infl b{font-weight:800}
 .infs button{white-space:nowrap;font-size:13px;padding:10px 4px;gap:4px}
+
+.rcx-lb.on{background:rgba(255,255,255,.92);color:#2a2f6a;box-shadow:0 0 0 3px rgba(255,255,255,.28)}
+.infpg{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin-top:6px}.infpg::-webkit-scrollbar{display:none}
+.infpg .infp{flex:0 0 100%;scroll-snap-align:start;margin:4px 0 2px;box-sizing:border-box}
+.infdots{display:flex;justify-content:center;gap:8px;margin-top:6px}.infdots button{width:8px;height:8px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.35);cursor:pointer}.infdots button.on{background:#fff;transform:scale(1.25)}
