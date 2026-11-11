@@ -248,7 +248,7 @@ body:has(.pg-quiz) .skw{display:none}
 .grid:has(>.tw) .tile{min-height:116px}
 .tile b .mp{display:inline-block;width:20px;height:20px;vertical-align:-4px;margin-right:7px;fill:currentColor}
 /* Match-3 : tout l’écran devient l’océan */
-body:is(:has(.m3),.seabg){background:radial-gradient(70% 38% at 25% 0,rgba(255,255,255,.3),transparent 72%),radial-gradient(55% 32% at 85% 0,rgba(255,255,255,.2),transparent 72%),linear-gradient(0deg,rgba(226,200,140,.28),transparent 10%),linear-gradient(180deg,#2fb0d2 0%,#1c84b8 34%,#13539b 66%,#0a2b69 100%) fixed!important}
+body:is(:has(.m3),.seabg){background:linear-gradient(0deg,rgba(226,200,140,.28),transparent 10%),linear-gradient(180deg,#2fb0d2 0%,#1c84b8 34%,#13539b 66%,#0a2b69 100%) fixed!important}
 body:is(:has(.m3),.seabg) #tint{opacity:0!important}
 body:is(:has(.m3),.seabg) #snow{display:none}
 body .m3{background:none;overflow:visible;border-radius:0}
@@ -347,7 +347,7 @@ body:has(.tank.ed) .aqbar,body:has(.tank.ed) .aqst{display:none}
 .aqsh .aqc,.aqsh small,.aqsh .atx small{color:rgba(255,255,255,.78)}
 body:has(.aqsh.open) #nav{opacity:0;pointer-events:none}
 /* Match-3 : l’eau suit jour / nuit (--gs : 1 jour, 0 nuit, graduel en Auto) */
-body:is(:has(.m3),.seabg){background:radial-gradient(70% 38% at 25% 0,rgba(255,255,255,calc(.04 + var(--gs,1)*.26)),transparent 72%),radial-gradient(55% 32% at 85% 0,rgba(255,255,255,calc(.03 + var(--gs,1)*.17)),transparent 72%),linear-gradient(0deg,rgba(226,200,140,calc(.08 + var(--gs,1)*.2)),transparent 10%),linear-gradient(180deg,color-mix(in srgb,#2fb0d2 calc(var(--gs,1)*100%),#0b3f66) 0%,color-mix(in srgb,#1c84b8 calc(var(--gs,1)*100%),#07335c) 34%,color-mix(in srgb,#13539b calc(var(--gs,1)*100%),#04204a) 66%,color-mix(in srgb,#0a2b69 calc(var(--gs,1)*100%),#020c25) 100%) fixed!important}
+body:is(:has(.m3),.seabg){background:linear-gradient(0deg,rgba(226,200,140,calc(.08 + var(--gs,1)*.2)),transparent 10%),linear-gradient(180deg,color-mix(in srgb,#2fb0d2 calc(var(--gs,1)*100%),#0b3f66) 0%,color-mix(in srgb,#1c84b8 calc(var(--gs,1)*100%),#07335c) 34%,color-mix(in srgb,#13539b calc(var(--gs,1)*100%),#04204a) 66%,color-mix(in srgb,#0a2b69 calc(var(--gs,1)*100%),#020c25) 100%) fixed!important}
 .m3bu{opacity:calc(.45 + var(--gs,1)*.55)}
 .m3fi{opacity:calc(.22 + var(--gs,1)*.28)}
 /* inventaire */
@@ -1228,3 +1228,12 @@ body:has(.m3) .seadeco{display:none!important}
 /* Tèconta : moins d'espace sous la barre du haut, plus de place pour le jeu */
 body:has(.pg-tetris) .top.stk{margin-bottom:0;padding-bottom:4px}
 .play.pg-tetris{padding-top:0}
+
+/* Constellations : plus de rayons de soleil dans les niveaux */
+.m3::before{display:none!important}
+/* Uno : ambiance de table de jeu de cartes, tapis vert */
+body.felt{background:radial-gradient(ellipse 90% 55% at 50% 38%,#238455 0%,#176143 52%,#0d3b29 100%) fixed!important}
+body.felt::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cg fill='%23fff' fill-opacity='.07' font-family='serif' font-size='34' text-anchor='middle'%3E%3Ctext x='35' y='45'%3E%E2%99%A0%3C/text%3E%3Ctext x='105' y='45'%3E%E2%99%A5%3C/text%3E%3Ctext x='35' y='115'%3E%E2%99%A6%3C/text%3E%3Ctext x='105' y='115'%3E%E2%99%A3%3C/text%3E%3C/g%3E%3C/svg%3E"),repeating-linear-gradient(45deg,rgba(255,255,255,.02) 0 2px,transparent 2px 5px)}
+body.felt::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.4) 100%)}
+body.felt #tint{opacity:0!important}
+body.felt #snow{display:none}
