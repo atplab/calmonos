@@ -1341,3 +1341,29 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .fr-av.fi{padding:0;background:linear-gradient(160deg,color-mix(in srgb,var(--fb) 30%,#3a6ab8),#17306e);overflow:hidden}.fr-av.fi svg{width:88%;height:auto;display:block}
 .pf-f{padding:4px;position:relative;display:grid;place-items:center}.pf-f svg{width:100%;height:auto;display:block}.pf-f.lk{opacity:.38;filter:grayscale(1);cursor:not-allowed}.pf-f i{position:absolute;right:3px;bottom:2px;font-size:.7rem;font-style:normal}
 .sgt{position:fixed;left:0;right:0;margin:0 auto;width:fit-content;max-width:calc(100% - 28px);bottom:calc(88px + 58px + env(safe-area-inset-bottom,0px));z-index:5;padding:6px 14px;border-radius:999px;font-size:13px;color:#fff;text-align:center;background:var(--gb);border:1px solid var(--gbd);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 8px 24px var(--gsh)}
+/* ===== Refonte des cartes (v368) : reflets, contours lumineux, entrées et appuis animés ===== */
+:root{--rx:24px;--spr:cubic-bezier(.34,1.56,.64,1);--eas:cubic-bezier(.2,.8,.2,1)}
+.glass{border-radius:var(--rx);border-color:var(--nbd,rgba(255,255,255,.22));box-shadow:inset 0 1px 0 rgba(255,255,255,.26),inset 0 -1px 0 rgba(0,0,0,.08),inset 0 0 38px -18px rgba(255,255,255,.35),0 14px 36px var(--nsh,rgba(20,20,70,.35)),0 2px 6px rgba(10,10,40,.18)}
+.tile,.rc,.item{transition:transform .28s var(--spr),box-shadow .3s var(--eas),border-color .3s var(--eas),filter .2s;will-change:transform;-webkit-tap-highlight-color:transparent}
+.tile{border-color:color-mix(in srgb,var(--a,#fff) 42%,rgba(255,255,255,.16));box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 0 44px -16px color-mix(in srgb,var(--a,#fff) 55%,transparent),0 14px 34px var(--nsh,rgba(20,20,70,.35)),0 0 0 0 transparent;animation:cdIn .55s var(--eas) both}
+.tile i{box-shadow:0 6px 16px color-mix(in srgb,var(--a,#fff) 45%,transparent),inset 0 1px 0 rgba(255,255,255,.4);transition:transform .35s var(--spr)}
+.tile:active{transform:scale(.955);filter:brightness(1.08)}
+.tile:active i{transform:scale(1.12) rotate(-6deg)}
+.item{border-radius:20px}.item:active{transform:scale(.97)}
+.rc{border-color:color-mix(in srgb,var(--a) 62%,rgba(255,255,255,.18));box-shadow:inset 0 1px 0 rgba(255,255,255,.28),inset 0 0 44px -16px color-mix(in srgb,var(--a) 55%,transparent),0 14px 34px var(--nsh,rgba(20,20,70,.35));animation:cdIn .55s var(--eas) both}
+.rc:active{transform:scale(.975)}
+@media(hover:hover){.tile:hover,.rc:hover{transform:translateY(-4px);box-shadow:inset 0 1px 0 rgba(255,255,255,.34),0 22px 44px var(--nsh,rgba(20,20,70,.4)),0 0 0 1px color-mix(in srgb,var(--a,#fff) 50%,transparent)}.item:hover{transform:translateY(-2px)}}
+.tile:nth-child(2),.rc:nth-child(2){animation-delay:.05s}.tile:nth-child(3){animation-delay:.1s}.tile:nth-child(4){animation-delay:.15s}.tile:nth-child(5){animation-delay:.2s}.tile:nth-child(6){animation-delay:.25s}.tile:nth-child(n+7){animation-delay:.3s}
+@keyframes cdIn{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
+.btn{box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -2px 0 rgba(0,0,0,.12),0 10px 22px rgba(60,50,150,.42);transition:transform .22s var(--spr),filter .2s,box-shadow .25s var(--eas)}
+.btn:not(:disabled):active{transform:scale(.95);filter:brightness(1.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 4px 10px rgba(60,50,150,.4)}
+.chip,.hb{box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 4px 12px rgba(10,10,40,.18);transition:transform .2s var(--spr)}
+.chip:active,.hb:active{transform:scale(.93)}
+#nav{box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 16px 40px rgba(10,10,40,.4)}
+#nav button{transition:background .3s var(--eas),color .25s,transform .25s var(--spr)}
+#nav button:active{transform:scale(.9)}
+#nav button.on{background:linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,.12));box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 4px 14px rgba(10,10,40,.25)}
+#nav button.on svg{animation:nvP .5s var(--spr)}
+@keyframes nvP{0%{transform:scale(.7) translateY(3px)}60%{transform:scale(1.18) translateY(-2px)}100%{transform:none}}
+:focus-visible{outline:2px solid color-mix(in srgb,var(--a,#b9b2ff) 80%,#fff);outline-offset:3px;border-radius:inherit}
+@media(prefers-reduced-motion:reduce){.tile,.rc{animation:none}.tile,.rc,.item,.btn,#nav button,.chip,.hb{transition:none}#nav button.on svg{animation:none}}
