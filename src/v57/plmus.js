@@ -38,7 +38,15 @@ function plSess(){const ms=navigator.mediaSession;if(!ms)return;try{const t=PLT[
  const set=src=>{ms.metadata=new MediaMetadata({title:t[1],artist:'Nuit de neige 2 · '+t[2],album:'Musiques des jeux',artwork:src?[{src,sizes:'512x512',type:'image/png'}]:[]})};
  set('');im.onload=()=>{try{const c=document.createElement('canvas');c.width=c.height=512;c.getContext('2d').drawImage(im,0,0,512,512);set(c.toDataURL('image/png'))}catch(e){}};im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
  [['play',()=>act.plpl()],['pause',()=>act.plpa()],['nexttrack',()=>act.plnx(1)],['previoustrack',()=>act.plnx(-1)]].forEach(([n,f])=>{try{ms.setActionHandler(n,f)}catch(e){}})}catch(e){}}
-function plApply(){PLT.forEach(t=>{try{t[3]()(!!PLK&&!PLPA&&t[0]===PLK)}catch(e){}});apply()}
+/* vraie piste audio (quasi inaudible, 25 Hz) lue en boucle par un <audio> : c’est elle qui fait reconnaître l’appli comme lecteur de musique (notification, écran verrouillé) */
+let PLA=null;
+function plTone(on){try{if(!on){if(PLA)PLA.pause();return}
+ if(!PLA){const sr=8000,n=sr*60,u=new Uint8Array(44+n),dv=new DataView(u.buffer),w=(o,t)=>{for(let i=0;i<t.length;i++)dv.setUint8(o+i,t.charCodeAt(i))};
+  w(0,'RIFF');dv.setUint32(4,36+n,true);w(8,'WAVEfmt ');dv.setUint32(16,16,true);dv.setUint16(20,1,true);dv.setUint16(22,1,true);dv.setUint32(24,sr,true);dv.setUint32(28,sr,true);dv.setUint16(32,1,true);dv.setUint16(34,8,true);w(36,'data');dv.setUint32(40,n,true);
+  for(let i=0;i<n;i++)u[44+i]=128+Math.round(4*Math.sin(2*Math.PI*25*i/sr));
+  PLA=new Audio(URL.createObjectURL(new Blob([u],{type:'audio/wav'})));PLA.loop=true;PLA.setAttribute('playsinline','')}
+ PLA.play().catch(()=>{})}catch(e){}}
+function plApply(){plTone(!!PLK&&!PLPA);PLT.forEach(t=>{try{t[3]()(!!PLK&&!PLPA&&t[0]===PLK)}catch(e){}});apply()}
 function plTick(){const o=document.getElementById('plp');if(!o){clearInterval(PLI);PLI=0;return}const e=plEl(),a=document.getElementById('ple'),b=document.getElementById('plpb');if(a)a.textContent=plFmt(e);if(b)b.style.width=((e%240)/240*100).toFixed(1)+'%'}
 function plDraw(){let o=document.getElementById('plo');if(!o){o=document.createElement('div');o.id='plo';o.className='plo';document.body.appendChild(o)}
  const t=PLT[PLC],pl=!!PLK&&!PLPA,I=n=>`<svg viewBox="0 0 24 24" aria-hidden="true">${n}</svg>`,
