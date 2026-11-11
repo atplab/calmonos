@@ -52,6 +52,7 @@ assert nn==10,nn
 exec(open('fv_block.py').read())
 exec(open('cach_block.py').read())
 exec(open('cach2_block.py').read())
+exec(open('cach3_block.py').read())
 RR("${tg('bg','Musique en arrière-plan','La musique continue quand tu quittes l’application')}","${tg('bg','Musique en arrière-plan','La musique continue quand tu quittes l’application')}<div class=\"tg pk\"><span>Scores du mode infini<small>Qui peut voir tes records</small></span><div class=\"seg\" role=\"radiogroup\" aria-label=\"Partage des scores\">${[['p','Global'],['f','Amis'],['n','Privé']].map(([v,l])=>`<button role=\"radio\" aria-checked=\"${(infShr()||'n')===v}\" class=\"${(infShr()||'n')===v?'on':''}\" data-a=\"infSet\" data-v=\"${v}\">${l}</button>`).join('')}</div></div>")
 
 RR("o.fv&&o.fv.l,","o.fv&&o.fv.l,o.hs?[o.hs.v,Object.entries(o.hs.k).sort(),Object.entries(o.hs.m||{}).sort()]:0,")
