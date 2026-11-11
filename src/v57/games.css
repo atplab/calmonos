@@ -1303,3 +1303,4 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .infl{list-style:none;margin:12px 0;padding:0;display:grid;gap:6px}.infl li{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:12px;background:rgba(255,255,255,.07)}
 .infl li.me{background:rgba(255,215,120,.22)}.infl i{font-style:normal;min-width:1.6em;opacity:.7;font-weight:700}.infl span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.infl b{font-variant-numeric:tabular-nums}
 .infl .fr-av{width:28px;height:28px;flex:none}.infsh{margin-top:14px}.infsh small{display:block;opacity:.7;margin-bottom:6px}.infs{margin-bottom:4px}
+.infs button{display:inline-flex;align-items:center;justify-content:center;gap:5px}.infic{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
