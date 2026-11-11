@@ -66,9 +66,9 @@ function pPlan(r){
  /* physique : petits pas de temps, collisions entre cercles */
  const phys=h=>{const mg=[];
   for(const p of ps){
-   if(OR){const dx=CX-p.x,dy=CY-p.y,d=Math.hypot(dx,dy)||1;p.vx+=dx/d*GC*h;p.vy+=dy/d*GC*h;if(p.in){p.vx*=1-1.5*h;p.vy*=1-1.5*h}p.x+=p.vx*h;p.y+=p.vy*h;p.a+=p.w*h;p.age+=h;
+   if(OR){const dx=CX-p.x,dy=CY-p.y,d=Math.hypot(dx,dy)||1;p.vx+=dx/d*GC*h;p.vy+=dy/d*GC*h;if(p.in){p.vx*=1-1.5*h;p.vy*=1-1.5*h}p.w*=1-1.6*h;if(Math.abs(p.w)<.05)p.w=0;p.x+=p.vx*h;p.y+=p.vy*h;p.a+=p.w*h;p.age+=h;
     const c=Math.hypot(p.x-CX,p.y-CY)||1;if(!p.in){if(c+p.r<RA-1)p.in=true;continue}
-    if(c+p.r>RA){const nx=(p.x-CX)/c,ny=(p.y-CY)/c;p.x=CX+nx*(RA-p.r);p.y=CY+ny*(RA-p.r);const vr=p.vx*nx+p.vy*ny;if(vr>0){p.vx-=(1+E)*vr*nx;p.vy-=(1+E)*vr*ny}p.w*=.97}
+    if(c+p.r>RA){const nx=(p.x-CX)/c,ny=(p.y-CY)/c;p.x=CX+nx*(RA-p.r);p.y=CY+ny*(RA-p.r);const vr=p.vx*nx+p.vy*ny;if(vr>0){p.vx-=(1+E)*vr*nx;p.vy-=(1+E)*vr*ny}p.w*=.9;{const tx=-ny,ty=nx,vt=p.vx*tx+p.vy*ty;p.vx-=tx*vt*.25;p.vy-=ty*vt*.25}}
     continue}
    p.vy+=G*h;p.x+=p.vx*h;p.y+=p.vy*h;p.a+=p.w*h;p.age+=h;
    if(p.x-p.r<WL){p.x=WL+p.r;if(p.vx<0)p.vx*=-E;p.w*=.97}
