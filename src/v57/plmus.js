@@ -48,21 +48,25 @@ function plTone(on){try{if(!on){if(PLA)PLA.pause();return}
  PLA.play().catch(()=>{})}catch(e){}}
 function plApply(){plTone(!!PLK&&!PLPA);PLT.forEach(t=>{try{t[3]()(PLK&&!PLPA?t[0]===PLK:!(PLK&&document.hidden)&&typeof cur!=='undefined'&&cur===(t[0]==='m3'?'match3':t[0]))}catch(e){}});apply()}
 function plTick(){const o=document.getElementById('plp');if(!o){clearInterval(PLI);PLI=0;return}const e=plEl(),a=document.getElementById('ple'),b=document.getElementById('plpb');if(a)a.textContent=plFmt(e);if(b)b.style.width=((e%240)/240*100).toFixed(1)+'%'}
-function plDraw(){let o=document.getElementById('plo');if(!o){o=document.createElement('div');o.id='plo';o.className='plo';document.body.appendChild(o)}
+const plFav=()=>{try{const f=st.get('pl:fav',[]);return Array.isArray(f)?f:[]}catch(e){return[]}};
+const plHe=(k,f)=>`<button class="plhe${f.includes(k)?' on':''}" data-a="plfv" data-v="${k}" aria-label="${f.includes(k)?'Retirer des favoris':'Ajouter aux favoris'}" aria-pressed="${f.includes(k)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg></button>`;
+function plDraw(){let o=document.getElementById('plo');const sy=o?o.scrollTop:0;if(!o){o=document.createElement('div');o.id='plo';o.className='plo';document.body.appendChild(o)}
  const t=PLT[PLC],pl=!!PLK&&!PLPA,I=n=>`<svg viewBox="0 0 24 24" aria-hidden="true">${n}</svg>`,
-  rows=PLT.map((r,i)=>`<button class="plr${PLK===r[0]?' on':''}" data-a="plp" data-v="${r[0]}"><span class="plth">${plArt(r[0])}</span><span class="plrt"><b>${r[1]}</b><small>${r[2]}</small></span>${PLK===r[0]&&!PLPA?'<i class="pleq"><u></u><u></u><u></u></i>':''}</button>`).join('');
+  FV=plFav(),rw=r=>`<div class="plrw"><button class="plr${PLK===r[0]?' on':''}" data-a="plp" data-v="${r[0]}"><span class="plth">${plArt(r[0])}</span><span class="plrt"><b>${r[1]}</b><small>${r[2]}</small></span>${PLK===r[0]&&!PLPA?'<i class="pleq"><u></u><u></u><u></u></i>':''}</button>${plHe(r[0],FV)}</div>`,
+  rows=PLT.map(rw).join(''),fvr=PLT.filter(r=>FV.includes(r[0])).map(rw).join('');
  o.innerHTML=`<div class="plp" id="plp" style="--c1:${t[4]};--c2:${t[5]}"><div class="plh"><button class="plcl" data-a="plx" aria-label="Fermer">${I('<path d="M6 9l6 6 6-6"/>')}</button><b>Lecteur de musique</b><span></span></div>
- <div class="plcv${pl?' pl':''}">${plArt(t[0])}</div><div class="plti"><b>${t[1]}</b><span>Nuit de neige 2 · ${t[2]}</span></div>
+ <div class="plcv${pl?' pl':''}">${plArt(t[0])}</div><div class="plti"><div><b>${t[1]}</b><span>Nuit de neige 2 · ${t[2]}</span></div>${plHe(t[0],FV)}</div>
  <div class="plpbw"><div class="plpbr"><i id="plpb" style="width:0"></i></div><div class="plt"><span id="ple">${plFmt(plEl())}</span><span>en boucle</span></div></div>
  <div class="plct"><button data-a="plnx" data-v="-1" aria-label="Précédent">${I('<path d="M6 5v14M19 5L8 12l11 7z" fill="currentColor"/>')}</button><button class="plbig" data-a="plpl" aria-label="${pl?'Pause':'Lecture'}">${pl?I('<path d="M8 5v14M16 5v14" stroke-width="3.4"/>'):I('<path d="M8 5l12 7-12 7z" fill="currentColor"/>')}</button><button data-a="plnx" data-v="1" aria-label="Suivant">${I('<path d="M18 5v14M5 5l11 7-11 7z" fill="currentColor"/>')}</button></div>
  <label class="plvo">${I('<path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/>')}<input type="range" min="0" max="100" value="${prefs().vol}" data-r="vol" aria-label="Volume"><span id="vv" hidden></span></label>
- <h3>Toutes les musiques</h3><div class="plls">${rows}</div>${PLK?'<button class="btn alt plsp" data-a="pls">Arrêter la lecture</button>':''}</div>`;
- if(!PLI)PLI=setInterval(plTick,1000);plTick();
+ ${fvr?`<h3>Favoris</h3><div class="plls">${fvr}</div>`:''}<h3>Toutes les musiques</h3><div class="plls">${rows}</div>${PLK?'<button class="btn alt plsp" data-a="pls">Arrêter la lecture</button>':''}</div>`;
+ if(!PLI)PLI=setInterval(plTick,1000);plTick();o.scrollTop=sy;
  document.querySelectorAll('.plfab').forEach(b=>b.classList.toggle('on',!!PLK&&!PLPA))}
 function plStart(i){const p=prefs();if(!p.music){p.music=true;savePrefs()}PLC=(i+PLT.length)%PLT.length;PLK=PLT[PLC][0];PLPA=false;PLT0=Date.now();PLE=0;audio();plApply();plSess();plDraw()}
 Object.assign(act,{plr:plDraw,plx:()=>{const o=document.getElementById('plo');if(o)o.remove()},
  plp:v=>{const i=PLT.findIndex(t=>t[0]===v);if(PLK===v&&!PLPA){PLC=i;act.plpa();return}plStart(i)},
  plpl:()=>{if(!PLK)return plStart(PLC);if(PLPA){PLPA=false;PLT0=Date.now()-PLE*1000;audio();plApply();plSess();plDraw()}else act.plpa()},
  plpa:()=>{if(!PLK)return;PLE=plEl();PLPA=true;plApply();plSess();plDraw()},
+ plfv:v=>{const f=plFav(),i=f.indexOf(v);if(i<0)f.push(v);else f.splice(i,1);st.set('pl:fav',f);plDraw()},
  plnx:v=>plStart(PLC+(+v||1)),
  pls:()=>{PLK=null;PLPA=false;PLE=0;plApply();plSess();plDraw()}});
