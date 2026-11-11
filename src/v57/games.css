@@ -1330,3 +1330,11 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .rcx-m .plseg button{padding:10px 9px;font-size:13px;white-space:nowrap}
 
 .pf-r{display:flex;align-items:center;gap:10px}.pf-r .pf-h{flex:1;min-width:0}.pf-pt{flex:none;white-space:nowrap}.pf-pt.on{filter:brightness(1.15);outline:2px solid currentColor}.fvp-w{margin-bottom:12px}
+.s67{position:fixed;inset:0;z-index:99;pointer-events:none;display:flex;align-items:center;justify-content:center;gap:.08em;font:800 min(38vw,200px)/1 Fraunces,Georgia,serif;color:#fff;text-shadow:0 6px 40px rgba(120,90,255,.8),0 0 14px rgba(255,255,255,.7);animation:s67o 3.4s ease forwards}
+.s67 b{display:inline-block;animation:s67a .5s ease-in-out infinite alternate}.s67 b:nth-child(2){animation-delay:.25s}
+.s67 i{position:absolute;font-style:normal;font-size:min(22vw,110px);bottom:14%;animation:s67a .5s ease-in-out infinite alternate}.s67 i.a{left:16%}.s67 i.b{right:16%;animation-delay:.25s}
+.s67 u{position:absolute;left:50%;top:50%;width:10px;height:10px;border-radius:50%;background:hsl(calc(var(--a)*1.4),90%,70%);animation:s67c 1.6s ease-out forwards;transform:rotate(var(--a)) translateY(0)}
+@keyframes s67a{from{transform:translateY(-.14em) rotate(-6deg)}to{transform:translateY(.14em) rotate(6deg)}}
+@keyframes s67c{to{transform:rotate(var(--a)) translateY(calc(var(--d)*-3));opacity:0}}
+@keyframes s67o{0%{opacity:0;transform:scale(.5)}12%{opacity:1;transform:scale(1)}80%{opacity:1}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.s67 b,.s67 i{animation:none}}
