@@ -15,7 +15,7 @@ function ahHub(){
  const online=!can?'<p class="note" style="margin:0">Le jeu en ligne est offert dans l’app Claude.</p>':!SO.uid?'<p class="note" style="margin:0">Active ton profil dans l’onglet Amis pour jouer en ligne.</p>':
   (ids.length?`<p class="note" style="margin:0 0 6px">Invite un ami : la partie commence dès qu’il accepte.</p>${ids.map(id=>`<div class="fr-i"><span class="fr-o">${socAv(id)}<span class="fr-t"><b>${esc(scrNm(id))}</b></span></span><div class="fr-b"><button class="sb buy" data-a="ahAsk" data-v="${esc(id)}">Inviter</button></div></div>`).join('')}`:'<p class="note" style="margin:0">Ajoute des amis dans l’onglet Amis pour les défier.</p>');
  const g=ALL.find(x=>x.id==='airhockey')||{t:'Air hockey',s:'',ic:'🏒'},dn=d.length,tg=nx===undefined?AHN-1:nx,AR='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',chev='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
- app.innerHTML=`<div class="top stk">${bk('home')}<div class="chip">❄ ${FLX()}</div></div><section class="glass story pt-airhockey"><i>${g.ic}</i><h2>${g.t}</h2><p>Glisse ton maillet du bout du doigt et envoie la rondelle dans le but d’en face. Contre l’IA, le premier à 5 buts gagne ; à deux ou en ligne, le premier à 7.</p></section>
+ app.innerHTML=`<div class="top stk">${bk('home')}<div class="chip">❄ ${FLX()}</div></div><section class="glass story pt-airhockey"><i>${g.ic}</i><h2>${g.t}</h2><p>Glisse ton maillet du bout du doigt et envoie la rondelle dans le but d’en face. Contre l’IA, le premier à 5 buts gagne. Dès certains niveaux, des obstacles apparaissent, et une cible dorée touchée donne la victoire directe (la rouge, celle de l’IA, la défaite) ; à deux ou en ligne, le premier à 7.</p></section>
  <div class="opts">${inv.map(x=>`<section class="rc pt-airhockey" data-g="🏒"><div class="rc-ic">${socAv(x.id)}</div><div class="rc-t"><small>Invitation</small><b>${esc(x.nm)}</b><span>t’invite à une partie en ligne</span></div><button class="rc-go" data-a="ahJoin" data-v="${esc(x.g)}">Jouer${AR}</button><button class="ahx" data-a="ahNo" data-v="${esc(x.g)}" aria-label="Refuser l’invitation de ${esc(x.nm)}">✕</button></section>`).join('')}
  <section class="rc pt-airhockey" data-g="🏒"><div class="rc-ic">🏒</div><div class="rc-t"><small>${dn?'Continuer':'Commencer'}</small><b>${nx===undefined?'Rejouer le niveau '+AHN:'Niveau '+(tg+1)}</b><span>${nx===undefined?'Tous les niveaux sont gagnés':dn+' sur '+AHN+' gagnés · contre l’IA'}</span></div><button class="rc-go" data-a="ahLv" data-v="${tg}">Jouer${AR}</button></section>
  <section class="rc" data-g="⇅"><div class="rc-ic">👥</div><div class="rc-t"><small>Sur cet écran</small><b>À deux</b><span>Posez le téléphone à plat entre vous</span></div><button class="rc-go" data-a="ahLoc">Jouer${AR}</button></section>
@@ -23,6 +23,27 @@ function ahHub(){
  <div class="dd pt-airhockey${lvOpen?' open':''}" id="ahdd"><button class="dd-h" data-a="ahDd" aria-expanded="${lvOpen}" aria-controls="lvl"><span><b>Choisir un niveau</b><small>${dn} / ${AHN} gagnés</small></span>${chev}</button><div class="dd-l" id="lvl"><div class="dd-i"><div class="lvg">${[...Array(AHN).keys()].map(i=>{const o=d.includes(i);return`<button class="lv ${o?'d':i===nx?'nx':'far'}" data-a="ahLv" data-v="${i}" aria-label="Niveau ${i+1}${o?', gagné':''}">${i+1}</button>`}).join('')}</div></div></div></div></div>`;
  window.scrollTo(0,0)}
 /* ---------- écran de jeu ---------- */
+/* mode histoire : obstacles (rebondissent), obstacles mobiles, cibles = victoire directe (dorée, côté adverse) / défaite directe (rouge, côté de l’IA) */
+function ahMod(L){const H=AHH,m=H/2,o=[],t=[],B=(x,y,r,ax,sp)=>o.push({x,y,r:r||.06,ax:ax||0,sp:sp||1.2,ph:o.length*1.7}),T=(x,y)=>{t.push({x,y,r:.05,w:'a'});t.push({x:1-x,y:H-y,r:.05,w:'b'})};
+ if(L===3)B(.5,m);
+ if(L===4){B(.3,m);B(.7,m)}
+ if(L===5)T(.14,.5);
+ if(L===6)B(.5,m,.06,.25);
+ if(L===7){B(.5,.62);B(.5,H-.62)}
+ if(L===8)T(.5,.46);
+ if(L===9){B(.25,m);B(.75,m);T(.14,.5)}
+ if(L===10){B(.5,m-.2,.055,.2);B(.5,m+.2,.055,.2,-1.2)}
+ if(L===11){B(.5,m,.085);T(.14,.5)}
+ if(L===12){B(.3,.62);B(.7,.62);B(.3,H-.62);B(.7,H-.62)}
+ if(L===13){B(.5,m,.06,.25);T(.5,.46)}
+ if(L===14){B(.2,m,.05);B(.5,m,.05);B(.8,m,.05)}
+ if(L===15){B(.5,m-.22,.055,.22);B(.5,m+.22,.055,.22,-1.3);T(.14,.5)}
+ if(L===16){B(.28,.7);B(.72,.7);B(.28,H-.7);B(.72,H-.7);T(.5,.46)}
+ if(L===17){B(.3,m,.05,.18);B(.5,m,.05,.18,-1.1);B(.7,m,.05,.18)}
+ if(L===18){B(.25,.65);B(.75,.65);B(.25,H-.65);B(.75,H-.65);B(.5,m,.06,.22);T(.14,.5)}
+ if(L===19){B(.2,.7,.05,.12);B(.8,.7,.05,.12,-1);B(.2,H-.7,.05,.12);B(.8,H-.7,.05,.12,-1);B(.5,m,.07,.28);T(.5,.46);T(.12,.8)}
+ return{o,t}}
+const ahOp=(o,t)=>({x:o.x+(o.ax?Math.sin(t*o.sp+o.ph)*o.ax:0),y:o.y});
 function ahNewState(){return{p:{x:.5,y:AHH*.5,vx:0,vy:0},a:{x:.5,y:AHH-.2,vx:0,vy:0,tx:.5,ty:AHH-.2},b:{x:.5,y:.2,vx:0,vy:0,tx:.5,ty:.2},s:[0,0],st:'play',pause:0,ai:{t:0,tx:.5,ty:.2,mode:'home'},fl:0,fls:0}}
 function ahScreen(sub){
  ahActs();ahStop();cur='airhockey';nv('games');theme('airhockey');
@@ -47,13 +68,15 @@ function ahMove(m,dt,vmax){const dx=m.tx-m.x,dy=m.ty-m.y,d=Math.hypot(dx,dy),st=
 function ahHit(p,m){const dx=p.x-m.x,dy=p.y-m.y,d=Math.hypot(dx,dy),R=AHR+AHM;if(d>=R||d===0)return false;const nx=dx/d,ny=dy/d;p.x=m.x+nx*R;p.y=m.y+ny*R;
  const rvx=p.vx-m.vx,rvy=p.vy-m.vy,vn=rvx*nx+rvy*ny;if(vn<0){p.vx-=1.85*vn*nx;p.vy-=1.85*vn*ny}const s=Math.hypot(p.vx,p.vy);if(s>AHMAX){p.vx*=AHMAX/s;p.vy*=AHMAX/s}return vn<-.3}
 function ahStep(S,dt){
- const p=S.p,N=4,h=dt/N;let snd=0;
+ const p=S.p,N=4,h=dt/N;let snd=0;S.t=(S.t||0)+dt;const MD=S.mod;
  for(let i=0;i<N;i++){
   p.x+=p.vx*h;p.y+=p.vy*h;
   if(p.x<AHR){p.x=AHR;p.vx=Math.abs(p.vx)*.9;snd=1}else if(p.x>1-AHR){p.x=1-AHR;p.vx=-Math.abs(p.vx)*.9;snd=1}
   const inG=p.x>AHG[0]&&p.x<AHG[1];
   if(!inG){if(p.y<AHR){p.y=AHR;p.vy=Math.abs(p.vy)*.9;snd=1}else if(p.y>AHH-AHR){p.y=AHH-AHR;p.vy=-Math.abs(p.vy)*.9;snd=1}}
   else for(const gx of AHG)for(const gy of [0,AHH]){const dx=p.x-gx,dy=p.y-gy,d=Math.hypot(dx,dy);if(d<AHR&&d>0){const nx=dx/d,ny=dy/d,vn=p.vx*nx+p.vy*ny;p.x=gx+nx*AHR;p.y=gy+ny*AHR;if(vn<0){p.vx-=1.8*vn*nx;p.vy-=1.8*vn*ny}snd=1}}
+  if(MD){for(const o of MD.o){const q=ahOp(o,S.t),dx=p.x-q.x,dy=p.y-q.y,d=Math.hypot(dx,dy),R=AHR+o.r;if(d<R&&d>0){const nx=dx/d,ny=dy/d,vn=p.vx*nx+p.vy*ny;p.x=q.x+nx*R;p.y=q.y+ny*R;if(vn<0){p.vx-=2*vn*nx;p.vy-=2*vn*ny}snd=1}}
+   for(const g of MD.t)if(Math.hypot(p.x-g.x,p.y-g.y)<g.r+AHR*.4)return g.w==='a'?'A':'B'}
   if(ahHit(p,S.a)||ahHit(p,S.b))snd=2;
   if(p.y<-AHR*1.2)return'a';if(p.y>AHH+AHR*1.2)return'b';
  }
@@ -72,6 +95,7 @@ function ahAI(S,dt){
    A.tx=.5+(px-.5)*(.45+P.agg*.4)+e;A.ty=.17+e*.3}}
  b.tx=Math.max(AHM,Math.min(1-AHM,A.tx));b.ty=Math.max(AHM,Math.min(AHH/2-AHM,A.ty))}
 function ahGoal(S,who){
+ if(who==='A'||who==='B'){S.s[who==='A'?0:1]=ahTo()-1;who=who.toLowerCase()}
  S.s[who==='a'?0:1]++;S.fl=1;S.fls=who==='a'?1:0;sfx(who==='a'?880:330,.22);try{vib(20)}catch(e){}
  const p=S.p;p.vx=p.vy=0;p.x=.5;p.y=who==='a'?AHH*.3:AHH*.7;S.pause=1;
  if(S.s[0]>=ahTo()||S.s[1]>=ahTo()){S.st='end';S.pause=0;setTimeout(()=>ahEnd(S.s[0]>S.s[1]),700)}}
@@ -115,6 +139,8 @@ function ahDraw(){
  if(!S)return;
  const mal=(m,col,dk)=>{c.fillStyle='rgba(0,0,0,.15)';c.beginPath();c.arc(m.x+.008,m.y+.012,AHM,0,7);c.fill();const gr=c.createRadialGradient(m.x-.02,m.y-.02,.01,m.x,m.y,AHM);gr.addColorStop(0,col);gr.addColorStop(1,dk);c.fillStyle=gr;c.beginPath();c.arc(m.x,m.y,AHM,0,7);c.fill();
   c.fillStyle=dk;c.beginPath();c.arc(m.x,m.y,AHM*.45,0,7);c.fill();c.fillStyle='rgba(255,255,255,.35)';c.beginPath();c.arc(m.x-.01,m.y-.012,AHM*.22,0,7);c.fill()};
+if(S.mod){for(const g of S.mod.t){const gold=g.w==='a';c.fillStyle=gold?'rgba(255,200,60,.35)':'rgba(230,70,80,.3)';c.beginPath();c.arc(g.x,g.y,g.r*1.5,0,7);c.fill();c.fillStyle=gold?'#ffc83c':'#e5464f';c.beginPath();c.arc(g.x,g.y,g.r,0,7);c.fill();c.strokeStyle='#fff';c.lineWidth=.006;c.beginPath();c.arc(g.x,g.y,g.r*.6,0,7);c.stroke()}
+  for(const o of S.mod.o){const q=ahOp(o,S.t||0);c.fillStyle='rgba(0,0,0,.15)';c.beginPath();c.arc(q.x+.008,q.y+.012,o.r,0,7);c.fill();const gr=c.createRadialGradient(q.x-.015,q.y-.015,.005,q.x,q.y,o.r);gr.addColorStop(0,'#8fa6d8');gr.addColorStop(1,'#34457a');c.fillStyle=gr;c.beginPath();c.arc(q.x,q.y,o.r,0,7);c.fill();c.strokeStyle='#dff3ff';c.lineWidth=.007;c.beginPath();c.arc(q.x,q.y,o.r*.55,0,7);c.stroke()}}
  mal(S.b,'#7fb0ff','#2f5fc4');mal(S.a,'#ff8a8f','#c9323d');
  const p=S.p;c.fillStyle='rgba(0,0,0,.18)';c.beginPath();c.arc(p.x+.006,p.y+.009,AHR,0,7);c.fill();c.fillStyle='#22283a';c.beginPath();c.arc(p.x,p.y,AHR,0,7);c.fill();c.strokeStyle='#4b5470';c.lineWidth=.006;c.beginPath();c.arc(p.x,p.y,AHR*.62,0,7);c.stroke();
  c.setTransform(1,0,0,1,0,0);c.save();c.globalAlpha=.2;c.fillStyle='#16213d';c.font=`800 ${Math.round(k*.17)}px Fraunces,Georgia,serif`;c.textAlign='center';c.textBaseline='middle';
@@ -159,7 +185,7 @@ async function ahGuestJoin(code){
 let ahAO=false;
 function ahActs(){if(ahAO)return;ahAO=true;Object.assign(act,{
  ahBk:()=>{ahStop();AH.mode='';AH.code='';AH.S=null;ahHub()},
- ahLv:v=>{AH.mode='lv';AH.lv=+v;AH.role='';AH.S=ahNewState();AH.S.st='cd';AH.S.cd=3;ahScreen('')},
+ ahLv:v=>{AH.mode='lv';AH.lv=+v;AH.role='';AH.S=ahNewState();AH.S.mod=ahMod(AH.lv);AH.S.st='cd';AH.S.cd=3;ahScreen('')},
  ahLoc:()=>{AH.mode='loc';AH.role='';AH.S=ahNewState();AH.S.st='cd';AH.S.cd=3;ahScreen('Rouge en bas, bleu en haut.')},
  ahAsk:v=>{if(SO.P[v])ahHost(v)},
  ahJoin:v=>{if(/^[a-z0-9]{4,20}$/.test(v))ahGuestJoin(v)},
