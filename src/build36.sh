@@ -59,6 +59,11 @@ RR("if(x.av&&typeof x.av==='object'){const t=+x.av.t||0","if(x.hs&&typeof x.hs==
 RR("M.fv={l,t:Date.now()}}}","M.fv={l,t:Date.now()}}{const sh=infShr(),v=sh==='p'||sh==='f'?sh:'',k=v?infAll():{},m=v?infAll5():{},z=JSON.stringify([v,k,m]);if((M.hs||v)&&(!M.hs||JSON.stringify([M.hs.v,M.hs.k||{},M.hs.m||{}])!==z))M.hs={v,t:Date.now(),k,m}}}")
 RR("fv:M.fv||{l:[],t:0},","fv:M.fv||{l:[],t:0},hs:M.hs||{v:'',t:0,k:{}},")
 RR("function start(g,d,l,r){","function start(g,d,l,r){INFG='';")
+RR("ckey=g=>'c:'+g;","ckey=g=>'c:'+(g==='planetes'&&st.get('pl:mode','')==='orbite'?'planetes_o':g);")
+RR("st.get('k:'+id+':'+i,false)","st.get('k:'+ckey(id).slice(2)+':'+i,false)")
+RR("st.get('k:'+id+':'+(N+i),false)","st.get('k:'+ckey(id).slice(2)+':'+(N+i),false)")
+RR("st.set('k:'+g+':'+l,true)","st.set('k:'+ckey(g).slice(2)+':'+l,true)")
+
 RR("const t=isX(cur,lv)?'Fêtes '+xn(cur,lv):'Niveau '+(lv+1);return daily||cur==='quiz'||cur==='match3'?","const t=INFG?'Mode infini':isX(cur,lv)?'Fêtes '+xn(cur,lv):'Niveau '+(lv+1);return daily||INFG||cur==='quiz'||cur==='match3'?")
 RR("${id==='planetes'?plModeCard():''}","${id==='planetes'?plModeCard():''}${INFN[id]?infCard(id):''}")
 RR("</button></section>${id==='mots'?anaCard():''}${id==='planetes'?plModeCard():''}${INFN[id]?infCard(id):''}","</button>${INFN[id]?infArea(id):''}</section>${id==='mots'?anaCard():''}")

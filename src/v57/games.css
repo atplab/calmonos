@@ -1310,3 +1310,10 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .rcx-m .plseg{flex:none}.rcx-lb{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.2);color:inherit;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}.rcx-lb .infic{width:22px;height:22px}
 .infin{width:100%}.infin .infb{position:static;max-width:none;max-height:none;overflow:visible;background:rgba(0,0,0,.16);color:inherit;box-shadow:none;border-radius:16px;padding:12px}.infin .infb h2{font-size:1rem;margin:0 0 8px;padding-right:28px}.infin .infx{top:6px;right:8px}
 .infin .infb{position:relative;padding-top:34px}.infin .infb h2{display:none}
+
+.infin .infb{background:transparent;padding:0;padding-top:2px}.infin .infx{display:none}
+.infin .plseg{background:rgba(255,255,255,.12)}
+.infin .infl{margin:10px 0 2px;gap:4px}.infin .infl li{background:rgba(255,255,255,.1);padding:8px 12px;border-radius:12px}
+.infin .infl li:nth-child(1) i{color:#ffd45e;opacity:1}.infin .infl li:nth-child(2) i{color:#dfe6f2;opacity:1}.infin .infl li:nth-child(3) i{color:#e8a878;opacity:1}
+.infin .infl li.me{background:rgba(255,255,255,.26)}.infin .infl b{font-weight:800}
+.infs button{white-space:nowrap;font-size:13px;padding:10px 4px;gap:4px}
