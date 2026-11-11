@@ -1328,3 +1328,5 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .unsl button.ok{background:rgba(120,220,160,.35)}.unsl button.nx{background:rgba(255,255,255,.9);color:#2a2f6a}.unsl button:disabled{opacity:.4;cursor:default}
 .rcx-m.col{flex-direction:column;align-items:stretch;gap:8px}.rcx-m.col .plseg{width:100%}
 .rcx-m .plseg button{padding:10px 9px;font-size:13px;white-space:nowrap}
+
+.pf-r{display:flex;align-items:center;gap:10px}.pf-r .pf-h{flex:1;min-width:0}.pf-pt{flex:none;white-space:nowrap}.pf-pt.on{filter:brightness(1.15);outline:2px solid currentColor}.fvp-w{margin-bottom:12px}
