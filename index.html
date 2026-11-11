@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0e0f34"><link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Nuit de neige"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Nuit de neige 2</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -1971,14 +1971,7 @@ body.xm .cl.cur,body.xm .sd-c.sel{background:#c23b34;color:#fff}
 body.xm .cl.ok,body.xm .sc.f{background:#1b7a49;color:#fff}
 body.xm :is(.whl b,.rw i,.cl,.sc,.sd-c){text-shadow:none}
 </style>
-</head>
-<body>
-<div id="tint" aria-hidden="true"></div>
-<div id="pat" aria-hidden="true"></div>
-<canvas id="snow" aria-hidden="true"></canvas>
-<main id="app"></main>
-<nav id="nav" class="glass" aria-label="Navigation"><button data-a="tab" data-v="aqua"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12c2.5-4.5 7-6 11.5-3.2L19.5 6v12l-5-2.8C10 18 5.5 16.5 3 12z"/><circle cx="8.3" cy="11" r=".9" fill="currentColor" stroke="none"/></svg><span>Aquarium</span><i class="ndot" hidden></i></button><button data-a="tab" data-v="games"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg><span>Jeux</span></button><button data-a="tab" data-v="daily"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg><span>Histoire</span></button><button data-a="tab" data-v="soc"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8.5" r="3"/><path d="M3.5 19c.5-3.3 2.9-5 5.5-5s5 1.7 5.5 5"/><circle cx="17" cy="9" r="2.4"/><path d="M16.2 14.1c2.5-.2 4.4 1.3 4.9 4.4"/></svg><span>Social</span><i class="ndot sdot" hidden></i></button><button data-a="tab" data-v="set"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14M5 16h14"/><circle cx="9" cy="8" r="2.2"/><circle cx="15" cy="16" r="2.2"/></svg><span>Réglages</span></button></nav>
-<script>
+<style>html,body{touch-action:manipulation;-webkit-text-size-adjust:100%}</style><script>
 /* Firebase : à l’extérieur de Claude, ce petit adaptateur fournit la même interface « claude.use('db' | 'user') » que l’appli utilise déjà,
    avec de vrais comptes (e-mail ou Google) et la base Firestore. Chaque document est stocké sous la forme { j : "<JSON>" }. */
 (()=>{
@@ -2136,6 +2129,13 @@ fb.open=(m)=>{
 fb.out=async()=>{try{const F=await load();await F.Au.signOut(F.auth)}catch(e){}try{if(window.__fbOut)window.__fbOut()}catch(e){}};
 })();
 </script>
+<script>["gesturestart","gesturechange","gestureend"].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault()},{passive:false})});document.addEventListener("touchmove",function(e){if(e.touches.length>1)e.preventDefault()},{passive:false});document.addEventListener("wheel",function(e){if(e.ctrlKey)e.preventDefault()},{passive:false});document.addEventListener("keydown",function(e){if((e.ctrlKey||e.metaKey)&&["+","-","=","0"].indexOf(e.key)>-1)e.preventDefault()})</script></head>
+<body>
+<div id="tint" aria-hidden="true"></div>
+<div id="pat" aria-hidden="true"></div>
+<canvas id="snow" aria-hidden="true"></canvas>
+<main id="app"></main>
+<nav id="nav" class="glass" aria-label="Navigation"><button data-a="tab" data-v="aqua"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12c2.5-4.5 7-6 11.5-3.2L19.5 6v12l-5-2.8C10 18 5.5 16.5 3 12z"/><circle cx="8.3" cy="11" r=".9" fill="currentColor" stroke="none"/></svg><span>Aquarium</span><i class="ndot" hidden></i></button><button data-a="tab" data-v="games"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg><span>Jeux</span></button><button data-a="tab" data-v="daily"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg><span>Histoire</span></button><button data-a="tab" data-v="soc"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8.5" r="3"/><path d="M3.5 19c.5-3.3 2.9-5 5.5-5s5 1.7 5.5 5"/><circle cx="17" cy="9" r="2.4"/><path d="M16.2 14.1c2.5-.2 4.4 1.3 4.9 4.4"/></svg><span>Social</span><i class="ndot sdot" hidden></i></button><button data-a="tab" data-v="set"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14M5 16h14"/><circle cx="9" cy="8" r="2.2"/><circle cx="15" cy="16" r="2.2"/></svg><span>Réglages</span></button></nav>
 <script>
 const $=s=>document.querySelector(s),app=$('#app'),mem={};
 let onSet=null;

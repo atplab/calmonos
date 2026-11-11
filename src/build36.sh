@@ -4,6 +4,9 @@ cd /tmp/claude-0/-home-claude/3d7f4fc1-f8a6-597b-88d5-0c7ad635827d/scratchpad
 python3 patch_v36.py && for d in remote*.diff; do patch -s -F3 --no-backup-if-mismatch /mnt/user-data/outputs/nuit-de-neige-2.html < "$d" || exit 1; done && python3 - <<'PY'
 import re
 h=open('/mnt/user-data/outputs/nuit-de-neige-2.html',encoding='utf-8').read()
+# pas de zoom : viewport verrouillé + gestes de pincement, double-tap et ctrl+molette bloqués
+h=h.replace('initial-scale=1, viewport-fit=cover','initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover',1)
+h=h.replace('</head>','<style>html,body{touch-action:manipulation;-webkit-text-size-adjust:100%}</style><script>["gesturestart","gesturechange","gestureend"].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault()},{passive:false})});document.addEventListener("touchmove",function(e){if(e.touches.length>1)e.preventDefault()},{passive:false});document.addEventListener("wheel",function(e){if(e.ctrlKey)e.preventDefault()},{passive:false});document.addEventListener("keydown",function(e){if((e.ctrlKey||e.metaKey)&&["+","-","=","0"].indexOf(e.key)>-1)e.preventDefault()})</script></head>',1)
 # retouches après les diffs distants
 for a,c in [("const follow=y0=>{if(sc)return;","const follow=y0=>{return;if(sc)return;"),
   ("function pCross(r){",open('v57/ana2d.js').read()+open('v57/ana2.js').read()+"function pCross(r){"),
