@@ -24,6 +24,7 @@ h=h.replace('</head>','<style>html,body{touch-action:manipulation;-webkit-text-s
 # retouches après les diffs distants
 for a,c in [("music.gain.setTargetAtTime(p.music?(","music.gain.setTargetAtTime(p.music&&!(PLK&&(!PLPA||document.hidden))?("),
   ("g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.2,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(mg);o.start(t);o.stop(t+d)}","d=Math.max(d,.09);const ea=Math.min(.012,d/4);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.2,t+ea);g.gain.setTargetAtTime(0,t+ea,d/6);o.connect(g);g.connect(mg);o.start(t);o.stop(t+d+.2)}"),
+  ("${id==='mots'?anaCard():''}","${id==='mots'?anaCard():''}${id==='planetes'?plModeCard():''}"),
   ("function sHudPos(){","function sHudPos(){try{const k=$('.shb[data-a=sbook]');if(k)document.body.style.setProperty('--pby',k.getBoundingClientRect().top.toFixed(0)+'px')}catch(e){}"),
   ("let AC,mg,music;","let AC,mg,music,PLK=null,PLPA=false;"+open('v57/plmus.js').read()),
   ("function apply(){if(!AC||!music)return;","function apply(){if(!AC||!music)return;try{bgOn()?acHold():acFree()}catch(e){}"),

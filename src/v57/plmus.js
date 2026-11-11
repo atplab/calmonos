@@ -75,3 +75,5 @@ Object.assign(act,{plr:plDraw,plx:()=>{const o=document.getElementById('plo');if
  plfv:v=>{const f=plFav(),i=f.indexOf(v);if(i<0)f.push(v);else f.splice(i,1);st.set('pl:fav',f);plDraw()},
  plnx:v=>plStart(PLC+(+v||1)),
  pls:()=>{PLK=null;PLPA=false;PLE=0;plApply();plSess();plDraw()}});
+
+act.plMode=v=>{try{st.set('pl:mode',v||'')}catch(e){}hub('planetes')};
