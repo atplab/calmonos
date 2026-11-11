@@ -33,7 +33,7 @@ function pTetris(r){
  const cv=$('#ttcv'),ctx=cv.getContext('2d'),wr=$('#ttw'),hc=$('#tthc'),nc=$('#ttnc');
  /* tailles */
  const ctl=()=>st.get('tt:ctl',''),applyCtl=()=>{const r=$('.ttrow');if(r)r.classList.toggle('nob',ctl()==='g')};
- const size=()=>{applyCtl();const avW=Math.min(($('.ttrow')||wr.parentElement).clientWidth||320,520)-(ctl()==='g'?4:2*(Math.min(50,Math.max(40,innerWidth*.105))+6)+6),avH=Math.max(300,innerHeight-168);cell=Math.max(14,Math.floor(Math.min(avW/W,avH/H)));
+ const size=()=>{applyCtl();const avW=Math.min(($('.ttrow')||wr.parentElement).clientWidth||320,520)-(ctl()==='g'?4:2*(Math.min(50,Math.max(40,innerWidth*.105))+6)+6),rw=$('.ttrow'),rt=rw?rw.getBoundingClientRect().top:168,tl=rw?[...rw.parentElement.children].filter(e=>rw.compareDocumentPosition(e)&4).reduce((s,e)=>s+(e.offsetHeight||0)+6,0):0,avH=Math.max(200,innerHeight-rt-tl-22);cell=Math.max(14,Math.floor(Math.min(avW/W,avH/H)));
   cv.width=W*cell*dpr;cv.height=H*cell*dpr;cv.style.width=W*cell+'px';cv.style.height=H*cell+'px';
   const s=Math.max(8,Math.round(cell*.42));hc.width=4*s*dpr;hc.height=2.4*s*dpr;hc.style.width=4*s+'px';hc.style.height=2.4*s+'px';
   nc.width=4*s*dpr;nc.height=2.4*s*dpr;nc.style.width=4*s+'px';nc.style.height=2.4*s+'px';SP={};side()};
@@ -167,7 +167,7 @@ function pTetris(r){
  window.__TTDBG={fill:()=>{const cs=cellsOf(cur.k,cur.r,cur.x,0),my=Math.max(...cs.map(c=>c[1]));for(let x=0;x<W;x++)Bd[H-1][x]=cs.some(c=>c[0]===x&&c[1]===my)?null:'T'},st:()=>({lines,clr:!!clr,cur:cur&&{...cur},done})};
  /* au premier lancement : choisir de jouer avec ou sans boutons */
  act.ttCtl=v=>{st.set('tt:ctl',v==='g'?'g':'b');size();if(paused){paused=false;hideOv()}};
- fresh();size();hud();
+ fresh();size();hud();requestAnimationFrame(()=>{if(cv.isConnected)size()});
  if(!ctl()){paused=true;const o=$('#ttov');o.hidden=false;o.innerHTML='<div><b>Comment veux-tu jouer ?</b><p>Tu pourras changer plus tard dans la pause.</p><button class="btn" data-a="ttCtl" data-v="b">Avec les boutons</button><button class="btn alt" data-a="ttCtl" data-v="g">Au doigt seulement</button><p class="ttch">Au doigt : touche pour tourner, glisse à gauche ou à droite pour déplacer, glisse vers le bas pour lâcher, vers le haut pour garder.</p></div>';requestAnimationFrame(()=>o.classList.add('on'))}
 msg(L.pc?'Défi : pose '+L.pc+' pièces sans que la pile touche le haut.':L.cr?'Des cristaux dorment dans la glace : libère-les en effaçant leurs rangées.':L.zen?'Neige immobile : les pièces ne tombent pas toutes seules. Prends ton temps.':L.rise?'Marée de glace : une rangée monte du fond toutes les '+L.rise+' pièces.':L.mc?'Efface au moins 2 lignes d’un coup, '+L.mc+' fois.':L.bag?'Petit sac : seules ces pièces tombent ('+[...L.bag].join(', ')+').':L.w?'Grille étroite : les lignes se remplissent plus vite.':L.gb?'Des rangées de glace attendent au fond : creuse jusqu’à elles.':'');requestAnimationFrame(tick);
 }
