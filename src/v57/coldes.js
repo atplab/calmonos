@@ -37,8 +37,8 @@ function cdScene(l){
  if(th===0){ /* étang aux lotus */
   sky(3+Math.round(q*4),150,190,86,94,30);add(CP.ell(CDW*rn(.35,.6),CDH*.36,rn(240,300),rn(240,300)),jit(140,30,86));mounts(2+Math.round(q*2),CDH*.5,160,200,78);
   for(let i=0;i<4+Math.round(q*5);i++)add(CP.band(CDH*(.6+i*.05),6,rn(1,3),rn(0,6),CDH),jit(195,40,82-i*3));
-  for(let i=0;i<3+Math.round(q*5);i++){const x=rn(80,920),y=rn(CDH*.68,CDH*.95),r=rn(50,90);add(CP.sector(x,y,0,r,.3,Math.PI*2-.05).replace(/^M/,'M'),jit(110,42,48));ln(CP.line([x,y,x+r*.9,y]),1.5)}
-  const nl=1+Math.round(q*2);for(let i=0;i<nl;i++)lotus(rn(280,720),rn(CDH*.64,CDH*.8),rn(200,280)/(1+i*.25),rn(330,350));
+  const LT=l===10?[[rn(210,330),rn(CDH*.68,CDH*.74)],[rn(650,790),rn(CDH*.8,CDH*.88)]]:[],PD=[];for(let i=0;i<3+Math.round(q*5)+(l===10?3:0);i++){let x=rn(80,920),y=rn(CDH*.68,CDH*.95);const r=rn(50,90);if(l===10)for(let t=0;t<80&&(LT.some(p=>Math.hypot(p[0]-x,p[1]-y)<250)||PD.some(p=>Math.hypot(p[0]-x,p[1]-y)<200));t++){x=rn(80,920);y=rn(CDH*.66,CDH*.97)}PD.push([x,y]);add(CP.sector(x,y,0,r,.3,Math.PI*2-.05).replace(/^M/,'M'),jit(110,42,48));ln(CP.line([x,y,x+r*.9,y]),1.5)}
+  const nl=1+Math.round(q*2);for(let i=0;i<nl;i++){if(l===10&&i<2)lotus(LT[i][0],LT[i][1],rn(170,230)/(1+i*.25),rn(330,350));else lotus(rn(280,720),rn(CDH*.64,CDH*.8),rn(200,280)/(1+i*.25),rn(330,350))}
   for(let i=0;i<2;i++)ln(CP.curve(rn(300,700),rn(200,400),rn(300,700),rn(150,350),rn(300,700),rn(200,400)),2)}
  else if(th===1){ /* baies */
   sky(2+Math.round(q*3),200,215,90,96,35);for(let i=0;i<3;i++)cloud(rn(150,850),rn(150,600),rn(90,150),94);
@@ -62,8 +62,8 @@ function cdScene(l){
   sky(4+Math.round(q*4),230,260,22,40,45);add(CP.ell(CDW*.78,CDH*.14,80,80),jit(50,70,86));add(CP.ell(CDW*.81,CDH*.13,70,70),cdHex(240,45,26));
   for(let i=0;i<6+Math.round(q*10);i++)add(CP.star(rn(30,970),rn(30,CDH*.35),rn(10,18),rn(4,7),4),jit(50,80,88));
   for(let i=0;i<3;i++)add(CP.band(CDH*(.5+i*.06),20,rn(.8,1.6),rn(0,6),CDH),jit(215,25,90-i*4));
-  const nh=3+Math.round(q*4);for(let i=0;i<nh;i++){const w=rn(170,250)/(1+i*.12);house(rn(0,CDW-w),rn(CDH*.66,CDH*.92),w,w*rn(.7,.95),rn(0,360))}
-  for(let i=0;i<3+Math.round(q*4);i++)pine(rn(30,970),rn(CDH*.7,CDH),rn(140,220),150,30)}
+  const nh=3+Math.round(q*4),HS=[];for(let i=0;i<nh;i++){const w=rn(170,250)/(1+i*.12),hx=rn(0,CDW-w),hy=rn(CDH*.66,CDH*.92),hh=w*rn(.7,.95),hu=rn(0,360);HS.push([hx-w*.12,hx+w*1.12]);house(hx,hy,w,hh,hu)}
+  const PP=[];for(let i=0;i<3+Math.round(q*4);i++){let px=rn(30,970);if(l===4){const bad=()=>HS.some(h=>px>h[0]-70&&px<h[1]+70)||PP.some(z=>Math.abs(px-z)<120);for(let t=0;t<200&&bad();t++)px=rn(30,970);if(bad())continue}PP.push(px);pine(px,rn(CDH*.7,CDH),rn(140,220),150,30)}}
  else if(th===5){ /* mandala */
   add(CP.rect(0,0,CDW,CDH),jit(260,30,90));const cx=CDW/2,cy=CDH/2,rg=5+Math.round(q*4),hu=rn(0,360);let r=70;add(CP.ell(cx,cy,r,r),jit(hu,70,60));
   for(let k=0;k<rg;k++){const n=8+2*ri(0,4),r2=r+(430-70)/rg*rn(.85,1.1);for(let i=0;i<n;i++){const a1=i/n*Math.PI*2,a2=(i+1)/n*Math.PI*2;if(k%2)add(CP.petal(cx+Math.cos(a1)*r,cy+Math.sin(a1)*r,a1+Math.PI/n,(r2-r)*1.2,(r2-r)*.35),jit(hu+k*28,60,70-k*3));else{add(CP.sector(cx,cy,r,r2,a1,a2),jit(hu+k*28+(i%2)*14,55,62+(i%2)*10));add(CP.ell(cx+Math.cos((a1+a2)/2)*(r+r2)/2,cy+Math.sin((a1+a2)/2)*(r+r2)/2,(r2-r)*.18,(r2-r)*.18),jit(hu+180,50,80))}}r=r2}
@@ -73,10 +73,11 @@ function cdScene(l){
   for(let i=0;i<4+Math.round(q*3);i++)add(CP.band(CDH*(.62+i*.06),12,rn(1,3),rn(0,6),CDH),jit(100,45,60-i*4));
   for(let i=0;i<4+Math.round(q*6);i++){const x=rn(60,940),y=rn(CDH*.66,CDH*.95);ln(CP.line([x,y,x,y+120]),3);flower(x,y,rn(60,110),rn(0,360),ri(5,8))}
   const nb=1+Math.round(q*2);for(let b=0;b<nb;b++){const x=rn(280,720),y=CDH*(.22+b*.15),s=rn(200,270)/(1+b*.3),hu=rn(0,360),a=rn(-.3,.3);
-   [1,-1].forEach(sd=>{add(CP.petal(x,y,-Math.PI/2+sd*1.0+a,s,s*.55),jit(hu,70,60));add(CP.petal(x,y,Math.PI/2+sd*.6+a,s*.7,s*.35),jit(hu+20,70,55));add(CP.ell(x+sd*s*.5,y-s*.45,s*.12,s*.12),jit(hu+180,60,85));add(CP.ell(x+sd*s*.3,y+s*.4,s*.08,s*.08),jit(hu+180,60,80))});add(CP.ell(x,y,s*.07,s*.42),jit(30,30,25))}}
+   [1,-1].forEach(sd=>{add(CP.petal(x,y,-Math.PI/2+sd*1.0+a,s,s*.55),jit(hu,70,60));add(CP.petal(x,y,Math.PI/2+sd*.6+a,s*.7,s*.35),jit(hu+20,70,55));add(CP.ell(x+sd*s*.5,y-s*.45,s*.12,s*.12),jit(hu+180,60,85));add(CP.ell(x+sd*s*.3,y+s*.4,s*.08,s*.08),jit(hu+180,60,80))});add(CP.ell(x,y,s*.07,s*.42),jit(30,30,25))}
+  if(l===6)for(let i=0;i<10;i++){const fx=60+(i+rn(.1,.9))*(CDW-120)/10,fy=rn(CDH*.76,CDH*.95);ln(CP.line([fx,fy,fx,fy+70]),3);flower(fx,fy,rn(34,58),rn(0,360),ri(5,7))}}
  else if(th===7){ /* récif de corail */
   for(let i=0;i<5+Math.round(q*4);i++)add(CP.band(CDH*(i*.1),10,rn(1,2),rn(0,6),CDH),jit(195,65,72-i*4));add(CP.band(CDH*.82,18,1.3,1,CDH),jit(40,55,78));add(CP.band(CDH*.9,12,2,2,CDH),jit(38,50,72));
-  for(let i=0;i<4+Math.round(q*5);i++){const x=rn(40,960),y=CDH*rn(.78,.92),hu=rn(-20,30);for(let k=0;k<ri(3,5);k++)add(CP.blob(x+rn(-60,60),y-rn(20,200),rn(25,45),rn(50,90),R,9,.3),jit(hu,70,62))}
+  const nc=4+Math.round(q*5);for(let i=0;i<nc;i++){const x=l===7?40+(i+rn(.15,.85))*(CDW-80)/nc:rn(40,960),y=CDH*(l===7?rn(.9,.97):rn(.78,.92)),hu=rn(-20,30),sp=l===7?34:60;for(let k=0;k<ri(3,5);k++)add(CP.blob(x+rn(-sp,sp),y-(l===7?rn(0,60):rn(20,200)),rn(25,45),rn(50,90),R,9,.3),jit(hu,70,62))}
   for(let i=0;i<3+Math.round(q*4);i++){const x=rn(30,970);add(CP.band(0,0,1,0,0),'#00000000');add(CP.petal(x,CDH*.92,-Math.PI/2+rn(-.2,.2),rn(220,380),rn(18,28)),jit(130,45,40))}
   for(let i=0;i<3+Math.round(q*5);i++)fish(rn(160,840),rn(CDH*.12,CDH*.7),rn(80,130),rn(0,60),R()<.5?1:-1);
   for(let i=0;i<5+Math.round(q*6);i++){const r=rn(8,18);add(CP.ell(rn(30,970),rn(30,CDH*.6),r,r),cdHex(195,60,92))}}
@@ -182,7 +183,7 @@ function cdWin(){
  document.querySelectorAll('.cdsw').forEach(b=>{b.classList.add('ok');b.style.setProperty('--pr','360deg')});
  sfx(784,.6);vib([20,40,20]);setTimeout(()=>{try{confetti(CD.cv)}catch(e){}},500);
  const nx=CD.l+1<CDN;setTimeout(()=>{const s=$('.cds');if(!s)return;s.insertAdjacentHTML('beforeend',`<div class="unend"><section class="glass play"><h2>Dessin ${CD.l+1}</h2><p class="note" style="margin:0 0 4px">Terminé !</p><p class="unrw">+${r} ❄</p><div class="chrow">${nx?`<button class="btn" data-a="cdLv" data-v="${CD.l+1}">Dessin suivant</button>`:''}<button class="btn alt" data-a="cdBk">Retour</button></div></section></div>`)},2200)}
-function cdOpen(l){CD.l=Math.max(0,Math.min(CDN-1,+l||0));const m=$('#m');CD.M=cdBuild(CD.l);CD.f=cdLoad();CD.ok=false;CD.hl=null;CD.pt={};CD.pz=null;CD.tap=null;CD.fit=0;cdScreen()}
+function cdOpen(l){if(!st.get('cd:fx1',0)){[4,6,7,10].forEach(i=>st.set('cd:sv:'+i,''));st.set('cd:fx1',1)}CD.l=Math.max(0,Math.min(CDN-1,+l||0));const m=$('#m');CD.M=cdBuild(CD.l);CD.f=cdLoad();CD.ok=false;CD.hl=null;CD.pt={};CD.pz=null;CD.tap=null;CD.fit=0;cdScreen()}
 setTimeout(()=>Object.assign(act,{
  cdBk:()=>{cdSave();CD.M=null;cbHub()},
  cdLv:v=>cdOpen(v),
@@ -197,3 +198,12 @@ setTimeout(()=>Object.assign(act,{
   CD.hl=new Set(ids);const an=n=>{const k=Math.min(1,(n-t0)/600),e=1-Math.pow(1-k,3);CD.z=z0+(zt-z0)*e;CD.ox=ox0+(tx-ox0)*e;CD.oy=oy0+(ty-oy0)*e;cdClamp();cdDraw();if(k<1)requestAnimationFrame(an)};requestAnimationFrame(an);
   setTimeout(()=>{CD.hl=null;cdDraw()},2200)}
 }));
+
+/* ---------- Album photo : tous les dessins terminés ---------- */
+const cdPc={};
+function cdPic(l,w){const k=l+':'+w;if(cdPc[k])return cdPc[k];const sc=cdScene(l),K=Math.min(50,10+Math.round(l*40/(CDN-1))),{pal,map}=cdPal(sc.S,K),c=document.createElement('canvas');c.width=w;c.height=Math.round(w*CDH/CDW);const x=c.getContext('2d');x.scale(w/CDW,w/CDW);x.lineJoin=x.lineCap='round';sc.A.forEach(s=>{const p=new Path2D(s.d);if(s.ln){x.strokeStyle='rgba(40,36,60,.45)';x.lineWidth=s.w;x.stroke(p)}else{x.fillStyle=pal[map[s.c]-1];x.fill(p)}});return cdPc[k]=c.toDataURL('image/jpeg',.9)}
+function cdAlbum(){cbActs();cur='colorie';nv('games');theme('colorie');const d=[...st.get('cd:d',[])].sort((a,b)=>a-b);
+ app.innerHTML=`<div class="top stk"><button class="back" data-a="cdAlbBk">‹ Retour</button><div class="tr"><div class="chip">❄ ${FLX()}</div></div></div><section class="glass story pt-colorie"><i>🖼️</i><h2>Album photo</h2><p>${d.length?`${d.length} sur ${CDN} dessins terminés. Touche un dessin pour le voir en grand.`:'Tes dessins terminés apparaîtront ici.'}</p></section>${d.length?`<div class="alb">${d.map(l=>`<button class="albi" data-a="cdAlbV" data-v="${l}" aria-label="Dessin ${l+1}"><img alt="" src="${cdPic(l,200)}"><span>Dessin ${l+1}</span></button>`).join('')}</div>`:''}`;window.scrollTo(0,0)}
+function cdAlbV(l){l=+l;const d=[...st.get('cd:d',[])].sort((a,b)=>a-b),i=d.indexOf(l);if(i<0)return;let v=$('#albv');if(!v){v=document.createElement('div');v.id='albv';v.className='albv';v.setAttribute('role','dialog');v.setAttribute('aria-label','Dessin en grand');app.appendChild(v)}
+ v.innerHTML=`<img alt="Dessin ${l+1}" src="${cdPic(l,640)}"><b>Dessin ${l+1}</b><div class="chrow">${i>0?`<button class="btn alt" data-a="cdAlbV" data-v="${d[i-1]}" aria-label="Dessin précédent">‹</button>`:''}<button class="btn" data-a="cdAlbX">Fermer</button>${i<d.length-1?`<button class="btn alt" data-a="cdAlbV" data-v="${d[i+1]}" aria-label="Dessin suivant">›</button>`:''}</div>`}
+setTimeout(()=>Object.assign(act,{cdAlb:()=>cdAlbum(),cdAlbBk:()=>cbHub(),cdAlbV:v=>cdAlbV(v),cdAlbX:()=>{const v=$('#albv');if(v)v.remove()}}));
