@@ -106,14 +106,14 @@ async function infLbSync(){if(!infLbOn()||infLbBusy)return;infLbBusy=true;
 const IC_MP='<svg class="infic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.4-3.4 3-5.2 6-5.2s5.6 1.8 6 5.2"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14c2.4.2 3.8 1.8 4 4.5"/></svg>',IC_PL='<svg class="infic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><ellipse cx="12" cy="12" rx="10" ry="3.4" transform="rotate(-22 12 12)"/></svg>';
 const IC_MD='<svg class="infic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="5"/><path d="M8.6 13.2 7 21l5-2.6 5 2.6-1.6-7.8"/></svg>',IC_LB='<svg class="infic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="12" width="5" height="8" rx="1"/><rect x="9.5" y="5" width="5" height="15" rx="1"/><rect x="16" y="14" width="5" height="6" rx="1"/></svg>';
 const infShr=()=>{try{return st.get('inf:sh','')}catch(e){return''}};
-function infDlg(){let d=$('#infd');if(!d){d=document.createElement('div');d.id='infd';d.className='infd';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');document.body.appendChild(d)}return d}
+function infDlg(inl){let d=$('#infd');if(!d){d=document.createElement('div');d.id='infd';if(inl){const h=document.querySelector('.rcx-b');if(h){d.className='infin';h.appendChild(d);return d}}d.className='infd';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');document.body.appendChild(d)}return d}
 function infAsk(g){if(infShr()!==''||$('#infd'))return;const d=infDlg();d.dataset.t='ask';d.dataset.pg=g||'';
  d.innerHTML=`<div class="infb"><h2>Partager tes scores ?</h2><p>Tes records du mode infini peuvent apparaître dans les classements. Choisis qui peut les voir : tu pourras le changer plus tard dans les réglages.</p><button class="btn" data-a="infSh" data-v="p">Global (tout le monde)</button><button class="btn alt" data-a="infSh" data-v="f">Mes amis seulement</button><button class="btn alt" data-a="infSh" data-v="n">Ne pas partager</button></div>`}
 function infRows(g,scope){const q=infKeyP(g),M=st.get('soc:me',null)||{},fr=M.fr||{},rows=[],sh=infShr();
  Object.entries(SO.P).forEach(([id,p])=>{const h=p&&p.hs;if(id===SO.uid||!h||!h.k||!h.k[q])return;if(scope==='w'){if(h.v==='p')rows.push([id,h.k[q]])}else if((h.v==='p'||h.v==='f')&&fr[id]>0)((h.m&&h.m[q])||[h.k[q]]).forEach(n=>rows.push([id,n]))});
  if(SO.uid&&(scope==='w'?sh==='p':sh==='p'||sh==='f')){if(scope==='w'){const mine=infBest(g);if(mine>0)rows.push([SO.uid,mine])}else infTop(g).forEach(x=>{if(x.s>0)rows.push([SO.uid,x.s])})}
  return rows.sort((a,b)=>b[1]-a[1]).slice(0,30)}
-function infBoard(g,tab){const d=infDlg(),M=st.get('soc:me',null)||{};if(d.dataset.t==='ask')return;
+function infBoard(g,tab){const d=infDlg(true),M=st.get('soc:me',null)||{};if(d.dataset.t==='ask')return;
  const same=d.dataset.g===g&&d.dataset.t===tab;d.dataset.g=g;d.dataset.t=tab;if(!same)d.dataset.n='0';
  const N={g2048:'2048',tetris:'Tèconta',planetes:'Planètes · '+(infKey(g)==='o'?'Orbite':'Classique')}[g];
  const tabs=[['m','Mes scores',IC_MD],['a','Amis',IC_MP],['w','Global',IC_PL]].map(([k,t,ic])=>`<button class="${k===tab?'on':''}" data-a="infTab" data-v="${g}:${k}">${ic}${t}</button>`).join('');
@@ -129,7 +129,7 @@ function infBoard(g,tab){const d=infDlg(),M=st.get('soc:me',null)||{};if(d.datas
  else{const rows=infRows(g,tab);b=rows.length?`<ol class="infl">${rows.map(([id,s],i)=>`<li class="${id===SO.uid?'me':''}"><i>${i+1}</i>${socAv(id)}<span>${esc(id===SO.uid?(M.name||'Moi'):(SO.P[id]&&SO.P[id].name)||'Ami')}</span><b>${s} pts</b></li>`).join('')}</ol>`:`<p class="note">${tab==='a'?'Aucun score d’ami à afficher pour l’instant.':'Aucun score public pour l’instant.'}</p>`}
  const sh=infShr();
  d.innerHTML=`<div class="infb"><button class="infx" data-a="infX" aria-label="Fermer">×</button><h2>${N}</h2><div class="plseg infs">${tabs}</div>${b}</div>`}
-Object.assign(act,{infBd:v=>infBoard(v,'m'),infTab:v=>{const[g,t]=v.split(':');infBoard(g,t)},infX:()=>{const d=$('#infd');if(d)d.remove()},
+Object.assign(act,{infBd:v=>{const d=$('#infd');if(d&&d.classList.contains('infin')&&d.dataset.g===v)return d.remove();if(d&&d.dataset.t!=='ask')d.remove();infBoard(v,'m')},infTab:v=>{const[g,t]=v.split(':');infBoard(g,t)},infX:()=>{const d=$('#infd');if(d)d.remove()},
  infSh:v=>{if(!/^[pfn]$/.test(v))return;try{st.set('inf:sh',v);socMine()}catch(e){}try{infLbSync()}catch(e){}const d=$('#infd');if(!d)return;if(d.dataset.t==='ask'){const g=d.dataset.pg;d.remove();if(g)act.infGo(g)}else infBoard(d.dataset.g,d.dataset.t)},
  infSet:v=>{if(!/^[pfn]$/.test(v))return;try{st.set('inf:sh',v);socMine()}catch(e){}try{infLbSync()}catch(e){}prefScreen()}});
 const infDone=g=>{let n=0;try{for(let l=0;l<nl(g);l++)if(st.get(ckey(g)+':'+l,false))n++}catch(e){}return n};
