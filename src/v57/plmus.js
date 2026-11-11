@@ -104,6 +104,7 @@ async function infLbSync(){if(!infLbOn()||infLbBusy)return;infLbBusy=true;
   st.set('inf:ls',done)}catch(e){}
  infLbBusy=false}
 const IC_MP='<svg class="infic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.4-3.4 3-5.2 6-5.2s5.6 1.8 6 5.2"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14c2.4.2 3.8 1.8 4 4.5"/></svg>',IC_PL='<svg class="infic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><ellipse cx="12" cy="12" rx="10" ry="3.4" transform="rotate(-22 12 12)"/></svg>';
+const IC_MD='<svg class="infic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="5"/><path d="M8.6 13.2 7 21l5-2.6 5 2.6-1.6-7.8"/></svg>',IC_LB='<svg class="infic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="12" width="5" height="8" rx="1"/><rect x="9.5" y="5" width="5" height="15" rx="1"/><rect x="16" y="14" width="5" height="6" rx="1"/></svg>';
 const infShr=()=>{try{return st.get('inf:sh','')}catch(e){return''}};
 function infDlg(){let d=$('#infd');if(!d){d=document.createElement('div');d.id='infd';d.className='infd';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');document.body.appendChild(d)}return d}
 function infAsk(g){if(infShr()!==''||$('#infd'))return;const d=infDlg();d.dataset.t='ask';d.dataset.pg=g||'';
@@ -115,7 +116,7 @@ function infRows(g,scope){const q=infKeyP(g),M=st.get('soc:me',null)||{},fr=M.fr
 function infBoard(g,tab){const d=infDlg(),M=st.get('soc:me',null)||{};if(d.dataset.t==='ask')return;
  const same=d.dataset.g===g&&d.dataset.t===tab;d.dataset.g=g;d.dataset.t=tab;if(!same)d.dataset.n='0';
  const N={g2048:'2048',tetris:'Tèconta',planetes:'Planètes · '+(infKey(g)==='o'?'Orbite':'Classique')}[g];
- const tabs=[['m','Mes scores',''],['a','Amis',IC_MP],['w','Global',IC_PL]].map(([k,t,ic])=>`<button class="${k===tab?'on':''}" data-a="infTab" data-v="${g}:${k}">${ic}${t}</button>`).join('');
+ const tabs=[['m','Mes scores',IC_MD],['a','Amis',IC_MP],['w','Global',IC_PL]].map(([k,t,ic])=>`<button class="${k===tab?'on':''}" data-a="infTab" data-v="${g}:${k}">${ic}${t}</button>`).join('');
  let b='';
  if(tab==='m'){const a=infTop(g).slice(0,5);b=a.length?`<ol class="infl">${a.map((x,i)=>`<li><i>${i+1}</i><span>${x.t?new Date(x.t).toLocaleDateString('fr',{day:'numeric',month:'short'}):'—'}</span><b>${x.s} pts</b></li>`).join('')}</ol>`:'<p class="note">Aucun score pour l’instant : lance une partie infinie.</p>'}
  else if(tab==='w'&&window.__fb&&window.__fb.lbTop){infLbSync();const q=infKeyP(g),c=infLB[q];
@@ -134,5 +135,5 @@ Object.assign(act,{infBd:v=>infBoard(v,'m'),infTab:v=>{const[g,t]=v.split(':');i
 const infDone=g=>{let n=0;try{for(let l=0;l<nl(g);l++)if(st.get(ckey(g)+':'+l,false))n++}catch(e){}return n};
 const infOk=g=>UNL()||infDone(g)>=20;
 function infCard(g){const b=infBest(g);if(!infOk(g))return`<section class="rc plmode" data-g="🔒"><div class="rc-t"><small>Mode infini</small><b>Verrouillé</b><span>Termine 20 niveaux pour le débloquer (${infDone(g)} / 20).</span></div></section>`;
- return`<section class="rc plmode" data-g="∞"><div class="rc-t"><small>Mode infini</small><b>Sans fin</b><span>${g==='planetes'?'Avec le mode choisi ci-dessus. ':''}${b?'Record : '+b+' pts':'Pas encore de record'}</span></div><div class="plseg"><button class="on" data-a="infGo" data-v="${g}">Jouer</button><button data-a="infBd" data-v="${g}">Classement</button></div></section>`}
+ return`<section class="rc plmode" data-g="∞"><div class="rc-t"><small>Mode infini</small><b>Sans fin</b><span>${g==='planetes'?'Avec le mode choisi ci-dessus. ':''}${b?'Record : '+b+' pts':'Pas encore de record'}</span></div><div class="infbt"><button class="btn" data-a="infGo" data-v="${g}">Jouer</button><button class="btn alt" data-a="infBd" data-v="${g}">${IC_LB}Classement</button></div></section>`}
 act.infGo=v=>{if(!INFN[v]||gLock(v)||gHid(v)||!infOk(v))return;if(infShr()===''&&window.claude&&window.claude.use)return infAsk(v);INFG=v;cur=v;daily=false;lv=0;playing=true;wsG=null;theme(v,false);({g2048:p2048,tetris:pTetris,planetes:pPlan})[v](undefined);window.scrollTo(0,0)};
