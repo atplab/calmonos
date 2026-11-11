@@ -10,7 +10,7 @@ h=h.replace('</head>','<style>html,body{touch-action:manipulation;-webkit-text-s
 # retouches après les diffs distants
 for a,c in [("const follow=y0=>{if(sc)return;","const follow=y0=>{return;if(sc)return;"),
   ("function pCross(r){",open('v57/ana2d.js').read()+open('v57/ana2.js').read()+"function pCross(r){"),
-  ("m3Mus(id==='match3'&&!x&&!xa);","m3Mus(id==='match3'&&!x&&!xa);ttMus(id==='tetris'&&!x&&!xa);cbMus(id==='colorie'&&!x&&!xa);unMus(id==='uno'&&!x&&!xa);chMus(id==='cherche'&&!x&&!xa);lfMus(id==='chess'&&!x&&!xa);"),
+  ("m3Mus(id==='match3'&&!x&&!xa);","m3Mus(id==='match3'&&!x&&!xa);ttMus(id==='tetris'&&!x&&!xa);cbMus(id==='colorie'&&!x&&!xa);unMus(id==='uno'&&!x&&!xa);chMus(id==='cherche'&&!x&&!xa);lfMus((id==='chess'||id==='sudoku')&&!x&&!xa);"),
   ("(typeof aqMu==='object'&&aqMu.on)||(typeof xmMu==='object'&&xmMu.on)?.08:.6","(typeof aqMu==='object'&&aqMu.on)||(typeof xmMu==='object'&&xmMu.on)||(typeof ttMu==='object'&&ttMu.on)||(typeof cbMu==='object'&&cbMu.on)||(typeof unMu==='object'&&unMu.on)||(typeof chMu==='object'&&chMu.on)||(typeof lfMu==='object'&&lfMu.on)?.08:.6"),
   ("if(typeof xmMu==='object')xmMu.vol(p.music)","if(typeof xmMu==='object')xmMu.vol(p.music);if(typeof ttMu==='object')ttMu.vol(p.music);if(typeof cbMu==='object')cbMu.vol(p.music);if(typeof unMu==='object')unMu.vol(p.music);if(typeof chMu==='object')chMu.vol(p.music);if(typeof lfMu==='object')lfMu.vol(p.music)"),
   ("ana:pAna,","ana:pAna2,flow:pFlow,g2048:p2048,tetris:pTetris,brick:pBrick,"),
