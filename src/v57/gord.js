@@ -14,7 +14,7 @@ setTimeout(()=>Object.assign(act,{
  gOrdX:()=>{const o=$('#gordo');if(o)o.remove()}
 }));
 /* jeux qui arrivent plus tard : cachés jusqu’à leur date (tout est visible en mode illimité) */
-const GAV={airhockey:[2026,11,5],demenage:[2026,11,12]};
+const GAV={airhockey:[2026,11,5],demenage:[2026,11,12],planetes:[2099,0,1]};
 const gOpenAt=id=>{const a=GAV[id];return a?new Date(a[0],a[1],a[2]).getTime():0};
 function gHid(id){return Date.now()<gOpenAt(id)&&!UNL()}
 /* fête de déblocage : une seule fois par jeu, à la première visite de l’onglet Jeux après la date */
