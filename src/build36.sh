@@ -22,7 +22,7 @@ for o,n in [('data-a="pick">'+GRD+'Choisir un niveau</button></section>`;','data
 h=h.replace('initial-scale=1, viewport-fit=cover','initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover',1)
 h=h.replace('</head>','<style>html,body{touch-action:manipulation;-webkit-text-size-adjust:100%}</style><script>["gesturestart","gesturechange","gestureend"].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault()},{passive:false})});document.addEventListener("touchmove",function(e){if(e.touches.length>1)e.preventDefault()},{passive:false});document.addEventListener("wheel",function(e){if(e.ctrlKey)e.preventDefault()},{passive:false});document.addEventListener("keydown",function(e){if((e.ctrlKey||e.metaKey)&&["+","-","=","0"].indexOf(e.key)>-1)e.preventDefault()})</script></head>',1)
 # retouches après les diffs distants
-for a,c in [("music.gain.setTargetAtTime(p.music?(","music.gain.setTargetAtTime(p.music&&!(PLK&&!PLPA)?("),
+for a,c in [("music.gain.setTargetAtTime(p.music?(","music.gain.setTargetAtTime(p.music&&!(PLK&&(!PLPA||document.hidden))?("),
   ("function sHudPos(){","function sHudPos(){try{const k=$('.shb[data-a=sbook]');if(k)document.body.style.setProperty('--pby',k.getBoundingClientRect().top.toFixed(0)+'px')}catch(e){}"),
   ("let AC,mg,music;","let AC,mg,music,PLK=null,PLPA=false;"+open('v57/plmus.js').read()),
   ("function apply(){if(!AC||!music)return;","function apply(){if(!AC||!music)return;try{bgOn()?acHold():acFree()}catch(e){}"),
@@ -45,7 +45,7 @@ import re as _re
 n0=h.count("!document.hidden&&prefs().music)")
 assert n0>=10,n0
 h=h.replace("!document.hidden&&prefs().music)","(!document.hidden||bgOn())&&prefs().music)")
-h,nn=_re.subn(r"(\w+Mus)\(id==='(\w+)'&&!x&&!xa\)",lambda m:m.group(1)+"(PLK?(PLK==='"+m.group(2)+"'&&!PLPA):id==='"+m.group(2)+"'&&!x&&!xa)",h)
+h,nn=_re.subn(r"(\w+Mus)\(id==='(\w+)'&&!x&&!xa\)",lambda m:m.group(1)+"((PLK&&!PLPA)?PLK==='"+m.group(2)+"':id==='"+m.group(2)+"'&&!x&&!xa)",h)
 assert nn==10,nn
 B='<button class="shb" data-a="sbook"'
 PB='<button class="plfab${PLK?\' on\':\'\'}" data-a="plr" aria-label="Lecteur de musique"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l11-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg></button>'

@@ -3,7 +3,7 @@ const bgOn=()=>!!(prefs().bg||PLK);
 function acHold(){if(!AC||!mg||AC.__md)return;try{const d=AC.createMediaStreamDestination(),a=new Audio();a.srcObject=d.stream;a.setAttribute('playsinline','');mg.connect(d);mg.disconnect(AC.destination);AC.__md=a;a.play().catch(acFree);
  }catch(e){AC.__md=null}}
 function acFree(){if(!AC||!AC.__md)return;try{mg.connect(AC.destination);AC.__md.pause();AC.__md.srcObject=null}catch(e){}AC.__md=null}
-document.addEventListener('visibilitychange',()=>{try{if(!AC)return;if(document.hidden){if(bgOn())return;mg.gain.cancelScheduledValues(AC.currentTime);mg.gain.setTargetAtTime(0,AC.currentTime,.025);clearTimeout(window.__acT);window.__acT=setTimeout(()=>{if(document.hidden&&!bgOn())AC.suspend()},200)}else{clearTimeout(window.__acT);if(AC.state==='suspended')AC.resume().then(apply,apply);else apply()}}catch(e){}});
+document.addEventListener('visibilitychange',()=>{try{if(PLK&&PLPA)plApply()}catch(e){}try{if(!AC)return;if(document.hidden){if(bgOn())return;mg.gain.cancelScheduledValues(AC.currentTime);mg.gain.setTargetAtTime(0,AC.currentTime,.025);clearTimeout(window.__acT);window.__acT=setTimeout(()=>{if(document.hidden&&!bgOn())AC.suspend()},200)}else{clearTimeout(window.__acT);if(AC.state==='suspended')AC.resume().then(apply,apply);else apply()}}catch(e){}});
 const PLT=[
  ['m3','Marée d’étoiles','Constellations',()=>m3Mus,'#3fc0cc','#0e4f78'],
  ['tetris','Blocs de glace','Tèconta',()=>ttMus,'#8fd8ff','#3d4fa0'],
@@ -46,7 +46,7 @@ function plTone(on){try{if(!on){if(PLA)PLA.pause();return}
   for(let i=0;i<n;i++)u[44+i]=128+Math.round(4*Math.sin(2*Math.PI*25*i/sr));
   PLA=new Audio(URL.createObjectURL(new Blob([u],{type:'audio/wav'})));PLA.loop=true;PLA.setAttribute('playsinline','')}
  PLA.play().catch(()=>{})}catch(e){}}
-function plApply(){plTone(!!PLK&&!PLPA);PLT.forEach(t=>{try{t[3]()(!!PLK&&!PLPA&&t[0]===PLK)}catch(e){}});apply()}
+function plApply(){plTone(!!PLK&&!PLPA);PLT.forEach(t=>{try{t[3]()(PLK&&!PLPA?t[0]===PLK:!(PLK&&document.hidden)&&typeof cur!=='undefined'&&cur===(t[0]==='m3'?'match3':t[0]))}catch(e){}});apply()}
 function plTick(){const o=document.getElementById('plp');if(!o){clearInterval(PLI);PLI=0;return}const e=plEl(),a=document.getElementById('ple'),b=document.getElementById('plpb');if(a)a.textContent=plFmt(e);if(b)b.style.width=((e%240)/240*100).toFixed(1)+'%'}
 function plDraw(){let o=document.getElementById('plo');if(!o){o=document.createElement('div');o.id='plo';o.className='plo';document.body.appendChild(o)}
  const t=PLT[PLC],pl=!!PLK&&!PLPA,I=n=>`<svg viewBox="0 0 24 24" aria-hidden="true">${n}</svg>`,
