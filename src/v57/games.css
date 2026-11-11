@@ -248,17 +248,17 @@ body:has(.pg-quiz) .skw{display:none}
 .grid:has(>.tw) .tile{min-height:116px}
 .tile b .mp{display:inline-block;width:20px;height:20px;vertical-align:-4px;margin-right:7px;fill:currentColor}
 /* Match-3 : tout l’écran devient l’océan */
-body:has(.m3){background:radial-gradient(70% 38% at 25% 0,rgba(255,255,255,.3),transparent 72%),radial-gradient(55% 32% at 85% 0,rgba(255,255,255,.2),transparent 72%),linear-gradient(0deg,rgba(226,200,140,.28),transparent 10%),linear-gradient(180deg,#2fb0d2 0%,#1c84b8 34%,#13539b 66%,#0a2b69 100%) fixed!important}
-body:has(.m3) #tint{opacity:0!important}
-body:has(.m3) #snow{display:none}
+body:is(:has(.m3),.seabg){background:radial-gradient(70% 38% at 25% 0,rgba(255,255,255,.3),transparent 72%),radial-gradient(55% 32% at 85% 0,rgba(255,255,255,.2),transparent 72%),linear-gradient(0deg,rgba(226,200,140,.28),transparent 10%),linear-gradient(180deg,#2fb0d2 0%,#1c84b8 34%,#13539b 66%,#0a2b69 100%) fixed!important}
+body:is(:has(.m3),.seabg) #tint{opacity:0!important}
+body:is(:has(.m3),.seabg) #snow{display:none}
 body .m3{background:none;overflow:visible;border-radius:0}
 body .m3sea{position:fixed}
-body:has(.m3) :is(.m,.tl,.m3m small,.note){color:#fff!important;text-shadow:0 1px 3px rgba(4,36,78,.6)}
+body:is(:has(.m3),.seabg) :is(.m,.tl,.m3m small,.note){color:#fff!important;text-shadow:0 1px 3px rgba(4,36,78,.6)}
 .m3fi svg{display:block;width:44px;height:auto}
-body:has(.m3) .skw{display:none}
-body:has(.m3)::after{display:none}
-body:has(.m3) #pat,body:has(.pg-quiz) #pat{filter:none}
-body:has(.m3) #pat{display:none}
+body:is(:has(.m3),.seabg) .skw{display:none}
+body:is(:has(.m3),.seabg)::after{display:none}
+body:is(:has(.m3),.seabg) #pat,body:has(.pg-quiz) #pat{filter:none}
+body:is(:has(.m3),.seabg) #pat{display:none}
 body .m3::before{position:fixed;inset:0;border-radius:0;opacity:.6;mask-image:linear-gradient(180deg,#000,transparent 60%);-webkit-mask-image:linear-gradient(180deg,#000,transparent 60%)}
 /* aquarium : chaque animal spécial nage à sa manière */
 .tank .fx[data-id=tortue] .fy{animation:mtg 8s ease-in-out infinite alternate;transform-origin:50% 50%}
@@ -347,7 +347,7 @@ body:has(.tank.ed) .aqbar,body:has(.tank.ed) .aqst{display:none}
 .aqsh .aqc,.aqsh small,.aqsh .atx small{color:rgba(255,255,255,.78)}
 body:has(.aqsh.open) #nav{opacity:0;pointer-events:none}
 /* Match-3 : l’eau suit jour / nuit (--gs : 1 jour, 0 nuit, graduel en Auto) */
-body:has(.m3){background:radial-gradient(70% 38% at 25% 0,rgba(255,255,255,calc(.04 + var(--gs,1)*.26)),transparent 72%),radial-gradient(55% 32% at 85% 0,rgba(255,255,255,calc(.03 + var(--gs,1)*.17)),transparent 72%),linear-gradient(0deg,rgba(226,200,140,calc(.08 + var(--gs,1)*.2)),transparent 10%),linear-gradient(180deg,color-mix(in srgb,#2fb0d2 calc(var(--gs,1)*100%),#0b3f66) 0%,color-mix(in srgb,#1c84b8 calc(var(--gs,1)*100%),#07335c) 34%,color-mix(in srgb,#13539b calc(var(--gs,1)*100%),#04204a) 66%,color-mix(in srgb,#0a2b69 calc(var(--gs,1)*100%),#020c25) 100%) fixed!important}
+body:is(:has(.m3),.seabg){background:radial-gradient(70% 38% at 25% 0,rgba(255,255,255,calc(.04 + var(--gs,1)*.26)),transparent 72%),radial-gradient(55% 32% at 85% 0,rgba(255,255,255,calc(.03 + var(--gs,1)*.17)),transparent 72%),linear-gradient(0deg,rgba(226,200,140,calc(.08 + var(--gs,1)*.2)),transparent 10%),linear-gradient(180deg,color-mix(in srgb,#2fb0d2 calc(var(--gs,1)*100%),#0b3f66) 0%,color-mix(in srgb,#1c84b8 calc(var(--gs,1)*100%),#07335c) 34%,color-mix(in srgb,#13539b calc(var(--gs,1)*100%),#04204a) 66%,color-mix(in srgb,#0a2b69 calc(var(--gs,1)*100%),#020c25) 100%) fixed!important}
 .m3bu{opacity:calc(.45 + var(--gs,1)*.55)}
 .m3fi{opacity:calc(.22 + var(--gs,1)*.28)}
 /* inventaire */
@@ -423,7 +423,7 @@ body:has(#app>.hf){overflow:hidden;overscroll-behavior:none}
 /* « Passer » : dans l’en-tête ; la confirmation s’affiche sous l’en-tête */
 .top .tr{gap:6px}.top .tr .hb{padding:6px 10px;font-size:13px}
 .hf .hhd .hb{padding:7px 11px;font-size:13px}
-body:has(.pg-quiz) .skh,body:has(.m3) .skh{display:none}
+body:has(.pg-quiz) .skh,body:is(:has(.m3),.seabg) .skh{display:none}
 .skw:not(:empty){position:fixed;top:calc(66px + env(safe-area-inset-top,0px));left:50%;translate:-50% 0;z-index:30;width:min(320px,88vw);box-sizing:border-box;margin:0;padding:12px 14px;border-radius:16px;background:rgba(18,22,56,.94);color:#fff;box-shadow:0 10px 30px rgba(5,8,30,.5)}
 @media(max-width:430px){body:not(:has(.m3)) .top.stk:has(.skh):has([data-a=hint]) .tl{display:none}}
 .hf .hhd{gap:6px}.hf .hhd .back,.hf .hhd .hb,.hf .hhd .chip{white-space:nowrap;padding:6px 10px;font-size:12.5px}
@@ -1220,3 +1220,11 @@ header.top:has(>.chip[title="Flocons"]){margin-top:-12px;margin-bottom:28px}
 .nxi svg,.pkb svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .pkb{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:10px;padding:12px 18px;border-radius:22px;border:1.5px dashed rgba(255,255,255,.42);background:rgba(255,255,255,.06);color:inherit;font:inherit;font-weight:600;cursor:pointer;touch-action:manipulation}
 .nxb:active,.pkb:active{transform:scale(.98)}
+
+/* Constellations : l'écran de fin et le choix des niveaux ont le même fond marin que les niveaux */
+.seadeco{display:none}
+body.seabg .seadeco{display:block;position:fixed;z-index:0}
+body:has(.m3) .seadeco{display:none!important}
+/* Tèconta : moins d'espace sous la barre du haut, plus de place pour le jeu */
+body:has(.pg-tetris) .top.stk{margin-bottom:0;padding-bottom:4px}
+.play.pg-tetris{padding-top:0}

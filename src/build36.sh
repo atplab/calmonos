@@ -10,6 +10,10 @@ GRD='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" h
 for o,n in [('<button class="btn" data-a="next" data-v="${lv+1}">Niveau suivant</button>','<button class="nxb" data-a="next" data-v="${lv+1}"><span>Niveau suivant</span>'+ARR+'</button>'),('<button class="btn alt" data-a="pick">Choisir un niveau</button>','<button class="pkb" data-a="pick">'+GRD+'Choisir un niveau</button>'),('<button class="btn" data-a="soNext">Niveau suivant</button>','<button class="nxb" data-a="soNext"><span>Niveau suivant</span>'+ARR+'</button>')]:
     assert o in h,o
     h=h.replace(o,n)
+SEA=r'''document.body.classList.toggle('seabg',id==='match3');if(id==='match3'&&!document.getElementById('seadeco')){const d=document.createElement('div');d.id='seadeco';d.className='m3sea seadeco';d.setAttribute('aria-hidden','true');d.innerHTML=[8,22,35,50,63,77,90].map((x,k)=>`<span class="m3bu" style="left:${x}%;--s:${6+k%3*4}px;--d:${5+k%4*1.7}s;animation-delay:-${k*1.3}s"></span>`).join('')+[['tortue','',20,34,0],['meduse',' r',52,26,-9],['raie','',80,30,-17]].map(f=>`<span class="m3fi${f[1]}" style="top:${f[2]}%;--t:${f[3]}s;animation-delay:${f[4]}s">${fishSVG(FISH.find(q=>q.id===f[0]))}</span>`).join('');document.body.appendChild(d)}'''
+T0="document.body.classList.toggle('g',!!g);"
+assert h.count(T0)==1,'theme introuvable'
+h=h.replace(T0,T0+SEA,1)
 AC_='<button class="hmb" data-a="tab" data-v="games" aria-label="Retour à l’accueil des jeux"><span class="hmi" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></svg></span>Accueil</button>'
 for o,n in [('data-a="pick">'+GRD+'Choisir un niveau</button></section>`;','data-a="pick">'+GRD+'Choisir un niveau</button>'+AC_+'</section>`;'),('data-a="soBk">Retour</button>','data-a="soBk">Retour</button>'+AC_),('data-a="cbBk">Retour</button>','data-a="cbBk">Retour</button>'+AC_),('data-a="cdBk">Retour</button>','data-a="cdBk">Retour</button>'+AC_)]:
     assert o in h,o
