@@ -27,7 +27,7 @@ function aqPanel(){
   const r=b.closest('.ai'),sil=()=>{if(!r)return;r.classList.add('xlk','sil');const nb=r.querySelector('.atx b');if(nb)nb.textContent='???'};
   if(k==='d'&&aqHid(L,k,A0)){if(r)r.remove();return}
   const tn=aqTL(L,k,A0);
-  if(k==='f'&&id==='gardien'&&!A0.f.hockey){sil();const sm=r&&r.querySelector('small');if(sm)sm.textContent='Se débloque après le poisson hockeyeur';b.outerHTML='<button class="sb lkb" disabled>🔒 Hockeyeur</button>'}
+  if(k==='f'&&id==='gardien'&&!A0.f.hockey){sil();const sm=r&&r.querySelector('small');if(sm)sm.textContent='Se débloque après ???';b.outerHTML='<button class="sb lkb" disabled>🔒 ???</button>'}
   else if(tn){sil();const sm=r&&r.querySelector('small');if(sm)sm.textContent='Se débloque avec l’aquarium '+tn;b.outerHTML='<button class="sb lkb" disabled>🔒 Aquarium '+tn+'</button>'}
   else if(aqXL(L)){sil();const sm=r&&r.querySelector('small');if(sm)sm.textContent='Un noël pour Zeni : étape '+L.lk;b.outerHTML='<button class="sb lkb" disabled>🔒 Étape '+L.lk+'</button>'}
   else if(!L.p)b.textContent='Obtenir'});
@@ -67,7 +67,7 @@ aqStatus=function(){aqStatus0();const a=aqRead();aqRewards(a);
 const st0=$('.aqst');if(!st0)return;st0.classList.toggle('open',!!window.AQLV);{const h1=$('.aqh1');if(h1){h1.classList.toggle('on',!!window.AQLV);h1.setAttribute('aria-expanded',window.AQLV?'true':'false')}}let l=st0.querySelector('.aqlv');if(!l){l=document.createElement('div');l.className='aqlv';st0.appendChild(l)}const h=aqLvHTML(a);if(l.dataset.h!==h){l.innerHTML=h;l.dataset.h=h}};
 const aqBuy0=aqBuy;
 aqBuy=function(v){const[k,id]=v.split(':'),a=aqRead(),L=(k==='f'?FISH:k==='d'?DECO:WATER).find(x=>x.id===id);mt='m-aq';
- if(L&&aqHid(L,k,a))return;if(k==='f'&&id==='gardien'&&!a.f.hockey)return msg('Le gardien arrive une fois le poisson hockeyeur acheté.');const n=L&&aqTL(L,k,a);if(n)return msg('Se débloque avec l’aquarium '+n+'.');aqBuy0(v)};
+ if(L&&aqHid(L,k,a))return;if(k==='f'&&id==='gardien'&&!a.f.hockey)return msg('Se débloque après ???.');const n=L&&aqTL(L,k,a);if(n)return msg('Se débloque avec l’aquarium '+n+'.');aqBuy0(v)};
 
 window.aqMedGl=n=>{try{const a=aqRead(),m=a.f.meduse;if(!m)return;m.gl=Math.min(3,n);m.gt=Date.now();aqSave(a);aqStatus()}catch(e){}};
 /* la méduse attrape le grain avec une tentacule, la replie pour amener le grain sous son ombrelle, dans sa bouche */
