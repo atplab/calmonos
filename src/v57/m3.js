@@ -246,6 +246,8 @@ function pMatch(r){
    const S=A.s==='x'?A:B,O=S===A?B:A,si=S===A?a:b;mv++;hud();
    const set=new Set([si]);
    if(O.s==='x'){g.forEach((u,j)=>{if(u)set.add(j)});S.all=true}
+   else if(O.s){/* soleil + spéciale : toutes les pièces de la couleur deviennent cette spéciale, puis explosent en chaîne */
+    const cl=O.t;g.forEach((u,j)=>{if(u&&!u.s&&!u.an&&u.t===cl){u.s=O.s;u.o=O.s==='m'?(Math.random()<.5?'v':'h'):0;look(u);u.el.classList.add('born');set.add(j)}});set.add(a);set.add(b);pop('Combo !','w',si);sfx(990,.3);await wt(520);if(!alive())return}
    else{S.col=O.t;g.forEach((u,j)=>{if(u&&u.t===O.t)set.add(j)});set.add(a);set.add(b)}
    S.el.classList.add('sunfx');rays(si,[...set].filter(j=>j!==si));await wt(700);if(!alive())return;
    const ev=boom(set);ev.push({s:'x',i:si});await removeSet(set,ev,1);if(!alive())return;await fall();await settle();if(!alive())return;busy=false;return finish();
@@ -254,7 +256,20 @@ function pMatch(r){
   if(sp2(A)||sp2(B)){
    mv++;hud();mvAB();await wt(210);if(!alive())return;
    const set=new Set();[a,b].forEach(i=>{const u=g[i];if(u&&sp2(u))set.add(i)});
-   const ev=boom(set);await removeSet(set,ev,1);if(!alive())return;await fall();await settle();if(!alive())return;busy=false;return finish();
+   const cb=[];
+   if(sp2(A)&&sp2(B)){/* combos : deux spéciales échangées ensemble */
+    const k=[A.s,B.s].sort().join(''),r0=(b/N)|0,c0=b%N,mo=A.s==='m'?A:B,ex=[];
+    const dg=w=>{for(let r=0;r<N;r++)for(let c=0;c<N;c++)if(Math.abs(Math.abs(r-r0)-Math.abs(c-c0))<=w)ex.push(r*N+c)};
+    if(k==='ms'){/* lune + étoile : 3 lignes (ou 3 colonnes) */
+     for(let d=-1;d<=1;d++){if(mo.o==='v'){const cc=c0+d;if(cc>=0&&cc<N){for(let r=0;r<N;r++)ex.push(r*N+cc);cb.push({s:'m',i:r0*N+cc,o:'v'})}}else{const rr=r0+d;if(rr>=0&&rr<N){for(let c=0;c<N;c++)ex.push(rr*N+c);cb.push({s:'m',i:rr*N+c0,o:'h'})}}}}
+    else if(k==='mm'){for(let k2=0;k2<N;k2++){ex.push(r0*N+k2,k2*N+c0)}cb.push({s:'m',i:b,o:'h'},{s:'m',i:b,o:'v'})}
+    else if(k==='ss'){for(let r=r0-2;r<=r0+2;r++)for(let c=c0-2;c<=c0+2;c++)if(r>=0&&r<N&&c>=0&&c<N)ex.push(r*N+c);cb.push({s:'s',i:b})}
+    else if(k==='sz'){dg(1);cb.push({s:'z',i:b})}
+    else if(k==='zz'){dg(2);cb.push({s:'z',i:b})}
+    else if(k==='mz'){for(let k2=0;k2<N;k2++)ex.push(r0*N+k2,k2*N+c0);dg(0);cb.push({s:'m',i:b,o:'h'},{s:'m',i:b,o:'v'},{s:'z',i:b})}
+    ex.forEach(j=>{if(g[j])set.add(j)});if(ex.length){pop('Combo !','w',b);sfx(990,.3)}
+   }
+   const ev=boom(set);cb.forEach(e=>ev.push(e));await removeSet(set,ev,1);if(!alive())return;await fall();await settle();if(!alive())return;busy=false;return finish();
   }
   mvAB();await wt(210);if(!alive())return;
   const T=types();

@@ -46,8 +46,10 @@ h=h.replace("!document.hidden&&prefs().music)","(!document.hidden||bgOn())&&pref
 h,nn=_re.subn(r"(\w+Mus)\(id==='(\w+)'&&!x&&!xa\)",lambda m:m.group(1)+"(PLK?PLK==='"+m.group(2)+"':id==='"+m.group(2)+"'&&!x&&!xa)",h)
 assert nn==10,nn
 B='<button class="shb" data-a="sbook"'
-assert h.count(B)==2
-h=h.replace(B,'<button class="shb${PLK?\' on\':\'\'}" data-a="plr" aria-label="Lecteur de musique"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l11-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg></button>'+B)
+PB='<button class="plfab${PLK?\' on\':\'\'}" data-a="plr" aria-label="Lecteur de musique"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l11-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg></button>'
+SB='return`<div class="sbar" id="sbar">'
+assert h.count(SB)==2
+h=h.replace(SB,'return`'+PB+'<div class="sbar" id="sbar">')
 open('/mnt/user-data/outputs/nuit-de-neige-2.html','w',encoding='utf-8').write(h)
 s=re.findall(r'<script[^>]*>(.*?)</script>',h,re.S)
 open('v12/chk.js','w').write('\n'.join(x for x in s if len(x)>1000))
