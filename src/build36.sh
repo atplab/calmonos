@@ -67,6 +67,7 @@ RR("st.set('k:'+g+':'+l,true)","st.set('k:'+ckey(g).slice(2)+':'+l,true)")
 RR("const t=isX(cur,lv)?'Fêtes '+xn(cur,lv):'Niveau '+(lv+1);return daily||cur==='quiz'||cur==='match3'?","const t=INFG?'Mode infini':isX(cur,lv)?'Fêtes '+xn(cur,lv):'Niveau '+(lv+1);return daily||INFG||cur==='quiz'||cur==='match3'?")
 RR("${id==='planetes'?plModeCard():''}","${id==='planetes'?plModeCard():''}${INFN[id]?infCard(id):''}")
 RR("</button></section>${id==='mots'?anaCard():''}${id==='planetes'?plModeCard():''}${INFN[id]?infCard(id):''}","</button>${INFN[id]?infArea(id):''}</section>${id==='mots'?anaCard():''}")
+RR("</button>${INFN[id]?infArea(id):''}</section>${id==='mots'?anaCard():''}","</button>${INFN[id]||id==='mots'?infArea(id):''}</section>")
 RR('<section class="rc pt-${id}" data-g="${g.ic}"><div class="rc-ic">${g.ic}</div><div class="rc-t"><small>${dn?','<section class="rc rcx pt-${id}" data-g="${g.ic}"><div class="rc-ic">${g.ic}</div><div class="rc-t"><small>${dn?')
 
 B='<button class="shb" data-a="sbook"'

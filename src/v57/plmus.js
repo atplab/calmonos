@@ -142,7 +142,12 @@ function infCard(g){const b=infBest(g);if(!infOk(g))return`<section class="rc pl
  return`<section class="rc plmode" data-g="∞"><div class="rc-t"><small>Mode infini</small><b>Sans fin</b><span>${g==='planetes'?'Avec le mode choisi ci-dessus. ':''}${b?'Record : '+b+' pts':'Pas encore de record'}</span></div><div class="infbt"><button class="btn" data-a="infGo" data-v="${g}">Jouer</button><button class="btn alt" data-a="infBd" data-v="${g}">${IC_LB}Classement</button></div></section>`}
 function plModeSeg(){let m='';try{m=st.get('pl:mode','')}catch(e){}
  return`<div class="rcx-m"><div class="rcx-t"><small>Mode de jeu</small><span>${m==='orbite'?'Attirées vers le centre':'Tombent au fond'}</span></div><div class="plseg"><button class="${m?'':'on'}" data-a="plMode" data-v="">Classique</button><button class="${m==='orbite'?'on':''}" data-a="plMode" data-v="orbite">Orbite</button></div></div>`}
-function infArea(g){const ok=infOk(g),b=infBest(g);
+function anaArea(){
+ const N=nl('ana'),dn=[...Array(N).keys()].filter(i=>st.get(ckey('ana')+':'+i,false)).length;
+ if(!anaOn()){const k=[...Array(60).keys()].findIndex(i=>!st.get(ckey('mots')+':'+i,false)&&!st.get('k:mots:'+i,false));
+  return`<div class="rcx-b"><div class="rcx-r"><div class="rcx-t"><small>Mode Anagramme 🔒</small><span>Débloqué au niveau 12 · tu en es au niveau ${Math.max(1,k+1)}</span></div></div></div>`}
+ return`<div class="rcx-b"><div class="rcx-r"><div class="rcx-t"><small>Mode Anagramme</small><span>${dn} sur ${N} terminés · +${rw('ana')} ❄</span></div><button class="rc-go" data-a="open" data-v="ana">${dn?'Continuer':'Jouer'}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div></div>`}
+function infArea(g){if(g==='mots')return anaArea();const ok=infOk(g),b=infBest(g);
  const row=ok?`<div class="rcx-r"><div class="rcx-t"><small>Mode infini</small><span>${b?'Record : '+b+' pts':'Pas encore de record'}</span></div><button class="rc-go" data-a="infGo" data-v="${g}">Jouer ∞</button><button class="rcx-lb" data-a="infBd" data-v="${g}" aria-label="Classement">${IC_LB}</button></div>`:`<div class="rcx-r"><div class="rcx-t"><small>Mode infini 🔒</small><span>Termine 20 niveaux (${infDone(g)} / 20)</span></div></div>`;
  return`<div class="rcx-b">${g==='planetes'?plModeSeg():''}${row}</div>`}
 act.infGo=v=>{if(!INFN[v]||gLock(v)||gHid(v)||!infOk(v))return;if(infShr()===''&&window.claude&&window.claude.use)return infAsk(v);INFG=v;cur=v;daily=false;lv=0;playing=true;wsG=null;theme(v,false);({g2048:p2048,tetris:pTetris,planetes:pPlan})[v](undefined);window.scrollTo(0,0)};
