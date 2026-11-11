@@ -72,15 +72,15 @@ _R=_rd.Random(20261111)
 _tiers=[2,2]+[0]*10+[1]*27+[2]*31
 _t2=_tiers[2:];_R.shuffle(_t2);_tiers=[2,2]+_t2   # niveaux 100,101 durs ; 102..169 mélangés
 _tiers=_tiers[:2]+_t2
-_TL=_T.split('\n');assert len(_TL)==69,len(_TL)
+_TL=_T.split('\n');assert len(_TL)==69,len(_TL);_TL=_TL[:67];_tiers=_tiers[:68]
 _L=[x.split()[:[6,8,9][_tiers[i+1]]] for i,x in enumerate(_TL)]
-_N=[10 if _tiers[i+1]==0 else _R.choice([10,11]) for i in range(69)]
+_N=[10 if _tiers[i+1]==0 else _R.choice([10,11]) for i in range(67)]
 _MST=''.join(map(str,_tiers))
 RR("11,7,7,9,8,8,9,9,9,9,9];","11,"+",".join(map(str,_N))+",7,7,9,8,8,9,9,9,9,9];")
 RR("/* niveaux de fêtes */\n ['NOEL'","".join(" "+repr(x)+",\n" for x in _L)+" /* niveaux de fêtes */\n ['NOEL'")
-RR("caches:100,phrase:40,maze:30","caches:169,phrase:40,maze:30")
+RR("caches:100,phrase:40,maze:30","caches:167,phrase:40,maze:30")
 RR("function msBuild(l){","const MST='"+_MST+"';\nfunction msBuild(l){")
-RR("DG=l>=14,dirs=","DG=l>=14,TR=l>=99&&l<169?+MST[l-99]:-1,HD=TR>=1,HH=TR===2,OW=HH?12:TR===1?8:5,dirs=")
+RR("DG=l>=14,dirs=","DG=l>=14,TR=l>=99&&l<167?+MST[l-99]:-1,HD=TR>=1,HH=TR===2,OW=HH?12:TR===1?8:5,dirs=")
 RR("let tot=0;for(const x of C)tot+=1+x[3]*5;let pk=rnd()*tot,ch=C[C.length-1];for(const x of C){pk-=1+x[3]*5;","let tot=0;for(const x of C)tot+=1+x[3]*OW;let pk=rnd()*tot,ch=C[C.length-1];for(const x of C){pk-=1+x[3]*OW;")
 RR("for(const need of [2,1,0]){for(let k=0;k<25&&!res;k++)","for(const need of HD?(HH?[6,5,4,3,2,1,0]:[3,2,1,0]):[2,1,0]){for(let k=0;k<(HD?12:25)&&!res;k++)")
 RR("const {WS,g,pos}=res,AL='ABCDEFGHILMNOPRSTUV';",r'''const {WS,g,pos}=res,AL='ABCDEFGHILMNOPRSTUV',DC=[];
@@ -105,7 +105,7 @@ RR("const {WS,g,pos}=res,AL='ABCDEFGHILMNOPRSTUV';",r'''const {WS,g,pos}=res,AL=
 RR("g[a][b]=AL[Math.floor(rnd()*AL.length)];","g[a][b]=lure?lure():AL[Math.floor(rnd()*AL.length)];")
 RR("return msP={l,N,WS,g,pos};","return msP={l,N,WS,g,pos,DC};")
 RR("const {N,WS,g,pos}=msBuild(lv),F=","const {N,WS,g,pos,DC}=msBuild(lv),F=")
-RR("let nw=lv>=14&&!st.get('dgn',0);if(nw)st.set('dgn',1);","let nw=lv>=14&&!st.get('dgn',0);if(nw)st.set('dgn',1);let nh=lv>=99&&lv<169&&+MST[lv-99]>=1&&!st.get('hdn',0);if(nh)st.set('hdn',1);act.dhx=()=>{nh=false;d()};")
+RR("let nw=lv>=14&&!st.get('dgn',0);if(nw)st.set('dgn',1);","let nw=lv>=14&&!st.get('dgn',0);if(nw)st.set('dgn',1);let nh=lv>=99&&lv<167&&+MST[lv-99]>=1&&!st.get('hdn',0);if(nh)st.set('hdn',1);act.dhx=()=>{nh=false;d()};")
 RR("frame(`${nw?`<div class=\"dnote\"","frame(`${nh?`<div class=\"dnote\" role=\"note\"><span>Niveaux difficiles : mots qui se chevauchent, faux amis (mots presque identiques), lettres leurres et plus de mots à trouver.</span><button data-a=\"dhx\" aria-label=\"Fermer\">OK</button></div>`:''}${nw?`<div class=\"dnote\"")
 RR("else{d();msg('Pas ici…')}};","else{d();msg(DC.includes(str)||DC.includes([...str].reverse().join(''))?'Faux ami !':'Pas ici…')}};")
 
