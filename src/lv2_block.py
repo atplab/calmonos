@@ -38,3 +38,8 @@ RR("q=l/(CDN-1),th=l%10","q=Math.min(1,l/39),th=l%10")
 assert h.count("l*40/(CDN-1)")>=1;h=h.replace("l*40/(CDN-1)","l*40/39")
 # fêtes : la progression glisse
 RR("mv('tournade',24,38,'mig:tn38');mv('sudoku',28,40,'mig:sd40')","mv('tournade',24,38,'mig:tn38');mv('sudoku',28,40,'mig:sd40');mv('sudoku',40,70,'mig:sd70');mv('mots',60,99,'mig:mo99');mv('croises',8,49,'mig:cw49')")
+
+# Déménagement : dix pièces de fêtes refaites
+RR("function pDemen2(r){",open('v57/demx.js').read()+"\nfunction pDemen2(r){")
+RR("R=DRM[i]||DRM[0],ids=X?DXI[i%DXI.length]:R.items,sc=dScene(DRM[i]?i:0)","R=X?DXR[i%DXR.length]:(DRM[i]||DRM[0]),ids=R.items,sc=X?dSceneX(R):dScene(DRM[i]?i:0)")
+RR("if(!r&&!X&&dStory[lv]&&!st.get(ckey('demenage')+':'+lv,false))dmOv(`<small>${dStory[lv][0]}</small><p class=\"sfq\">${dStory[lv][1]}</p>`,'Ouvrir les cartons');","if(!r&&X&&!st.get(ckey('demenage')+':'+lv,false))dmOv(`<small>Fêtes · ${R.n}</small><p class=\"sfq\">${R.s}</p>`,'Ouvrir les cartons');else if(!r&&!X&&dStory[lv]&&!st.get(ckey('demenage')+':'+lv,false))dmOv(`<small>${dStory[lv][0]}</small><p class=\"sfq\">${dStory[lv][1]}</p>`,'Ouvrir les cartons');")
