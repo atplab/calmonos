@@ -97,3 +97,5 @@ function pCasc(rs){
   cancel:()=>{if(drag&&drag.on)d();drag=null}
  };
  d();if(INF)clock()}
+/* récompense : facile = base, moyen = +1, difficile = +2 */
+function caTier(l){if(caOn())return l<16?0:l<32?1:2;return l>=99&&l<167?(+MST[l-99]||0):0}
