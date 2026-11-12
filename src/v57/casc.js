@@ -1,5 +1,5 @@
 /* ---------- Mots cachés en cascade : quand un mot est trouvé, il disparaît et les lettres au-dessus tombent ---------- */
-const CAW=8,CAH=8,CANL=40,CADIR=[[1,0],[0,1],[1,1],[1,-1]];
+const CAW=8,CAH=8,CANL=60,CAHARD=49,CADIR=[[1,0],[0,1],[1,1],[1,-1]];
 function caOn(){try{return st.get('ca:mode','')==='cascade'}catch(e){return false}}
 const caRng=n=>{let s=n>>>0;return()=>{s=(s+0x6D2B79F5)>>>0;let t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}};
 const caShuf=(a,r)=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
@@ -17,7 +17,7 @@ function caSolve(cols,rem,memo,cap){if(!rem.length)return true;const key=cols.ma
  memo.set(key,r);return r}
 const caOk=(cols,rem)=>caSolve(cols,rem,new Map(),{n:6000});
 /* construction à l'envers : on part d'un fond de lettres, puis on insère les mots du dernier au premier trouvé, en repoussant vers le haut les lettres qui sont au-dessus */
-function caGen(WS,r){
+function caGen(WS,r,need){
  for(let at=0;at<80;at++){
   let id=0;const cols=Array.from({length:CAW},()=>[]),pool=[...new Set(WS.join(''))];
   for(let c=0;c<CAW;c++){const h=Math.floor(r()*3)+(r()<.5?1:0);for(let k=0;k<h;k++)cols[c].push({ch:pool[Math.floor(r()*pool.length)],id:id++})}
@@ -33,14 +33,14 @@ function caGen(WS,r){
    if(!opts.length){ok=false;break}
    const[dc,di,c0,i0]=opts[Math.floor(r()*opts.length)];
    for(let j=0;j<L;j++)cols[c0+dc*j].splice(i0+di*j,0,{ch:w[j],id:id++})}
-  if(ok&&caOk(cols,WS))return cols}
+  if(ok&&caOk(cols,WS)&&(!need||WS.filter(w=>!caOcc(cols,w).length).length>=need))return cols}
  return null}
-function caBoard(k,K,r){for(let t=0;t<12;t++){const WS=caWords(k+t*97,K,r),cols=caGen(WS,r);if(cols)return{WS,cols}}return null}
+function caBoard(k,K,r,need){for(let t=0;t<12;t++){const WS=caWords(k+t*97,K,r),cols=caGen(WS,r,need);if(cols)return{WS,cols}}return null}
 function pCasc(rs){
  const INF=INFG==='caches',lvl=INF?0:lv;
  let wave=1,score=0,T0=0,tLeft=60000,tick=null,over=false,run=Math.floor(Math.random()*1e9);
  let WS=[],cols=[],F=[],M=[],a0=null,hn=null,drag=null,busy=false,pend=null,fall=null,nh=false;
- const mk=()=>{const K=INF?Math.min(7,4+Math.floor((wave-1)/2)):4+Math.min(3,Math.floor(lvl/8)),r=caRng(INF?run*31+wave*977:lvl*977+31),b=caBoard(INF?wave:lvl,K,r);WS=b.WS;cols=b.cols;F=[];M=[]};
+ const mk=()=>{const K=INF?Math.min(7,4+Math.floor((wave-1)/2)):4+Math.min(3,Math.floor(lvl/8)),r=caRng(INF?run*31+wave*977:lvl*977+31),b=caBoard(INF?wave:lvl,K,r,!INF&&lvl>=CAHARD?2:0);WS=b.WS;cols=b.cols;F=[];M=[]};
  mk();
  if(!INF&&rs&&rs.cs&&Array.isArray(rs.M)){try{const m=[];for(const x of rs.M){const cells=x.c;if(!WS.includes(x.w))throw 0;const oc=caOcc(cols,x.w);if(!oc.some(o=>o.map(q=>q.join(':')).sort().join('|')===cells.map(q=>q.join(':')).sort().join('|')))throw 0;cols=caRemove(cols,cells);F.push(x.w);m.push(x)}M=m}catch(e){mk()}}
  snap=()=>INF?null:({cs:1,M});
@@ -98,4 +98,4 @@ function pCasc(rs){
  };
  d();if(INF)clock()}
 /* récompense : facile = base, moyen = +1, difficile = +2 */
-function caTier(l){if(caOn())return l<16?0:l<32?1:2;return l>=99&&l<167?(+MST[l-99]||0):0}
+function caTier(l){if(caOn())return l<16?0:l<CAHARD?1:2;return l>=99&&l<167?(+MST[l-99]||0):0}
