@@ -73,7 +73,7 @@ RR("""${sv.sty!=null?'<small class="note" style="margin:0">Mode histoire</small>
 # --- nouveau jeu : Cuisine (salon de thé) ---
 RR("function pCross(r){",open('v57/cuisine.js').read()+"\nfunction pCross(r){")
 RR("flow:pFlow,g2048:p2048,","flow:pFlow,cuisine:pCuis,g2048:p2048,")
-RR("\n{id:'flow',n:'Relie les points'","\n{id:'cuisine',n:'Cuisine',ic:'🍔',a:'#ff9a8a',b:'#7a3a8a',nox:1,t:'Le Burger des Étoiles',s:'Des petits voisins de Zeni viennent manger au restaurant. Compose chaque burger ou hot-dog comme ils le demandent : le bon pain, la viande cuite sur le grill, les garnitures… puis sers-les. Pas de chrono : seuls tes gestes les font patienter.',w:'Tout le monde est reparti le ventre plein, avec un grand sourire.'},\n{id:'flow',n:'Relie les points'")
+RR("\n{id:'flow',n:'Relie les points'","\n{id:'cuisine',n:'Cuisine',ic:'🍔',a:'#ff9a8a',b:'#7a3a8a',nox:1,t:'Le Burger des Étoiles',s:'Des petits voisins de Zeni viennent manger au restaurant. Compose chaque burger, hot-dog ou plateau de sushis comme ils le demandent, puis sers-les. Pas de chrono : seuls tes gestes les font patienter. En mode arcade, les plats sont déjà prêts : sers vite le bon, avant la fin du temps.',w:'Tout le monde est reparti le ventre plein, avec un grand sourire.'},\n{id:'flow',n:'Relie les points'")
 RR("'brick','planetes'],GD=","'brick','planetes','cuisine'],GD=")
 RR("ana:50,flow:75,","ana:50,cuisine:30,flow:75,")
 RR("cherche:4},rw=","cherche:4,cuisine:4},rw=")
@@ -84,3 +84,7 @@ RR("(typeof fiMu==='object'&&fiMu.on)?.08:.6)","(typeof fiMu==='object'&&fiMu.on
 RR("if(typeof fiMu==='object')fiMu.vol(p.music)}","if(typeof fiMu==='object')fiMu.vol(p.music);if(typeof kzMu==='object')kzMu.vol(p.music)}")
 RR("fiMus((PLK&&!PLPA)?PLK==='flow':id==='flow'&&!x&&!xa);","fiMus((PLK&&!PLPA)?PLK==='flow':id==='flow'&&!x&&!xa);kzMus(id==='cuisine'&&!x&&!xa);")
 RR("const GSTEP={flow:0,","const GSTEP={cuisine:50,flow:0,")
+# --- Cuisine : mode arcade ---
+RR("function pCross(r){",open('v57/kzarc.js').read()+"\nfunction pCross(r){")
+RR("${INFN[id]||id==='mots'||id==='ana'?infArea(id):''}","${INFN[id]||id==='mots'||id==='ana'?infArea(id):''}${id==='cuisine'?kzModeArea():''}")
+RR('<section class="rc rcx pt-${id}"','<section class="rc rcx pt-${id}${id===\'cuisine\'&&st.get(\'kz:mode\',\'\')===\'arc\'?\' kzarc\':\'\'}"')

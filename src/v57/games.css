@@ -1541,3 +1541,18 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .kzaz.bt .kzat{bottom:6px}.kzaz.bt .kzaw{bottom:6px}
 .kzaz.bt .kzaw{position:relative}
 .kzcat{width:56px;height:34px}.kzcat .kzwb{scale:1;width:56px;height:34px;filter:none}
+/* Cuisine : mode arcade */
+.rc.kzarc>.rc-go,.rc.kzarc>.dd,.rc.kzarc>.rc-t,.rc.kzarc>.rc-ic{display:none}.rc.kzarc>.rcx-b{margin-top:0;padding-top:0;border-top:0}
+.kzabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.kzab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:12px 6px;border-radius:16px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.14);color:inherit;font:inherit;cursor:pointer}
+.kzab b{font-size:15px}.kzab small{font-size:11px;opacity:.85;text-align:center}.kzab.lk{opacity:.55}
+.kztm{position:absolute;left:14px;right:14px;top:58px;height:7px;border-radius:99px;background:rgba(255,255,255,.18);overflow:hidden;z-index:3}
+.kztm i{display:block;height:100%;width:100%;border-radius:inherit;background:linear-gradient(90deg,#8af0b0,#ffe27a);transition:width .1s linear}.kztm i.lo{background:#ff8a6a}
+.kzra{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.kzrd{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px 6px;border:0;border-radius:18px;background:radial-gradient(ellipse at 50% 38%,#fff 0 40%,#ece8f6 41% 52%,rgba(255,255,255,.12) 53%);cursor:pointer;min-height:96px;box-shadow:0 4px 10px rgba(0,0,0,.25)}
+.kzrd.e{background:rgba(255,255,255,.06);box-shadow:none}
+.kzrp{display:block;width:78px}.kzrp .kzd{width:100%;height:auto;display:block}
+.kzrd .kzbi{background:rgba(255,255,255,.9);border-radius:10px;padding:2px 4px}
+.kzrd.nw{animation:kzPop .3s ease-out}.kzrd.no{animation:kzNo .35s}
+@keyframes kzNo{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.kzbig{font-size:30px;font-weight:800;margin:4px 0}.kzbr{display:flex;gap:8px;justify-content:center}.kzbr .btn{margin:0}
