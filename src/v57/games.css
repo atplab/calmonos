@@ -1641,3 +1641,12 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .apmc{max-width:420px;display:flex;flex-direction:column;gap:12px;text-align:left}.apmc h2{margin:0}.apmc small{opacity:.75}
 .apmo{display:flex;flex-direction:column;gap:4px;text-align:left;padding:14px 16px;border-radius:16px;border:1.5px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08);color:inherit;font:inherit;cursor:pointer}
 .apmo b{font-size:17px}.apmo span{font-size:14px;opacity:.85;line-height:1.35}.apmo:active{transform:scale(.98)}
+/* boutique de flocons */
+.chip{cursor:pointer}
+.shpc{max-width:440px;width:100%;display:flex;flex-direction:column;gap:12px}.shph{display:flex;align-items:center;justify-content:space-between}.shph h2{margin:0}
+.shpx{width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:inherit;font-size:16px;cursor:pointer}
+.shpl{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.shpi{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;border-radius:16px;border:1.5px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:inherit;font:inherit;cursor:pointer}
+.shpi:last-child{grid-column:1/-1}.shpi.hot{border-color:#ffd86b;background:rgba(255,216,107,.14)}
+.shpn{font-size:19px;font-weight:800}.shpi small{font-size:12px;opacity:.8;color:#ffe9a8}.shpi b{font-size:15px;padding:6px 14px;border-radius:999px;background:rgba(255,255,255,.16);display:flex;gap:6px;align-items:center}.shpi b i{font-style:normal;font-size:11px;opacity:.75}
+.shpm{text-align:center;opacity:.7;font-size:12px;margin:0}

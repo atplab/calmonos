@@ -122,7 +122,7 @@ _raie=('<defs><linearGradient id="raGr" x1="0" y1="0" x2="1" y2="1"><stop offset
 RR("function fishSVG(f){","FSH.koiciel=f=>'"+_koi.replace("'","\\'")+"';FSH.raieaur=f=>'"+_raie.replace("'","\\'")+"';\nfunction fishSVG(f){")
 # --- déblocages : Cascade après le niveau 100 des Mots cachés ; Pêche avec l'aquarium niveau 2 ---
 RR("""<button class="${m?'on':''}" data-a="caMode" data-v="cascade">Cascade</button>""","""<button class="${m?'on':''}${caUnl()?'':' lk'}" data-a="caMode" data-v="${caUnl()?'cascade':'lk'}">${caUnl()?'':'🔒 '}Cascade</button>""")
-RR("function gLock(id){return ","function gLock(id){if(id==='peche'){try{return !UNL()&&aqTier(aqRead())<2}catch(e){return false}}return ")
+RR("function gLock(id){return ","function gLock(id){if(id==='peche')return false;return ")
 RR("if(s)s.textContent='🔒 Étape '+GSTEP[id];","if(s)s.textContent=id==='peche'?'🔒 Aquarium niveau 2':'🔒 Étape '+GSTEP[id];")
 RR("gLk:v=>{const g=ALL.find(x=>x.id===v),n=GSTEP[v]||0;gToast(","gLk:v=>{const g=ALL.find(x=>x.id===v),n=GSTEP[v]||0;if(v==='peche'){gToast('La pêche se débloque quand ton aquarium atteint le niveau 2.');return}gToast(")
 RR("caMode=v=>{try{","caMode=v=>{if(v==='lk'){msg('Le mode Cascade se débloque après avoir terminé le niveau 100.');return}try{")
