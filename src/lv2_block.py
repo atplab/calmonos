@@ -97,3 +97,10 @@ RR("const GB=+st.get('sync:gb',0)||0;if(GB>0)body.gb=GB;","const GB=+st.get('syn
 RR("if(rep){st.set('sync:gb',Math.max(0,...cur.map(v=>+v.gb||0)));st.set('sync:g',0);st.set('sync:b',0)}","if(rep){st.set('sync:gb',Math.max(0,...cur.map(v=>+v.gb||0)));st.set('sync:g',0);st.set('sync:b',0);st.set('buy:b',Math.max(0,...cur.map(v=>+v.bb||0)));st.set('buy:c',0)}")
 RR("st.set('sync:gb',SO.gt);st.set('sync:g',0);","st.set('sync:gb',SO.gt);st.set('sync:g',0);st.set('buy:b',+st.get('buy:t',0)||0);st.set('buy:c',0);")
 RR("st.set('sync:o',oth);socCredit();","st.set('sync:o',oth);socCredit();try{buyCredit()}catch(e){}")
+
+# Hors ligne : indicateur, fonctions réseau grisées, sauvegarde envoyée au retour du réseau
+RR("function prefScreen(){","""const offl=()=>typeof navigator!=='undefined'&&navigator.onLine===false;
+function netUI(){const o=offl();document.body.classList.toggle('offl',o);let p=document.getElementById('offp');if(o&&!p){p=document.createElement('div');p.id='offp';p.setAttribute('role','status');p.textContent='Hors ligne · tes parties sont gardées sur l’appareil';document.body.appendChild(p)}else if(!o&&p)p.remove()}
+addEventListener('offline',netUI);addEventListener('online',()=>{netUI();try{if(st.get('sync:acc',false)){if(!Sy.ref)accInit();else push()}}catch(e){}try{if(typeof socLater==='function')socLater()}catch(e){}});setTimeout(netUI,0);
+document.addEventListener('click',e=>{if(!offl())return;const t=e.target.closest&&e.target.closest('[data-a="tab"][data-v="soc"],[data-a="shopBuy"],[data-net]');if(!t)return;e.preventDefault();e.stopPropagation();shToast('Hors ligne : cette fonction a besoin d’Internet.')},true);
+function prefScreen(){""")

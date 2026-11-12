@@ -1650,3 +1650,6 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .shpi:last-child{grid-column:1/-1}.shpi.hot{border-color:#ffd86b;background:rgba(255,216,107,.14)}
 .shpn{font-size:19px;font-weight:800}.shpi small{font-size:12px;opacity:.8;color:#ffe9a8}.shpi b{font-size:15px;padding:6px 14px;border-radius:999px;background:rgba(255,255,255,.16);display:flex;gap:6px;align-items:center}.shpi b i{font-style:normal;font-size:11px;opacity:.75}
 .shpm{text-align:center;opacity:.7;font-size:12px;margin:0}
+/* hors ligne */
+#offp{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 6px);transform:translateX(-50%);z-index:60;padding:5px 12px;border-radius:999px;background:rgba(20,24,52,.82);color:#e8ecff;font-size:12px;border:1px solid rgba(255,255,255,.18);pointer-events:none;white-space:nowrap}
+body.offl [data-a="tab"][data-v="soc"],body.offl [data-a="shopBuy"],body.offl [data-net]{opacity:.4}
