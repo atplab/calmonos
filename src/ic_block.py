@@ -70,3 +70,11 @@ try{if(!st.get('chm30',0)){st.set('chm30',1);for(let i=9;i>=0;i--){const a=20+i,
 </script>
 </body>""")
 RR("""${sv.sty!=null?'<small class="note" style="margin:0">Mode histoire</small>':''}</div>${sv.sty!=null?'':`<p class="note" style="margin:0 0 12px">Contre ${sv.S.length-1} bot${sv.S.length>2?'s':''}</p>`}""","""<small class="note" style="margin:0">${sv.sty!=null?'Mode histoire':'Contre '+(sv.S.length-1)+' bot'+(sv.S.length>2?'s':'')}</small></div>""")
+# --- nouveau jeu : Cuisine (salon de thé) ---
+RR("function pCross(r){",open('v57/cuisine.js').read()+"\nfunction pCross(r){")
+RR("flow:pFlow,g2048:p2048,","flow:pFlow,cuisine:pCuis,g2048:p2048,")
+RR("\n{id:'flow',n:'Relie les points'","\n{id:'cuisine',n:'Cuisine',ic:'♨',a:'#ffb38a',b:'#9a4a3a',nox:1,t:'Le salon de thé de Givre',s:'Au salon de thé du village, les clients arrivent les joues rosies par le froid. Prépare chaque commande sur tes plans de travail, lance les cuissons et sers tout le monde. Pas de chrono : chaque geste fait seulement patienter un peu les clients.',w:'Tous les clients sont repartis réchauffés et le ventre plein. Le salon sent bon le chocolat.'},\n{id:'flow',n:'Relie les points'")
+RR("'brick','planetes'],GD=","'brick','planetes','cuisine'],GD=")
+RR("ana:50,flow:75,","ana:50,cuisine:40,flow:75,")
+RR("cherche:4},rw=","cherche:4,cuisine:4},rw=")
+RR("const gSv=g=>","GSV.cuisine='<path d=\"M4 11h16v1.5a7 7 0 0 1-7 7h-2a7 7 0 0 1-7-7z\"/><path d=\"M9 4.5c-.8 1 .8 2-.2 3.5M13 4.5c-.8 1 .8 2-.2 3.5\"/><path d=\"M20 12.5h1.5\"/>';const gSv=g=>")
