@@ -31,3 +31,5 @@ _xl_e=_xm.rindex("`:'')}")
 _xmB=_xm[_xl_s:_xl_e]
 _new='<div class="opts">${xon&&xdn<NLX?`'+_xmA+"`:''}"+_card+_dd+'</section>'+_book+"${xon?(xdn>=NLX?`"+_xmA+"`:''):''}</div>"
 h=h[:_s]+_new+h[_dz+len(_de):]
+RR("ic:'⇄',a:'#c9a2f0',b:'#6b4aa8'","ic:'✦',a:'#a99cf0',b:'#5458AB'")
+RR("const gSv=g=>GSV[g.id]?","const gSv=g=>(g.id==='ana'&&(g=ALL.find(x=>x.id==='mots')),GSV[g.id])?")
