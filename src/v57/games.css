@@ -1637,3 +1637,7 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .pkf .ppa{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);font-size:calc(var(--cw)*.6);line-height:1}
 .pkf .ppf{position:absolute;left:24%;right:24%;top:15%;bottom:15%;border:1.5px solid currentColor;border-radius:calc(var(--cw)*.06);display:flex;flex-direction:column;align-items:center;justify-content:center;background:color-mix(in srgb,currentColor 8%,transparent);line-height:1}
 .pkf .ppf b{font:800 calc(var(--cw)*.36)/1 Fraunces,Georgia,serif}.pkf .ppf u{font-size:calc(var(--cw)*.24);margin-top:2px}
+/* choix du mode au démarrage */
+.apmc{max-width:420px;display:flex;flex-direction:column;gap:12px;text-align:left}.apmc h2{margin:0}.apmc small{opacity:.75}
+.apmo{display:flex;flex-direction:column;gap:4px;text-align:left;padding:14px 16px;border-radius:16px;border:1.5px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08);color:inherit;font:inherit;cursor:pointer}
+.apmo b{font-size:17px}.apmo span{font-size:14px;opacity:.85;line-height:1.35}.apmo:active{transform:scale(.98)}
