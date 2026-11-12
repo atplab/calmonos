@@ -1613,3 +1613,15 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .gorl li .ghd svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .gorl li.ghid>i,.gorl li.ghid>b{opacity:.4}.gorl li.ghid>b{text-decoration:line-through}
 .pg-planetes #m:empty{display:none}.pg-planetes .bkh{margin-top:-4px}
+/* Solitaire : cartes plus douces (papier crème, couleurs feutrées, dos lavande) */
+.scd .pkf{background:linear-gradient(180deg,#fdf9f2,#f5eee1);border:1px solid #e2d7c4;box-shadow:0 1px 2px rgba(20,24,60,.16),0 3px 8px rgba(20,24,60,.1);color:#434a6e}
+.scd.sred .pkf{color:#c06872}
+.scd .pkf:has(.fc){background:radial-gradient(circle at 50% 64%,rgba(150,160,215,.16) 0 33%,transparent 34%),linear-gradient(180deg,#fdf9f2,#f5eee1)}
+.scd.sred .pkf:has(.fc){background:radial-gradient(circle at 50% 64%,rgba(220,150,160,.16) 0 33%,transparent 34%),linear-gradient(180deg,#fdf9f2,#f5eee1)}
+.pkf .pkr{font-family:Fraunces,Georgia,serif;font-weight:700;letter-spacing:-.03em}
+.pkf .pks{opacity:.8}.pkf .pkm{opacity:.72}.pkf .pkm.fc{opacity:.85}.pkf .pkx{opacity:.4;font-weight:700}
+.scd .pkb{margin:0;padding:0;width:auto;gap:0;background:radial-gradient(circle at 50% 46%,rgba(255,240,214,.2) 0 17%,transparent 18%),radial-gradient(ellipse at 50% 115%,rgba(175,200,245,.4),transparent 62%),linear-gradient(170deg,#9096cc,#6672ad 55%,#525d98);border:calc(var(--cw)*.05) solid #f5f1fa;box-shadow:0 1px 2px rgba(20,24,60,.16),0 3px 8px rgba(20,24,60,.12)}
+.scd .pkb::before{content:'';position:absolute;inset:calc(var(--cw)*.05);border-radius:calc(var(--cw)*.06);border:1px solid rgba(255,255,255,.3)}
+.scd .pkb::after{color:#fff3d8;opacity:.85;font-size:calc(var(--cw)*.32)}
+.scd.hn .pkf,.scd.hn .pkb{box-shadow:0 0 0 2.5px #f1d79c,0 0 12px rgba(241,215,156,.55)}
+.sslot{border:1.5px dashed rgba(255,255,255,.22);color:rgba(255,255,255,.3)}
