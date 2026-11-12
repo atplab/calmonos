@@ -61,7 +61,13 @@ function soScreen(){
  soLay();window.scrollTo(0,0);
  clearTimeout(SL.rt);addEventListener('resize',soRs)}
 function soRs(){clearTimeout(SL.rt);SL.rt=setTimeout(()=>{if($('#sob'))soLay();else removeEventListener('resize',soRs)},120)}
-const soCard=c=>{const r=soR(c),R=SOLR[r-1],S=SOS[soSu(c)];return`<span class="pkf"><i class="pkr">${R}</i><i class="pks">${S}</i>${r>10?`<b class="pkm fc">${R}<small>${S}</small></b>`:`<b class="pkm">${S}</b>`}<i class="pkx">${R}</i></span><span class="pkb"></span>`};
+/* carte : index en coin (valeur sur la couleur) en haut à gauche et retourné en bas à droite, enseignes disposées comme un vrai jeu */
+const SOPIP={2:[[50,24],[50,76]],3:[[50,24],[50,50],[50,76]],4:[[38,24],[62,24],[38,76],[62,76]],5:[[38,24],[62,24],[50,50],[38,76],[62,76]],6:[[38,24],[62,24],[38,50],[62,50],[38,76],[62,76]],
+ 7:[[38,24],[62,24],[50,37],[38,50],[62,50],[38,76],[62,76]],8:[[38,24],[62,24],[50,37],[38,50],[62,50],[50,63],[38,76],[62,76]],9:[[38,24],[62,24],[38,41.5],[62,41.5],[50,50],[38,58.5],[62,58.5],[38,76],[62,76]],
+ 10:[[38,24],[62,24],[50,33],[38,41.5],[62,41.5],[38,58.5],[62,58.5],[50,67],[38,76],[62,76]]};
+const soCard=c=>{const r=soR(c),R=SOLR[r-1],S=SOS[soSu(c)]+'\uFE0E',ix=d=>`<i class="pki${d?' dn':''}"><b${r===10?' class="p10"':''}>${R}</b><u>${S}</u></i>`;
+ const mid=r===1?`<i class="ppa">${S}</i>`:r>10?`<i class="ppf"><b>${R}</b><u>${S}</u></i>`:SOPIP[r].map(([x,y])=>`<i class="pp${y>55?' dn':''}" style="left:${x}%;top:${y}%">${S}</i>`).join('');
+ return`<span class="pkf">${ix(0)}${mid}${ix(1)}</span><span class="pkb"></span>`};
 /* placement de toutes les cartes (les éléments sont gardés : les déplacements glissent) */
 function soLay(){
  const B=$('#sob');if(!B||!SL.g)return;const g=SL.g,W=B.clientWidth,gap=Math.max(3,Math.round(W*.012)),cw=Math.floor((W-gap*6)/7),ch=Math.round(cw*1.42);
@@ -73,7 +79,7 @@ function soLay(){
  g.S.forEach((c,i)=>pos[c]={x:X(0),y:0,f:0,z:z++,l:{a:'s'}});
  const wn=g.W.length;g.W.forEach((c,i)=>pos[c]={x:X(1)+Math.max(0,i-(wn-3))*Math.round(cw*.4)*(wn>=3?1:0),y:0,f:1,z:z++,l:{a:'w',i}});
  for(let s=0;s<4;s++){let n=g.F[s];for(let r=1;r<=n;r++){const c=s*13+r-1;pos[c]={x:X(3+s),y:0,f:1,z:z++,l:{a:'f',s}}}}
- g.T.forEach((t,k)=>{const nd=t.d.length,nu=t.u.length;let od=Math.round(ch*.11),ou=Math.round(ch*.29);const need=nd*od+Math.max(0,nu-1)*ou;if(need>avail-ch&&nu>1){ou=Math.max(Math.round(ch*.17),Math.floor((avail-ch-nd*od)/(nu-1)))}
+ g.T.forEach((t,k)=>{const nd=t.d.length,nu=t.u.length;let od=Math.round(ch*.11),ou=Math.round(ch*.36);const need=nd*od+Math.max(0,nu-1)*ou;if(need>avail-ch&&nu>1){ou=Math.max(Math.round(ch*.17),Math.floor((avail-ch-nd*od)/(nu-1)))}
   let y=ty;t.d.forEach(c=>{pos[c]={x:X(k),y,f:0,z:z++,l:{a:'t',k}};y+=od});t.u.forEach((c,i)=>{pos[c]={x:X(k),y,f:1,z:z++,l:{a:'t',k,i}};y+=ou})});
  let maxY=ty+ch;Object.values(pos).forEach(p=>{if(p.y+ch>maxY)maxY=p.y+ch});B.style.height=(maxY+8)+'px';
  SL.pos=pos;

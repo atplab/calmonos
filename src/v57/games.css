@@ -1625,3 +1625,15 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .scd .pkb::after{color:#fff3d8;opacity:.85;font-size:calc(var(--cw)*.32)}
 .scd.hn .pkf,.scd.hn .pkb{box-shadow:0 0 0 2.5px #f1d79c,0 0 12px rgba(241,215,156,.55)}
 .sslot{border:1.5px dashed rgba(255,255,255,.22);color:rgba(255,255,255,.3)}
+/* Solitaire : cartes lisibles, disposées comme un vrai jeu */
+.scd .pkf,.scd .pkf:has(.fc),.scd.sred .pkf:has(.fc){background:#fffdf8;border:1px solid #cfc4ae;color:#1f2742;font-family:"Nunito Sans",system-ui,sans-serif;box-shadow:0 1px 2px rgba(20,24,60,.2),0 3px 8px rgba(20,24,60,.12)}
+.scd.sred .pkf{color:#c42f42}
+.pkf i,.pkf b,.pkf u{font-style:normal;text-decoration:none}
+.pkf .pki{position:absolute;top:calc(var(--cw)*.04);left:calc(var(--cw)*.03);width:calc(var(--cw)*.24);display:flex;flex-direction:column;align-items:center;line-height:.92}
+.pkf .pki b{font-weight:800;font-size:calc(var(--cw)*.3);letter-spacing:-.02em}.pkf .pki b.p10{letter-spacing:-.12em;font-size:calc(var(--cw)*.27);margin-left:-.1em}
+.pkf .pki u{font-size:calc(var(--cw)*.22);margin-top:1px}
+.pkf .pki.dn{top:auto;left:auto;bottom:calc(var(--cw)*.04);right:calc(var(--cw)*.03);transform:rotate(180deg)}
+.pkf .pp{position:absolute;transform:translate(-50%,-50%);font-size:calc(var(--cw)*.19);line-height:1}.pkf .pp.dn{transform:translate(-50%,-50%) rotate(180deg)}
+.pkf .ppa{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);font-size:calc(var(--cw)*.6);line-height:1}
+.pkf .ppf{position:absolute;left:24%;right:24%;top:15%;bottom:15%;border:1.5px solid currentColor;border-radius:calc(var(--cw)*.06);display:flex;flex-direction:column;align-items:center;justify-content:center;background:color-mix(in srgb,currentColor 8%,transparent);line-height:1}
+.pkf .ppf b{font:800 calc(var(--cw)*.36)/1 Fraunces,Georgia,serif}.pkf .ppf u{font-size:calc(var(--cw)*.24);margin-top:2px}
