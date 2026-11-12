@@ -12,11 +12,10 @@ function kzArcade(rs){
  const u=[];for(let i=rs*10;i<rs*10+10;i++)u.push(...KZU[i]);const by=k=>[...new Set(u.filter(x=>KZI[x].k===k))],buns=by('b'),prot=by('p'),tops=by('t');
  const pick=a=>a[Math.floor(Math.random()*a.length)],key=o=>o.b+'|'+o.p+'|'+o.t.join(','),T=(f,ms)=>setTimeout(()=>{if(ok())f()},ms);
  /* la carte du service : 6 plats fixes, tous proches les uns des autres */
- const menu=[];{const base={b:pick(buns),p:pick(prot),t:[]},pool=tops.slice();while(base.t.length<Math.min(2,pool.length))base.t.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);base.t.sort();menu.push(base);
-  for(let g=0;menu.length<6&&g<400;g++){const s=pick(menu),d={b:s.b,p:s.p,t:s.t.slice()},r=Math.random();
-   if(r<.22&&buns.length>1)d.b=pick(buns.filter(x=>x!==s.b));else if(r<.44&&prot.length>1)d.p=pick(prot.filter(x=>x!==s.p));
-   else if(r<.66&&d.t.length>1)d.t.splice(Math.floor(Math.random()*d.t.length),1);else{const add=tops.filter(x=>!d.t.includes(x));if(add.length&&d.t.length<4)d.t.push(pick(add));else if(d.t.length)d.t.splice(Math.floor(Math.random()*d.t.length),1)}
-   d.t.sort();if(!menu.some(m=>key(m)===key(d)))menu.push(d)}
+ /* la carte du service : 6 plats fixes, chacun bien différent des autres (au moins 2 ou 3 éléments qui changent) */
+ const dist=(a,b)=>(a.b!==b.b)+(a.p!==b.p)+a.t.filter(x=>!b.t.includes(x)).length+b.t.filter(x=>!a.t.includes(x)).length;
+ const rnd=()=>{const n=1+Math.floor(Math.random()*Math.min(3,tops.length)),T=[],pool=tops.slice();while(T.length<n&&pool.length)T.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);return{b:pick(buns),p:pick(prot),t:T.sort()}};
+ const menu=[];{for(const D of[3,2,1]){for(let g=0;menu.length<6&&g<3000;g++){const d=rnd();if(menu.every(m=>dist(m,d)>=D))menu.push(d)}if(menu.length>=6)break}
   for(let i=menu.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[menu[i],menu[j]]=[menu[j],menu[i]]}}
  const S={T:KZAT,sc:0,cb:0,best:0,sv:0,seat:[null,null,null],id:0,over:false,last:performance.now(),bag:[]};
  /* chaque plat de la carte revient aussi souvent que les autres (tirage dans un sac), sans doublon au comptoir si possible */

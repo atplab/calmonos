@@ -87,4 +87,4 @@ RR("const GSTEP={flow:0,","const GSTEP={cuisine:50,flow:0,")
 # --- Cuisine : mode arcade ---
 RR("function pCross(r){",open('v57/kzarc.js').read()+"\nfunction pCross(r){")
 RR("${INFN[id]||id==='mots'||id==='ana'?infArea(id):''}","${INFN[id]||id==='mots'||id==='ana'?infArea(id):''}${id==='cuisine'?kzModeArea():''}")
-RR('<section class="rc rcx pt-${id}"','<section class="rc rcx pt-${id}${id===\'cuisine\'&&st.get(\'kz:mode\',\'\')===\'arc\'?\' kzarc\':\'\'}"')
+RR('<section class="rc rcx pt-${id}"','<section class="rc rcx pt-${id}${id===\'cuisine\'?\' kzc\'+(st.get(\'kz:mode\',\'\')===\'arc\'?\' kzarc\':\'\'):\'\'}"')

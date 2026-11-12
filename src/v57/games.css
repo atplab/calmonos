@@ -1557,3 +1557,6 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 @keyframes kzNo{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 .kzbig{font-size:30px;font-weight:800;margin:4px 0}.kzbr{display:flex;gap:8px;justify-content:center}.kzbr .btn{margin:0}
 .kzrd.ok{animation:kzOk .4s ease-out}@keyframes kzOk{40%{transform:scale(1.06);box-shadow:0 0 0 4px #8af0b0,0 0 20px rgba(140,240,176,.6)}}
+/* Cuisine : le choix du mode vient en premier, en histoire comme en arcade */
+.rc.kzc>.rcx-b{order:-1;flex:0 0 100%;margin:0 0 12px;padding:0 0 12px;border-top:0;border-bottom:1px solid rgba(255,255,255,.28)}
+.rc.kzc.kzarc>.rcx-b{margin:0;padding:0;border-bottom:0}
