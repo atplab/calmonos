@@ -1346,20 +1346,18 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .glass{border-radius:var(--rx);border-color:var(--nbd,rgba(255,255,255,.22));box-shadow:inset 0 1px 0 rgba(255,255,255,.26),inset 0 -1px 0 rgba(0,0,0,.08),inset 0 0 38px -18px rgba(255,255,255,.35),0 14px 36px var(--nsh,rgba(20,20,70,.35)),0 2px 6px rgba(10,10,40,.18)}
 .tile,.rc,.item,.btn{-webkit-tap-highlight-color:transparent;transition:transform .35s var(--eas),box-shadow .45s var(--eas),filter .3s}
 .tile{position:relative;overflow:hidden;border-color:color-mix(in srgb,var(--a,#fff) 42%,rgba(255,255,255,.16));box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 0 44px -16px color-mix(in srgb,var(--a,#fff) 55%,transparent),0 14px 34px var(--nsh,rgba(20,20,70,.35));animation:cdIn .9s var(--eas) both}
-.tile:nth-child(odd){--dx:-26px}.tile:nth-child(even){--dx:26px}
+.tile:nth-child(odd){--dx:-12px}.tile:nth-child(even){--dx:12px}
 .tile:nth-child(2){animation-delay:.06s}.tile:nth-child(3){animation-delay:.12s}.tile:nth-child(4){animation-delay:.18s}.tile:nth-child(5){animation-delay:.24s}.tile:nth-child(6){animation-delay:.3s}.tile:nth-child(n+7){animation-delay:.36s}
-@keyframes cdIn{from{opacity:0;filter:blur(8px);transform:translateX(var(--dx,0))}to{opacity:1;filter:blur(0);transform:none}}
-.tile::before{content:'';position:absolute;top:-30%;bottom:-30%;left:-70%;width:45%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.24),transparent);transform:skewX(-20deg);pointer-events:none;animation:beam 1.6s ease-out .7s both}
+@keyframes cdIn{from{opacity:0;filter:blur(4px);transform:translateX(var(--dx,0))}to{opacity:1;filter:blur(0);transform:none}}
+.tile::before{content:'';position:absolute;top:-30%;bottom:-30%;left:-70%;width:45%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.13),transparent);transform:skewX(-20deg);pointer-events:none;animation:beam 2.2s ease-in-out .8s both}
 .tile:nth-child(even)::before{animation-delay:.9s}
 @keyframes beam{from{left:-70%}to{left:150%}}
-.tile i{box-shadow:0 6px 16px color-mix(in srgb,var(--a,#fff) 45%,transparent),inset 0 1px 0 rgba(255,255,255,.4);animation:flt 6s ease-in-out infinite}
-.tile:nth-child(2n) i{animation-delay:-1.5s}.tile:nth-child(3n) i{animation-delay:-3s}.tile:nth-child(5n) i{animation-delay:-4.5s}
-@keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
-.tile:active,.rc:active,.item:active{transform:translateY(2px);filter:brightness(.96);box-shadow:inset 0 4px 16px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.12)}
+.tile i{box-shadow:0 6px 16px color-mix(in srgb,var(--a,#fff) 45%,transparent),inset 0 1px 0 rgba(255,255,255,.4)}
+.tile:active,.rc:active,.item:active{transform:translateY(1px);filter:brightness(.97);box-shadow:inset 0 3px 12px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.12)}
 .item{border-radius:20px}
 .rc{border-color:color-mix(in srgb,var(--a) 62%,rgba(255,255,255,.18));box-shadow:inset 0 1px 0 rgba(255,255,255,.28),inset 0 0 44px -16px color-mix(in srgb,var(--a) 55%,transparent),0 14px 34px var(--nsh,rgba(20,20,70,.35));animation:cdIn .9s var(--eas) both}
 .rc::before{transform-origin:center;animation:bar 4s ease-in-out infinite}
-@keyframes bar{0%,100%{transform:scaleY(.62);opacity:.7}50%{transform:scaleY(1);opacity:1}}
+@keyframes bar{0%,100%{transform:scaleY(.8);opacity:.8}50%{transform:scaleY(1);opacity:1}}
 @media(hover:hover){.tile:hover,.rc:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.34),inset 0 0 52px -12px color-mix(in srgb,var(--a,#fff) 75%,transparent),0 18px 40px var(--nsh,rgba(20,20,70,.4))}.tile:hover::before{animation:beam 1.1s ease-out both}}
 .btn{box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -2px 0 rgba(0,0,0,.12),0 10px 22px rgba(60,50,150,.42)}
 .btn:not(:disabled):active{transform:translateY(2px);filter:brightness(.95);box-shadow:inset 0 3px 10px rgba(0,0,0,.3),0 2px 6px rgba(60,50,150,.4)}
@@ -1372,4 +1370,16 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 #nav button.on svg{animation:nvD .6s var(--eas) both}
 @keyframes nvD{from{transform:translateY(-7px);opacity:0}to{transform:none;opacity:1}}
 :focus-visible{outline:2px solid color-mix(in srgb,var(--a,#b9b2ff) 80%,#fff);outline-offset:3px;border-radius:inherit}
-@media(prefers-reduced-motion:reduce){.tile,.rc,.tile::before,.tile i,.rc::before,#nav button.on,#nav button.on svg{animation:none!important}.tile,.rc,.item,.btn{transition:none}}
+@media(prefers-reduced-motion:reduce){.tile,.rc,.tile::before,.rc::before,#app>.story,.opts>*,.dd.open .lvg>*,#nav button.on,#nav button.on svg{animation:none!important}.tile,.rc,.item,.btn{transition:none}}
+
+/* page d'un jeu : description, carte de jeu et choix de niveaux apparaissent en douceur ; un changement de mode ne refait qu'un fondu léger */
+#app>.story,.opts>.rc,.opts>.dd{animation:hbIn .85s var(--eas) both}
+.opts>.rc:nth-child(2){animation-delay:.08s}.opts>.rc:nth-child(3){animation-delay:.14s}.opts>.dd{animation-delay:.2s}
+@keyframes hbIn{from{opacity:0;filter:blur(4px);transform:translateY(10px)}to{opacity:1;filter:blur(0);transform:none}}
+#app.hsw>.story,#app.hsw .opts>.rc,#app.hsw .opts>.dd{animation:swF .55s ease both;animation-delay:0s!important}
+@keyframes swF{from{opacity:.6;filter:blur(1.5px)}to{opacity:1;filter:blur(0)}}
+.dd.open .lvg>*{animation:lvI .6s var(--eas) both}
+#app.hsw .dd.open .lvg>*{animation:none}
+@keyframes lvI{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:none}}
+.dd.open .lvg>:nth-child(1){animation-delay:0.022s}.dd.open .lvg>:nth-child(2){animation-delay:0.044s}.dd.open .lvg>:nth-child(3){animation-delay:0.066s}.dd.open .lvg>:nth-child(4){animation-delay:0.088s}.dd.open .lvg>:nth-child(5){animation-delay:0.110s}.dd.open .lvg>:nth-child(6){animation-delay:0.132s}.dd.open .lvg>:nth-child(7){animation-delay:0.154s}.dd.open .lvg>:nth-child(8){animation-delay:0.176s}.dd.open .lvg>:nth-child(9){animation-delay:0.198s}.dd.open .lvg>:nth-child(10){animation-delay:0.220s}.dd.open .lvg>:nth-child(11){animation-delay:0.242s}.dd.open .lvg>:nth-child(12){animation-delay:0.264s}.dd.open .lvg>:nth-child(13){animation-delay:0.286s}.dd.open .lvg>:nth-child(14){animation-delay:0.308s}.dd.open .lvg>:nth-child(15){animation-delay:0.330s}.dd.open .lvg>:nth-child(16){animation-delay:0.352s}.dd.open .lvg>:nth-child(17){animation-delay:0.374s}.dd.open .lvg>:nth-child(18){animation-delay:0.396s}.dd.open .lvg>:nth-child(19){animation-delay:0.418s}.dd.open .lvg>:nth-child(20){animation-delay:0.440s}.dd.open .lvg>:nth-child(21){animation-delay:0.462s}.dd.open .lvg>:nth-child(22){animation-delay:0.484s}.dd.open .lvg>:nth-child(23){animation-delay:0.506s}.dd.open .lvg>:nth-child(24){animation-delay:0.528s}
+.dd.open .lvg>:nth-child(n+25){animation-delay:.55s}
