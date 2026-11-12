@@ -133,7 +133,7 @@ RR("Chaque décor dans l’aquarium augmente les flocons des repas : 100 ❄ →
 RR("const HR=6*36e5,MAXF=10","const HR=8*36e5,MAXF=10")
 
 # ---- À propos (Réglages) : Nextonset ----
-RR("function prefScreen(){","""const ABOUT_MAIL='';
+RR("function prefScreen(){","""const ABOUT_MAIL='nextonset@pm.me';
 function aboutScreen(){
  cur=null;nv('set');
  app.innerHTML=`<header class="top pfh"><h1>À propos</h1></header><section class="glass play pf ab">
