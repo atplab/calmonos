@@ -45,4 +45,4 @@ var xmMu={on:false,L:null,T:0,s:0,t:0,
  loop(){clearTimeout(this.T);if(!this.on)return;if(!this.L&&typeof AC!=='undefined'&&AC){this.build();apply()}if(this.L&&!document.hidden&&prefs().music)this.tick();this.T=setTimeout(()=>this.loop(),120)},
  vol(m){if(!this.L||typeof AC==='undefined'||!AC)return;this.L.out.gain.setTargetAtTime(m&&this.on?.9:0,AC.currentTime,.8)},
  set(v){v=!!v;if(v===this.on)return;this.on=v;if(v){this.t=0;this.s=0;this.build();this.loop()}else clearTimeout(this.T);if(typeof AC!=='undefined'&&AC&&typeof music!=='undefined'&&music)apply()}};
-function xmMus(v){if(typeof xmMu==='object')xmMu.set(v)}
+function xmMus(v){if(typeof xmMu!=='object')return;xmMu.want=!!v;xmMu.set(!!v&&!(typeof PLK!=='undefined'&&PLK&&!PLPA))}

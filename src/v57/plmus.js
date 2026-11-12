@@ -46,7 +46,7 @@ function plTone(on){try{if(!on){if(PLA)PLA.pause();return}
   for(let i=0;i<n/2;i++)dv.setInt16(44+i*2,Math.round(24*Math.sin(2*Math.PI*25*i/sr)),true);
   PLA=new Audio(URL.createObjectURL(new Blob([u],{type:'audio/wav'})));PLA.loop=true;PLA.setAttribute('playsinline','')}
  PLA.play().catch(()=>{})}catch(e){}}
-function plApply(){plTone(!!PLK&&!PLPA);PLT.forEach(t=>{try{t[3]()(PLK&&!PLPA?t[0]===PLK:!(PLK&&document.hidden)&&typeof cur!=='undefined'&&cur===(t[0]==='m3'?'match3':t[0]))}catch(e){}});apply()}
+function plApply(){plTone(!!PLK&&!PLPA);PLT.forEach(t=>{try{t[3]()(PLK&&!PLPA?t[0]===PLK:!(PLK&&document.hidden)&&typeof cur!=='undefined'&&cur===(t[0]==='m3'?'match3':t[0]))}catch(e){}});if(typeof xmMu==='object'&&xmMu.want)xmMus(true);apply()}
 function plTick(){const o=document.getElementById('plp');if(!o){clearInterval(PLI);PLI=0;return}const e=plEl(),a=document.getElementById('ple'),b=document.getElementById('plpb');if(a)a.textContent=plFmt(e);if(b)b.style.width=((e%240)/240*100).toFixed(1)+'%'}
 const plFav=()=>{try{const f=st.get('pl:fav',[]);return Array.isArray(f)?f:[]}catch(e){return[]}};
 const plHe=(k,f)=>`<button class="plhe${f.includes(k)?' on':''}" data-a="plfv" data-v="${k}" aria-label="${f.includes(k)?'Retirer des favoris':'Ajouter aux favoris'}" aria-pressed="${f.includes(k)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/></svg></button>`;
