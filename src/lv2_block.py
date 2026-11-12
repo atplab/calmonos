@@ -130,3 +130,4 @@ RR("data-a=\"aqtab\" data-v=\"deco\">Décors</button></div>","data-a=\"aqtab\" d
 RR("aqcare:()=>aqTabTo('care'),","aqcare:()=>aqTabTo('care'),aqpb:v=>aqPlBuy(v),aqpf:v=>aqPlFeed(v),aqpa:()=>aqPlFeed(),")
 
 RR("Chaque décor dans l’aquarium augmente les flocons des repas : 100 ❄ → ×1,1 ; 500 ❄ → ×1,5. Les bonus s’additionnent. Total actuel : <b>×${frN(aqM(a)/1000)}</b>","Les poissons sont plus heureux avec des décorations !")
+RR("const HR=6*36e5,MAXF=10","const HR=8*36e5,MAXF=10")
