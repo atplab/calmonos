@@ -188,7 +188,7 @@ function pCuis(r){
    if(c.fries&&!c.got.fries){if(S.fr.n){S.hold='fries';return'C'+i}if(!S.fr.c)return'Ifries';continue}
    if(c.drink&&!c.got.drink){if(S.dr.n){S.hold='drink';return'C'+i}if(!S.dr.c)return'Idrink';continue}}
   return null};
- app.innerHTML=`<div class="kzg ${hd?'hd':'bu'}" id="kzg"><div class="kzt"><button class="back" data-a="back" data-v="hub">‹ Cuisine</button><b>Niveau ${C.L+1}</b><div class="kztr"><button class="hb hintb" data-a="hint" aria-label="Indice : coûte 1 flocon">${HBI(1)}</button><div class="chip">❄ ${FLX()}</div></div></div><div class="kzsc">${kzBg(hd)}<div class="kzcu" id="kzcu"></div><div class="kzct"></div></div><p class="m kzm" id="m" role="status" aria-live="polite"></p><div class="kzk" id="kzk"></div><div class="kzov" id="kzov" hidden></div></div>`;
+ app.innerHTML=`<div class="kzg ${hd?'hd':'bu'}" id="kzg"><div class="kzt"><button class="back" data-a="back" data-v="hub">‹ Cuisine</button><b>Niveau ${C.L+1}</b><div class="kztr"><button class="hb hintb" data-a="hint" aria-label="Indice : coûte 1 flocon">${HBI(1)}</button><div class="chip">❄ ${FLX()}</div></div></div><div class="kzsc">${kzBg(hd)}${kzAmb(hd,C.L*3)}<div class="kzcu" id="kzcu"></div><div class="kzct"></div></div><p class="m kzm" id="m" role="status" aria-live="polite"></p><div class="kzk" id="kzk"></div><div class="kzov" id="kzov" hidden></div></div>`;
  $('#nav').hidden=true;mt='m';
  const d=()=>{const cu=$('#kzcu'),kk=$('#kzk');if(!cu||!kk)return;const H=k=>hn===k?' hn':'',now=Date.now();
   cu.style.setProperty('--n',S.seat.length);
@@ -205,3 +205,19 @@ ${C.u.includes('fries')?`<button class="kzfr${S.hold==='fries'?' on':''}${S.fr.c
   last=''};
  d();S.seat.forEach((_,i)=>T(()=>arrive(i),350+i*650));
 }
+/* ---------- ambiance : des voisins qui mangent, bavardent et passent ---------- */
+function kzAmb(hd,L0){
+ const G=(k,m,id)=>`<span class="kzag">${kzGuy(KZL[(L0+k)%KZL.length],m,'a'+id)}</span>`,
+  burg=kzDish({b:'bb',p:'vi',t:['la','to']}),dog=kzDish({b:'ph',p:'sa',t:['ke','mo']}),
+  tb=`<svg class="kzat" viewBox="0 0 80 40" aria-hidden="true"><ellipse cx="40" cy="8" rx="36" ry="7" fill="${hd?'#c9935a':'#f2d8b0'}"/><ellipse cx="40" cy="8" rx="36" ry="7" fill="none" stroke="${hd?'#8a5a30':'#c9a070'}" stroke-width="2"/><path d="M40 14v24M28 38h24" stroke="${hd?'#6a4424':'#8a7ad8'}" stroke-width="4" stroke-linecap="round"/><ellipse cx="26" cy="7" rx="9" ry="3" fill="#fff"/><ellipse cx="54" cy="7" rx="9" ry="3" fill="#fff"/></svg>`,
+  say=(t,d)=>`<span class="kztk" style="animation-delay:${d}s">${t}</span>`,
+  food=(f,c)=>`<span class="kzaf ${c||''}">${f}</span>`;
+ const a=hd?
+  `<div class="kzaz z1"><span class="kzbench"></span><div class="kzaw eat">${G(1,'happy',1)}${food(dog)}</div><div class="kzaw eat d2">${G(4,'wait',2)}${food(dog,'r')}</div>${say('…',1)}${say('♪',5.5)}</div>
+   <div class="kzaz z2">${tb}<div class="kzaw eat d3">${G(7,'happy',3)}${food(kzDrink(),'dk')}</div>${say('♥',3)}</div>
+   <div class="kzwk" style="bottom:23%;animation-duration:30s"><span class="kzwb">${G(2,'wait',4)}</span></div>
+   <div class="kzwk rv" style="bottom:25%;animation-duration:38s;animation-delay:-14s"><span class="kzwb">${G(9,'happy',5)}</span></div>`
+ :`<div class="kzaz z1">${tb}<div class="kzaw eat">${G(1,'happy',1)}${food(burg)}</div><div class="kzaw eat d2 fl">${G(5,'wait',2)}${food(burg,'r')}</div>${say('…',1)}${say('Miam !',6)}</div>
+   <div class="kzaz z2">${tb}<div class="kzaw eat d3">${G(3,'wait',3)}${food(kzFries())}</div><div class="kzaw eat fl">${G(8,'happy',4)}${food(burg,'r')}</div>${say('♥',3.5)}${say('…',8)}</div>
+   <div class="kzwk" style="bottom:24%;animation-duration:34s;animation-delay:-6s"><span class="kzwb">${G(6,'happy',5)}<span class="kzty">${burg}</span></span></div>`;
+ return`<div class="kzam" aria-hidden="true">${a.split('\n').map(x=>x.trim()).sort((p,q)=>(q.startsWith('<div class="kzwk')?1:0)-(p.startsWith('<div class="kzwk')?1:0)).join('')}</div>`}

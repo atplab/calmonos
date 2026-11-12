@@ -1501,3 +1501,23 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .kzi{padding:4px 1px 5px;border-radius:12px;box-shadow:0 2px 0 #c9a070}.kzg.hd .kzi{box-shadow:0 2px 0 #9a8ac8}
 .kzi span{width:30px;height:30px}.kzi small{font-size:9.5px}
 .kznote{font-size:12px;padding:8px 10px}
+/* Cuisine : ambiance de la salle */
+.kzam{position:absolute;inset:0;pointer-events:none;z-index:0}
+.kzaz{position:absolute;display:flex;align-items:flex-end;gap:0;width:96px;height:64px}.kzaz.z1{left:calc(33.3% - 48px)!important;right:auto!important;bottom:40px!important}.kzaz.z2{left:calc(66.6% - 48px)!important;right:auto!important;bottom:40px!important}
+.kzat{position:absolute;left:8px;bottom:0;width:80px;height:40px}
+.kzbench{position:absolute;left:4px;bottom:2px;width:88px;height:12px;border-radius:6px;background:#8a5a30;box-shadow:0 8px 0 -4px #6a4424}
+.kzaw{position:relative;width:44px;height:52px;z-index:1}.kzaw.fl{transform:scaleX(-1)}
+.kzag{display:block;width:44px;height:52px}.kzag svg{width:100%;height:100%}
+.kzaf{position:absolute;left:24px;bottom:18px;width:22px}.kzaf.r{left:-4px}.kzaf .kzd,.kzaf svg{width:100%;height:auto;display:block}.kzaf.dk{width:14px;bottom:20px}
+.kzaw.eat .kzag{transform-origin:50% 100%;animation:kzEat 2.4s ease-in-out infinite}.kzaw.d2 .kzag{animation-delay:-.8s}.kzaw.d3 .kzag{animation-delay:-1.5s}
+@keyframes kzEat{0%,60%,100%{transform:none}70%{transform:scale(1.04,.95)}80%{transform:scale(.98,1.03)}90%{transform:scale(1.03,.96)}}
+.kztk{position:absolute;top:-16px;left:30px;background:#fff;color:#5a4a8a;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;opacity:0;animation:kzTk 10s ease-in-out infinite}
+.kztk::after{content:'';position:absolute;left:8px;bottom:-4px;border:4px solid transparent;border-bottom:0;border-top-color:#fff}
+@keyframes kzTk{0%,5%{opacity:0;transform:translateY(4px)}10%,30%{opacity:1;transform:none}36%,100%{opacity:0;transform:translateY(-3px)}}
+.kzwk{position:absolute;left:0;width:40px;height:48px;animation:kzWk 32s linear infinite}
+.kzwk.rv{animation-name:kzWkR}.kzwk.rv .kzwb{transform:scaleX(-1)}
+.kzwb{position:relative;display:block;width:40px;height:48px;animation:kzHop .55s ease-in-out infinite}.kzwb .kzag{width:40px;height:48px}
+.kzty{position:absolute;left:22px;top:20px;width:20px}.kzty .kzd{width:100%;height:auto}
+@keyframes kzWk{from{transform:translateX(-60px)}to{transform:translateX(calc(100vw + 20px))}}
+@keyframes kzWkR{from{transform:translateX(calc(100vw + 20px))}to{transform:translateX(-60px)}}
+.kzcu{z-index:1}
