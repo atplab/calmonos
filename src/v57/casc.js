@@ -1,6 +1,7 @@
 /* ---------- Mots cachés en cascade : quand un mot est trouvé, il disparaît et les lettres au-dessus tombent ---------- */
 const CAW=8,CAH=8,CANL=115,CAHARD=49,CAHX=3,CADIR=[[1,0],[0,1],[1,1],[1,-1]];
-function caOn(){try{return st.get('ca:mode','')==='cascade'}catch(e){return false}}
+const caUnl=()=>{try{return UNL()||!!st.get('c:caches:99',false)}catch(e){return false}};
+function caOn(){try{return st.get('ca:mode','')==='cascade'&&caUnl()}catch(e){return false}}
 const caRng=n=>{let s=n>>>0;return()=>{s=(s+0x6D2B79F5)>>>0;let t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}};
 const caShuf=(a,r)=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 /* mots d'un niveau : une liste thématique, mots de 3 à 7 lettres */
