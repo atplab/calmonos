@@ -86,7 +86,7 @@ act.shopBuy=async k=>{if(!shopOn())return shToast('Les achats arrivent bientôt 
  const r=await window.fbShop.buy(k);if(b){delete b.dataset.busy;b.style.opacity=''}
  if(r&&r.err==='login')shToast('Connecte-toi à ton compte (Réglages) pour acheter des flocons.');else if(r&&r.err)shToast('Le paiement n’a pas pu démarrer. Réessaie dans un instant.')};
 /* flocons achetés : total serveur (buys/<uid>.t) − base après réinitialisation (buy:b) − déjà crédité sur cet appareil (buy:c) */
-function buyCredit(){const T=+st.get('buy:t',0)||0,E=Math.max(0,T-(+st.get('buy:b',0)||0)),c=+st.get('buy:c',0)||0;if(E<=c)return;const d=E-c;st.set('buy:c',E);fl=Math.min(1e8,fl+d);st.set('fl',fl);try{chip()}catch(e){}shToast('+'+d.toLocaleString('fr-CA')+' ❄ — merci pour ton achat !');try{schedulePush()}catch(e){}}
+function buyCredit(){const T=+st.get('buy:t',0)||0,E=Math.max(0,T-(+st.get('buy:b',0)||0)),c=+st.get('buy:c',0)||0;if(E<=c)return;const d=E-c;st.set('buy:c',E);fl=Math.min(1e8,fl+d);st.set('fl',fl);try{chip()}catch(e){}shToast('+'+d.toLocaleString('fr-CA')+' ❄ — merci énormément pour ton soutien !');try{schedulePush()}catch(e){}}
 if(window.fbShop)window.fbShop.watch(T=>{st.set('buy:t',T);buyCredit()});
 try{const q=new URLSearchParams(location.search).get('achat');if(q){history.replaceState(null,'',location.pathname);setTimeout(()=>shToast(q==='ok'?'Paiement reçu ✦ Tes flocons arrivent dans quelques secondes.':'Achat annulé.'),900)}}catch(e){}
 document.addEventListener('click',e=>{const c=e.target.closest&&e.target.closest('.chip');if(!c||c.dataset.a||c.closest('#shpo'))return;if((c.textContent||'').trim().startsWith('❄'))shopOpen()});
