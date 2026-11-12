@@ -67,28 +67,31 @@ const AQPD_={
 function aqpSVG(P,g){const A=['',''];AQPD_[P.id](g,P.h,(i,s)=>{A[i%2]+=s});return`<g class="s1">${A[0]}</g><g class="s2">${A[1]}</g>`}
 function aqPlHTML(a,now){return AQPT.filter(P=>aqpO(a)[P.id]).map(P=>{const o=a.pl[P.id],g=aqpG(o,P,now),hg=aqpHg(o,now);
  return`<svg class="pl${hg?' hg':''}" data-id="${P.id}" data-q="${Math.round(g*80)+(hg?'h':'')}" viewBox="0 0 100 ${P.h}" style="left:${P.x}%;width:${P.w}%;aspect-ratio:100/${P.h};--sd:${(5+aqpS(P.id)%4).toFixed(1)}s" role="img" aria-label="${P.n}"><g class="pg">${aqpSVG(P,g)}</g></svg>`}).join('')}
-function aqPl(){
- const el=$('#aql');if(!el)return;const a=aqRead(),now=Date.now(),pl=aqpO(a);
- const own=AQPT.filter(P=>pl[P.id]),oth=AQPT.filter(P=>!pl[P.id]);
- const pv=(P,g,hg)=>{const c=Math.min(P.h,170);return`<svg viewBox="0 ${P.h-c} 100 ${c}" class="plv${hg?' hg':''}" aria-hidden="true">${aqpSVG(P,g)}</svg>`};
+const aqpSig=(a,now=Date.now())=>AQPT.map(P=>{const o=aqpO(a)[P.id];return o?Math.floor(aqpG(o,P,now)*100)+(aqpHg(o,now)?'h':'')+(aqpCan(o,now)?'c':''):'-'}).join(',');
+const aqpGain=P=>P.p*.025;
+const aqpPv=(P,g,hg)=>{const c=Math.min(P.h,170);return`<svg viewBox="0 ${P.h-c} 100 ${c}" class="plv${hg?' hg':''}" aria-hidden="true">${aqpSVG(P,g)}</svg>`};
+/* section « Plantes » de l’inventaire */
+function aqPlInv(a){const now=Date.now(),pl=aqpO(a),own=AQPT.filter(P=>pl[P.id]);if(!own.length)return'';
  const row=P=>{const o=pl[P.id],g=aqpG(o,P,now),hg=aqpHg(o,now),can=aqpCan(o,now),pc=Math.floor(g*100),done=g>=1,sat=o.f+AQPD-now,left=(1-g)*P.d*864e5*(hg?2:1);
-  const info=done?(hg?'Adulte · elle a faim':'Adulte · épanouie'):(hg?'A faim · pousse 2× moins vite':'Rassasiée')+' · '+pc+' % · ~'+aqFmtD(left);
+  const info=(done?'Adulte · +'+frN(aqpGain(P))+' ❄ par repas':(hg?'A faim · pousse 2× moins vite':'Rassasiée')+' · '+pc+' % · ~'+aqFmtD(left))+(done&&hg?' · a faim':'');
   const btn=can?`<button class="sb buy" data-a="aqpf" data-v="${P.id}">Nourrir</button>`:`<button class="sb" disabled>Dans ${aqFmtD(sat-AQPW)}</button>`;
-  return`<div class="ai${hg?' plh':''}"><div class="ap sq plp">${pv(P,g,hg)}</div><div class="atx"><b>${P.n}</b><small>${info}</small><div class="aqm-bar"><i style="width:${pc}%"></i></div></div>${btn}</div>`};
+  return`<div class="ai${hg?' plh':''}"><div class="ap sq plp">${aqpPv(P,g,hg)}</div><div class="atx"><b>${P.n}</b><small>${info}</small>${done?'':`<div class="aqm-bar"><i style="width:${pc}%"></i></div>`}</div>${btn}</div>`};
  const nf=own.filter(P=>aqpCan(pl[P.id],now)).length;
- el.dataset.ps=AQPT.map(P=>{const o=pl[P.id];return o?Math.floor(aqpG(o,P,now)*100)+(aqpHg(o,now)?'h':'')+(aqpCan(o,now)?'c':''):'-'}).join(',');
- el.innerHTML=`<p class="aqc">Les plantes poussent lentement : de 5 jours à 3 semaines selon l’espèce. Nourris-les une fois tous les 2 jours ; si elles ont faim, elles poussent 2 fois plus lentement.</p>`
- +(own.length?`<h3 class="aqh">Mes plantes</h3>`+(nf>1?`<button class="btn aqpa" data-a="aqpa">Nourrir toutes (${nf})</button>`:'')+own.map(row).join(''):'')
- +(oth.length?`<h3 class="aqh">Boutique</h3><div class="aqcar">`+oth.map(P=>`<div class="ai"><div class="ap sq plp">${pv(P,1,0)}</div><div class="atx"><b>${P.n}</b><small>${P.s} · adulte en ${P.d} j</small></div><button class="sb buy ${!UNL()&&fl<P.p?'low':''}" data-a="aqpb" data-v="${P.id}">Acheter · ${P.p} ❄</button></div>`).join('')+`</div>`:'');
+ return`<h3 class="aqh">Plantes</h3><p class="aqc">Nourris-les tous les 2 jours. Une fois adultes, elles donnent des ❄ à chaque repas.</p>`+(nf>1?`<button class="btn aqpa" data-a="aqpa">Nourrir toutes (${nf})</button>`:'')+own.map(row).join('')}
+function aqPl(){
+ const el=$('#aql');if(!el)return;const a=aqRead(),now=Date.now(),pl=aqpO(a),oth=AQPT.filter(P=>!pl[P.id]);
+ el.dataset.ps=aqpSig(a,now);
+ el.innerHTML=`<p class="aqc">Rajoute de la vie à ton aquarium !</p>`
+ +(oth.length?`<div class="aqcar">`+oth.map(P=>`<div class="ai"><div class="ap sq plp">${aqpPv(P,1,0)}</div><div class="atx"><b>${P.n}</b><small>${P.s} · adulte en ${P.d} j · +${frN(aqpGain(P))} ❄ par repas</small></div><button class="sb buy ${!UNL()&&fl<P.p?'low':''}" data-a="aqpb" data-v="${P.id}">Acheter · ${P.p} ❄</button></div>`).join('')+`</div>`:'<p class="aqc">Tu as toutes les plantes. Retrouve-les dans l’inventaire.</p>');
 }
 function aqPlBuy(v){const P=AQPT.find(x=>x.id===v),a=aqRead();mt='m-aq';if(!P||aqpO(a)[v])return;if(!spend(P.p))return;const n=Date.now();a.pl[v]={g:.03,t:n,f:n};aqSave(a);msg(P.n+' plantée ! Nourris-la tous les 2 jours.');sfx(660,.18);aquaRefresh()}
 function aqPlFeed(id){const a=aqRead(),now=Date.now();let n=0;mt='m-aq';
- AQPT.forEach(P=>{const o=aqpO(a)[P.id];if(!o||(id&&id!==P.id)||!aqpCan(o,now))return;o.g=aqpG(o,P,now);o.t=now;o.f=now;n++});
- if(!n)return;aqSave(a);sfx(600,.15);msg(n>1?'Tes plantes sont nourries.':'Plante nourrie : elle reprend son rythme.');aquaRefresh();
+ let q=Math.min(999,+a.r||0);AQPT.forEach(P=>{const o=aqpO(a)[P.id];if(!o||(id&&id!==P.id)||!aqpCan(o,now))return;const g=aqpG(o,P,now);if(g>=1)q+=P.p*25;o.g=g;o.t=now;o.f=now;n++});
+ if(!n)return;const gn=Math.floor(q/1000);q-=gn*1000;if(q)a.r=q;else delete a.r;if(gn){fl+=gn;st.set('fl',fl);chip()}aqSave(a);sfx(600,.15);msg((n>1?'Tes plantes sont nourries.':'Plante nourrie : elle reprend son rythme.')+(gn?' +'+gn+' ❄':''));aquaRefresh();
  document.querySelectorAll('.tank .pl').forEach(e=>{if(!id||e.dataset.id===id){e.classList.add('fd');setTimeout(()=>e.classList.remove('fd'),1600)}})}
 function aqPlTick(){const a=aqRead(),now=Date.now();let hn=0;
  document.querySelectorAll('.tank .pl').forEach(e=>{const P=AQPT.find(x=>x.id===e.dataset.id),o=P&&aqpO(a)[P.id];if(!o)return;const g=aqpG(o,P,now),hg=aqpHg(o,now),q=Math.round(g*80)+(hg?'h':'');e.classList.toggle('hg',hg);if(e.dataset.q!==q){e.dataset.q=q;const pg=e.querySelector('.pg');if(pg)pg.innerHTML=aqpSVG(P,g)}});
  AQPT.forEach(P=>{const o=aqpO(a)[P.id];if(o&&aqpHg(o,now))hn++});
  if(hn){const d=$('#nav .ndot');if(d)d.hidden=false}
- const el=$('#aql');if(aqTab==='plant'&&el&&el.dataset.ps){const sg=AQPT.map(P=>{const o=aqpO(a)[P.id];return o?Math.floor(aqpG(o,P,now)*100)+(aqpHg(o,now)?'h':'')+(aqpCan(o,now)?'c':''):'-'}).join(',');if(el.dataset.ps!==sg)aqPl()}}
+ const el=$('#aql');if((aqTab==='plant'||aqTab==='inv')&&el&&el.dataset.ps&&el.dataset.ps!==aqpSig(a,now))aqPanel()}
 const aqStatus1=aqStatus;aqStatus=function(){aqStatus1();try{aqPlTick()}catch(e){}};

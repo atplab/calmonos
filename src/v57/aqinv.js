@@ -4,11 +4,12 @@ function aqInv(){
  const nm=aqNames(a),fo=FISH.filter(f=>a.f[f.id]),dO=DECO.filter(d=>a.d[d.id]!==undefined);
  const fr=fo.map(f=>{const on=a.f[f.id].on;return`<div class="ai"><div class="ap">${fishSVG(f)}</div><div class="atx"><b>${esc(nm[f.id])}</b><small>${esc(f.n)} · ${on?'Dans l’aquarium':'Rangé'}</small></div><button class="sb" data-a="aqtg" data-v="${f.id}">${on?'Ranger':'Sortir'}</button></div>`}).join('');
  const dr=dO.map(d=>{const on=a.d[d.id];return`<div class="ai"><div class="ap sq"><svg viewBox="${d.vb||'0 0 100 100'}" aria-hidden="true">${d.svg}</svg></div><div class="atx"><b>${d.n}</b><small>${on?'Dans l’aquarium':'Rangé'}</small></div><button class="sb" data-a="aqdt" data-v="${d.id}">${on?'Ranger':'Sortir'}</button></div>`}).join('');
- el.innerHTML=`<p class="aqc">Poissons dans l’aquarium : <b>${aqOn(a).length} / ${MAXF}</b> · décors : <b>${dO.filter(d=>a.d[d.id]).length} / ${dO.length}</b></p>`
+ el.innerHTML=`<p class="aqc">Poissons dans l’aquarium : <b>${aqOn(a).length} / ${MAXF}</b> · décors : <b>${dO.filter(d=>a.d[d.id]).length} / ${dO.length}</b><br>Bonus de flocons des décors : <b>×${frN(aqM(a)/1000)}</b></p>`
  +`<div class="aqf aqed"><div><b>Placer les décors</b><small>Déplace tes décors où tu veux dans l’aquarium.</small></div><button class="btn" data-a="aqed">Déplacer</button></div>`
  +(Object.keys(a.p).length?'<button class="lnk" data-a="aqpr">Remettre les décors à leur place</button>':'')
  +`<h3 class="aqh">Poissons</h3>`+(fr||'<p class="aqc">Aucun poisson pour l’instant : va faire un tour à la boutique.</p>')
- +`<h3 class="aqh">Décors</h3>`+(dr||'<p class="aqc">Aucun décor pour l’instant : va faire un tour à la boutique.</p>');
+ +`<h3 class="aqh">Décors</h3>`+(dr||'<p class="aqc">Aucun décor pour l’instant : va faire un tour à la boutique.</p>')+aqPlInv(a);
+ if(aqpO(a)&&Object.keys(aqpO(a)).length)el.dataset.ps=aqpSig(a);else delete el.dataset.ps;
 }
 function aqPanel(){
  const tc=$('.aqtc');if(tc)tc.textContent=aqTab==='inv'?'Inventaire':'Entretien';
