@@ -9,9 +9,17 @@ const PEF=[
  {id:'perche',r:'c',n:'Perche',sh:'std',b:'#c9c25a',f:'#ff9a5a',st:'v',sc:'#4a5a2a',sz:.95},
  {id:'ablette',r:'c',n:'Ablette',sh:'long',b:'#dfe8f2',f:'#b8c8dc',sz:.85},
  {id:'goujon',r:'c',n:'Goujon',sh:'long',b:'#a89a7a',f:'#c9b898',sp:'#6a5a3a',sz:.8},
+ {id:'rotengle',r:'c',n:'Rotengle',sh:'std',b:'#c8ccc0',f:'#ff5a4a',sz:.9},
+ {id:'breme',r:'c',n:'Brème',sh:'round',b:'#d8dce4',f:'#a8b0c0',sz:.95},
+ {id:'vandoise',r:'c',n:'Vandoise',sh:'long',b:'#b8d0ea',f:'#8aa8c8',sp:'#e8f2ff',sz:.85},
+ {id:'chevesne',r:'c',n:'Chevesne',sh:'std',b:'#6a7484',f:'#e0804a',sz:1},
  {id:'truite',r:'u',n:'Truite arc-en-ciel',sh:'long',b:'#9ab8a0',f:'#c9dcc0',sp:'#ff8aa0',sz:1},
  {id:'carpe',r:'u',n:'Carpe',sh:'round',b:'#c99a4a',f:'#e8c07a',sz:1.05},
  {id:'tanche',r:'u',n:'Tanche',sh:'std',b:'#5a7a3a',f:'#8aa85a',sz:1},
+ {id:'fario',r:'u',n:'Truite fario',sh:'long',b:'#b8945a',f:'#d8b880',sp:'#e84a3a',sz:1},
+ {id:'miroir',r:'u',n:'Carpe miroir',sh:'round',b:'#d8a83a',f:'#f2d27a',sp:'#fff2c0',sz:1.05},
+ {id:'sandre',r:'u',n:'Sandre',sh:'long',b:'#8a9a8a',f:'#c0ccc0',st:'v',sc:'#4a5a4a',sz:1.05},
+ {id:'blackbass',r:'u',n:'Black-bass',sh:'std',b:'#5a8a4a',f:'#a8c890',st:'v',sc:'#2a4a2a',sz:1},
  {id:'brochet',r:'r',n:'Brochet',sh:'long',b:'#6a8a4a',f:'#a8c07a',sp:'#e8f0a0',sz:1.15},
  {id:'saumon',r:'r',n:'Saumon',sh:'long',b:'#c8d0e0',f:'#ff9a7a',sp:'#ff8a6a',sz:1.15},
  {id:'omble',r:'r',n:'Omble chevalier',sh:'std',b:'#3a4a6a',f:'#ff8a5a',sp:'#ffd0a0',sz:1.05},
@@ -51,7 +59,7 @@ function pePlay(){
 <div class="pezn" id="pezn">${typeof qzGuy==='function'?qzGuy('ask'):''}</div>
 
 <div class="pefl" id="pefo" hidden><svg viewBox="0 0 20 30" aria-hidden="true"><path d="M10 0v8" stroke="#fff" stroke-width="1.4"/><ellipse cx="10" cy="14" rx="6" ry="7" fill="#ff5a5a"/><path d="M4 14a6 7 0 0 0 12 0z" fill="#fff"/><ellipse cx="10" cy="21" rx="9" ry="2.2" fill="#9ab8ff" opacity=".5"/></svg><b class="pex" id="pex" hidden>!</b></div></div>
-<div class="pehud"><p class="m pem" id="m" role="status" aria-live="polite">Touche le lac pour lancer ta ligne.</p><div class="pepr" id="pepr" hidden><i id="pepi"></i></div><button class="btn pebt" id="pebt" data-a="peAct">Lancer</button></div><div class="peov" id="peov" hidden></div></div>`;
+<div class="pehud"><p class="m pem" id="m" role="status" aria-live="polite">Touche le lac pour lancer ta ligne.</p><div class="pepr" id="pepr" hidden><i id="pepi"></i><b class="pete"><i id="pete"></i></b></div><button class="btn pebt" id="pebt" data-a="peAct">Lancer</button></div><div class="peov" id="peov" hidden></div></div>`;
  $('#nav').hidden=true;mt='m';
  const sc=$('#pesc'),fo=$('#pefo'),lp=$('#pelp'),bt=$('#pebt'),pr=$('#pepr'),pi=$('#pepi');
  let S={st:'idle',x:0,y:0,fish:null,p:0,hold:false,pull:0,pt:0,t0:0,bite:0},raf=0;
@@ -69,11 +77,14 @@ function pePlay(){
    else if(S.st==='bite'){put(S.x,S.y+6+Math.sin(t*30)*3);if(n-S.bt>3000){S.st='wait';$('#pex').hidden=true;S.bite=n+2500+Math.random()*5000;msg('Le poisson est reparti. Un autre viendra…');setBt('Ramener','peAct')}}
    else if(S.st==='reel'){const f=S.fish,rk='curel'.indexOf(f.r),dt=Math.min(.05,(n-(S.ln||n))/1000);S.ln=n;
     if(n>=S.pt){S.pull=S.pull?0:1;S.pt=n+(S.pull?700+rk*250:1600-rk*200+Math.random()*900);if(S.pull){msg('Il tire ! Relâche un peu…');sfx(300,.08)}else msg('Il se fatigue : remonte-le doucement.')}
-    const sp=.3-rk*.035;S.p+=S.hold?(S.pull?-.1:sp)*dt:(S.pull?-.03:0)*dt;S.p=Math.max(0,Math.min(1,S.p));pi.style.width=(S.p*100)+'%';pr.classList.toggle('pl',!!S.pull);
+    /* plus il est rare, plus il tire fort : tenir pendant qu’il tire tend la ligne ; trop tendue, il se décroche */
+    const sp=.3-rk*.04;S.p+=S.hold?(S.pull?-.1-rk*.03:sp)*dt:(S.pull?-.03*(1+rk):0)*dt;S.p=Math.max(0,Math.min(1,S.p));pi.style.width=(S.p*100)+'%';pr.classList.toggle('pl',!!S.pull);
+    S.te=Math.max(0,(S.te||0)+(S.hold&&S.pull?[.3,.55,.85,1.2,1.6][rk]:-.45)*dt);const tz=$('#pete');if(tz){tz.style.width=Math.min(100,S.te*100)+'%';tz.classList.toggle('hi',S.te>.6)}
+    if(S.te>=1){cancelAnimationFrame(raf);sfx(180,.3);vib(60);const nm=f.r==='l'||f.r==='e'?'un poisson très puissant':f.r==='r'?'un beau poisson':'le poisson';idle('Oh ! '+nm[0].toUpperCase()+nm.slice(1)+' s’est décroché… Relâche quand il tire !');return}
     const t2=tip(),k=S.p;S.x=S.rx+(t2.x+30-S.rx)*k+(S.pull?Math.sin(n/60)*4:0);S.y=S.ry+(t2.y+20-S.ry)*k;put(S.x,S.y+Math.sin(n/90)*2);line();
     if(S.p>=1)return caught()}
    raf=requestAnimationFrame(step)};raf=requestAnimationFrame(step)};
- const hook=()=>{S.fish=peRoll();S.st='reel';S.p=.08;S.pull=0;S.pt=performance.now()+900;S.rx=S.x;S.ry=S.y;S.ln=0;$('#pex').hidden=true;pr.hidden=false;sfx(520,.15);
+ const hook=()=>{S.fish=peRoll();S.st='reel';S.p=.08;S.te=0;S.pull=0;S.pt=performance.now()+900;S.rx=S.x;S.ry=S.y;S.ln=0;$('#pex').hidden=true;pr.hidden=false;sfx(520,.15);
   msg(S.fish.r==='l'?'Quelle force… c’est un poisson extraordinaire !':S.fish.r==='e'?'Il est lourd ! Prends ton temps.':'Ferré ! Maintiens le bouton pour remonter.');setBt('Maintenir pour remonter','peHold');pr.classList.toggle('lg',S.fish.r==='l')};
  const caught=()=>{cancelAnimationFrame(raf);const f=S.fish,R=peR(f.r),b=peBag();b[f.id]=(b[f.id]|0)+1;st.set('pe:bag',b);const seen=st.get('pe:seen',[]);const nw=!seen.includes(f.id);if(nw){seen.push(f.id);st.set('pe:seen',seen)}bagN();
   sfx(f.r==='l'?990:784,.35);vib(f.r==='l'?[40,60,40,60,80]:[20,30,20]);idle('');
