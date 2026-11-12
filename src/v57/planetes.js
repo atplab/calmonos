@@ -176,6 +176,6 @@ function pPlan(r){
  const rs=()=>{if(!cv.isConnected){removeEventListener('resize',rs);return}size()};addEventListener('resize',rs);
  window.__PLDBG={OR,ps:()=>ps,made:()=>made,L,win:()=>{made[L.T||0]=99;score=1e5;checkWin()}};
  size();fresh();
-  msg(OR?'Mode Orbite : les planètes sont attirées vers le centre.':UW?'Sous l’eau : les objets remontent vers la surface. Deux pareils fusionnent.':L.pre?'Le bocal est déjà un peu rempli.':'Deux fruits identiques fusionnent en un plus gros.');
+
  requestAnimationFrame(tick);
 }
