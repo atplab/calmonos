@@ -1523,3 +1523,14 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .kzcu{z-index:1}
 
 .kzwk{transform-origin:50% 100%}.kzwb{scale:.72;filter:brightness(.9)}
+/* Cuisine : Sushi des Vagues (bateau, la nuit) */
+.kzg.su{background:linear-gradient(#0c1034,#1a1a40 440px,#2a1c2a)}
+.kzg.su .kzct{background:linear-gradient(#c9935a 0 9px,#7a4a2a 9px 12px,transparent 12px),repeating-linear-gradient(0deg,#3a2a2a 0 2px,transparent 2px 12px),repeating-linear-gradient(90deg,#5a3a34 0 30px,#4a2e2a 30px 32px)}
+.kzg.su .kzgr{background:linear-gradient(#d9a870,#b8864a);box-shadow:inset 0 2px 0 rgba(255,255,255,.3)}
+.kzg.su .kzgs{background:repeating-linear-gradient(90deg,#e8c48a 0 18px,#dab47a 18px 20px);box-shadow:inset 0 0 0 2px rgba(120,70,30,.35)}
+.kzg.su .kzgs.ok{box-shadow:0 0 0 3px #ff9ad0,0 0 16px rgba(255,150,210,.5)}
+.kzg.su .kzi{background:linear-gradient(#fff5f8,#f2dce6);box-shadow:0 2px 0 #c98aa8;color:#5a2a4a}.kzg.su .kzi small{color:#5a2a4a}
+.kzg.su .kzfr{background:linear-gradient(#5a3a4a,#3a2434)}
+.kzpe{position:absolute;top:-12px;width:9px;height:6px;border-radius:60% 0;background:#ffb3cf;opacity:.8;animation:kzPe 11s linear infinite}
+@keyframes kzPe{0%{transform:translate(0,0) rotate(0)}50%{transform:translate(-30px,48vh) rotate(160deg)}100%{transform:translate(10px,95vh) rotate(320deg);opacity:0}}
+.kzcat .kzwb{width:50px;height:30px;animation-duration:.4s}.kzcat .kzwb svg{width:100%;height:100%}
