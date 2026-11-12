@@ -1,12 +1,12 @@
 /* ---------- Cuisine, mode arcade : les plats sont déjà prêts, il faut servir le bon, le plus vite possible ---------- */
 const KZAT=60000;
-const kzReach=rs=>UNL()||!rs||st.get(ckey('cuisine')+':'+(rs*10-1),false);
+const kzReach=rs=>UNL()||st.get(ckey('cuisine')+':'+(rs*10+9),false);
 function kzModeArea(){const m=st.get('kz:mode','');
  return`<div class="rcx-b"><div class="rcx-m"><div class="rcx-t"><small>Mode de jeu</small><span>${m==='arc'?'Sers les bons plats avant la fin du temps':'Prépare chaque commande'}</span></div><div class="plseg"><button class="${m?'':'on'}" data-a="kzMode" data-v="">Histoire</button><button class="${m==='arc'?'on':''}" data-a="kzMode" data-v="arc">Arcade</button></div></div>
-${m==='arc'?`<div class="kzabs">${['Burger','Hot-dog','Sushi'].map((n,rs)=>{const ok=kzReach(rs),b=st.get('kz:ar'+rs,0);return`<button class="kzab${ok?'':' lk'}" data-a="kzA" data-v="${rs}"${ok?'':' aria-disabled="true"'}><b>${n}</b><small>${ok?(b?'Record : '+b:'Pas encore de record'):'🔒 Niveau '+(rs*10+1)}</small></button>`}).join('')}</div>`:''}</div>`}
+${m==='arc'?`<div class="kzabs">${['Burger','Hot-dog','Sushi'].map((n,rs)=>{const ok=kzReach(rs),b=st.get('kz:ar'+rs,0);return`<button class="kzab${ok?'':' lk'}" data-a="kzA" data-v="${rs}"${ok?'':' aria-disabled="true"'}><b>${n}</b><small>${ok?(b?'Record : '+b:'Pas encore de record'):'🔒 Après le niveau '+(rs*10+10)}</small></button>`}).join('')}</div>`:''}</div>`}
 var KZRUN=0;
 function kzArcade(rs){
- if(!kzReach(rs))return msg('Termine d’abord le niveau '+(rs*10)+' en mode histoire.');
+ if(!kzReach(rs))return msg('Termine d’abord le niveau '+(rs*10+10)+' en mode histoire.');
  const run=++KZRUN,ok=()=>run===KZRUN&&playing&&cur==='cuisine'&&!!document.getElementById('kzra');
  cur='cuisine';daily=false;lv=rs*10;playing=true;try{INFG=''}catch(e){}snap=null;theme('cuisine');KZR=rs;KZI.fries.n=rs===2?'soupe miso':'frites';KZI.drink.n=rs===2?'thé vert':'boisson';try{kzMu.style(rs)}catch(e){}
  const u=[];for(let i=rs*10;i<rs*10+10;i++)u.push(...KZU[i]);const by=k=>[...new Set(u.filter(x=>KZI[x].k===k))],buns=by('b'),prot=by('p'),tops=by('t');
