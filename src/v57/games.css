@@ -1612,3 +1612,4 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .gorl li .ghd{width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:inherit;display:grid;place-items:center;cursor:pointer;flex:none}
 .gorl li .ghd svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .gorl li.ghid>i,.gorl li.ghid>b{opacity:.4}.gorl li.ghid>b{text-decoration:line-through}
+.pg-planetes #m:empty{display:none}.pg-planetes .bkh{margin-top:-4px}
