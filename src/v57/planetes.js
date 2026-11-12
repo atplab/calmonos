@@ -6,7 +6,8 @@ const PLFN=['Cerise','Fraise','Raisin','Clémentine','Kaki','Pomme','Pêche','An
 const PLFC=[['#ff9aaa','#c8102e'],['#ffa08a','#e0302a'],['#d6b3ff','#6a2a9a'],['#ffd890','#ff8a1a'],['#ffbf7a','#e0601a'],['#ffb0a8','#d8202a'],['#ffe6d2','#ff8a6a'],['#fff2a0','#e0a82a'],['#e8ffc0','#86c64a'],['#8ae07a','#1f7a3a']];
 const PLWN=['Bulle','Perle','Oursin','Méduse','Coquillage','Poisson-globe','Tortue','Pieuvre','Poisson-lune','Baleine'];
 const PLWC=[['#ffffff','#8ad0ff'],['#ffffff','#d0c8e4'],['#d9b8ff','#5a2a8a'],['#ffe0f6','#c87ae0'],['#ffe8dc','#ff9a8a'],['#fff4b0','#e8b82a'],['#c8f0a0','#3a8a4a'],['#ffc0b0','#e0503a'],['#e4ecf6','#7a8aa8'],['#9ac4ff','#2a4a9a']];
-const plMd=()=>{try{const m=st.get('pl:mode','');return m==='orbite'||m==='eau'?m:''}catch(e){return''}};
+const plUnl=m=>{try{if(UNL()||!m)return true;if(m==='eau')return!!st.get('c:planetes:19',false);return!!(st.get('c:planetes:49',false)||st.get('c:planetes_e:49',false))}catch(e){return false}};
+const plMd=()=>{try{const m=st.get('pl:mode','');return(m==='orbite'||m==='eau')&&plUnl(m)?m:''}catch(e){return''}};
 function plLv(l){const T=Math.min(8,3+Math.floor(l/5)),sc=(l>=20&&l%5===4&&l!==39)?800+(l-20)*120:0;
  return{T:sc?0:T,N:sc?0:(l===39?2:T>=7?1:1+(l%5>=3?1:0)),sc,km:Math.min(4,2+Math.floor(l/10)),pre:l%4===3?6+Math.min(6,l>>2):0}}
 

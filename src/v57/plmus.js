@@ -76,7 +76,7 @@ Object.assign(act,{plr:plDraw,plx:()=>{const o=document.getElementById('plo');if
  plnx:v=>plStart(PLC+(+v||1)),
  pls:()=>{PLK=null;PLPA=false;PLE=0;plApply();plSess();plDraw()}});
 
-act.plMode=v=>{try{st.set('pl:mode',v||'')}catch(e){}hub('planetes')};
+act.plMode=v=>{if(v&&!plUnl(v))return msg(v==='eau'?'Le mode Sous l’eau se débloque après le niveau 20 des Fruits.':'Le mode Planètes se débloque après le niveau 50 des Fruits ou de Sous l’eau.');try{st.set('pl:mode',v||'')}catch(e){}hub('planetes')};
 
 act.socPlay=v=>{const[k,f]=String(v).split(':');if(!f||!SO.P[f])return;const w=(fn,ms)=>setTimeout(fn,ms);
  if(k==='chess'){act.open('chess');w(()=>act.chInv(f),80)}
@@ -141,7 +141,7 @@ const infOk=g=>UNL()||g==='blocs'||infDone(g)>=20;
 function infCard(g){const b=infBest(g);if(!infOk(g))return`<section class="rc plmode" data-g="🔒"><div class="rc-t"><small>Mode infini</small><b>Verrouillé</b><span>Termine 20 niveaux pour le débloquer (${infDone(g)} / 20).</span></div></section>`;
  return`<section class="rc plmode" data-g="∞"><div class="rc-t"><small>Mode infini</small><b>Sans fin</b><span>${g==='planetes'?'Avec le mode choisi ci-dessus. ':''}${b?'Record : '+b+' pts':'Pas encore de record'}</span></div><div class="infbt"><button class="btn" data-a="infGo" data-v="${g}">Jouer</button><button class="btn alt" data-a="infBd" data-v="${g}">${IC_LB}Classement</button></div></section>`}
 function plModeSeg(){const m=plMd();
- return`<div class="rcx-m"><div class="rcx-t"><small>Mode de jeu</small><span>${m==='orbite'?'Planètes attirées vers le centre':m==='eau'?'Les objets remontent vers la surface':'Les fruits tombent au fond'}</span></div><div class="plseg"><button class="${m?'':'on'}" data-a="plMode" data-v="">Fruits</button><button class="${m==='orbite'?'on':''}" data-a="plMode" data-v="orbite">Orbite</button><button class="${m==='eau'?'on':''}" data-a="plMode" data-v="eau">Sous l’eau</button></div></div>`}
+ return`<div class="rcx-m"><div class="rcx-t"><small>Mode de jeu</small><span>${m==='orbite'?'Planètes attirées vers le centre':m==='eau'?'Les objets remontent vers la surface':'Les fruits tombent au fond'}</span></div><div class="plseg"><button class="${m?'':'on'}" data-a="plMode" data-v="">Fruits</button><button class="${m==='eau'?'on':''}" data-a="plMode" data-v="eau">${plUnl('eau')?'':'🔒 '}Sous l’eau</button><button class="${m==='orbite'?'on':''}" data-a="plMode" data-v="orbite">${plUnl('orbite')?'':'🔒 '}Planètes</button></div></div>`}
 function anaArea(){
  const N=nl('ana'),dn=[...Array(N).keys()].filter(i=>st.get(ckey('ana')+':'+i,false)).length;
  if(!anaOn()){const k=[...Array(60).keys()].findIndex(i=>!st.get(ckey('mots')+':'+i,false)&&!st.get('k:mots:'+i,false));
