@@ -78,3 +78,8 @@ RR("'brick','planetes'],GD=","'brick','planetes','cuisine'],GD=")
 RR("ana:50,flow:75,","ana:50,cuisine:20,flow:75,")
 RR("cherche:4},rw=","cherche:4,cuisine:4},rw=")
 RR("const gSv=g=>","GSV.cuisine='<path d=\"M4 11q0-6 8-6t8 6z\"/><path d=\"M3.5 14h17\"/><path d=\"M4 17h16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z\"/><path d=\"M9 8h.01M13 7.5h.01\"/>';const gSv=g=>")
+# --- Cuisine : musiques ---
+RR("function pCross(r){",open('v57/kzmus.js').read()+"\nfunction pCross(r){")
+RR("(typeof fiMu==='object'&&fiMu.on)?.08:.6)","(typeof fiMu==='object'&&fiMu.on)||(typeof kzMu==='object'&&kzMu.on)?.08:.6)")
+RR("if(typeof fiMu==='object')fiMu.vol(p.music)}","if(typeof fiMu==='object')fiMu.vol(p.music);if(typeof kzMu==='object')kzMu.vol(p.music)}")
+RR("fiMus((PLK&&!PLPA)?PLK==='flow':id==='flow'&&!x&&!xa);","fiMus((PLK&&!PLPA)?PLK==='flow':id==='flow'&&!x&&!xa);kzMus(id==='cuisine'&&!x&&!xa);")

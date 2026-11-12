@@ -139,7 +139,7 @@ function kzLv(l){
   Q.push({o:{b,p,t:T.sort()},fries,drink,lk:(L*7+i*3)%KZL.length,p:Math.round(steps*(k+(seats-1)*.8)+4)})}
  return{L,hd,r,u,seats,plates,grills,nc,allow,Q}}
 function pCuis(r){
- const C=kzLv(lv),hd=C.hd;
+ const C=kzLv(lv),hd=C.hd;try{kzMu.style(hd)}catch(e){}
  const S={q:C.Q.map((x,i)=>({...x,id:i})),seat:Array(C.seats).fill(null),pl:Array.from({length:C.plates},()=>null),sel:0,gr:Array(C.grills).fill(null),fr:{n:0,c:null},dr:{n:0,c:null},hold:null,sv:0,ms:0,n:0};
  let hn=null,over=false,nh=C.L===0&&!st.get('kz:t',0),last='';
  snap=()=>null;
