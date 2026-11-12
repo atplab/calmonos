@@ -1503,7 +1503,7 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .kznote{font-size:12px;padding:8px 10px}
 /* Cuisine : ambiance de la salle */
 .kzam{position:absolute;inset:0;pointer-events:none;z-index:0}
-.kzaz{position:absolute;display:flex;align-items:flex-end;gap:0;width:96px;height:64px}.kzaz.z1{left:calc(33.3% - 48px)!important;right:auto!important;bottom:40px!important}.kzaz.z2{left:calc(66.6% - 48px)!important;right:auto!important;bottom:40px!important}
+.kzaz{position:absolute;display:flex;align-items:flex-end;gap:0;width:96px;height:64px}.kzaz.z1,.kzaz.z2{transform:scale(.72);transform-origin:50% 100%;bottom:calc(26px + 118px)!important;right:auto!important;filter:saturate(.85) brightness(.92)}.kzaz.z1{left:calc(33.3% - 48px)!important}.kzaz.z2{left:calc(66.6% - 48px)!important}
 .kzat{position:absolute;left:8px;bottom:0;width:80px;height:40px}
 .kzbench{position:absolute;left:4px;bottom:2px;width:88px;height:12px;border-radius:6px;background:#8a5a30;box-shadow:0 8px 0 -4px #6a4424}
 .kzaw{position:relative;width:44px;height:52px;z-index:1}.kzaw.fl{transform:scaleX(-1)}
@@ -1521,3 +1521,5 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 @keyframes kzWk{from{transform:translateX(-60px)}to{transform:translateX(calc(100vw + 20px))}}
 @keyframes kzWkR{from{transform:translateX(calc(100vw + 20px))}to{transform:translateX(-60px)}}
 .kzcu{z-index:1}
+
+.kzwk{transform-origin:50% 100%}.kzwb{scale:.72;filter:brightness(.9)}

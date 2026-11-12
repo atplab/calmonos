@@ -215,9 +215,9 @@ function kzAmb(hd,L0){
  const a=hd?
   `<div class="kzaz z1"><span class="kzbench"></span><div class="kzaw eat">${G(1,'happy',1)}${food(dog)}</div><div class="kzaw eat d2">${G(4,'wait',2)}${food(dog,'r')}</div>${say('…',1)}${say('♪',5.5)}</div>
    <div class="kzaz z2">${tb}<div class="kzaw eat d3">${G(7,'happy',3)}${food(kzDrink(),'dk')}</div>${say('♥',3)}</div>
-   <div class="kzwk" style="bottom:23%;animation-duration:30s"><span class="kzwb">${G(2,'wait',4)}</span></div>
-   <div class="kzwk rv" style="bottom:25%;animation-duration:38s;animation-delay:-14s"><span class="kzwb">${G(9,'happy',5)}</span></div>`
+   <div class="kzwk" style="bottom:calc(26px + 150px);animation-duration:30s"><span class="kzwb">${G(2,'wait',4)}</span></div>
+   <div class="kzwk rv" style="bottom:calc(26px + 158px);animation-duration:38s;animation-delay:-14s"><span class="kzwb">${G(9,'happy',5)}</span></div>`
  :`<div class="kzaz z1">${tb}<div class="kzaw eat">${G(1,'happy',1)}${food(burg)}</div><div class="kzaw eat d2 fl">${G(5,'wait',2)}${food(burg,'r')}</div>${say('…',1)}${say('Miam !',6)}</div>
    <div class="kzaz z2">${tb}<div class="kzaw eat d3">${G(3,'wait',3)}${food(kzFries())}</div><div class="kzaw eat fl">${G(8,'happy',4)}${food(burg,'r')}</div>${say('♥',3.5)}${say('…',8)}</div>
-   <div class="kzwk" style="bottom:24%;animation-duration:34s;animation-delay:-6s"><span class="kzwb">${G(6,'happy',5)}<span class="kzty">${burg}</span></span></div>`;
+   <div class="kzwk" style="bottom:calc(26px + 152px);animation-duration:34s;animation-delay:-6s"><span class="kzwb">${G(6,'happy',5)}<span class="kzty">${burg}</span></span></div>`;
  return`<div class="kzam" aria-hidden="true">${a.split('\n').map(x=>x.trim()).sort((p,q)=>(q.startsWith('<div class="kzwk')?1:0)-(p.startsWith('<div class="kzwk')?1:0)).join('')}</div>`}
