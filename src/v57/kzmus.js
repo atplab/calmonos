@@ -15,6 +15,9 @@ var kzMu={on:false,L:null,T:0,s:0,t:0,off:0,k:'bu',
    CH:[[39,[54,58,61,65]],[44,[54,58,60,63]],[39,[54,58,61,65]],[44,[54,58,60,63]],[35,[54,58,59,63]],[46,[53,56,61,65]],[44,[54,59,63,66]],[46,[53,56,58,62]]],
    PH:[[[0,75,2],[2,78,2],[4,80,1],[5,78,1],[6,75,2],[10,73,2],[12,75,4]],[[0,70,2],[3,73,1],[4,75,2],[6,78,4],[12,80,2],[14,78,2]],[[0,82,3],[3,80,1],[4,78,2],[6,80,2],[8,75,6]],[[4,73,2],[6,75,2],[8,78,2],[10,80,2],[12,82,4]],
     [[0,85,4],[4,82,2],[6,80,2],[8,78,4],[12,75,4]],[[0,77,2],[2,78,2],[4,80,4],[8,77,2],[10,73,2],[12,70,4]],[[0,71,2],[2,75,2],[4,78,2],[6,82,2],[8,80,6],[14,78,2]],[[0,77,4],[4,74,2],[6,73,2],[8,70,8]]]},
+  pe:{E:.42,sw:0, /* Pêche : ballade nocturne en ré, guitare en arpèges, flûte rare, basse ronde */
+   CH:[[38,[62,66,69,73]],[35,[62,66,69,71]],[31,[62,66,67,71]],[33,[61,64,66,69]],[40,[62,64,67,71]],[42,[61,64,66,69]],[31,[62,66,67,71]],[33,[61,64,69,73]]],
+   PH:[[[2,78,4]],[[0,76,2],[4,74,4]],[[2,74,2],[4,71,4]],[[0,73,6]],[[2,76,4]],[[0,78,2],[4,81,4]],[[2,79,2],[4,78,4]],[[0,76,6]]]},
   hd:{E:.27,sw:0,
    CH:[[41,[64,65,69,72]],[38,[60,62,65,69]],[43,[62,65,67,70]],[36,[64,67,70,72]],[41,[64,65,69,72]],[46,[62,65,69,70]],[43,[62,65,67,70]],[36,[64,67,70,72]]],
    PH:[[[0,81,3],[3,79,1],[4,77,4]],[[0,76,2],[2,77,2],[4,81,4]],[[0,79,3],[3,77,1],[4,74,2],[6,77,2]],[[0,76,8]],
@@ -42,7 +45,7 @@ var kzMu={on:false,L:null,T:0,s:0,t:0,off:0,k:'bu',
    g.gain.setValueAtTime(.0001,tt);g.gain.exponentialRampToValueAtTime(.006,tt+.03);g.gain.exponentialRampToValueAtTime(.0001,tt+d);o.connect(g);g.connect(bp);o.start(tt);o.stop(tt+d+.02);tt+=d+.03+Math.random()*.06}},
  clink(t,bus,v=.012){const a=AC,f=2300+Math.random()*1500;[[1,1],[2.7,.3]].forEach(([m,k])=>{const o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.value=f*m;this.env(g,t,v*k,.002,.25);o.connect(g);g.connect(bus);o.start(t);o.stop(t+.3)})},
  ding(t,bus){[1318.5,1760].forEach((f,i)=>{const a=AC,o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.value=f;this.env(g,t+i*.12,.02,.004,.9);o.connect(g);g.connect(bus);o.start(t+i*.12);o.stop(t+i*.12+1)})},
- amb(t,j,L){if(Math.random()<.22)this.talk(t,L.amb);if(Math.random()<.05)this.clink(t+Math.random()*.2,L.amb);
+ amb(t,j,L){if(this.k==='pe'){if(Math.random()<.05)this.plop(t+Math.random()*.3,L.amb);if(Math.random()<.008)this.owl(t,L.amb);return}if(Math.random()<.22)this.talk(t,L.amb);if(Math.random()<.05)this.clink(t+Math.random()*.2,L.amb);
   if(j===0&&Math.random()<(this.k==='su'?.02:.04))this.ding(t,L.amb);if(this.k==='hd'&&j===4&&Math.random()<.03){this.clink(t,L.amb,.02);this.clink(t+.09,L.amb,.02)}},
  /* clavinet : petite note pincée, brillante et courte */
  clav(f,t,d,v,bus){const a=AC,o=a.createOscillator(),g=a.createGain(),lp=a.createBiquadFilter();o.type='sawtooth';o.frequency.value=f;lp.type='lowpass';lp.frequency.setValueAtTime(2600,t);lp.frequency.exponentialRampToValueAtTime(700,t+d);this.env(g,t,v,.004,d);o.connect(lp);lp.connect(g);g.connect(bus);o.start(t);o.stop(t+d+.05)},
@@ -56,13 +59,20 @@ var kzMu={on:false,L:null,T:0,s:0,t:0,off:0,k:'bu',
   [['sawtooth',1,1],['square',1.003,.5]].forEach(([ty,m,k])=>{const o=a.createOscillator(),gg=a.createGain();o.type=ty;o.frequency.value=f*m;lg.connect(o.frequency);gg.gain.value=k;o.connect(gg);gg.connect(lp);o.start(t);o.stop(t+d+.15)});lf.start(t);lf.stop(t+d+.15)},
  koto(f,t,v,bus){const a=AC;[[1,1,.6],[2,.35,.3],[3,.12,.15]].forEach(([m,k,dd])=>{const o=a.createOscillator(),g=a.createGain();o.type=m===1?'triangle':'sine';o.frequency.setValueAtTime(f*m*1.01,t);o.frequency.exponentialRampToValueAtTime(f*m,t+.03);this.env(g,t,v*k,.003,dd);o.connect(g);g.connect(bus);o.start(t);o.stop(t+dd+.05)})},
  kick(t,bus){const a=AC,o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.setValueAtTime(110,t);o.frequency.exponentialRampToValueAtTime(45,t+.12);this.env(g,t,.12,.004,.2);o.connect(g);g.connect(bus);o.start(t);o.stop(t+.25)},
+ plop(t,bus){const a=AC,o=a.createOscillator(),g=a.createGain(),f=500+Math.random()*400;o.type='sine';o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(f*.35,t+.12);this.env(g,t,.018,.004,.16);o.connect(g);g.connect(bus);o.start(t);o.stop(t+.2)},
+ owl(t,bus){[0,.5,.75].forEach((d,i)=>{const a=AC,o=a.createOscillator(),g=a.createGain(),f=i?360:380;o.type='sine';o.frequency.setValueAtTime(f,t+d);o.frequency.linearRampToValueAtTime(f*.92,t+d+.3);g.gain.setValueAtTime(.0001,t+d);g.gain.exponentialRampToValueAtTime(.012,t+d+.08);g.gain.exponentialRampToValueAtTime(.0001,t+d+.34);o.connect(g);g.connect(bus);o.start(t+d);o.stop(t+d+.4)})},
  tok(t,v,bus,f=1100){const a=AC,o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(f*.62,t+.04);this.env(g,t,v,.003,.06);o.connect(g);g.connect(bus);o.start(t);o.stop(t+.08)},
- style(x){const k=x===2?'su':x?'hd':'bu';if(k===this.k)return;this.k=k;this.s=0;this.t=0},
+ style(x){const k=x==='pe'?'pe':x===2?'su':x?'hd':'bu';if(k===this.k)return;this.k=k;this.s=0;this.t=0},
  tick(){const L=this.L,a=typeof AC!=='undefined'?AC:null;if(!L||!a)return;if(this.t<a.currentTime)this.t=a.currentTime+.12;
   const G=this.SG[this.k],E=G.E;
   const N=G.n||8;
   while(this.t<a.currentTime+.5){const s=this.s,c=Math.floor(s/N)%8,j=s%N,[r,T]=G.CH[c],t0=this.t,t=t0+(j%2?E*G.sw:0);
-   if(this.k==='su'){const nr=G.CH[(c+1)%8][0];
+   if(this.k==='pe'){
+    if(j===0)this.bass(this.mf(r+12),t,E*6,.12,L.dry);
+    const A=[0,1,2,3,2,1,2,3][j];this.koto(this.mf(T[A]),t+(j%2?E*.04:0),.022,L.bus);
+    if(j===4&&c%2)this.ep(this.mf(T[0]+12),t,E*3,.012,L.bus);
+    const m=L.M.pe[s];if(m)this.fl(this.mf(m[0]),t,m[1]*E,.045,L.bus)}
+   else if(this.k==='su'){const nr=G.CH[(c+1)%8][0];
     /* basse slappée : fondamentale, « pop » à l’octave, petits glissements chromatiques autour de la tonique */
     const B={0:[r,2,.2],2:[r+12,1,.11],3:[r,1,.1],5:[r+1,1,.1],6:[r+2,2,.15],8:[r,1,.18],10:[r+12,1,.11],11:[r+10,1,.09],12:[r+7,1,.13],14:[nr-1,1,.12],15:[nr-2+2*(c%2),1,.08]}[j];if(B)this.bass(this.mf(B[0]),t,E*B[1]*1.15,B[2],L.dry);
     /* batterie sans souffle : grosse caisse, caisse claire « clap », charleston en doubles croches */

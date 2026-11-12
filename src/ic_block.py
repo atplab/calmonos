@@ -82,9 +82,18 @@ RR("const gSv=g=>","GSV.cuisine='<path d=\"M4 11q0-6 8-6t8 6z\"/><path d=\"M3.5 
 RR("function pCross(r){",open('v57/kzmus.js').read()+"\nfunction pCross(r){")
 RR("(typeof fiMu==='object'&&fiMu.on)?.08:.6)","(typeof fiMu==='object'&&fiMu.on)||(typeof kzMu==='object'&&kzMu.on)?.08:.6)")
 RR("if(typeof fiMu==='object')fiMu.vol(p.music)}","if(typeof fiMu==='object')fiMu.vol(p.music);if(typeof kzMu==='object')kzMu.vol(p.music)}")
-RR("fiMus((PLK&&!PLPA)?PLK==='flow':id==='flow'&&!x&&!xa);","fiMus((PLK&&!PLPA)?PLK==='flow':id==='flow'&&!x&&!xa);kzMus(id==='cuisine'&&!x&&!xa);")
+RR("fiMus((PLK&&!PLPA)?PLK==='flow':id==='flow'&&!x&&!xa);","fiMus((PLK&&!PLPA)?PLK==='flow':id==='flow'&&!x&&!xa);kzMus((id==='cuisine'||id==='peche')&&!x&&!xa);")
 RR("const GSTEP={flow:0,","const GSTEP={cuisine:50,flow:0,")
 # --- Cuisine : mode arcade ---
 RR("function pCross(r){",open('v57/kzarc.js').read()+"\nfunction pCross(r){")
 RR("${INFN[id]||id==='mots'||id==='ana'?infArea(id):''}","${INFN[id]||id==='mots'||id==='ana'?infArea(id):''}${id==='cuisine'?kzModeArea():''}")
 RR('<section class="rc rcx pt-${id}"','<section class="rc rcx pt-${id}${id===\'cuisine\'?\' kzc\'+(st.get(\'kz:mode\',\'\')===\'arc\'?\' kzarc\':\'\'):\'\'}"')
+
+# --- nouveau jeu : Pêche ---
+RR("function pCross(r){",open('v57/peche.js').read()+"\nfunction pCross(r){")
+RR("const SP=[{id:'scrabble'","const SP=[{id:'peche',n:'Pêche',ic:'🎣',a:'#5aa8d8',b:'#2a3a7a',t:'Le lac aux étoiles',s:'Sur le ponton, Zeni lance sa ligne dans le lac endormi. Pêche tranquillement, vends tes prises contre des flocons… et peut-être croiseras-tu un poisson légendaire.',sp:''},{id:'scrabble'")
+RR("v==='airhockey'?ahHub():","v==='airhockey'?ahHub():v==='peche'?pePlay():")
+RR("const gSv=g=>","GSV.peche='<path d=\"M3 13c3-4 9-4 12 0-3 4-9 4-12 0z\"/><path d=\"M15 13l4-3v6z\"/><path d=\"M18 3v4a2 2 0 0 1-4 0\"/>';const gSv=g=>")
+RR("FISH.push({id:'noel',n:'Poisson Père Noël',p:520,sh:'std',b:'#e8434f',f:'#ffd2d2',sp:'#fff',sa:1,sz:1.12,lk:20});","FISH.push({id:'noel',n:'Poisson Père Noël',p:520,sh:'std',b:'#e8434f',f:'#ffd2d2',sp:'#fff',sa:1,sz:1.12,lk:20});PEF.filter(f=>f.aq).forEach(f=>FISH.push({...f,p:2000,pe:1}));")
+RR(""":`<button class="sb buy ${!UNL()&&fl<f.p?'low':''}" data-a="aqbuy" data-v="f:${f.id}">Acheter · ${f.p} ❄</button>`""",""":f.pe?`<span class="sb lk">Légendaire · à pêcher</span>`:`<button class="sb buy ${!UNL()&&fl<f.p?'low':''}" data-a="aqbuy" data-v="f:${f.id}">Acheter · ${f.p} ❄</button>`""")
+RR("aqBuy=function(v){const[k,id]=v.split(':'),a","aqBuy=function(v){if(/^f:/.test(v)&&(FISH.find(x=>'f:'+x.id===v)||{}).pe)return;const[k,id]=v.split(':'),a")
