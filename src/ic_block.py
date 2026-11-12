@@ -126,3 +126,12 @@ RR("function gLock(id){return ","function gLock(id){if(id==='peche'){try{return 
 RR("if(s)s.textContent='🔒 Étape '+GSTEP[id];","if(s)s.textContent=id==='peche'?'🔒 Aquarium niveau 2':'🔒 Étape '+GSTEP[id];")
 RR("gLk:v=>{const g=ALL.find(x=>x.id===v),n=GSTEP[v]||0;gToast(","gLk:v=>{const g=ALL.find(x=>x.id===v),n=GSTEP[v]||0;if(v==='peche'){gToast('La pêche se débloque quand ton aquarium atteint le niveau 2.');return}gToast(")
 RR("caMode=v=>{try{","caMode=v=>{if(v==='lk'){msg('Le mode Cascade se débloque après avoir terminé le niveau 100.');return}try{")
+# --- Planète : fruits / orbite / sous l'eau ; nouveau jeu Blocs (caché pour l'instant) ---
+RR("t:'Les planètes qui fusionnent',s:'Laisse tomber des planètes dans le bocal. Deux planètes identiques fusionnent en une plus grosse. Fais naître la planète de l’objectif sans dépasser la ligne.'","t:'Fruits, planètes et trésors marins',s:'Laisse tomber des fruits dans le bocal : deux pareils fusionnent en un plus gros. En mode Orbite, ce sont des planètes attirées vers le centre ; sous l’eau, des trésors marins qui remontent vers la surface. Fais naître celui de l’objectif sans dépasser la ligne.'")
+RR("function pCross(r){",open('v57/blocs.js').read()+"\nfunction pCross(r){")
+RR("flow:pFlow,cuisine:pCuis,","flow:pFlow,cuisine:pCuis,blocs:pBlocs,")
+RR("\n{id:'cuisine',n:'Cuisine'","\n{id:'blocs',n:'Blocs',ic:'▦',a:'#5aa8ff',b:'#2a3a8a',nox:1,t:'Les blocs de couleur',s:'Glisse les pièces dans la grille de 8 × 8. Une ligne ou une colonne pleine disparaît. Trois pièces arrivent à la fois : elles rentrent toujours, mais il faut bien les placer. Atteins le score de l’objectif.',w:'La grille scintille de toutes ses couleurs.'},\n{id:'cuisine',n:'Cuisine'")
+RR("'brick','planetes','cuisine'],GD=","'brick','planetes','cuisine','blocs'],GD=")
+RR("ana:50,cuisine:30,","ana:50,cuisine:30,blocs:40,")
+RR("const GAV={","const GAV={blocs:[2099,0,1],")
+RR("const gSv=g=>","GSV.blocs='<rect x=\"4\" y=\"4\" width=\"7\" height=\"7\" rx=\"1.5\"/><rect x=\"13\" y=\"4\" width=\"7\" height=\"7\" rx=\"1.5\"/><rect x=\"4\" y=\"13\" width=\"7\" height=\"7\" rx=\"1.5\"/>';const gSv=g=>")

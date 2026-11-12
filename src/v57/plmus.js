@@ -84,9 +84,9 @@ act.socPlay=v=>{const[k,f]=String(v).split(':');if(!f||!SO.P[f])return;const w=(
  else if(k==='uno'){act.open('uno');w(()=>{UN.cfg.fr=[f];act.unMake()},80)}
  else if(k==='airhockey'){act.open('airhockey');w(()=>act.ahAsk(f),80)}};
 
-const INFN={g2048:1,tetris:1,planetes:1,caches:1};
-const infKey=g=>g==='planetes'?(st.get('pl:mode','')==='orbite'?'o':'c'):'s';
-const infKeyP=g=>g==='planetes'?'p'+infKey(g):g==='caches'?'ca':g;
+const INFN={g2048:1,tetris:1,planetes:1,caches:1,blocs:1};
+const infKey=g=>g==='planetes'?(st.get('pl:mode','')==='orbite'?'o':st.get('pl:mode','')==='eau'?'u':'c'):'s';
+const infKeyP=g=>g==='planetes'?'p'+infKey(g):g==='caches'?'ca':g==='blocs'?'bl':g;
 const infTop=g=>{let a=null;try{a=(st.get('inf:'+g,{})||{})[infKey(g)]}catch(e){}if(typeof a==='number')a=[{s:a,t:0}];return Array.isArray(a)?a:[]};
 const infBest=g=>(infTop(g)[0]||{s:0}).s;
 const infAll=()=>{const k={};[['g2048','g2048','s'],['tetris','tetris','s'],['pc','planetes','c'],['po','planetes','o'],['ca','caches','s']].forEach(([q,g,m])=>{let a=null;try{a=(st.get('inf:'+g,{})||{})[m]}catch(e){}if(typeof a==='number')a=[{s:a}];const b=Array.isArray(a)&&a[0]?a[0].s:0;if(b>0)k[q]=b});return k};
@@ -137,11 +137,11 @@ Object.assign(act,{infBd:v=>{const d=$('#infd');if(d&&d.classList.contains('infi
  infSh:v=>{if(!/^[pfn]$/.test(v))return;try{st.set('inf:sh',v);socMine()}catch(e){}try{infLbSync()}catch(e){}const d=$('#infd');if(!d)return;if(d.dataset.t==='ask'){const g=d.dataset.pg;d.remove();if(g)act.infGo(g)}else infBoard(d.dataset.g,d.dataset.t)},
  infSet:v=>{if(!/^[pfn]$/.test(v))return;try{st.set('inf:sh',v);socMine()}catch(e){}try{infLbSync()}catch(e){}prefScreen()}});
 const infDone=g=>{let n=0;try{for(let l=0;l<nl(g);l++)if(st.get(ckey(g)+':'+l,false))n++}catch(e){}return n};
-const infOk=g=>UNL()||infDone(g)>=20;
+const infOk=g=>UNL()||g==='blocs'||infDone(g)>=20;
 function infCard(g){const b=infBest(g);if(!infOk(g))return`<section class="rc plmode" data-g="🔒"><div class="rc-t"><small>Mode infini</small><b>Verrouillé</b><span>Termine 20 niveaux pour le débloquer (${infDone(g)} / 20).</span></div></section>`;
  return`<section class="rc plmode" data-g="∞"><div class="rc-t"><small>Mode infini</small><b>Sans fin</b><span>${g==='planetes'?'Avec le mode choisi ci-dessus. ':''}${b?'Record : '+b+' pts':'Pas encore de record'}</span></div><div class="infbt"><button class="btn" data-a="infGo" data-v="${g}">Jouer</button><button class="btn alt" data-a="infBd" data-v="${g}">${IC_LB}Classement</button></div></section>`}
-function plModeSeg(){let m='';try{m=st.get('pl:mode','')}catch(e){}
- return`<div class="rcx-m"><div class="rcx-t"><small>Mode de jeu</small><span>${m==='orbite'?'Attirées vers le centre':'Tombent au fond'}</span></div><div class="plseg"><button class="${m?'':'on'}" data-a="plMode" data-v="">Classique</button><button class="${m==='orbite'?'on':''}" data-a="plMode" data-v="orbite">Orbite</button></div></div>`}
+function plModeSeg(){const m=plMd();
+ return`<div class="rcx-m"><div class="rcx-t"><small>Mode de jeu</small><span>${m==='orbite'?'Planètes attirées vers le centre':m==='eau'?'Les objets remontent vers la surface':'Les fruits tombent au fond'}</span></div><div class="plseg"><button class="${m?'':'on'}" data-a="plMode" data-v="">Fruits</button><button class="${m==='orbite'?'on':''}" data-a="plMode" data-v="orbite">Orbite</button><button class="${m==='eau'?'on':''}" data-a="plMode" data-v="eau">Sous l’eau</button></div></div>`}
 function anaArea(){
  const N=nl('ana'),dn=[...Array(N).keys()].filter(i=>st.get(ckey('ana')+':'+i,false)).length;
  if(!anaOn()){const k=[...Array(60).keys()].findIndex(i=>!st.get(ckey('mots')+':'+i,false)&&!st.get('k:mots:'+i,false));
@@ -155,4 +155,4 @@ function infArea(g){if(g==='mots'||g==='ana')return wdArea(g);const ok=infOk(g),
 function caSeg(){const m=caOn();return`<div class="rcx-m"><div class="rcx-t"><small>Mode de jeu</small><span>${m?'Les lettres tombent':'Relie les lettres'}</span></div><div class="plseg"><button class="${m?'':'on'}" data-a="caMode" data-v="">Classique</button><button class="${m?'on':''}" data-a="caMode" data-v="cascade">Cascade</button></div></div>`}
 act.caMode=v=>{try{st.set('ca:mode',v==='cascade'?'cascade':'')}catch(e){}hub('caches')};
 act.wdMode=v=>{if(v==='mots'||v==='ana')hub(v)};
-act.infGo=v=>{if(!INFN[v]||gLock(v)||gHid(v)||!infOk(v))return;if(infShr()===''&&window.claude&&window.claude.use)return infAsk(v);INFG=v;cur=v;daily=false;lv=0;playing=true;wsG=null;theme(v,false);({g2048:p2048,tetris:pTetris,planetes:pPlan,caches:pCasc})[v](undefined);window.scrollTo(0,0)};
+act.infGo=v=>{if(!INFN[v]||gLock(v)||gHid(v)||!infOk(v))return;if(infShr()===''&&window.claude&&window.claude.use)return infAsk(v);INFG=v;cur=v;daily=false;lv=0;playing=true;wsG=null;theme(v,false);({g2048:p2048,tetris:pTetris,planetes:pPlan,caches:pCasc,blocs:pBlocs})[v](undefined);window.scrollTo(0,0)};
