@@ -1,16 +1,13 @@
-menu mue nue une
-rime mire émir
-robe orbe
-rame mare arme âme mer
-pâte tape pat
 fruit fuir tir
 prune pure pur rue une nue
+menu mue nue une
 sucre curé écru cure sur rue
 trône note ton net ont
 carte trace écart acte race arc car rat
 marin main mari ami air
 ourse rose user sur rue roue ose
 grain rang gain air
+rime mire émir
 océan canoë acné âne once
 crêpe perce père pré
 ronce corne once cône
@@ -18,6 +15,7 @@ ruche cure écru
 tigre gîte rite tir gré
 olive voile vole vol loi vie
 paire pire aire prie air
+robe orbe
 linge ligne gel lie nie gin
 sorte store rose ôter sort
 épine peine pie épi nie
@@ -25,12 +23,14 @@ talon tonal lot ton
 aigle agile gale gel lie île
 sirop pois roi pris ris
 gerbe berge gré
+rame mare arme âme mer
 lever lèvre rêve ver levé
 ronde rond onde ode
 paume puma âme mue
 ortie trio rite tire roi toi
 cadre race arc car
 lotus tous lots sol
+pâte tape pat
 merle mêler mer
 poste pote stop pot
 tuile luit lit île
