@@ -107,3 +107,6 @@ function prefScreen(){""")
 # Son : la redirection vers un flux média (pour jouer en arrière-plan) causait des coupures et des notes faussées ; on ne l'utilise plus que quand l'appli est cachée
 RR("bgOn()?acHold():acFree()","(bgOn()&&document.hidden)?acHold():acFree()")
 RR("function acFree(){","document.addEventListener('visibilitychange',()=>{try{if(bgOn()&&document.hidden)acHold();else acFree()}catch(e){}});\nfunction acFree(){")
+# Arrière-plan : plus de flux média (coupures, notes faussées). Un élément audio quasi muet garde l'appli éveillée et le son reste direct.
+RR("function acHold(){if(!AC||!mg||AC.__md)return;","function acHold(){try{if(typeof plTone==='function'){plTone(true);AC.__tn=1}}catch(e){}return;if(!AC||!mg||AC.__md)return;")
+RR("function acFree(){if(!AC||!AC.__md)return;","function acFree(){try{if(AC&&AC.__tn&&!(PLK&&!PLPA)){plTone(false);AC.__tn=0}}catch(e){}if(!AC||!AC.__md)return;")
