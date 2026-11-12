@@ -69,3 +69,4 @@ try{if(CHART.length===30&&!window.__chfix){window.__chfix=1;[CHART[11],CHART[19]
 try{if(!st.get('chm30',0)){st.set('chm30',1);for(let i=9;i>=0;i--){const a=20+i,b=30+i;for(const pre of ['c:cherche:','k:cherche:','p:cherche:']){const v=st.get(pre+a,undefined);if(v!==undefined&&v!==null&&v!==false&&v!==''){st.set(pre+b,v);st.set(pre+a,pre==='p:cherche:'?null:false)}}}}}catch(e){}
 </script>
 </body>""")
+RR("""${sv.sty!=null?'<small class="note" style="margin:0">Mode histoire</small>':''}</div>${sv.sty!=null?'':`<p class="note" style="margin:0 0 12px">Contre ${sv.S.length-1} bot${sv.S.length>2?'s':''}</p>`}""","""<small class="note" style="margin:0">${sv.sty!=null?'Mode histoire':'Contre '+(sv.S.length-1)+' bot'+(sv.S.length>2?'s':'')}</small></div>""")
