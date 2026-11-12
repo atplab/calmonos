@@ -147,7 +147,7 @@ function pCuis(r){
  const S={q:C.Q.map((x,i)=>({...x,id:i})),seat:Array(C.seats).fill(null),pl:Array.from({length:C.plates},()=>null),sel:0,gr:Array(C.grills).fill(null),fr:{n:0,c:null},dr:{n:0,c:null},hold:null,sv:0,ms:0,n:0};
  let hn=null,over=false,nh=(C.L===0&&!st.get('kz:t',0))||(C.L===20&&!st.get('kz:t2',0)),last='';
  snap=()=>null;
- const T=(f,ms)=>setTimeout(()=>{if(playing&&cur==='cuisine'&&document.getElementById('kzg'))f()},ms);
+ const run=++KZRUN,T=(f,ms)=>setTimeout(()=>{if(run===KZRUN&&playing&&cur==='cuisine'&&document.getElementById('kzg'))f()},ms);
  const arrive=i=>{if(S.seat[i]||!S.q.length||over)return;const c=S.q.shift();S.seat[i]={...c,m:c.p,got:{o:0,fries:0,drink:0},st:'in'};sfx(660,.08);d();T(()=>{const s=S.seat[i];if(s&&s.st==='in'){s.st='wait';d()}},950)};
  const desc=o=>[o.b,o.p,...o.t].filter(Boolean).map(x=>KZI[x].n).join(', ');
  const dname=o=>o.b==='ph'||o.b==='pb'?'un hot-dog':o.b==='ni'?'des nigiris':o.b==='mk'?'des makis':'un burger';

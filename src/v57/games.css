@@ -1556,3 +1556,4 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .kzrd.nw{animation:kzPop .3s ease-out}.kzrd.no{animation:kzNo .35s}
 @keyframes kzNo{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 .kzbig{font-size:30px;font-weight:800;margin:4px 0}.kzbr{display:flex;gap:8px;justify-content:center}.kzbr .btn{margin:0}
+.kzrd.ok{animation:kzOk .4s ease-out}@keyframes kzOk{40%{transform:scale(1.06);box-shadow:0 0 0 4px #8af0b0,0 0 20px rgba(140,240,176,.6)}}
