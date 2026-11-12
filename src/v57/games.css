@@ -1588,3 +1588,9 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .pebf{width:56px;flex:none}.pebf svg{width:100%;height:auto}.pebt2{flex:1;min-width:0;display:flex;flex-direction:column}.pebt2 small{font-weight:700}
 .pebb{display:flex;flex-direction:column;gap:4px}
 @media(prefers-reduced-motion:reduce){.peg *{animation:none!important}}
+.pepi{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.pebkh{margin:8px 0 2px;font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+.pebkg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.pebki{display:flex;flex-direction:column;align-items:center;gap:2px;background:rgba(255,255,255,.08);border-radius:12px;padding:6px 4px}
+.pebki span{width:64px}.pebki svg{width:100%;height:auto}.pebki small{font-size:11px;text-align:center}
+.pebki.no svg{filter:brightness(0);opacity:.55}.pebki.no small{opacity:.6}

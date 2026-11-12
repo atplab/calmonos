@@ -39,16 +39,17 @@ ${[...Array(26)].map((_,i)=>{const x=i*16-4,h=26+(i*37)%24;return`<path d="M${x}
 <rect x="0" y="300" width="400" height="400" fill="url(#pew0)"/>
 ${[...Array(9)].map((_,i)=>`<path d="M${280+(i%3)*8-i*3} ${312+i*16}h${36-i*3}" stroke="#fff6d0" stroke-opacity="${.45-i*.04}" stroke-width="3" stroke-linecap="round"/>`).join('')}
 ${[...Array(14)].map((_,i)=>`<path class="perp" style="animation-delay:${-i*.7}s" d="M${(i*67)%380+10} ${330+(i*53)%330}q10 -4 20 0" stroke="#9ab8ff" stroke-opacity=".35" stroke-width="1.6" fill="none"/>`).join('')}
-<path d="M0 560h150l14 10v130H0Z" fill="#6a4a30"/><path d="M0 560h150" stroke="#e8ecff" stroke-width="6" stroke-linecap="round"/>${[20,60,100,140].map(x=>`<rect x="${x-5}" y="566" width="10" height="134" fill="#4a3220"/>`).join('')}${[...Array(6)].map((_,i)=>`<path d="M0 ${578+i*20}h150" stroke="#4a3220" stroke-width="2"/>`).join('')}
-<path d="M138 560v-46" stroke="#4a3220" stroke-width="4"/><circle cx="138" cy="508" r="7" fill="#ffcf7a"/><circle cx="138" cy="508" r="26" fill="#ffcf7a" opacity=".2"/></svg>`}
+</svg>`}
+const pePier=()=>`<svg class="pepi" viewBox="0 0 400 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><path d="M0 560h150l14 10v130H0Z" fill="#6a4a30"/><path d="M0 560h150" stroke="#e8ecff" stroke-width="6" stroke-linecap="round"/>${[20,60,100,140].map(x=>`<rect x="${x-5}" y="566" width="10" height="134" fill="#4a3220"/>`).join('')}${[...Array(6)].map((_,i)=>`<path d="M0 ${578+i*20}h150" stroke="#4a3220" stroke-width="2"/>`).join('')}
+<path d="M138 560v-46" stroke="#4a3220" stroke-width="4"/><circle cx="138" cy="508" r="7" fill="#ffcf7a"/><circle cx="138" cy="508" r="26" fill="#ffcf7a" opacity=".2"/></svg>`;
 function pePlay(){
  if(typeof gLock==='function'&&gLock('peche'))return;
  cur='peche';daily=false;playing=false;snap=null;theme('peche');try{kzMu.style('pe')}catch(e){}
  const run=++KZRUN,ok=()=>run===KZRUN&&cur==='peche'&&!!document.getElementById('peg');
- app.innerHTML=`<div class="peg" id="peg"><div class="pet"><button class="back" data-a="back" data-v="home">‹ Jeux</button><b>Pêche</b><div class="petr"><button class="hb pebk" data-a="peBag" aria-label="Ouvrir le panier"><span>🧺</span> <b id="pebn">0</b></button><div class="chip" id="pefl">❄ ${FLX()}</div></div></div>
-<div class="pesc" id="pesc">${peBg()}<svg class="peln" id="peln" aria-hidden="true"><path id="perd" d="" stroke="#8a5a30" stroke-width="3.2" stroke-linecap="round" fill="none"/><path id="pelp" d="" stroke="#e8ecff" stroke-opacity=".75" stroke-width="1.4" fill="none"/></svg>
+ app.innerHTML=`<div class="peg" id="peg"><div class="pet"><button class="back" data-a="back" data-v="home">‹ Jeux</button><b>Pêche</b><div class="petr"><button class="hb pebk" data-a="peBook" aria-label="Carnet de pêche"><span>📖</span></button><button class="hb pebk" data-a="peBag" aria-label="Ouvrir le panier"><span>🧺</span> <b id="pebn">0</b></button><div class="chip" id="pefl">❄ ${FLX()}</div></div></div>
+<div class="pesc" id="pesc">${peBg()}<div class="pesh"><i style="top:62%;animation-duration:26s"></i><i style="top:74%;animation-duration:34s;animation-delay:-12s"></i><i style="top:84%;animation-duration:30s;animation-delay:-20s" class="r"></i></div>${pePier()}<svg class="peln" id="peln" aria-hidden="true"><path id="perd" d="" stroke="#8a5a30" stroke-width="3.2" stroke-linecap="round" fill="none"/><path id="pelp" d="" stroke="#e8ecff" stroke-opacity=".75" stroke-width="1.4" fill="none"/></svg>
 <div class="pezn" id="pezn">${typeof qzGuy==='function'?qzGuy('ask'):''}</div>
-<div class="pesh"><i style="top:62%;animation-duration:26s"></i><i style="top:74%;animation-duration:34s;animation-delay:-12s"></i><i style="top:84%;animation-duration:30s;animation-delay:-20s" class="r"></i></div>
+
 <div class="pefl" id="pefo" hidden><svg viewBox="0 0 20 30" aria-hidden="true"><path d="M10 0v8" stroke="#fff" stroke-width="1.4"/><ellipse cx="10" cy="14" rx="6" ry="7" fill="#ff5a5a"/><path d="M4 14a6 7 0 0 0 12 0z" fill="#fff"/><ellipse cx="10" cy="21" rx="9" ry="2.2" fill="#9ab8ff" opacity=".5"/></svg><b class="pex" id="pex" hidden>!</b></div></div>
 <div class="pehud"><p class="m pem" id="m" role="status" aria-live="polite">Touche le lac pour lancer ta ligne.</p><div class="pepr" id="pepr" hidden><i id="pepi"></i></div><button class="btn pebt" id="pebt" data-a="peAct">Lancer</button></div><div class="peov" id="peov" hidden></div></div>`;
  $('#nav').hidden=true;mt='m';
@@ -86,6 +87,8 @@ function pePlay(){
   peHold:()=>{},
   peOk:()=>{const o=$('#peov');if(o){o.hidden=true;o.innerHTML=''}msg('Touche le lac pour relancer.')},
   peBag:()=>peBagShow(),
+  peBook:()=>{const o=$('#peov');if(!o)return;const seen=st.get('pe:seen',[]);
+   o.hidden=false;o.innerHTML=`<div class="pebag"><div class="pebh"><h2>Carnet de pêche</h2><button class="sb" data-a="peBagX">Fermer</button></div><p class="kzsm">${seen.length} / ${PEF.length} espèces découvertes</p>${PER.map(R=>{const L=PEF.filter(f=>f.r===R.k);return`<h3 class="pebkh" style="color:${R.c}">${R.n} · ${R.v} ❄</h3><div class="pebkg">${L.map(f=>{const ok=seen.includes(f.id);return`<div class="pebki${ok?'':' no'}"><span>${fishSVG(f)}</span><small>${ok?f.n:'???'}</small></div>`}).join('')}</div>`}).join('')}</div>`},
   peSell:v=>{const b=peBag(),f=PEF.find(x=>x.id===v);if(!f||!(b[v]>0))return;const n=v==='*'?0:b[v],g=n*peR(f.r).v;delete b[v];st.set('pe:bag',b);fl+=g;st.set('fl',fl);sfx(880,.2);msg('+'+g+' ❄');peBagShow();bagN();peFl()},
   peSellAll:()=>{const b=peBag();let g=0;for(const id in b){const f=PEF.find(x=>x.id===id);if(!f||f.r==='l')continue;g+=(b[id]|0)*peR(f.r).v;delete b[id]}if(!g)return msg('Rien à vendre pour l’instant.');st.set('pe:bag',b);fl+=g;st.set('fl',fl);sfx(880,.25);msg('Tu as vendu ta pêche : +'+g+' ❄');peBagShow();bagN();peFl()},
   peAq:v=>{const b=peBag(),f=PEF.find(x=>x.id===v&&x.aq);if(!f||!(b[v]>0))return;const a=aqRead();if(a.f[v])return msg('Ce poisson nage déjà dans ton aquarium.');
