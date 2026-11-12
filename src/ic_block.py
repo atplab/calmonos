@@ -33,3 +33,5 @@ _new='<div class="opts">${xon&&xdn<NLX?`'+_xmA+"`:''}"+_card+_dd+'</section>'+_b
 h=h[:_s]+_new+h[_dz+len(_de):]
 RR("ic:'⇄',a:'#c9a2f0',b:'#6b4aa8'","ic:'✦',a:'#a99cf0',b:'#5458AB'")
 RR("const gSv=g=>GSV[g.id]?","const gSv=g=>(g.id==='ana'&&(g=ALL.find(x=>x.id==='mots')),GSV[g.id])?")
+RR("""<section class="glass story pt-${id}"><i>${gSv(g)}</i><h2>${id==='ana'||id==='mots'?'Jeu de mots':g.t}</h2><p>${id==='ana'?ALL.find(x=>x.id==='mots').s:g.s}</p></section>""","""<details class="glass story pt-${id} gdet"${window.GDO!==false?' open':''}><summary><i>${gSv(g)}</i><h2>${id==='ana'||id==='mots'?'Jeu de mots':g.t}</h2><span class="gdc" aria-hidden="true"></span></summary><p>${id==='ana'?ALL.find(x=>x.id==='mots').s:g.s}</p></details>""")
+RR("</script>\n</body>","document.addEventListener('toggle',e=>{if(e.target.classList&&e.target.classList.contains('gdet'))window.GDO=e.target.open},true);\n</script>\n</body>")

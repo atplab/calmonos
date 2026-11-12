@@ -1406,3 +1406,10 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 /* ===== Cartes et menus : aucune animation (v383) ===== */
 .tile,.rc,.item,.btn,#app>.story,.opts>*,.opts>.rc,.opts>.dd,.tile::before,.rc::before,.tile:hover::before,.dd .lvg>*,.dd.open .lvg>*,.hsw .chg,.chg,#nav button.on,#nav button.on svg{animation:none!important}
 .tile,.rc,.item,.btn,.dd,.dd-h,.dd-h svg,.dd-l,.dd.open .dd-l,#nav button,#nav button svg,.chip,.hb{transition:none!important}
+/* Description du jeu repliable ; titre à droite du logo */
+.gdet summary{display:flex;align-items:center;gap:14px;cursor:pointer;list-style:none;-webkit-tap-highlight-color:transparent}
+.gdet summary::-webkit-details-marker{display:none}
+.gdet summary i{margin:0;flex:none}.gdet summary h2{margin:0;flex:1;min-width:0}
+.gdet .gdc{flex:none;width:10px;height:10px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);margin:-4px 4px 0 0;opacity:.8}
+.gdet[open] .gdc{transform:rotate(-135deg);margin:4px 4px 0 0}
+.gdet>p{margin:14px 0 0}
