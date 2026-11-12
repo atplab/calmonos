@@ -1,0 +1,5 @@
+_CJ=open('v57/casc.js').read()
+RR("function pSearch(r){",_CJ+"\nfunction pSearch(r){if(caOn()||INFG==='caches')return pCasc(r);return pSearch0(r)}\nfunction pSearch0(r){")
+RR(",nl=id=>NLS[id]||8,",",nl=id=>id==='caches'&&caOn()?CANL:(NLS[id]||8),")
+RR("ckey=g=>'c:'+(g==='planetes'&&st.get('pl:mode','')==='orbite'?'planetes_o':g);","ckey=g=>'c:'+(g==='planetes'&&st.get('pl:mode','')==='orbite'?'planetes_o':g==='caches'&&caOn()?'caches_c':g);")
+RR("app.dataset.hub=id;app.classList.toggle('hsw',same);const r=hub0(id)","app.dataset.hub=id;app.classList.toggle('hsw',same);try{const G=ALL.find(x=>x.id==='caches');if(G)G.nox=caOn()}catch(e){}const r=hub0(id)")

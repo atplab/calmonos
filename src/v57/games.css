@@ -1386,3 +1386,12 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .dd.open .lvg>:nth-child(n+25){animation-delay:.55s}
 
 .gsv{width:1.05em;height:1.05em;display:block}.btn .gsv,.fvc .gsv{display:inline-block;vertical-align:-.17em}.rc-ic .gsv{width:26px;height:26px}.rc.xl .rc-ic .gsv{width:34px;height:34px}.tile i .gsv,.story i .gsv{width:24px;height:24px}
+
+/* Cascade */
+.sc.ce{background:transparent!important;border-color:transparent!important;box-shadow:none!important;pointer-events:none}
+.sc.fl{animation:caF .6s cubic-bezier(.3,.8,.3,1) both}
+@keyframes caF{from{transform:translateY(calc(var(--k)*-110%));opacity:.7}to{transform:none;opacity:1}}
+.sc.ca.f{animation:caP .5s ease both}
+@keyframes caP{50%{transform:scale(1.12)}100%{transform:scale(.7);opacity:0}}
+.cah{display:flex;gap:8px;margin:0 0 8px}.cat{flex:1;text-align:center;padding:6px 4px;border-radius:14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18)}.cat small{display:block;font-size:11px;opacity:.75}.cat b{font-size:18px}
+.cab{height:6px;border-radius:99px;background:rgba(255,255,255,.16);margin:0 0 10px;overflow:hidden}.cab i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--a),#fff);transition:width .15s linear}

@@ -84,13 +84,13 @@ act.socPlay=v=>{const[k,f]=String(v).split(':');if(!f||!SO.P[f])return;const w=(
  else if(k==='uno'){act.open('uno');w(()=>{UN.cfg.fr=[f];act.unMake()},80)}
  else if(k==='airhockey'){act.open('airhockey');w(()=>act.ahAsk(f),80)}};
 
-const INFN={g2048:1,tetris:1,planetes:1};
+const INFN={g2048:1,tetris:1,planetes:1,caches:1};
 const infKey=g=>g==='planetes'?(st.get('pl:mode','')==='orbite'?'o':'c'):'s';
-const infKeyP=g=>g==='planetes'?'p'+infKey(g):g;
+const infKeyP=g=>g==='planetes'?'p'+infKey(g):g==='caches'?'ca':g;
 const infTop=g=>{let a=null;try{a=(st.get('inf:'+g,{})||{})[infKey(g)]}catch(e){}if(typeof a==='number')a=[{s:a,t:0}];return Array.isArray(a)?a:[]};
 const infBest=g=>(infTop(g)[0]||{s:0}).s;
-const infAll=()=>{const k={};[['g2048','g2048','s'],['tetris','tetris','s'],['pc','planetes','c'],['po','planetes','o']].forEach(([q,g,m])=>{let a=null;try{a=(st.get('inf:'+g,{})||{})[m]}catch(e){}if(typeof a==='number')a=[{s:a}];const b=Array.isArray(a)&&a[0]?a[0].s:0;if(b>0)k[q]=b});return k};
-const infAll5=()=>{const m={};[['g2048','g2048','s'],['tetris','tetris','s'],['pc','planetes','c'],['po','planetes','o']].forEach(([q,g,k])=>{let a=null;try{a=(st.get('inf:'+g,{})||{})[k]}catch(e){}if(typeof a==='number')a=[{s:a}];if(Array.isArray(a)&&a.length)m[q]=a.slice(0,30).map(x=>x.s).filter(n=>n>0)});return m};
+const infAll=()=>{const k={};[['g2048','g2048','s'],['tetris','tetris','s'],['pc','planetes','c'],['po','planetes','o'],['ca','caches','s']].forEach(([q,g,m])=>{let a=null;try{a=(st.get('inf:'+g,{})||{})[m]}catch(e){}if(typeof a==='number')a=[{s:a}];const b=Array.isArray(a)&&a[0]?a[0].s:0;if(b>0)k[q]=b});return k};
+const infAll5=()=>{const m={};[['g2048','g2048','s'],['tetris','tetris','s'],['pc','planetes','c'],['po','planetes','o'],['ca','caches','s']].forEach(([q,g,k])=>{let a=null;try{a=(st.get('inf:'+g,{})||{})[k]}catch(e){}if(typeof a==='number')a=[{s:a}];if(Array.isArray(a)&&a.length)m[q]=a.slice(0,30).map(x=>x.s).filter(n=>n>0)});return m};
 const infSave=(g,s)=>{if(!(s>0))return false;let nw=false;try{const o=Object.assign({},st.get('inf:'+g,{})||{}),k=infKey(g);let a=infTop(g).slice();nw=!a.length||s>a[0].s;a.push({s,t:Date.now()});a.sort((x,y)=>y.s-x.s);o[k]=a.slice(0,30);st.set('inf:'+g,o)}catch(e){}
  try{socMine()}catch(e){}
  try{infLbSync()}catch(e){}
@@ -99,7 +99,7 @@ let infLB={},infLBp={},infLbBusy=false;
 const infLbOn=()=>!!(window.__fb&&window.__fb.lbPut&&window.__fb.u);
 async function infLbSync(){if(!infLbOn()||infLbBusy)return;infLbBusy=true;
  try{const sh=infShr(),k=sh==='p'?infAll():{},M=st.get('soc:me',null)||{},nm=(M.name||'Joueur').slice(0,24),done=Object.assign({},st.get('inf:ls',{})||{});
-  for(const q of ['g2048','tetris','pc','po']){const sig=k[q]?k[q]+'|'+nm:'',cu=done[q]||'';if(sig===cu)continue;
+  for(const q of ['g2048','tetris','pc','po','ca']){const sig=k[q]?k[q]+'|'+nm:'',cu=done[q]||'';if(sig===cu)continue;
    try{if(sig)await window.__fb.lbPut(q,k[q],nm);else await window.__fb.lbDel(q);done[q]=sig;infLB={};infLBp={}}catch(e){}}
   st.set('inf:ls',done)}catch(e){}
  infLbBusy=false}
@@ -118,7 +118,7 @@ function infList(a){if(a.length<=6)return`<ol class="infl">${a.join('')}</ol>`;c
 const infLbBtn=on=>document.querySelectorAll('.rcx-lb').forEach(b=>{b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
 function infBoard(g,tab){const d=infDlg(true),M=st.get('soc:me',null)||{};if(d.dataset.t==='ask')return;
  const same=d.dataset.g===g&&d.dataset.t===tab;d.dataset.g=g;d.dataset.t=tab;if(!same)d.dataset.n='0';
- const N={g2048:'2048',tetris:'Tèconta',planetes:'Planètes · '+(infKey(g)==='o'?'Orbite':'Classique')}[g];
+ const N={g2048:'2048',tetris:'Tèconta',planetes:'Planètes · '+(infKey(g)==='o'?'Orbite':'Classique'),caches:'Mots cachés · Cascade'}[g];
  const tabs=[['m','Mes scores',IC_MD],['a','Amis',IC_MP],['w','Global',IC_PL]].map(([k,t,ic])=>`<button class="${k===tab?'on':''}" data-a="infTab" data-v="${g}:${k}">${ic}${t}</button>`).join('');
  let b='';
  if(tab==='m'){const a=infTop(g).slice(0,5);b=a.length?`${infList(a.map((x,i)=>`<li><i>${i+1}</i><span>${x.t?new Date(x.t).toLocaleDateString('fr',{day:'numeric',month:'short'}):'—'}</span><b>${x.s} pts</b></li>`))}`:'<p class="note">Aucun score pour l’instant : lance une partie infinie.</p>'}
@@ -151,6 +151,8 @@ function wdArea(g){const ok=anaOn(),k=[...Array(60).keys()].findIndex(i=>!st.get
  return`<div class="rcx-b"><div class="rcx-m"><div class="rcx-t"><small>Mode de jeu</small><span>${g==='ana'?'Mots entremêlés':'Relie les lettres'}</span></div><div class="plseg"><button class="${g==='mots'?'on':''}" data-a="wdMode" data-v="mots">Roue des mots</button><button class="${g==='ana'?'on':''}" data-a="wdMode" data-v="ana">${ok?'':'🔒 '}Anagramme</button></div></div>${ok?'':`<p class="note" style="margin:0">Anagramme se débloque au niveau 12 de la Roue des mots (tu en es au niveau ${Math.max(1,k+1)}).</p>`}</div>`}
 function infArea(g){if(g==='mots'||g==='ana')return wdArea(g);const ok=infOk(g),b=infBest(g);
  const row=ok?`<div class="rcx-r"><div class="rcx-t"><small>Mode infini</small><span>${b?'Record : '+b+' pts':'Pas encore de record'}</span></div><button class="rc-go" data-a="infGo" data-v="${g}">Jouer ∞</button><button class="rcx-lb" data-a="infBd" data-v="${g}" aria-label="Classement">${IC_LB}</button></div>`:`<div class="rcx-r"><div class="rcx-t"><small>Mode infini 🔒</small><span>Termine 20 niveaux (${infDone(g)} / 20)</span></div></div>`;
- return`<div class="rcx-b">${g==='planetes'?plModeSeg():''}${row}</div>`}
+ return`<div class="rcx-b">${g==='planetes'?plModeSeg():g==='caches'?caSeg():''}${g==='caches'&&!caOn()?'':row}</div>`}
+function caSeg(){const m=caOn();return`<div class="rcx-m"><div class="rcx-t"><small>Mode de jeu</small><span>${m?'Les lettres tombent':'Relie les lettres'}</span></div><div class="plseg"><button class="${m?'':'on'}" data-a="caMode" data-v="">Classique</button><button class="${m?'on':''}" data-a="caMode" data-v="cascade">Cascade</button></div></div>`}
+act.caMode=v=>{try{st.set('ca:mode',v==='cascade'?'cascade':'')}catch(e){}hub('caches')};
 act.wdMode=v=>{if(v==='mots'||v==='ana')hub(v)};
-act.infGo=v=>{if(!INFN[v]||gLock(v)||gHid(v)||!infOk(v))return;if(infShr()===''&&window.claude&&window.claude.use)return infAsk(v);INFG=v;cur=v;daily=false;lv=0;playing=true;wsG=null;theme(v,false);({g2048:p2048,tetris:pTetris,planetes:pPlan})[v](undefined);window.scrollTo(0,0)};
+act.infGo=v=>{if(!INFN[v]||gLock(v)||gHid(v)||!infOk(v))return;if(infShr()===''&&window.claude&&window.claude.use)return infAsk(v);INFG=v;cur=v;daily=false;lv=0;playing=true;wsG=null;theme(v,false);({g2048:p2048,tetris:pTetris,planetes:pPlan,caches:pCasc})[v](undefined);window.scrollTo(0,0)};
