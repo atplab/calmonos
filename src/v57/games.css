@@ -1399,3 +1399,16 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .rc.rcx>.dd{flex:0 0 100%;margin-top:12px;border:0;border-top:1px solid rgba(255,255,255,.28);border-radius:0;background:none;-webkit-backdrop-filter:none;backdrop-filter:none;animation:none;box-shadow:none}
 .rc.rcx>.dd .dd-h{padding:12px 2px 0;color:inherit}
 .rc.rcx>.dd.open .dd-i{margin-top:12px;border-radius:16px;background:rgba(10,12,34,.26)}
+/* Cascade : plafond visible (les lettres plus hautes sont cachées) */
+.chx{--z:min(44px,calc((min(100vw,440px) - 110px)/var(--n)));display:grid;grid-template-columns:repeat(var(--n),var(--z));gap:4px;height:28px;width:calc(var(--n)*var(--z) + (var(--n) - 1)*4px);max-width:100%;margin:12px auto 0;border-bottom:2px dashed rgba(255,255,255,.5)}
+.chx i{border-radius:10px 10px 0 0}.chx i.h{background:linear-gradient(to top,rgba(255,255,255,.34),rgba(255,255,255,0))}
+.chx+.sg{margin-top:6px}
+/* ===== Animations calmes (v382) : fondu simple, sans flou, sans déplacement, sans boucle ===== */
+@keyframes calm{from{opacity:0}to{opacity:1}}
+.tile,.rc,#app>.story,.opts>.rc,.opts>.dd{animation:calm .4s ease-out both!important;animation-delay:0s!important}
+.tile::before,.rc::before,.tile:hover::before{animation:none!important}
+.dd.open .lvg>*{animation:calm .3s ease-out both!important;animation-delay:0s!important}
+#app.hsw>.story,#app.hsw .opts>.rc,#app.hsw .opts>.dd,#app.hsw .dd.open .lvg>*{animation:none!important}
+.hsw .chg{animation:calm .5s ease-out both}
+#nav button.on,#nav button.on svg{animation:none!important}
+.tile,.rc,.item,.btn{transition:box-shadow .5s ease,filter .4s ease,background-color .4s ease}
