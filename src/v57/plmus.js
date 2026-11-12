@@ -156,3 +156,9 @@ function caSeg(){const m=caOn();return`<div class="rcx-m"><div class="rcx-t"><sm
 act.caMode=v=>{try{st.set('ca:mode',v==='cascade'?'cascade':'')}catch(e){}hub('caches')};
 act.wdMode=v=>{if(v==='mots'||v==='ana')hub(v)};
 act.infGo=v=>{if(!INFN[v]||gLock(v)||gHid(v)||!infOk(v))return;if(infShr()===''&&window.claude&&window.claude.use)return infAsk(v);INFG=v;cur=v;daily=false;lv=0;playing=true;wsG=null;theme(v,false);({g2048:p2048,tetris:pTetris,planetes:pPlan,caches:pCasc,blocs:pBlocs})[v](undefined);window.scrollTo(0,0)};
+/* Musiques : une musique coupée continuait de tourner en silence (nappes, bruits, échos) et chargeait le son jusqu'aux craquements.
+   Quelques secondes après l'arrêt, on la débranche ; elle se rebranche dès qu'on la relance. */
+setTimeout(()=>{Object.keys(window).filter(k=>/Mu$/.test(k)).forEach(k=>{const M=window[k];if(!M||typeof M.set!=='function'||typeof M.build!=='function'||M._dz0)return;M._dz0=1;const set0=M.set;
+ M.set=function(v){if(v&&this.L&&this.L.out&&this._dc&&typeof mg!=='undefined'&&mg){try{this.L.out.connect(mg)}catch(e){}this._dc=false}
+  const r=set0.call(this,v);clearTimeout(this._dz);
+  if(!this.on&&this.L&&this.L.out&&!this._dc)this._dz=setTimeout(()=>{if(!this.on&&this.L&&!this._dc){try{this.L.out.disconnect()}catch(e){}this._dc=true}},3000);return r}})},0);
