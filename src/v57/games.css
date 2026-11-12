@@ -1395,3 +1395,7 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 @keyframes caP{50%{transform:scale(1.12)}100%{transform:scale(.7);opacity:0}}
 .cah{display:flex;gap:8px;margin:0 0 8px}.cat{flex:1;text-align:center;padding:6px 4px;border-radius:14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18)}.cat small{display:block;font-size:11px;opacity:.75}.cat b{font-size:18px}
 .cab{height:6px;border-radius:99px;background:rgba(255,255,255,.16);margin:0 0 10px;overflow:hidden}.cab i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--a),#fff);transition:width .15s linear}
+/* Commencer + Choisir un niveau fusionnés dans une seule carte */
+.rc.rcx>.dd{flex:0 0 100%;margin-top:12px;border:0;border-top:1px solid rgba(255,255,255,.28);border-radius:0;background:none;-webkit-backdrop-filter:none;backdrop-filter:none;animation:none;box-shadow:none}
+.rc.rcx>.dd .dd-h{padding:12px 2px 0;color:inherit}
+.rc.rcx>.dd.open .dd-i{margin-top:12px;border-radius:16px;background:rgba(10,12,34,.26)}
