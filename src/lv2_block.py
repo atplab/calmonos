@@ -75,9 +75,25 @@ RR("function prefScreen(){","act.apSet=v=>{apMode(v==='calm'?'calm':'reg');const
 RR("function prefScreen(){","""/* boutique : un lien de paiement par paquet (Stripe Payment Links : carte, Apple Pay, Google Pay, PayPal…). Tant qu'un lien est vide, le paquet affiche « Bientôt ». */
 const SHOPP=[['p1',100,'0,99 $',''],['p2',350,'2,99 $','+17 %'],['p3',700,'4,99 $','+40 %'],['p4',2000,'9,99 $','Le plus populaire'],['p5',4500,'19,99 $','Meilleure valeur']],SHOPL={};
 function shopOpen(){let o=document.getElementById('shpo');if(o)o.remove();o=document.createElement('div');o.id='shpo';o.className='sfr';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');
- o.innerHTML=`<div class="glass sfc shpc"><div class="shph"><h2>❄ Flocons</h2><button class="shpx" data-a="shopX" aria-label="Fermer">✕</button></div><p class="note">Tu as <b>${FLX()}</b> flocons. Ajoute-en pour débloquer des indices, des poissons et des décorations.</p><div class="shpl">${SHOPP.map(([k,n,p,t])=>`<button class="shpi${t==='Le plus populaire'?' hot':''}" data-a="shopBuy" data-v="${k}"><span class="shpn">❄ ${n.toLocaleString('fr-CA')}</span>${t?`<small>${t}</small>`:'<small>&nbsp;</small>'}<b>${SHOPL[k]?p:p+'<i>Bientôt</i>'}</b></button>`).join('')}</div><p class="note shpm">Carte de crédit · Apple Pay · Google Pay · PayPal</p></div>`;
+ o.innerHTML=`<div class="glass sfc shpc"><div class="shph"><h2>❄ Flocons</h2><button class="shpx" data-a="shopX" aria-label="Fermer">✕</button></div><p class="note">Tu as <b>${FLX()}</b> flocons. Ajoute-en pour débloquer des indices, des poissons et des décorations.</p><div class="shpl">${SHOPP.map(([k,n,p,t])=>`<button class="shpi${t==='Le plus populaire'?' hot':''}" data-a="shopBuy" data-v="${k}"><span class="shpn">❄ ${n.toLocaleString('fr-CA')}</span>${t?`<small>${t}</small>`:'<small>&nbsp;</small>'}<b>${shopOn()?p:p+'<i>Bientôt</i>'}</b></button>`).join('')}</div><p class="note shpm">${shopOn()?'Paiement sécurisé par Stripe · carte de crédit, Apple Pay, Google Pay':'Carte de crédit · Apple Pay · Google Pay'}</p></div>`;
  o.addEventListener('click',e=>{if(e.target===o)o.remove()});document.body.appendChild(o)}
 act.shopX=()=>{const o=document.getElementById('shpo');if(o)o.remove()};
-act.shopBuy=k=>{const u=SHOPL[k];if(!u){if(typeof gToast==='function')gToast('Les achats arrivent bientôt ✦');return}let id='';try{id=(typeof SO==='object'&&SO.uid)||''}catch(e){}window.open(u+(u.includes('?')?'&':'?')+'client_reference_id='+encodeURIComponent(id),'_blank')};
+const shToast=t=>{if(typeof gToast==='function')gToast(t);else if(typeof msg==='function')msg(t)};
+/* la boutique n'est active que sur le site web (pas dans l'appli installée depuis un magasin d'applications) */
+const inStore=()=>{try{if(document.referrer.startsWith('android-app://'))sessionStorage.setItem('twa','1');return sessionStorage.getItem('twa')==='1'||/[?&]src=(play|ios)/.test(location.search)}catch(e){return false}};inStore();
+const shopOn=()=>!!window.fbShop&&!inStore();
+act.shopBuy=async k=>{if(!shopOn())return shToast('Les achats arrivent bientôt ✦');const b=document.querySelector('[data-a="shopBuy"][data-v="'+k+'"]');if(b){if(b.dataset.busy)return;b.dataset.busy=1;b.style.opacity=.6}
+ const r=await window.fbShop.buy(k);if(b){delete b.dataset.busy;b.style.opacity=''}
+ if(r&&r.err==='login')shToast('Connecte-toi à ton compte (Réglages) pour acheter des flocons.');else if(r&&r.err)shToast('Le paiement n’a pas pu démarrer. Réessaie dans un instant.')};
+/* flocons achetés : total serveur (buys/<uid>.t) − base après réinitialisation (buy:b) − déjà crédité sur cet appareil (buy:c) */
+function buyCredit(){const T=+st.get('buy:t',0)||0,E=Math.max(0,T-(+st.get('buy:b',0)||0)),c=+st.get('buy:c',0)||0;if(E<=c)return;const d=E-c;st.set('buy:c',E);fl=Math.min(1e8,fl+d);st.set('fl',fl);try{chip()}catch(e){}shToast('+'+d.toLocaleString('fr-CA')+' ❄ — merci pour ton achat !');try{schedulePush()}catch(e){}}
+if(window.fbShop)window.fbShop.watch(T=>{st.set('buy:t',T);buyCredit()});
+try{const q=new URLSearchParams(location.search).get('achat');if(q){history.replaceState(null,'',location.pathname);setTimeout(()=>shToast(q==='ok'?'Paiement reçu ✦ Tes flocons arrivent dans quelques secondes.':'Achat annulé.'),900)}}catch(e){}
 document.addEventListener('click',e=>{const c=e.target.closest&&e.target.closest('.chip');if(!c||c.dataset.a||c.closest('#shpo'))return;if((c.textContent||'').trim().startsWith('❄'))shopOpen()});
 function prefScreen(){""")
+
+RR("n:S.fl-(+st.get('sync:b',0)||0)-st.get('sync:o',0)-st.get('sync:g',0),","n:S.fl-(+st.get('sync:b',0)||0)-st.get('sync:o',0)-st.get('sync:g',0)-(+st.get('buy:c',0)||0),")
+RR("const GB=+st.get('sync:gb',0)||0;if(GB>0)body.gb=GB;","const GB=+st.get('sync:gb',0)||0;if(GB>0)body.gb=GB;const BB=+st.get('buy:b',0)||0;if(BB>0)body.bb=BB;")
+RR("if(rep){st.set('sync:gb',Math.max(0,...cur.map(v=>+v.gb||0)));st.set('sync:g',0);st.set('sync:b',0)}","if(rep){st.set('sync:gb',Math.max(0,...cur.map(v=>+v.gb||0)));st.set('sync:g',0);st.set('sync:b',0);st.set('buy:b',Math.max(0,...cur.map(v=>+v.bb||0)));st.set('buy:c',0)}")
+RR("st.set('sync:gb',SO.gt);st.set('sync:g',0);","st.set('sync:gb',SO.gt);st.set('sync:g',0);st.set('buy:b',+st.get('buy:t',0)||0);st.set('buy:c',0);")
+RR("st.set('sync:o',oth);socCredit();","st.set('sync:o',oth);socCredit();try{buyCredit()}catch(e){}")

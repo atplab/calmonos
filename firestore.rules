@@ -44,6 +44,13 @@ service cloud.firestore {
         && request.resource.data.j.size() < 20000;
     }
 
+    // Achats de flocons : écrits seulement par le serveur (webhook Stripe). Le joueur lit son propre total.
+    match /buys/{uid} {
+      allow get: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+      match /s/{sid} { allow read, write: if false; }
+    }
+
     // Sauvegarde par compte : strictement privée.
     match /data/users/{uid}/{docId} {
       allow read: if request.auth != null && request.auth.uid == uid;
