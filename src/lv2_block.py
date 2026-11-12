@@ -1,0 +1,40 @@
+import json as _j
+_G='gen/'
+# Jeu de mots : 60 → 99
+_M=open(_G+'mots.txt').read().strip('\n')
+RR("arène rêne née ère are\n","arène rêne née ère are\n"+_M+"\n")
+RR("const NLS={mots:60,","const NLS={mots:99,croises:49,")
+# Mots croisés : 8 → 49
+_i=h.index('const CW=[')+9;_d=0;_k=_i
+while True:
+    if h[_k]=='[':_d+=1
+    elif h[_k]==']':
+        _d-=1
+        if not _d:break
+    _k+=1
+_cw=_j.loads(h[_i:_k+1]);assert len(_cw)==18
+_cw=_cw[:8]+_j.load(open(_G+'cw.json'))+_cw[8:]
+h=h[:_i]+_j.dumps(_cw,ensure_ascii=False,separators=(',',':'))+h[_k+1:]
+# Sudoku : 40 → 70 (images 41 à 70 nouvelles, fêtes après)
+RR("sudoku:40,","sudoku:70,")
+RR(",22,22,22,22,22,22,22,22,22,22,22,22][Math.min(39,",",22,22,22,22,22,22,22,22,22,22,22,22"+",22"*30+"][Math.min(69,")
+_p=open(_G+'px.txt').read().strip().split('\n');_px=[]
+for _a in range(0,len(_p),2):
+    _r=_p[_a+1].split();assert len(_r)==9 and all(len(x)==9 for x in _r),_p[_a];_px.append([_p[_a],_r])
+assert len(_px)==30
+_i=h.index('SDPX=[')+5;_d=0;_k=_i
+while True:
+    if h[_k]=='[':_d+=1
+    elif h[_k]==']':
+        _d-=1
+        if not _d:break
+    _k+=1
+_sx=_j.loads(h[_i:_k+1]);assert len(_sx)==50
+_sx=_sx[:40]+_px+_sx[40:]
+h=h[:_i]+_j.dumps(_sx,ensure_ascii=False)+h[_k+1:]
+# Coloriage : 40 → 60 dessins (les 40 premiers inchangés)
+RR("const CDN=40,","const CDN=60,")
+RR("q=l/(CDN-1),th=l%10","q=Math.min(1,l/39),th=l%10")
+assert h.count("l*40/(CDN-1)")>=1;h=h.replace("l*40/(CDN-1)","l*40/39")
+# fêtes : la progression glisse
+RR("mv('tournade',24,38,'mig:tn38');mv('sudoku',28,40,'mig:sd40')","mv('tournade',24,38,'mig:tn38');mv('sudoku',28,40,'mig:sd40');mv('sudoku',40,70,'mig:sd70');mv('mots',60,99,'mig:mo99');mv('croises',8,49,'mig:cw49')")

@@ -81,6 +81,7 @@ assert h.count(SB)==2
 h=h.replace(SB,'return`'+PB+'<div class="sbar" id="sbar">')
 exec(open('cas_block.py').read())
 exec(open('ic_block.py').read())
+exec(open('lv2_block.py').read())
 open('/mnt/user-data/outputs/nuit-de-neige-2.html','w',encoding='utf-8').write(h)
 s=re.findall(r'<script[^>]*>(.*?)</script>',h,re.S)
 open('v12/chk.js','w').write('\n'.join(x for x in s if len(x)>1000))
