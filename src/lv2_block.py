@@ -110,3 +110,13 @@ RR("function acFree(){","document.addEventListener('visibilitychange',()=>{try{i
 # Arrière-plan : plus de flux média (coupures, notes faussées). Un élément audio quasi muet garde l'appli éveillée et le son reste direct.
 RR("function acHold(){if(!AC||!mg||AC.__md)return;","function acHold(){try{if(typeof plTone==='function'){plTone(true);AC.__tn=1}}catch(e){}return;if(!AC||!mg||AC.__md)return;")
 RR("function acFree(){if(!AC||!AC.__md)return;","function acFree(){try{if(AC&&AC.__tn&&!(PLK&&!PLPA)){plTone(false);AC.__tn=0}}catch(e){}if(!AC||!AC.__md)return;")
+# Accueil des jeux : sections par genre, avec raccourcis
+RR("""${F.length?`<h2 class="s shr"><span>Favoris</span>${window.mpLink?mpLink():''}</h2><div class="grid fgrid">${F.map(tile).join('')}</div>${R.length?'<h2 class="s">Autres jeux</h2>':''}`:`<h2 class="s shr"><span>Choisis ta veillée</span>${window.mpLink?mpLink():''}</h2>`}${R.length?`<div class="grid">${R.map(tile).join('')}</div>`:''}""",
+"""${F.length?`<h2 class="s shr"><span>Favoris</span>${window.mpLink?mpLink():''}</h2><div class="grid fgrid">${F.map(tile).join('')}</div>`:`<h2 class="s shr"><span>Choisis ta veillée</span>${window.mpLink?mpLink():''}</h2>`}${gSecs(R,tile)}""")
+RR("const HBI=n=>","""/* sections de jeux par genre (l'ordre choisi par le joueur est gardé à l'intérieur de chaque section) */
+const GCAT=[['mots','Mots et culture',['mots','croises','caches','phrase','tournade','ana','quiz','wordle']],['refl','Réflexion',['sudoku','memo','puzzle','flow','maze','g2048','demineur','blocs']],['dete','Détente',['colorie','cherche','demenage','match3','peche','planetes']],['cart','Cartes et plateau',['solitaire','scrabble','chess','uno']],['arca','Arcade',['tetris','brick','airhockey','cuisine']]];
+const gCatOf=id=>{const c=GCAT.find(c=>c[2].includes(id));return c?c[0]:'autr'};
+function gSecs(R,tile){if(!R.length)return'';const S=[...GCAT,['autr','Autres',[]]].map(c=>({k:c[0],n:c[1],L:R.filter(g=>gCatOf(g.id)===c[0])})).filter(s=>s.L.length);
+ return`<nav class="gcats" aria-label="Genres de jeux">${S.map(s=>`<button data-a="gCat" data-v="${s.k}">${s.n}</button>`).join('')}</nav>`+S.map(s=>`<h2 class="s gcs" id="gc-${s.k}"><span>${s.n}</span><small>${s.L.length}</small></h2><div class="grid">${s.L.map(tile).join('')}</div>`).join('')}
+const HBI=n=>""")
+RR("function prefScreen(){","act.gCat=v=>{const e=document.getElementById('gc-'+v);if(e)e.scrollIntoView({behavior:'smooth',block:'start'})};\nfunction prefScreen(){")
