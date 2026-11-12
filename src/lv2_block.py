@@ -137,7 +137,7 @@ RR("function prefScreen(){","""const ABOUT_MAIL='nextonset@pm.me';
 function aboutScreen(){
  cur=null;nv('set');
  app.innerHTML=`<header class="top pfh"><h1>À propos</h1></header><section class="glass play pf ab">
-<h2>Nextonset</h2><p>« Nuit de neige 2 » est un jeu de détente en français, édité par <b>Nextonset</b>. Le jeu est gratuit ; les achats de flocons sont facultatifs.</p>
+<h2>Nextonset</h2><p>« Calmos » est un jeu de détente en français, édité par <b>Nextonset</b>. Le jeu est gratuit ; les achats de flocons sont facultatifs.</p>
 <h2>Conditions d’utilisation</h2>
 <p>En utilisant le jeu, tu acceptes ces conditions.</p>
 <ul><li>Le jeu est fourni pour un usage personnel, tel quel, sans garantie de disponibilité continue.</li><li>Pas de triche ni d’abus qui fausseraient les classements ou perturberaient les autres joueurs. Nextonset peut suspendre un compte en cas d’abus.</li><li>Les flocons ❄ sont une monnaie virtuelle du jeu : ils n’ont aucune valeur réelle, ne sont ni échangeables contre de l’argent, ni transférables entre comptes.</li><li>Nextonset peut modifier le jeu, ses niveaux et ces conditions. L’utilisation continue du jeu vaut acceptation.</li></ul>
@@ -152,3 +152,5 @@ function aboutScreen(){
 act.about=aboutScreen;act.aboutBack=()=>prefScreen();
 function prefScreen(){""")
 RR("""${syncHTML()}<button class="btn alt" data-a="rst">""","""${syncHTML()}<section class="glass play pf abt"><button class="tg" data-a="about"><span>À propos<small>Nextonset, conditions, confidentialité, contact</small></span><b>›</b></button></section><button class="btn alt" data-a="rst">""")
+RR("<title>Nuit de neige 2</title>","<title>Calmos</title>")
+RR("<h1>Nuit de neige</h1><div class=\"chip\" title=\"Flocons\">","<h1>Calmos</h1><div class=\"chip\" title=\"Flocons\">")

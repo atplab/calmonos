@@ -35,7 +35,7 @@ const plEl=()=>PLK&&!PLPA?(Date.now()-PLT0)/1000:PLE;
 function plSess(){const ms=navigator.mediaSession;if(!ms)return;try{const t=PLT[PLC];if(!PLK){ms.metadata=null;ms.playbackState='none';return}
  ms.playbackState=PLPA?'paused':'playing';
  const svg=plArt(t[0]).replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" '),im=new Image();
- const set=src=>{ms.metadata=new MediaMetadata({title:t[1],artist:'Nuit de neige 2 · '+t[2],album:'Musiques des jeux',artwork:src?[{src,sizes:'512x512',type:'image/png'}]:[]})};
+ const set=src=>{ms.metadata=new MediaMetadata({title:t[1],artist:'Calmos · '+t[2],album:'Musiques des jeux',artwork:src?[{src,sizes:'512x512',type:'image/png'}]:[]})};
  set('');im.onload=()=>{try{const c=document.createElement('canvas');c.width=c.height=512;c.getContext('2d').drawImage(im,0,0,512,512);set(c.toDataURL('image/png'))}catch(e){}};im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
  [['play',()=>act.plpl()],['pause',()=>act.plpa()],['nexttrack',()=>act.plnx(1)],['previoustrack',()=>act.plnx(-1)]].forEach(([n,f])=>{try{ms.setActionHandler(n,f)}catch(e){}})}catch(e){}}
 /* vraie piste audio (quasi inaudible, 25 Hz) lue en boucle par un <audio> : c’est elle qui fait reconnaître l’appli comme lecteur de musique (notification, écran verrouillé) */
@@ -60,7 +60,7 @@ function plDraw(){let o=document.getElementById('plo');const sy=o?o.scrollTop:0;
   FV=plFav(),rw=r=>`<div class="plrw"><button class="plr${PLK===r[0]?' on':''}" data-a="plp" data-v="${r[0]}"><span class="plth">${plArt(r[0])}</span><span class="plrt"><b>${r[1]}</b><small>${r[2]}</small></span>${PLK===r[0]&&!PLPA?'<i class="pleq"><u></u><u></u><u></u></i>':''}</button>${plHe(r[0],FV)}</div>`,
   rows=PLT.map(rw).join(''),fvr=PLT.filter(r=>FV.includes(r[0])).map(rw).join('');
  o.innerHTML=`<div class="plp" id="plp" style="--c1:${t[4]};--c2:${t[5]}"><div class="plh"><button class="plcl" data-a="plx" aria-label="Fermer">${I('<path d="M6 9l6 6 6-6"/>')}</button><b>Lecteur de musique</b><span></span></div>
- <div class="plcv${pl?' pl':''}">${plArt(t[0])}</div><div class="plti"><div><b>${t[1]}</b><span>Nuit de neige 2 · ${t[2]}</span></div>${plHe(t[0],FV)}</div>
+ <div class="plcv${pl?' pl':''}">${plArt(t[0])}</div><div class="plti"><div><b>${t[1]}</b><span>Calmos · ${t[2]}</span></div>${plHe(t[0],FV)}</div>
  <div class="plpbw"><div class="plpbr"><i id="plpb" style="width:0"></i></div><div class="plt"><span id="ple">${plFmt(plEl())}</span><span>en boucle</span></div></div>
  <div class="plct"><button data-a="plnx" data-v="-1" aria-label="Précédent">${I('<path d="M6 5v14M19 5L8 12l11 7z" fill="currentColor"/>')}</button><button class="plbig" data-a="plpl" aria-label="${pl?'Pause':'Lecture'}">${pl?I('<path d="M8 5v14M16 5v14" stroke-width="3.4"/>'):I('<path d="M8 5l12 7-12 7z" fill="currentColor"/>')}</button><button data-a="plnx" data-v="1" aria-label="Suivant">${I('<path d="M18 5v14M5 5l11 7-11 7z" fill="currentColor"/>')}</button></div>
  <label class="plvo">${I('<path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/>')}<input type="range" min="0" max="100" value="${prefs().vol}" data-r="vol" aria-label="Volume"><span id="vv" hidden></span></label>

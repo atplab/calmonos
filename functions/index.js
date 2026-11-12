@@ -24,7 +24,7 @@ exports.createCheckout=onRequest({secrets:[STRIPE_KEY],cors:ORIGINS,region:'us-c
       client_reference_id:uid,
       metadata:{uid,pack:k,flakes:String(P.f)},
       payment_intent_data:{metadata:{uid,pack:k,flakes:String(P.f)}},
-      line_items:[{quantity:1,price_data:{currency:'cad',unit_amount:P.c,product_data:{name:P.f+' flocons',description:'Nuit de neige 2'}}}],
+      line_items:[{quantity:1,price_data:{currency:'cad',unit_amount:P.c,product_data:{name:P.f+' flocons',description:'Calmos'}}}],
       success_url:SITE+'?achat=ok',
       cancel_url:SITE+'?achat=annule'
     },{idempotencyKey:uid+':'+k+':'+Math.floor(Date.now()/10000)});
