@@ -43,3 +43,12 @@ RR("mv('tournade',24,38,'mig:tn38');mv('sudoku',28,40,'mig:sd40')","mv('tournade
 RR("function pDemen2(r){",open('v57/demx.js').read()+"\nfunction pDemen2(r){")
 RR("R=DRM[i]||DRM[0],ids=X?DXI[i%DXI.length]:R.items,sc=dScene(DRM[i]?i:0)","R=X?DXR[i%DXR.length]:(DRM[i]||DRM[0]),ids=R.items,sc=X?dSceneX(R):dScene(DRM[i]?i:0)")
 RR("if(!r&&!X&&dStory[lv]&&!st.get(ckey('demenage')+':'+lv,false))dmOv(`<small>${dStory[lv][0]}</small><p class=\"sfq\">${dStory[lv][1]}</p>`,'Ouvrir les cartons');","if(!r&&X&&!st.get(ckey('demenage')+':'+lv,false))dmOv(`<small>Fêtes · ${R.n}</small><p class=\"sfq\">${R.s}</p>`,'Ouvrir les cartons');else if(!r&&!X&&dStory[lv]&&!st.get(ckey('demenage')+':'+lv,false))dmOv(`<small>${dStory[lv][0]}</small><p class=\"sfq\">${dStory[lv][1]}</p>`,'Ouvrir les cartons');")
+# Labyrinthe : 30 → 50 niveaux
+_mz=_j.load(open(_G+'mz.json'))
+import re as _re
+for _k,_v in [('MZS',_mz['S']),('MZB',_mz['B']),('MZP',_mz['P']),('MZK',_mz['K'])]:
+    _m=_re.search(_k+r'=(\[[^\n]*?\]\]|\[[^\[\]\n]*\])',h);_a=_j.loads(_re.sub(r'(?<![0-9])\.',r'0.',_m.group(1)));assert len(_a)==40,_k
+    _a=_a[:30]+_v+_a[30:];h=h[:_m.start(1)]+_j.dumps(_a,separators=(',',':'))+h[_m.end(1):]
+RR("(l>=30?l-10:l)*7919","(l>=50?l-30:l)*7919")
+RR("maze:30,","maze:50,")
+RR("mv('croises',8,49,'mig:cw49')","mv('croises',8,49,'mig:cw49');mv('maze',30,50,'mig:mz50')")
