@@ -73,8 +73,8 @@ RR("""${sv.sty!=null?'<small class="note" style="margin:0">Mode histoire</small>
 # --- nouveau jeu : Cuisine (salon de thé) ---
 RR("function pCross(r){",open('v57/cuisine.js').read()+"\nfunction pCross(r){")
 RR("flow:pFlow,g2048:p2048,","flow:pFlow,cuisine:pCuis,g2048:p2048,")
-RR("\n{id:'flow',n:'Relie les points'","\n{id:'cuisine',n:'Cuisine',ic:'♨',a:'#ffb38a',b:'#9a4a3a',nox:1,t:'Le salon de thé de Givre',s:'Au salon de thé du village, les clients arrivent les joues rosies par le froid. Prépare chaque commande sur tes plans de travail, lance les cuissons et sers tout le monde. Pas de chrono : chaque geste fait seulement patienter un peu les clients.',w:'Tous les clients sont repartis réchauffés et le ventre plein. Le salon sent bon le chocolat.'},\n{id:'flow',n:'Relie les points'")
+RR("\n{id:'flow',n:'Relie les points'","\n{id:'cuisine',n:'Cuisine',ic:'🍔',a:'#ff9a8a',b:'#7a3a8a',nox:1,t:'Le Burger des Étoiles',s:'Des petits voisins de Zeni viennent manger au restaurant. Compose chaque burger ou hot-dog comme ils le demandent : le bon pain, la viande cuite sur le grill, les garnitures… puis sers-les. Pas de chrono : seuls tes gestes les font patienter.',w:'Tout le monde est reparti le ventre plein, avec un grand sourire.'},\n{id:'flow',n:'Relie les points'")
 RR("'brick','planetes'],GD=","'brick','planetes','cuisine'],GD=")
-RR("ana:50,flow:75,","ana:50,cuisine:40,flow:75,")
+RR("ana:50,flow:75,","ana:50,cuisine:20,flow:75,")
 RR("cherche:4},rw=","cherche:4,cuisine:4},rw=")
-RR("const gSv=g=>","GSV.cuisine='<path d=\"M4 11h16v1.5a7 7 0 0 1-7 7h-2a7 7 0 0 1-7-7z\"/><path d=\"M9 4.5c-.8 1 .8 2-.2 3.5M13 4.5c-.8 1 .8 2-.2 3.5\"/><path d=\"M20 12.5h1.5\"/>';const gSv=g=>")
+RR("const gSv=g=>","GSV.cuisine='<path d=\"M4 11q0-6 8-6t8 6z\"/><path d=\"M3.5 14h17\"/><path d=\"M4 17h16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z\"/><path d=\"M9 8h.01M13 7.5h.01\"/>';const gSv=g=>")
