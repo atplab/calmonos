@@ -225,12 +225,11 @@ ${intro?`<div class="hov" id="hov"><div class="hcd glass"><h2>${u.n}</h2><p>${u.
  const hv=$('#hv'),hw=$('#hw');
  let s=1,tx=0,ty=0,vw=0,vh=0,smin=.5,smax=3;
  const clamp=()=>{s=Math.max(smin,Math.min(smax,s));const w=CHW*s,h=CHH*s;tx=vw>=w?(vw-w)/2:Math.min(0,Math.max(vw-w,tx));ty=vh>=h?(vh-h)/2:Math.min(0,Math.max(vh-h,ty))};
- /* rendu fluide : une seule mise à jour par image, et la scène passe sur sa propre couche pendant le geste (redessinée nette ensuite) */
- let rq=0,lt=0;const draw=()=>{rq=0;hw.style.transform=`translate(${tx.toFixed(1)}px,${ty.toFixed(1)}px) scale(${s.toFixed(4)})`};
- const live=()=>{if(!hw.classList.contains('mv'))hw.classList.add('mv');clearTimeout(lt);lt=setTimeout(()=>hw.classList.remove('mv'),220)};
- const put=(now)=>{clamp();if(now){if(rq){cancelAnimationFrame(rq);rq=0}draw();return}live();if(!rq)rq=requestAnimationFrame(draw)};
- const fit=()=>{const f=s<=smin*1.001;vw=hv.clientWidth||innerWidth;vh=hv.clientHeight||innerHeight;smin=Math.max(vw/CHW,vh/CHH);smax=Math.max(smin*3.2,2.6);if(f||!hw.style.transform)s=smin*1.12;put(1)};
- fit();tx=(vw-CHW*s)/2;ty=0;put(1);
+ /* rendu fluide : la scène reste sur sa propre couche (le glissement ne la redessine jamais) ; après un zoom, on la redessine nette une seule fois */
+ let rs=0,lt=0;const crisp=()=>{if(Math.abs(s-rs)<1e-4)return;rs=s;hw.style.willChange='auto';requestAnimationFrame(()=>{hw.style.willChange='transform'})};
+ const put=()=>{clamp();hw.style.transform=`translate(${tx.toFixed(1)}px,${ty.toFixed(1)}px) scale(${s.toFixed(4)})`;if(Math.abs(s-rs)>1e-4){clearTimeout(lt);lt=setTimeout(crisp,350)}};
+ const fit=()=>{const f=s<=smin*1.001;vw=hv.clientWidth||innerWidth;vh=hv.clientHeight||innerHeight;smin=Math.max(vw/CHW,vh/CHH);smax=Math.max(smin*3.2,2.6);if(f||!hw.style.transform)s=smin*1.12;put()};
+ fit();tx=(vw-CHW*s)/2;ty=0;put();rs=s;
  const zoomAt=(cx,cy,ns)=>{ns=Math.max(smin,Math.min(smax,ns));const wx=(cx-tx)/s,wy=(cy-ty)/s;s=ns;tx=cx-wx*s;ty=cy-wy*s;put()};
  const onRs=()=>{if(!document.body.contains(hv))return removeEventListener('resize',onRs);hb=null;fit()};addEventListener('resize',onRs);
  /* gestes : un doigt fait glisser la scène, deux doigts la zooment, un appui court cherche sous le doigt */
