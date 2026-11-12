@@ -35,3 +35,20 @@ RR("ic:'⇄',a:'#c9a2f0',b:'#6b4aa8'","ic:'✦',a:'#a99cf0',b:'#5458AB'")
 RR("const gSv=g=>GSV[g.id]?","const gSv=g=>(g.id==='ana'&&(g=ALL.find(x=>x.id==='mots')),GSV[g.id])?")
 RR("""<section class="glass story pt-${id}"><i>${gSv(g)}</i><h2>${id==='ana'||id==='mots'?'Jeu de mots':g.t}</h2><p>${id==='ana'?ALL.find(x=>x.id==='mots').s:g.s}</p></section>""","""<details class="glass story pt-${id} gdet"${window.GDO!==false?' open':''}><summary><i>${gSv(g)}</i><h2>${id==='ana'||id==='mots'?'Jeu de mots':g.t}</h2><span class="gdc" aria-hidden="true"></span></summary><p>${id==='ana'?ALL.find(x=>x.id==='mots').s:g.s}</p></details>""")
 RR("</script>\n</body>","document.addEventListener('toggle',e=>{if(e.target.classList&&e.target.classList.contains('gdet'))window.GDO=e.target.open},true);\n</script>\n</body>")
+# --- Uno : carte Histoire au même format ---
+_a=h.index('return`<section class="glass play unst">')
+_b=h.index('</section>`}',_a)+len('</section>`}')
+_arw='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
+_u='''return`<section class="rc rcx pt-uno" data-g="🃏"><div class="rc-ic">${gSv(ALL.find(x=>x.id==='uno'))}</div><div class="rc-t"><small>${dn?'Continuer':'Commencer'} · Histoire</small><b>Niveau ${nx+1}</b><span>${esc(T[0])} · ${dn} sur ${UNN} terminés</span></div><button class="rc-go" data-a="unSt" data-v="${nx}">Jouer'''+_arw+'''</button><div class="rcx-b"><p class="note" style="margin:0">${esc(T[1])} Tu as ${c.hm} cartes, ${c.nb>1?'les '+c.nb+' bots en ont':'le bot en a'} ${c.hb}.</p></div><div class="dd pt-uno${lvOpen?' open':''}"><button class="dd-h" data-a="dd" aria-expanded="${lvOpen}" aria-controls="unlvl"><span><b>Choisir un niveau</b><small>${dn} / ${UNN} terminés</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="dd-l" id="unlvl"><div class="dd-i"><div class="lvg">${[...Array(UNN).keys()].map(i=>`<button class="lv ${unSDone(i)?'d':i===nx?'nx':'far'}" data-a="unSt" data-v="${i}"${i>nx?' disabled':''} aria-label="Niveau ${i+1}${unSDone(i)?', terminé':''}">${i+1}</button>`).join('')}</div></div></div></div></section>`}'''
+h=h[:_a]+_u+h[_b:]
+# --- Air hockey : carte Commencer + Choisir un niveau fusionnées ---
+_c0='<section class="rc pt-airhockey" data-g="🏒"><div class="rc-ic">🏒</div><div class="rc-t"><small>${dn?\'Continuer\':\'Commencer\'}'
+assert h.count(_c0)==1
+_i=h.index(_c0)
+_e='Jouer${AR}</button></section>'
+_j=h.index(_e,_i)+len(_e)-len('</section>')
+_d0=h.index('<div class="dd pt-airhockey${lvOpen',_j)
+_de="}).join('')}</div></div></div></div></div>`;"
+_dz=h.index(_de,_d0)
+_dd=h[_d0:_dz]+"}).join('')}</div></div></div></div>"
+h=h[:_i]+h[_i:_j].replace('class="rc pt-airhockey"','class="rc rcx pt-airhockey"',1)+_dd+h[_j:_d0]+"</div>`;"+h[_dz+len(_de):]

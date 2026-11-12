@@ -1413,3 +1413,4 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .gdet .gdc{flex:none;width:10px;height:10px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);margin:-4px 4px 0 0;opacity:.8}
 .gdet[open] .gdc{transform:rotate(-135deg);margin:4px 4px 0 0}
 .gdet>p{margin:14px 0 0}
+.lvg .lv:disabled{opacity:.4;cursor:default}
