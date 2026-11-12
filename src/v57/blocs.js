@@ -11,7 +11,7 @@ const BBS=(()=>{const L=[];const add=(w,cells)=>{const k=cells.map(c=>c.join(','
   [3,[[0,0],[1,0],[2,0],[2,1]]],[3,[[0,1],[1,1],[2,1],[2,0]]],[1.4,[[0,0],[1,1]]],[1,[[0,0],[1,1],[2,2]]]];
  base.forEach(([w,c])=>rots(c).forEach(r=>add(w,r)));return L})();
 function pBlocs(r){
- const INF=INFG==='blocs',N=8,goal=INF?0:Math.round(90+lv*45+(lv>20?(lv-20)*20:0)),R0=rng((lv+3)*7919+5);
+ const INF=INFG==='blocs',N=8,goal=INF?0:lv<10?50+lv*30:Math.round(90+lv*45+(lv>20?(lv-20)*20:0)),R0=rng((lv+3)*7919+5);
  let g=Array(N*N).fill(-1),P=[null,null,null],sc=0,best=INF?infBest('blocs'):0,combo=0,over=false,done=false,drag=null,hn=null;
  const fits=(G,s,r0,c0)=>s.c.every(([r,c])=>{const R=r0+r,C=c0+c;return R>=0&&R<N&&C>=0&&C<N&&G[R*N+C]<0});
  const lines=G=>{const rows=[],cols=[];for(let i=0;i<N;i++){let fr=true,fc=true;for(let j=0;j<N;j++){if(G[i*N+j]<0)fr=false;if(G[j*N+i]<0)fc=false}if(fr)rows.push(i);if(fc)cols.push(i)}return{rows,cols}};
@@ -19,14 +19,14 @@ function pBlocs(r){
  const anyFit=(G,s)=>{for(let r=0;r<N;r++)for(let c=0;c<N;c++)if(fits(G,s,r,c))return[r,c];return null};
  /* les trois pièces peuvent-elles toutes entrer, dans au moins un ordre ? */
  const allFit=(G,S)=>{if(!S.length)return true;for(let i=0;i<S.length;i++){const s=S[i],rest=S.filter((_,j)=>j!==i);for(let r=0;r<N;r++)for(let c=0;c<N;c++){if(!fits(G,s,r,c))continue;if(!rest.length)return true;if(allFit(place(G,s,r,c,0).H,rest))return true}}return false};
- const bigW=INF?Math.min(2.2,1+sc/3000):1+Math.min(1.2,lv/30);
+ const bigW=INF?Math.min(2.2,1+sc/3000):lv<4?.3:lv<10?.6:1+Math.min(1.2,lv/30);
  const pick=()=>{const W=BBS.map(s=>s.w*(s.c.length>=5?bigW:1)),T=W.reduce((a,b)=>a+b,0);let x=Math.random()*T;for(let i=0;i<BBS.length;i++){x-=W[i];if(x<=0)return BBS[i]}return BBS[0]};
  const deal=()=>{let S=null;for(let t=0;t<80;t++){const c=[pick(),pick(),pick()];if(allFit(g,c)){S=c;break}}
   if(!S){const small=BBS.filter(s=>s.c.length<=3);for(let t=0;t<200&&!S;t++){const c=[small[Math.floor(Math.random()*small.length)],small[Math.floor(Math.random()*small.length)],small[Math.floor(Math.random()*small.length)]];if(allFit(g,c))S=c}}
   if(!S)S=[BBS[0],BBS[0],BBS[0]];P=S.map(s=>({s,col:Math.floor(Math.random()*BBC.length)}))};
  snap=INF?null:()=>({g,P:P.map(p=>p?{k:p.s.k,col:p.col}:null),sc,combo});
  if(r&&Array.isArray(r.g)&&r.g.length===N*N){g=r.g.slice();sc=r.sc|0;combo=r.combo|0;P=(r.P||[]).map(p=>{if(!p)return null;const s=BBS.find(x=>x.k===p.k);return s?{s,col:p.col|0}:null});while(P.length<3)P.push(null);if(!P.some(Boolean))deal()}
- else{if(!INF&&lv>=6){const n=Math.min(20,4+Math.floor(lv/3));for(let i=0;i<n*3&&g.filter(x=>x>=0).length<n;i++){const k=Math.floor(R0()*N*N);g[k]=Math.floor(R0()*BBC.length);if(lines(g).rows.length||lines(g).cols.length)g[k]=-1}}deal()}
+ else{if(!INF&&lv>=10){const n=Math.min(20,4+Math.floor(lv/3));for(let i=0;i<n*3&&g.filter(x=>x>=0).length<n;i++){const k=Math.floor(R0()*N*N);g[k]=Math.floor(R0()*BBC.length);if(lines(g).rows.length||lines(g).cols.length)g[k]=-1}}deal()}
  frame(`<div class="bbh"><div class="bbsc"><small>${INF?'Mode infini':'Objectif '+goal}</small><b id="bbs">${sc}</b>${INF?`<span>👑 ${best}</span>`:`<i class="bbbar"><i id="bbbr"></i></i>`}</div></div><div class="bbw"><div class="bbg" id="bbg">${g.map((_,i)=>`<i class="bbc" data-i="${i}"></i>`).join('')}</div><div class="bbov" id="bbov" hidden></div></div><div class="bbt" id="bbt"></div><div class="bbdr" id="bbdr" hidden></div>`,1);
  const bg=$('#bbg'),cells=[...bg.children],bt=$('#bbt'),dr=$('#bbdr');
  const mini=(p,cs)=>{const w=Math.max(...p.s.c.map(x=>x[1]))+1,h=Math.max(...p.s.c.map(x=>x[0]))+1;return`<span class="bbp" style="--w:${w};--h:${h};--cs:${cs}px">${p.s.c.map(([r,c])=>`<i style="grid-row:${r+1};grid-column:${c+1};--c:${BBC[p.col]}"></i>`).join('')}</span>`};
