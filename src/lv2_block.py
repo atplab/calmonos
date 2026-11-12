@@ -104,3 +104,6 @@ function netUI(){const o=offl();document.body.classList.toggle('offl',o);let p=d
 addEventListener('offline',netUI);addEventListener('online',()=>{netUI();try{if(st.get('sync:acc',false)){if(!Sy.ref)accInit();else push()}}catch(e){}try{if(typeof socLater==='function')socLater()}catch(e){}});setTimeout(netUI,0);
 document.addEventListener('click',e=>{if(!offl())return;const t=e.target.closest&&e.target.closest('[data-a="tab"][data-v="soc"],[data-a="shopBuy"],[data-net]');if(!t)return;e.preventDefault();e.stopPropagation();shToast('Hors ligne : cette fonction a besoin d’Internet.')},true);
 function prefScreen(){""")
+# Son : la redirection vers un flux média (pour jouer en arrière-plan) causait des coupures et des notes faussées ; on ne l'utilise plus que quand l'appli est cachée
+RR("bgOn()?acHold():acFree()","(bgOn()&&document.hidden)?acHold():acFree()")
+RR("function acFree(){","document.addEventListener('visibilitychange',()=>{try{if(bgOn()&&document.hidden)acHold();else acFree()}catch(e){}});\nfunction acFree(){")
