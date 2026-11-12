@@ -1376,10 +1376,13 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 #app>.story,.opts>.rc,.opts>.dd{animation:hbIn .85s var(--eas) both}
 .opts>.rc:nth-child(2){animation-delay:.08s}.opts>.rc:nth-child(3){animation-delay:.14s}.opts>.dd{animation-delay:.2s}
 @keyframes hbIn{from{opacity:0;filter:blur(4px);transform:translateY(10px)}to{opacity:1;filter:blur(0);transform:none}}
-#app.hsw>.story,#app.hsw .opts>.rc,#app.hsw .opts>.dd{animation:swF .55s ease both;animation-delay:0s!important}
-@keyframes swF{from{opacity:.6;filter:blur(1.5px)}to{opacity:1;filter:blur(0)}}
+#app.hsw>.story,#app.hsw .opts>.rc,#app.hsw .opts>.dd{animation:none!important}
+.hsw .chg{animation:chg .7s ease-out both}
+@keyframes chg{from{opacity:.35;transform:translateY(2px)}to{opacity:1;transform:none}}
 .dd.open .lvg>*{animation:lvI .6s var(--eas) both}
 #app.hsw .dd.open .lvg>*{animation:none}
 @keyframes lvI{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:none}}
 .dd.open .lvg>:nth-child(1){animation-delay:0.022s}.dd.open .lvg>:nth-child(2){animation-delay:0.044s}.dd.open .lvg>:nth-child(3){animation-delay:0.066s}.dd.open .lvg>:nth-child(4){animation-delay:0.088s}.dd.open .lvg>:nth-child(5){animation-delay:0.110s}.dd.open .lvg>:nth-child(6){animation-delay:0.132s}.dd.open .lvg>:nth-child(7){animation-delay:0.154s}.dd.open .lvg>:nth-child(8){animation-delay:0.176s}.dd.open .lvg>:nth-child(9){animation-delay:0.198s}.dd.open .lvg>:nth-child(10){animation-delay:0.220s}.dd.open .lvg>:nth-child(11){animation-delay:0.242s}.dd.open .lvg>:nth-child(12){animation-delay:0.264s}.dd.open .lvg>:nth-child(13){animation-delay:0.286s}.dd.open .lvg>:nth-child(14){animation-delay:0.308s}.dd.open .lvg>:nth-child(15){animation-delay:0.330s}.dd.open .lvg>:nth-child(16){animation-delay:0.352s}.dd.open .lvg>:nth-child(17){animation-delay:0.374s}.dd.open .lvg>:nth-child(18){animation-delay:0.396s}.dd.open .lvg>:nth-child(19){animation-delay:0.418s}.dd.open .lvg>:nth-child(20){animation-delay:0.440s}.dd.open .lvg>:nth-child(21){animation-delay:0.462s}.dd.open .lvg>:nth-child(22){animation-delay:0.484s}.dd.open .lvg>:nth-child(23){animation-delay:0.506s}.dd.open .lvg>:nth-child(24){animation-delay:0.528s}
 .dd.open .lvg>:nth-child(n+25){animation-delay:.55s}
+
+.gsv{width:1.05em;height:1.05em;display:block}.btn .gsv,.fvc .gsv{display:inline-block;vertical-align:-.17em}.rc-ic .gsv{width:26px;height:26px}.rc.xl .rc-ic .gsv{width:34px;height:34px}.tile i .gsv,.story i .gsv{width:24px;height:24px}

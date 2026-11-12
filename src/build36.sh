@@ -79,6 +79,7 @@ PB='<button class="plfab${(PLK&&!PLPA)?\' on\':\'\'}" data-a="plr" aria-label="L
 SB='return`<div class="sbar" id="sbar">'
 assert h.count(SB)==2
 h=h.replace(SB,'return`'+PB+'<div class="sbar" id="sbar">')
+exec(open('ic_block.py').read())
 open('/mnt/user-data/outputs/nuit-de-neige-2.html','w',encoding='utf-8').write(h)
 s=re.findall(r'<script[^>]*>(.*?)</script>',h,re.S)
 open('v12/chk.js','w').write('\n'.join(x for x in s if len(x)>1000))
