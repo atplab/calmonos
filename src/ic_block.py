@@ -29,5 +29,5 @@ _xmA=_xm[_xa_s:_xa_e]
 _xl_s=_xm.index('`',_xa_e+3)+1
 _xl_e=_xm.rindex("`:'')}")
 _xmB=_xm[_xl_s:_xl_e]
-_new='<div class="opts">${xon&&xdn<NLX?`'+_xmA+"`:''}"+_card+_dd+'</section>'+_book+"${xon?(xdn>=NLX?`"+_xmA+"`:''):(!g.soon&&!g.nox?`"+_xmB+"`:'')}</div>"
+_new='<div class="opts">${xon&&xdn<NLX?`'+_xmA+"`:''}"+_card+_dd+'</section>'+_book+"${xon?(xdn>=NLX?`"+_xmA+"`:''):''}</div>"
 h=h[:_s]+_new+h[_dz+len(_de):]
