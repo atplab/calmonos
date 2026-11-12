@@ -1653,3 +1653,5 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 /* hors ligne */
 #offp{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 6px);transform:translateX(-50%);z-index:60;padding:5px 12px;border-radius:999px;background:rgba(20,24,52,.82);color:#e8ecff;font-size:12px;border:1px solid rgba(255,255,255,.18);pointer-events:none;white-space:nowrap}
 body.offl [data-a="tab"][data-v="soc"],body.offl [data-a="shopBuy"],body.offl [data-net]{opacity:.4}
+/* Cherche et trouve : couche dédiée pendant le glissement et le zoom */
+.hw{contain:layout style}.hw.mv{will-change:transform}

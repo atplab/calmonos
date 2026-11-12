@@ -225,15 +225,18 @@ ${intro?`<div class="hov" id="hov"><div class="hcd glass"><h2>${u.n}</h2><p>${u.
  const hv=$('#hv'),hw=$('#hw');
  let s=1,tx=0,ty=0,vw=0,vh=0,smin=.5,smax=3;
  const clamp=()=>{s=Math.max(smin,Math.min(smax,s));const w=CHW*s,h=CHH*s;tx=vw>=w?(vw-w)/2:Math.min(0,Math.max(vw-w,tx));ty=vh>=h?(vh-h)/2:Math.min(0,Math.max(vh-h,ty))};
- const put=()=>{clamp();hw.style.transform=`translate(${tx.toFixed(1)}px,${ty.toFixed(1)}px) scale(${s.toFixed(4)})`};
- const fit=()=>{const f=s<=smin*1.001;vw=hv.clientWidth||innerWidth;vh=hv.clientHeight||innerHeight;smin=Math.max(vw/CHW,vh/CHH);smax=Math.max(smin*3.2,2.6);if(f||!hw.style.transform)s=smin*1.12;put()};
- fit();tx=(vw-CHW*s)/2;ty=0;put();
+ /* rendu fluide : une seule mise à jour par image, et la scène passe sur sa propre couche pendant le geste (redessinée nette ensuite) */
+ let rq=0,lt=0;const draw=()=>{rq=0;hw.style.transform=`translate(${tx.toFixed(1)}px,${ty.toFixed(1)}px) scale(${s.toFixed(4)})`};
+ const live=()=>{if(!hw.classList.contains('mv'))hw.classList.add('mv');clearTimeout(lt);lt=setTimeout(()=>hw.classList.remove('mv'),220)};
+ const put=(now)=>{clamp();if(now){if(rq){cancelAnimationFrame(rq);rq=0}draw();return}live();if(!rq)rq=requestAnimationFrame(draw)};
+ const fit=()=>{const f=s<=smin*1.001;vw=hv.clientWidth||innerWidth;vh=hv.clientHeight||innerHeight;smin=Math.max(vw/CHW,vh/CHH);smax=Math.max(smin*3.2,2.6);if(f||!hw.style.transform)s=smin*1.12;put(1)};
+ fit();tx=(vw-CHW*s)/2;ty=0;put(1);
  const zoomAt=(cx,cy,ns)=>{ns=Math.max(smin,Math.min(smax,ns));const wx=(cx-tx)/s,wy=(cy-ty)/s;s=ns;tx=cx-wx*s;ty=cy-wy*s;put()};
- const onRs=()=>{if(!document.body.contains(hv))return removeEventListener('resize',onRs);fit()};addEventListener('resize',onRs);
+ const onRs=()=>{if(!document.body.contains(hv))return removeEventListener('resize',onRs);hb=null;fit()};addEventListener('resize',onRs);
  /* gestes : un doigt fait glisser la scène, deux doigts la zooment, un appui court cherche sous le doigt */
  const P=new Map();let g0=null,mv=false;
- const pt=e=>{const b=hv.getBoundingClientRect();return[e.clientX-b.left,e.clientY-b.top]};
- hv.addEventListener('pointerdown',e=>{if(intro||fin)return;try{hv.setPointerCapture(e.pointerId)}catch(_){}const[x,y]=pt(e);P.set(e.pointerId,{x,y,sx:x,sy:y,t:Date.now()});mv=false;
+ let hb=null;const pt=e=>{const b=hb||(hb=hv.getBoundingClientRect());return[e.clientX-b.left,e.clientY-b.top]};
+ hv.addEventListener('pointerdown',e=>{if(intro||fin)return;hb=null;try{hv.setPointerCapture(e.pointerId)}catch(_){}const[x,y]=pt(e);P.set(e.pointerId,{x,y,sx:x,sy:y,t:Date.now()});mv=false;
   if(P.size===2){const[a,b]=[...P.values()];g0={d:Math.hypot(a.x-b.x,a.y-b.y)||1,s,mx:(a.x+b.x)/2,my:(a.y+b.y)/2,wx:((a.x+b.x)/2-tx)/s,wy:((a.y+b.y)/2-ty)/s};mv=true}});
  hv.addEventListener('pointermove',e=>{const p=P.get(e.pointerId);if(!p)return;const[x,y]=pt(e);
   if(P.size===2&&g0){p.x=x;p.y=y;const[a,b]=[...P.values()],d=Math.hypot(a.x-b.x,a.y-b.y)||1,mx=(a.x+b.x)/2,my=(a.y+b.y)/2;s=Math.max(smin,Math.min(smax,g0.s*d/g0.d));tx=mx-g0.wx*s;ty=my-g0.wy*s;put();return}
@@ -241,7 +244,7 @@ ${intro?`<div class="hov" id="hov"><div class="hcd glass"><h2>${u.n}</h2><p>${u.
  const up=e=>{const p=P.get(e.pointerId);if(!p)return;P.delete(e.pointerId);if(P.size<2)g0=null;
   if(!mv&&P.size===0&&Date.now()-p.t<600)tap(p.x,p.y);if(P.size===1){const q=[...P.values()][0];q.sx=q.x;q.sy=q.y;mv=true}};
  hv.addEventListener('pointerup',up);hv.addEventListener('pointercancel',up);
- hv.addEventListener('wheel',e=>{e.preventDefault();const[x,y]=pt(e);zoomAt(x,y,s*(e.deltaY<0?1.18:1/1.18))},{passive:false});
+ hv.addEventListener('wheel',e=>{e.preventDefault();hb=null;const[x,y]=pt(e);zoomAt(x,y,s*(e.deltaY<0?1.18:1/1.18))},{passive:false});
  const ripple=(x,y)=>{const d=document.createElement('i');d.className='hrp';d.style.left=x+'px';d.style.top=y+'px';hw.appendChild(d);setTimeout(()=>d.remove(),600)};
  const tap=(cx,cy)=>{
   const x=(cx-tx)/s,y=(cy-ty)/s;let b=-1,bd=1e9;
