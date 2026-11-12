@@ -1,7 +1,7 @@
 
 /* ---------- Cuisine : deux musiques de restaurant ----------
    Burger des Étoiles : petit diner rétro, swing doux en do majeur (vibraphone, piano électrique, basse qui marche, balais).
-   Sushi des Vagues : funk « city pop » sur un bateau.
+   Sushi des Vagues : funk « city pop » énergique en mi bémol mineur, sur un bateau.
    Hot-dog de la Lune : bossa nova de rue en fa (flûte douce, Rhodes syncopé, basse bossa, claves). Aucun bruit blanc.
    Ambiance : murmures de conversation, tintements de couverts, caisse (burger) ou sonnette de vélo (rue), sous la musique. */
 var kzMu={on:false,L:null,T:0,s:0,t:0,off:0,k:'bu',
@@ -11,10 +11,10 @@ var kzMu={on:false,L:null,T:0,s:0,t:0,off:0,k:'bu',
    BW:[[0,4,7,9],[0,3,7,10],[0,4,7,9],[0,4,7,9],[0,4,7,9],[0,3,7,10],[0,3,7,10],[0,4,7,10]],
    PH:[[[0,72,2],[2,76,2],[4,79,3],[7,76,1]],[[0,81,2],[2,79,2],[4,76,4]],[[0,77,2],[2,81,2],[4,84,3],[7,81,1]],[[0,79,4],[4,74,2],[6,77,2]],
     [[0,76,2],[2,79,2],[4,84,2],[6,83,2]],[[0,81,3],[3,79,1],[4,76,4]],[[0,77,2],[2,76,2],[4,74,2],[6,77,2]],[[0,79,6]]]},
-  su:{E:.144,sw:0,n:16, /* funk « city pop » en mi dorien, ~104 bpm : basse slappée, stabs de clavinet, lead cuivré, petits traits de koto */
-   CH:[[40,[55,59,62,66]],[45,[55,59,61,64]],[40,[55,59,62,66]],[45,[55,59,61,64]],[36,[55,59,60,64]],[47,[54,57,62,66]],[45,[55,60,64,67]],[47,[54,57,59,63]]],
-   PH:[[[0,76,3],[3,79,1],[4,81,2],[6,79,2],[8,83,4],[12,81,2],[14,79,2]],[[0,76,6],[8,73,2],[10,74,2],[12,76,4]],[[0,79,2],[2,81,2],[4,83,2],[6,86,6],[12,83,2],[14,81,2]],[[0,83,4],[4,81,2],[6,79,2],[8,76,8]],
-    [[0,79,4],[4,76,2],[6,79,2],[8,83,6],[14,84,2]],[[0,86,4],[4,83,4],[8,81,4],[12,78,4]],[[0,79,3],[3,76,1],[4,72,4],[8,74,2],[10,76,2],[12,79,4]],[[0,78,4],[4,75,4],[8,71,8]]]},
+  su:{E:.1442,sw:0,n:16, /* funk « city pop » énergique en mi bémol mineur, ~104 bpm : basse slappée chromatique, guitare étouffée, section de cuivres, saxophone, batterie serrée, traits de koto */
+   CH:[[39,[54,58,61,65]],[44,[54,58,60,63]],[39,[54,58,61,65]],[44,[54,58,60,63]],[35,[54,58,59,63]],[46,[53,56,61,65]],[44,[54,59,63,66]],[46,[53,56,58,62]]],
+   PH:[[[0,75,2],[2,78,2],[4,80,1],[5,78,1],[6,75,2],[10,73,2],[12,75,4]],[[0,70,2],[3,73,1],[4,75,2],[6,78,4],[12,80,2],[14,78,2]],[[0,82,3],[3,80,1],[4,78,2],[6,80,2],[8,75,6]],[[4,73,2],[6,75,2],[8,78,2],[10,80,2],[12,82,4]],
+    [[0,85,4],[4,82,2],[6,80,2],[8,78,4],[12,75,4]],[[0,77,2],[2,78,2],[4,80,4],[8,77,2],[10,73,2],[12,70,4]],[[0,71,2],[2,75,2],[4,78,2],[6,82,2],[8,80,6],[14,78,2]],[[0,77,4],[4,74,2],[6,73,2],[8,70,8]]]},
   hd:{E:.27,sw:0,
    CH:[[41,[64,65,69,72]],[38,[60,62,65,69]],[43,[62,65,67,70]],[36,[64,67,70,72]],[41,[64,65,69,72]],[46,[62,65,69,70]],[43,[62,65,67,70]],[36,[64,67,70,72]]],
    PH:[[[0,81,3],[3,79,1],[4,77,4]],[[0,76,2],[2,77,2],[4,81,4]],[[0,79,3],[3,77,1],[4,74,2],[6,77,2]],[[0,76,8]],
@@ -50,6 +50,10 @@ var kzMu={on:false,L:null,T:0,s:0,t:0,off:0,k:'bu',
  brass(f,t,d,v,bus){const a=AC,lp=a.createBiquadFilter(),g=a.createGain();lp.type='lowpass';lp.frequency.setValueAtTime(600,t);lp.frequency.linearRampToValueAtTime(2200,t+.06);lp.frequency.linearRampToValueAtTime(1400,t+d);lp.connect(g);g.connect(bus);
   g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.04);g.gain.setValueAtTime(v,t+Math.max(.05,d-.06));g.gain.exponentialRampToValueAtTime(.0001,t+d+.12);
   [1,1.006].forEach(m=>{const o=a.createOscillator();o.type='sawtooth';o.frequency.value=f*m;o.connect(lp);o.start(t);o.stop(t+d+.15)})},
+ /* saxophone : anche douce, vibrato léger */
+ sax(f,t,d,v,bus){const a=AC,lp=a.createBiquadFilter(),g=a.createGain(),lf=a.createOscillator(),lg=a.createGain();lp.type='lowpass';lp.Q.value=2;lp.frequency.setValueAtTime(900,t);lp.frequency.linearRampToValueAtTime(2000,t+.05);lp.frequency.linearRampToValueAtTime(1500,t+d);lp.connect(g);g.connect(bus);
+  lf.frequency.value=5.6;lg.gain.value=f*.007;lf.connect(lg);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.035);g.gain.setValueAtTime(v*.85,t+Math.max(.05,d-.05));g.gain.exponentialRampToValueAtTime(.0001,t+d+.1);
+  [['sawtooth',1,1],['square',1.003,.5]].forEach(([ty,m,k])=>{const o=a.createOscillator(),gg=a.createGain();o.type=ty;o.frequency.value=f*m;lg.connect(o.frequency);gg.gain.value=k;o.connect(gg);gg.connect(lp);o.start(t);o.stop(t+d+.15)});lf.start(t);lf.stop(t+d+.15)},
  koto(f,t,v,bus){const a=AC;[[1,1,.6],[2,.35,.3],[3,.12,.15]].forEach(([m,k,dd])=>{const o=a.createOscillator(),g=a.createGain();o.type=m===1?'triangle':'sine';o.frequency.setValueAtTime(f*m*1.01,t);o.frequency.exponentialRampToValueAtTime(f*m,t+.03);this.env(g,t,v*k,.003,dd);o.connect(g);g.connect(bus);o.start(t);o.stop(t+dd+.05)})},
  kick(t,bus){const a=AC,o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.setValueAtTime(110,t);o.frequency.exponentialRampToValueAtTime(45,t+.12);this.env(g,t,.12,.004,.2);o.connect(g);g.connect(bus);o.start(t);o.stop(t+.25)},
  tok(t,v,bus,f=1100){const a=AC,o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(f*.62,t+.04);this.env(g,t,v,.003,.06);o.connect(g);g.connect(bus);o.start(t);o.stop(t+.08)},
@@ -59,12 +63,16 @@ var kzMu={on:false,L:null,T:0,s:0,t:0,off:0,k:'bu',
   const N=G.n||8;
   while(this.t<a.currentTime+.5){const s=this.s,c=Math.floor(s/N)%8,j=s%N,[r,T]=G.CH[c],t0=this.t,t=t0+(j%2?E*G.sw:0);
    if(this.k==='su'){const nr=G.CH[(c+1)%8][0];
-    /* basse funk : fondamentale, « pop » à l’octave, quinte, approche chromatique */
-    const B={0:[r,3,.2],3:[r+12,1,.12],6:[r,2,.17],10:[r+7,1,.12],11:[r+10,1,.08],12:[r+12,1,.11],14:[nr-1,1,.12]}[j];if(B)this.bass(this.mf(B[0]),t,E*B[1]*1.1,B[2],L.dry);
-    if(j===2||j===7||j===10)T.forEach((n,i)=>this.clav(this.mf(n),t+i*.004,E*.9,.022,L.bus));
-    if(j===0||j===8)this.kick(t,L.dry);if(j===4||j===12)this.tok(t,.02,L.dry,1800);if(j%4===2)this.tok(t,.008,L.dry,5200);
-    const m=L.M.su[s];if(m)this.brass(this.mf(m[0]),t,m[1]*E,.045,L.bus);
-    if((c===3&&j>=12)||(c===7&&j>=8&&j%2===0)){const K=[71,74,76,78,81,83,86,88];this.koto(this.mf(K[(c===3?j-12:(j-8)/2+4)%8]),t,.04,L.bus)}}
+    /* basse slappée : fondamentale, « pop » à l’octave, petits glissements chromatiques autour de la tonique */
+    const B={0:[r,2,.2],2:[r+12,1,.11],3:[r,1,.1],5:[r+1,1,.1],6:[r+2,2,.15],8:[r,1,.18],10:[r+12,1,.11],11:[r+10,1,.09],12:[r+7,1,.13],14:[nr-1,1,.12],15:[nr-2+2*(c%2),1,.08]}[j];if(B)this.bass(this.mf(B[0]),t,E*B[1]*1.15,B[2],L.dry);
+    /* batterie sans souffle : grosse caisse, caisse claire « clap », charleston en doubles croches */
+    if(j===0||j===8||(j===10&&c%2))this.kick(t,L.dry);if(j===4||j===12){this.tok(t,.024,L.dry,1800);this.tok(t+.012,.014,L.dry,2400)}
+    this.tok(t,j%2?.003:.006,L.dry,6200);
+    /* guitare étouffée et cuivres */
+    if(j===3||j===6||j===11||j===14)T.slice(1).forEach((n,i)=>this.clav(this.mf(n+12),t+i*.003,E*.6,.012,L.bus));
+    if(c%2===1&&(j===6||j===14))T.forEach((n,i)=>this.brass(this.mf(n+12),t,E*1.3,.018,L.bus));
+    const m=L.M.su[s];if(m)this.sax(this.mf(m[0]),t,m[1]*E,.05,L.bus);
+    if((c===3&&j<4)||(c===7&&j>=8&&j%2===0)){const K=[70,73,75,78,80,82,85,87];this.koto(this.mf(K[(c===3?j:(j-8)/2+4)%8]),t,.04,L.bus)}}
    else if(this.k==='bu'){
     if(j%2===0)this.bass(this.mf(r+G.BW[c][j>>1]),t,E*1.7,.17,L.dry);
     if(j===2||j===6){T.forEach((n,i)=>this.ep(this.mf(n),t+i*.008,E*1.4,.03,L.bus));this.tok(t,.012,L.dry,900)}

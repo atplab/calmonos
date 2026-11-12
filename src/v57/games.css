@@ -1534,3 +1534,10 @@ body:has(.pg-planetes) .top.stk{margin-bottom:0;padding-bottom:4px}
 .kzpe{position:absolute;top:-12px;width:9px;height:6px;border-radius:60% 0;background:#ffb3cf;opacity:.8;animation:kzPe 11s linear infinite}
 @keyframes kzPe{0%{transform:translate(0,0) rotate(0)}50%{transform:translate(-30px,48vh) rotate(160deg)}100%{transform:translate(10px,95vh) rotate(320deg);opacity:0}}
 .kzcat .kzwb{width:50px;height:30px;animation-duration:.4s}.kzcat .kzwb svg{width:100%;height:100%}
+/* Sushi : tables sur de petits bateaux qui tanguent, chat sur la rambarde */
+.kzaz.bt .kzbob{position:absolute;inset:0;animation:kzBob 5s ease-in-out infinite}.kzaz.bt .kzbob.b2{animation-delay:-2.2s}
+.kzboat{position:absolute;left:-17px;bottom:-30px;width:130px;height:46px;overflow:visible}
+@keyframes kzBob{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-4px) rotate(1.5deg)}}
+.kzaz.bt .kzat{bottom:6px}.kzaz.bt .kzaw{bottom:6px}
+.kzaz.bt .kzaw{position:relative}
+.kzcat{width:56px;height:34px}.kzcat .kzwb{scale:1;width:56px;height:34px;filter:none}
