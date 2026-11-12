@@ -97,3 +97,26 @@ RR("const gSv=g=>","GSV.peche='<path d=\"M3 13c3-4 9-4 12 0-3 4-9 4-12 0z\"/><pa
 RR("FISH.push({id:'noel',n:'Poisson Père Noël',p:520,sh:'std',b:'#e8434f',f:'#ffd2d2',sp:'#fff',sa:1,sz:1.12,lk:20});","FISH.push({id:'noel',n:'Poisson Père Noël',p:520,sh:'std',b:'#e8434f',f:'#ffd2d2',sp:'#fff',sa:1,sz:1.12,lk:20});PEF.filter(f=>f.aq).forEach(f=>FISH.push({...f,p:2000,pe:1}));")
 RR(""":`<button class="sb buy ${!UNL()&&fl<f.p?'low':''}" data-a="aqbuy" data-v="f:${f.id}">Acheter · ${f.p} ❄</button>`""",""":f.pe?`<span class="sb lk">Légendaire · à pêcher</span>`:`<button class="sb buy ${!UNL()&&fl<f.p?'low':''}" data-a="aqbuy" data-v="f:${f.id}">Acheter · ${f.p} ❄</button>`""")
 RR("aqBuy=function(v){const[k,id]=v.split(':'),a","aqBuy=function(v){if(/^f:/.test(v)&&(FISH.find(x=>'f:'+x.id===v)||{}).pe)return;const[k,id]=v.split(':'),a")
+# --- Pêche : dessins uniques des deux légendaires ---
+_star=lambda x,y,r,c:'<path d="M%s %sl%s %s %s %s -%s %s -%s %s -%s -%s -%s -%s %s -%sz" fill="%s"/>'%(x,y-r,r*.3,r*.7,r*.7,r*.3,r*.7,r*.3,r*.3,r*.7,r*.3,r*.7,r*.7,r*.3,r*.7,r*.3,c)
+_koi=('<ellipse cx="44" cy="24" rx="42" ry="28" fill="#ffe9a0" opacity=".16"/>'
+ '<path d="M24 24C12 4 3 0-3 6 4 14 7 20 5 24 7 28 4 34-3 42 3 48 12 44 24 24Z" fill="#ffd27a" opacity=".85"/>'
+ '<path d="M24 24C15 10 8 7 3 10 9 16 11 21 10 24 11 27 9 32 3 38 8 41 15 38 24 24Z" fill="#fff3d0" opacity=".7"/>'
+ '<path d="M42 12Q50-2 64 10Z" fill="#ffd27a" opacity=".75"/><path d="M48 34q6 12 14 6Z" fill="#ffd27a" opacity=".7"/>'
+ '<path d="M20 24C26 12 50 8 66 12 78 15 84 20 84 24 84 28 78 33 66 36 50 40 26 36 20 24Z" fill="#f8f6ff"/>'
+ '<ellipse cx="48" cy="17" rx="10" ry="4.6" fill="#ff6a3a"/><ellipse cx="35" cy="29" rx="7" ry="3.6" fill="#ff6a3a"/><ellipse cx="58" cy="30" rx="5" ry="2.6" fill="#ff8a5a"/>'
+ '<path d="M70 14a6 6 0 1 0 2 9a4.5 4.5 0 1 1 -2 -9z" fill="#ffd27a"/>'
+ +_star(30,15,3.2,'#ffd27a')+_star(56,33,2.6,'#ffd27a')+_star(12,6,3,'#fff3d0')+_star(6,40,2.4,'#fff3d0')+
+ '<circle cx="77" cy="21" r="2.5" fill="#fff"/><circle cx="77.6" cy="21.2" r="1.4" fill="#1b1b2f"/>'
+ '<path d="M83 26q6 4 4 10M82 27q3 6-1 10" stroke="#ffd27a" stroke-width="1.2" fill="none" stroke-linecap="round"/>')
+_raie=('<defs><linearGradient id="raGr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7affd0"/><stop offset=".5" stop-color="#8a8aff"/><stop offset="1" stop-color="#ff9ad5"/></linearGradient></defs>'
+ '<ellipse cx="50" cy="24" rx="36" ry="28" fill="#9affe0" opacity=".14"/>'
+ '<path d="M38 24C24 25 12 18 1 27" stroke="url(#raGr)" stroke-width="2.4" fill="none" stroke-linecap="round"/>'+_star(1,27,4,'#fff6d0')+
+ '<path d="M82 24C72 9 54-4 18 0 30 11 34 19 36 24 34 29 30 37 18 48 54 52 72 39 82 24Z" fill="url(#raGr)"/>'
+ '<path d="M18 0q-4-6 4-7M18 48q-4 6 4 7" stroke="#c9a3ff" stroke-width="2" fill="none" stroke-linecap="round"/>'
+ '<path d="M78 24C68 17 54 11 42 11 48 17 51 21 52 24 51 27 48 31 42 37 54 37 68 31 78 24Z" fill="#fff" opacity=".28"/>'
+ '<g stroke="#fff" stroke-opacity=".7" stroke-width=".8" fill="none"><path d="M30 8 44 13 56 9 64 15M30 40 44 35 56 39 64 33"/></g>'
+ '<g fill="#fff6d0">'+''.join('<circle cx="%s" cy="%s" r="1.6"/>'%(x,y) for x,y in [(30,8),(44,13),(56,9),(64,15),(30,40),(44,35),(56,39),(64,33)])+'</g>'
+ '<path d="M82 24 88 20.5 85 24 88 27.5Z" fill="#c9a3ff"/>'
+ '<circle cx="75" cy="17" r="2.6" fill="#fff"/><circle cx="75.7" cy="17.2" r="1.4" fill="#1b1b2f"/><circle cx="75" cy="31" r="2.6" fill="#fff"/><circle cx="75.7" cy="31.2" r="1.4" fill="#1b1b2f"/>')
+RR("function fishSVG(f){","FSH.koiciel=f=>'"+_koi.replace("'","\\'")+"';FSH.raieaur=f=>'"+_raie.replace("'","\\'")+"';\nfunction fishSVG(f){")

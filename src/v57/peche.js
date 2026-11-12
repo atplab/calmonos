@@ -18,8 +18,8 @@ const PEF=[
  {id:'esturgeon',r:'e',n:'Esturgeon',sh:'long',b:'#7a8aa8',f:'#b8c4dc',sc:'#4a5a78',sz:1.3},
  {id:'silure',r:'e',n:'Poisson-chat géant',sh:'std',b:'#5a4a3a',f:'#8a7a6a',sz:1.3},
  {id:'koidor',r:'e',n:'Koï dorée',sh:'std',b:'#ffcf4a',f:'#fff0b0',sp:'#ffffff',sz:1.15},
- {id:'koiciel',r:'l',aq:1,n:'Koï céleste',sh:'veil',b:'#f4f2ff',f:'#ff6a3a',f2:'#ffd27a',sz:1.3},
- {id:'raieaur',r:'l',aq:1,n:'Raie aurore',sh:'manta',b:'#2fd1c5',f:'#e9d6ff',sc:'#9a6ad8',sp:'#fff6d0',sz:1.35}
+ {id:'koiciel',r:'l',aq:1,n:'Koï céleste',sh:'koiciel',b:'#f4f2ff',f:'#ff6a3a',f2:'#ffd27a',sz:1.3},
+ {id:'raieaur',r:'l',aq:1,n:'Raie aurore',sh:'raieaur',b:'#2fd1c5',f:'#e9d6ff',sc:'#9a6ad8',sp:'#fff6d0',sz:1.35}
 ];
 const peR=k=>PER.find(x=>x.k===k);
 function peRoll(){const x=Math.random()*10000,k=x<2?'l':x<502?'e':x<2002?'r':x<5002?'u':'c',L=PEF.filter(f=>f.r===k);return k==='l'?L[x<1?0:1]:L[Math.floor(Math.random()*L.length)]}
