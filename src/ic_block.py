@@ -52,3 +52,13 @@ _de="}).join('')}</div></div></div></div></div>`;"
 _dz=h.index(_de,_d0)
 _dd=h[_d0:_dz]+"}).join('')}</div></div></div></div>"
 h=h[:_i]+h[_i:_j].replace('class="rc pt-airhockey"','class="rc rcx pt-airhockey"',1)+_dd+h[_j:_d0]+"</div>`;"+h[_dz+len(_de):]
+# --- Uno : Histoire / Contre des bots / Avec des amis = modes ---
+RR("unCfg:v=>{const[k,x]=v.split(':');","unMode:v=>{if(!/^(story|bots|fr)$/.test(v))return;st.set('uno:mode',v);unHubDraw()},unCfg:v=>{const[k,x]=v.split(':');")
+RR("function unHubDraw(){","""function unMSeg(m){const L=[['story','Histoire'],['bots','Bots'],['fr','Amis']];return`<section class="glass play unmd"><div class="rcx-t"><small>Mode de jeu</small></div><div class="plseg unseg" role="group" aria-label="Mode de jeu">${L.map(x=>`<button class="${m===x[0]?'on':''}" data-a="unMode" data-v="${x[0]}" aria-pressed="${m===x[0]}">${x[1]}</button>`).join('')}</div></section>`}
+function unHubDraw(){""")
+RR("let h='';\n h+=unRooms();\n h+=unStoryCard();","let h='';const md=st.get('uno:mode','story');\n h+=unRooms();")
+_a=h.index('h+=`<section class="glass play"><h2>Contre des bots</h2>')
+_b=h.index('</section>`;',_a)+len('</section>`;')
+_blk=h[_a:_b]
+h=h[:_a]+"h+=unMSeg(md);if(md==='story')h+=unStoryCard();if(md==='bots')"+_blk+h[_b:]
+RR("h+=unFriends();","if(md==='fr')h+=unFriends();")
