@@ -120,3 +120,11 @@ function gSecs(R,tile){if(!R.length)return'';const S=[...GCAT,['autr','Autres',[
  return`<nav class="gcats" aria-label="Genres de jeux">${S.map(s=>`<button data-a="gCat" data-v="${s.k}">${s.n}</button>`).join('')}</nav>`+S.map(s=>`<h2 class="s gcs" id="gc-${s.k}"><span>${s.n}</span><small>${s.L.length}</small></h2><div class="grid">${s.L.map(tile).join('')}</div>`).join('')}
 const HBI=n=>""")
 RR("function prefScreen(){","act.gCat=v=>{const e=document.getElementById('gc-'+v);if(e)e.scrollIntoView({behavior:'smooth',block:'start'})};\nfunction prefScreen(){")
+
+# ---- Plantes de l'aquarium ----
+RR("const aqBuy0=aqBuy;",open('v57/plantes.js').read()+"const aqBuy0=aqBuy;")
+RR("a.d=a.d||{};a.p=a.p||{};a.ws=a.ws||['nuit'];","a.d=a.d||{};a.p=a.p||{};a.pl=a.pl||{};a.ws=a.ws||['nuit'];")
+RR("<div class=\"sand\"></div><div class=\"bubs\">","<div class=\"sand\"></div>${aqPlHTML(a,now)}<div class=\"bubs\">")
+RR("if(aqTab==='inv')return aqInv();","if(aqTab==='inv')return aqInv();\n if(aqTab==='plant')return aqPl();")
+RR("data-a=\"aqtab\" data-v=\"deco\">Décors</button></div>","data-a=\"aqtab\" data-v=\"deco\">Décors</button><button class=\"${aqTab==='plant'?'on':''}\" data-a=\"aqtab\" data-v=\"plant\">Plantes</button></div>")
+RR("aqcare:()=>aqTabTo('care'),","aqcare:()=>aqTabTo('care'),aqpb:v=>aqPlBuy(v),aqpf:v=>aqPlFeed(v),aqpa:()=>aqPlFeed(),")
