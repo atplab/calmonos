@@ -86,7 +86,7 @@ function pPlan(r){
   if(k===9&&OR){g.strokeStyle='rgba(255,200,90,.7)';g.lineWidth=r*.07;g.lineCap='round';for(let i=0;i<12;i++){const a=i/12*6.283;g.beginPath();g.moveTo(Math.cos(a)*r*1.08,Math.sin(a)*r*1.08);g.lineTo(Math.cos(a)*r*1.3,Math.sin(a)*r*1.3);g.stroke()}}
   return SP[k]=o};
  const lp=k=>{const d=RA+PR(k)+16,x=CX+Math.cos(aimA)*d,y=CY+Math.sin(aimA)*d;return[Math.max(PR(k)+3,Math.min(LW-PR(k)-3,x)),Math.max(PR(k)+3,Math.min(LH-PR(k)-3,y))]};
- const fall=now=>{cd=now+420;if(OR){const[x,y]=lp(held),d=Math.hypot(CX-x,CY-y)||1,p=mk(held,x,y,(CX-x)/d*470,(CY-y)/d*470);p.in=false}else mk(held,Math.max(WL+PR(held),Math.min(WR-PR(held),hx)),UW?DU:DY,0,UW?-60:60);held=nxt;nxt=pick();sfx(240,.05)};
+ const fall=now=>{cd=now+420;if(OR){const[x,y]=lp(held),d=Math.hypot(CX-x,CY-y)||1,p=mk(held,x,y,(CX-x)/d*470,(CY-y)/d*470);p.in=false}else mk(held,Math.max(WL+PR(held),Math.min(WR-PR(held),hx)),UW?DU:DY,0,UW?-25:60);held=nxt;nxt=pick();sfx(240,.05)};
  const merge=(a,b)=>{a.dead=b.dead=true;const k=a.k,x=(a.x*a.r*a.r+b.x*b.r*b.r)/(a.r*a.r+b.r*b.r),y=(a.y*a.r*a.r+b.y*b.r*b.r)/(a.r*a.r+b.r*b.r);
   if(k>=9){score+=400;burst(x,y,'#ffe38a',40,260);pop(OR?'Supernova !':UW?'Raz-de-marée !':'Super pastèque !',1);sfx(900,.4);vib([20,40,20]);made[9]++;hud();checkWin();return}
   const n=mk(k+1,x,y,(a.vx+b.vx)/2,(a.vy+b.vy)/2-40);n.w=(a.w+b.w)/2;n.age=1.2;made[k+1]++;score+=(k+2)*(k+2)*2;
@@ -110,7 +110,7 @@ function pPlan(r){
     const c=Math.hypot(p.x-CX,p.y-CY)||1;if(!p.in){if(c+p.r<RA-1)p.in=true;continue}
     if(c+p.r>RA){const nx=(p.x-CX)/c,ny=(p.y-CY)/c;p.x=CX+nx*(RA-p.r);p.y=CY+ny*(RA-p.r);const vr=p.vx*nx+p.vy*ny;if(vr>0){p.vx-=(1+E)*vr*nx;p.vy-=(1+E)*vr*ny}p.w*=.9;{const tx=-ny,ty=nx,vt=p.vx*tx+p.vy*ty;p.vx-=tx*vt*.25;p.vy-=ty*vt*.25}}
     continue}
-   if(UW){p.vy-=G*.85*h;p.vx*=1-.4*h}else p.vy+=G*h;p.x+=p.vx*h;p.y+=p.vy*h;p.a+=p.w*h;p.age+=h;
+   if(UW){p.vy-=G*.15*h;p.vx*=1-2.2*h;p.vy*=1-1.9*h;p.w*=1-1.2*h}else p.vy+=G*h;p.x+=p.vx*h;p.y+=p.vy*h;p.a+=p.w*h;p.age+=h;
    if(p.x-p.r<WL){p.x=WL+p.r;if(p.vx<0)p.vx*=-E;p.w*=.97}
    if(p.x+p.r>WR){p.x=WR-p.r;if(p.vx>0)p.vx*=-E;p.w*=.97}
    if(UW){if(p.y-p.r<CE){p.y=CE+p.r;if(p.vy<0)p.vy*=-E;p.vx*=.985;p.w=p.w*.9-p.vx/p.r*.1}}else if(p.y+p.r>FL){p.y=FL-p.r;if(p.vy>0)p.vy*=-E;p.vx*=.985;p.w=p.w*.9+p.vx/p.r*.1}}
@@ -119,7 +119,7 @@ function pPlan(r){
    const d=Math.sqrt(dx*dx+dy*dy)||.01,nx=dx/d,ny=dy/d,ma=a.r*a.r,mb=b.r*b.r,ov=RR-d,ms=ma+mb;
    a.x-=nx*ov*mb/ms;a.y-=ny*ov*mb/ms;b.x+=nx*ov*ma/ms;b.y+=ny*ov*ma/ms;
    const vn=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;
-   if(vn<0){const j2=-(1+E)*vn/(1/ma+1/mb);a.vx-=j2*nx/ma;a.vy-=j2*ny/ma;b.vx+=j2*nx/mb;b.vy+=j2*ny/mb;
+   if(vn<0){const j2=-(1+(UW?.04:E))*vn/(1/ma+1/mb);a.vx-=j2*nx/ma;a.vy-=j2*ny/ma;b.vx+=j2*nx/mb;b.vy+=j2*ny/mb;
     const tx=-ny,ty=nx,vt=(b.vx-a.vx)*tx+(b.vy-a.vy)*ty;a.vx+=tx*vt*.06*mb/ms;a.vy+=ty*vt*.06*mb/ms;b.vx-=tx*vt*.06*ma/ms;b.vy-=ty*vt*.06*ma/ms;a.w+=vt*.02/a.r;b.w+=vt*.02/b.r}}
   const used=new Set();mg.forEach(([a,b])=>{if(used.has(a)||used.has(b))return;used.add(a);used.add(b);merge(a,b)});
   if(mg.length)ps=ps.filter(p=>!p.dead)};
