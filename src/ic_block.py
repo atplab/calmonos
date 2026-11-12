@@ -10,3 +10,4 @@ RR("rw=id=>RWD[id]||5","rw=(id,l)=>{let b=RWD[id]||5;if(id==='caches'&&l>=0)b+=c
 RR("first=!st.get(lk,false),r=first?rw(cur):1;","first=!st.get(lk,false),r=first?rw(cur,lv):1;")
 RR("""<p class="note" style="text-align:center">Les mots se lisent à l’horizontale, à la verticale${lv>=14?' ou en diagonale':''}, dans les deux sens. Glisse ton doigt sur le mot, ou touche sa première puis sa dernière lettre.</p>""","")
 RR("Retrouve-les un à un.',w:'Tous les mots sont sortis","Retrouve-les un à un. Les mots se lisent à l’horizontale, à la verticale ou en diagonale, dans les deux sens : glisse ton doigt sur le mot, ou touche sa première puis sa dernière lettre.',w:'Tous les mots sont sortis")
+RR("if(id==='caches'&&l>=0)b+=caTier(l);return b}","if(id==='caches'&&l>=0){if(caOn()&&l>=99)return l===99?10:6;b+=caTier(l)}return b}")
