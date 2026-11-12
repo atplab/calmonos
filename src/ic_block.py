@@ -62,3 +62,10 @@ _b=h.index('</section>`;',_a)+len('</section>`;')
 _blk=h[_a:_b]
 h=h[:_a]+"h+=unMSeg(md);if(md==='story')h+=unStoryCard();if(md==='bots')"+_blk+h[_b:]
 RR("h+=unFriends();","if(md==='fr')h+=unFriends();")
+RR("""<section class="glass play"><h2>Partie en cours</h2><p class="note" style="margin:0 0 12px">Contre ${sv.S.length-1} bot${sv.S.length>2?'s':''} · ${sv.H[0].length} carte${sv.H[0].length>1?'s':''} en main</p>""","""<section class="glass play"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:0 0 12px"><h2 style="margin:0">Partie en cours</h2>${sv.sty!=null?'<small class="note" style="margin:0">Mode histoire</small>':''}</div>${sv.sty!=null?'':`<p class="note" style="margin:0 0 12px">Contre ${sv.S.length-1} bot${sv.S.length>2?'s':''}</p>`}""")
+RR("cherche:20,tournade:40","cherche:30,tournade:40")
+RR("</script>\n</body>","""/* Cherche et trouve : 10 nouveaux niveaux (21 à 30) ; les arts suivent les niveaux, les niveaux de fêtes passent à 31-40 */
+try{if(CHART.length===30&&!window.__chfix){window.__chfix=1;[CHART[11],CHART[19]]=[CHART[19],CHART[11]];CHART.splice(20,0,...Array(10).fill(null));CHU.forEach(u=>{if(u.ar===11)u.ar=19})}}catch(e){}
+try{if(!st.get('chm30',0)){st.set('chm30',1);for(let i=9;i>=0;i--){const a=20+i,b=30+i;for(const pre of ['c:cherche:','k:cherche:','p:cherche:']){const v=st.get(pre+a,undefined);if(v!==undefined&&v!==null&&v!==false&&v!==''){st.set(pre+b,v);st.set(pre+a,pre==='p:cherche:'?null:false)}}}}}catch(e){}
+</script>
+</body>""")

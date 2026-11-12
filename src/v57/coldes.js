@@ -19,20 +19,29 @@ const CP={
  line:P=>'M'+P.map((v,i)=>cdF(v)+(i%2?(i<P.length-1?'L':''):' ')).join(''),
  curve:(x1,y1,cx,cy,x2,y2)=>`M${cdF(x1)} ${cdF(y1)}Q${cdF(cx)} ${cdF(cy)} ${cdF(x2)} ${cdF(y2)}`
 };
+const cdMp2=(d,f)=>d.replace(/([MLCQ])([^MLCQZ]*)/g,(m,c,r)=>{const n=r.trim().split(/\s+/).map(Number);return c+n.map((v,i)=>cdF(f(v,i%2))).join(' ')});
+function cdBx2(S,n0){let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(let i=n0;i<S.length;i++){const n=(S[i].d||'').match(/-?\d+\.?\d*/g);if(!n)continue;for(let k=0;k+1<n.length;k+=2){const x=+n[k],y=+n[k+1];if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y}}return[x0,y0,x1,y1]}
+/* un objet entier doit tenir dans le cadre : on le décale vers l’intérieur */
+function cdFt2(S,n0){if(S.length<=n0)return;const[x0,y0,x1,y1]=cdBx2(S,n0),P=8;if(x0>1e8)return;let dx=0,dy=0;
+ if(x1-x0>CDW-2*P)dx=(CDW-x1-x0)/2;else if(x0<P)dx=P-x0;else if(x1>CDW-P)dx=CDW-P-x1;
+ if(y1-y0>CDH-2*P)dy=(CDH-y1-y0)/2;else if(y0<P)dy=P-y0;else if(y1>CDH-P)dy=CDH-P-y1;
+ if(!dx&&!dy)return;for(let i=n0;i<S.length;i++)if(S[i].d)S[i].d=cdMp2(S[i].d,(v,k)=>v+(k?dy:dx))}
+const cdKeep=S=>S.forEach(s=>{if(!s.d)return;const n=(s.d.match(/-?\d+\.?\d*/g)||[]).map(Number);if(n.every((v,i)=>i%2?v>=0&&v<=CDH:v>=0&&v<=CDW))return;s.d=cdMp2(s.d,(v,k)=>Math.max(0,Math.min(k?CDH:CDW,v)))});
 /* ---------- les 10 thèmes (4 variantes chacun, de plus en plus fournies) ---------- */
 function cdScene(l){
  const R=cdRng(l*7919+13),q=l/(CDN-1),th=l%10,S=[],L=[],add=(d,c)=>S.push({d,c}),ln=(d,w=3)=>S.push({d,w,ln:1}),jit=(h,s,li,j=6)=>cdHex(h+(R()-.5)*j,s+(R()-.5)*j,li+(R()-.5)*j),rn=(a,b)=>a+R()*(b-a),ri=(a,b)=>Math.floor(rn(a,b+1));
  const sky=(n,h1,h2,l1,l2,s=45)=>{for(let i=0;i<n;i++){const t=i/n;add(CP.band(i?CDH*(.02+t*.45):-30,rn(4,18),rn(.6,1.6),rn(0,6),CDH),cdHex(h1+(h2-h1)*t,s,l1+(l2-l1)*t))}};
  const mounts=(n,y0,h,hu,li)=>{for(let k=0;k<n;k++){const y=y0+k*h*.35,P=[0,CDH];let x=0;P.push(0,y+rn(-30,30));while(x<CDW){x+=rn(60,170);P.push(Math.min(CDW,x),y-rn(0,h)*(1-k*.12))}P.push(CDW,CDH);add(CP.poly(P),jit(hu,30,li-k*6))}};
- const lotus=(cx,cy,sz,hu)=>{const n=ri(5,7);for(let i=0;i<n;i++){const a=Math.PI+(i+.5)/n*Math.PI;add(CP.petal(cx,cy,a,sz,sz*.32),jit(hu,62,80-i%2*8))}for(let i=0;i<n-1;i++){const a=Math.PI+(i+1)/n*Math.PI;add(CP.petal(cx,cy+sz*.05,a,sz*.8,sz*.28),jit(hu,66,68))}add(CP.ell(cx,cy-sz*.12,sz*.22,sz*.12),jit(52,80,62));for(let i=0;i<3;i++)add(CP.petal(cx,cy+sz*.08,-Math.PI/2+(i-1)*.5,sz*.62,sz*.24),jit(hu,70,58+i*5))};
- const leafP=(x,y,a,len,w,hu,li)=>{add(CP.half(x,y,a,len,w,1),jit(hu,45,li));add(CP.half(x,y,a,len,w,-1),jit(hu,48,li-9));ln(CP.line([x,y,x+Math.cos(a)*len,y+Math.sin(a)*len]),2);for(let k=1;k<4;k++){const u=len*k/4.4,bx=x+Math.cos(a)*u,by=y+Math.sin(a)*u;[1,-1].forEach(sd=>ln(CP.line([bx,by,bx+Math.cos(a+sd*.7)*w*.7,by+Math.sin(a+sd*.7)*w*.7]),1.4))}};
- const pine=(x,y,h,hu,li)=>{add(CP.rect(x-h*.05,y-h*.18,h*.1,h*.2),jit(25,40,30));const k=ri(3,4);for(let i=0;i<k;i++){const yy=y-h*.15-i*h*.25,w=h*(.42-i*.08);add(CP.poly([x-w,yy,x,yy-h*.42,x+w,yy]),jit(hu,40,li+i*4))}};
- const house=(x,y,w,h,hu)=>{add(CP.rect(x,y-h,w,h),jit(hu,45,62));add(CP.poly([x-w*.1,y-h,x+w/2,y-h-w*.55,x+w*1.1,y-h]),jit(hu+180,35,40));add(CP.poly([x-w*.1,y-h,x+w/2,y-h-w*.55,x+w*1.1,y-h,x+w*1.02,y-h+8,x+w/2,y-h-w*.42,x-w*.02,y-h+8]),'#f4f6fb');add(CP.rect(x+w*.38,y-h*.5,w*.24,h*.5),jit(25,45,32));add(CP.rect(x+w*.1,y-h*.8,w*.2,h*.2),jit(48,90,68));add(CP.rect(x+w*.7,y-h*.8,w*.2,h*.2),jit(48,90,64));ln(CP.line([x+w*.2,y-h*.8,x+w*.2,y-h*.6]),1.6);ln(CP.line([x+w*.8,y-h*.8,x+w*.8,y-h*.6]),1.6)};
- const flower=(cx,cy,r,hu,n)=>{for(let i=0;i<n;i++)add(CP.petal(cx,cy,i/n*Math.PI*2+rn(0,.2),r,r*.42),jit(hu,65,70-(i%2)*8));add(CP.ell(cx,cy,r*.28,r*.28),jit(45,85,58));add(CP.ell(cx-r*.06,cy-r*.06,r*.1,r*.1),jit(45,85,74))};
- const cloud=(x,y,w,li)=>{add(CP.blob(x,y,w,w*.38,R,10,.18),cdHex(220,30,li));add(CP.blob(x-w*.3,y+w*.08,w*.45,w*.25,R,8,.15),cdHex(220,25,li-6))};
- const berry=(cx,cy,r,hu)=>{const P=[];const n=ri(9,14);for(let i=0;i<n;i++){const a=R()*Math.PI*2,d=R()*r*.75;P.push([cx+Math.cos(a)*d,cy+Math.sin(a)*d*1.15])}P.sort((a,b)=>a[1]-b[1]);P.forEach(([x,y])=>{const rr=r*rn(.24,.3);add(CP.ell(x,y,rr,rr),jit(hu,45,30+rn(0,18)));add(CP.ell(x-rr*.35,y-rr*.35,rr*.3,rr*.22),jit(hu,30,70))})};
- const fish=(x,y,s,hu,dir)=>{add(CP.poly([x-dir*s*.9,y,x-dir*s*1.4,y-s*.4,x-dir*s*1.4,y+s*.4]),jit(hu,70,50));add(CP.ell(x,y,s,s*.5),jit(hu,75,60));for(let k=0;k<3;k++)add(CP.rect(x-s*.5+k*s*.35,y-s*.45,s*.12,s*.9),jit(hu+30,40,92));add(CP.petal(x,y-s*.4,-Math.PI/2-dir*.6,s*.5,s*.18),jit(hu,70,45));add(CP.ell(x+dir*s*.55,y-s*.1,s*.1,s*.1),'#ffffff');add(CP.ell(x+dir*s*.58,y-s*.1,s*.05,s*.05),'#26243a')};
- const balloon=(x,y,r,hues)=>{const n=hues.length;for(let i=0;i<n;i++){const a1=-Math.PI/2-Math.PI/2+i*Math.PI/n,a2=a1+Math.PI/n;add(CP.sector(x,y,0,r,a1+Math.PI/2-Math.PI/2,a2),'#000')}};
+ const lotus0=(cx,cy,sz,hu)=>{const n=ri(5,7);for(let i=0;i<n;i++){const a=Math.PI+(i+.5)/n*Math.PI;add(CP.petal(cx,cy,a,sz,sz*.32),jit(hu,62,80-i%2*8))}for(let i=0;i<n-1;i++){const a=Math.PI+(i+1)/n*Math.PI;add(CP.petal(cx,cy+sz*.05,a,sz*.8,sz*.28),jit(hu,66,68))}add(CP.ell(cx,cy-sz*.12,sz*.22,sz*.12),jit(52,80,62));for(let i=0;i<3;i++)add(CP.petal(cx,cy+sz*.08,-Math.PI/2+(i-1)*.5,sz*.62,sz*.24),jit(hu,70,58+i*5))};
+ const leafP0=(x,y,a,len,w,hu,li)=>{add(CP.half(x,y,a,len,w,1),jit(hu,45,li));add(CP.half(x,y,a,len,w,-1),jit(hu,48,li-9));ln(CP.line([x,y,x+Math.cos(a)*len,y+Math.sin(a)*len]),2);for(let k=1;k<4;k++){const u=len*k/4.4,bx=x+Math.cos(a)*u,by=y+Math.sin(a)*u;[1,-1].forEach(sd=>ln(CP.line([bx,by,bx+Math.cos(a+sd*.7)*w*.7,by+Math.sin(a+sd*.7)*w*.7]),1.4))}};
+ const pine0=(x,y,h,hu,li)=>{add(CP.rect(x-h*.05,y-h*.18,h*.1,h*.2),jit(25,40,30));const k=ri(3,4);for(let i=0;i<k;i++){const yy=y-h*.15-i*h*.25,w=h*(.42-i*.08);add(CP.poly([x-w,yy,x,yy-h*.42,x+w,yy]),jit(hu,40,li+i*4))}};
+ const house0=(x,y,w,h,hu)=>{add(CP.rect(x,y-h,w,h),jit(hu,45,62));add(CP.poly([x-w*.1,y-h,x+w/2,y-h-w*.55,x+w*1.1,y-h]),jit(hu+180,35,40));add(CP.poly([x-w*.1,y-h,x+w/2,y-h-w*.55,x+w*1.1,y-h,x+w*1.02,y-h+8,x+w/2,y-h-w*.42,x-w*.02,y-h+8]),'#f4f6fb');add(CP.rect(x+w*.38,y-h*.5,w*.24,h*.5),jit(25,45,32));add(CP.rect(x+w*.1,y-h*.8,w*.2,h*.2),jit(48,90,68));add(CP.rect(x+w*.7,y-h*.8,w*.2,h*.2),jit(48,90,64));ln(CP.line([x+w*.2,y-h*.8,x+w*.2,y-h*.6]),1.6);ln(CP.line([x+w*.8,y-h*.8,x+w*.8,y-h*.6]),1.6)};
+ const flower0=(cx,cy,r,hu,n)=>{for(let i=0;i<n;i++)add(CP.petal(cx,cy,i/n*Math.PI*2+rn(0,.2),r,r*.42),jit(hu,65,70-(i%2)*8));add(CP.ell(cx,cy,r*.28,r*.28),jit(45,85,58));add(CP.ell(cx-r*.06,cy-r*.06,r*.1,r*.1),jit(45,85,74))};
+ const cloud0=(x,y,w,li)=>{add(CP.blob(x,y,w,w*.38,R,10,.18),cdHex(220,30,li));add(CP.blob(x-w*.3,y+w*.08,w*.45,w*.25,R,8,.15),cdHex(220,25,li-6))};
+ const berry0=(cx,cy,r,hu)=>{const P=[];const n=ri(9,14);for(let i=0;i<n;i++){const a=R()*Math.PI*2,d=R()*r*.75;P.push([cx+Math.cos(a)*d,cy+Math.sin(a)*d*1.15])}P.sort((a,b)=>a[1]-b[1]);P.forEach(([x,y])=>{const rr=r*rn(.24,.3);add(CP.ell(x,y,rr,rr),jit(hu,45,30+rn(0,18)));add(CP.ell(x-rr*.35,y-rr*.35,rr*.3,rr*.22),jit(hu,30,70))})};
+ const fish0=(x,y,s,hu,dir)=>{add(CP.poly([x-dir*s*.9,y,x-dir*s*1.4,y-s*.4,x-dir*s*1.4,y+s*.4]),jit(hu,70,50));add(CP.ell(x,y,s,s*.5),jit(hu,75,60));for(let k=0;k<3;k++)add(CP.rect(x-s*.5+k*s*.35,y-s*.45,s*.12,s*.9),jit(hu+30,40,92));add(CP.petal(x,y-s*.4,-Math.PI/2-dir*.6,s*.5,s*.18),jit(hu,70,45));add(CP.ell(x+dir*s*.55,y-s*.1,s*.1,s*.1),'#ffffff');add(CP.ell(x+dir*s*.58,y-s*.1,s*.05,s*.05),'#26243a')};
+ const balloon0=(x,y,r,hues)=>{const n=hues.length;for(let i=0;i<n;i++){const a1=-Math.PI/2-Math.PI/2+i*Math.PI/n,a2=a1+Math.PI/n;add(CP.sector(x,y,0,r,a1+Math.PI/2-Math.PI/2,a2),'#000')}};
+ const G=f=>(...a)=>{const n0=S.length,r=f(...a);cdFt2(S,n0);return r},lotus=G(lotus0),leafP=G(leafP0),pine=G(pine0),house=G(house0),flower=G(flower0),cloud=G(cloud0),berry=G(berry0),fish=G(fish0),balloon=G(balloon0);
  const C={};
  if(th===0){ /* étang aux lotus */
   sky(3+Math.round(q*4),150,190,86,94,30);add(CP.ell(CDW*rn(.35,.6),CDH*.36,rn(240,300),rn(240,300)),jit(140,30,86));mounts(2+Math.round(q*2),CDH*.5,160,200,78);
@@ -95,6 +104,7 @@ function cdScene(l){
   const tx=CDW*.36,ty=CDH*.64;add(CP.ell(tx,ty,200,160),jit(rn(0,360),45,62));add(CP.ell(tx-40,ty-50,80,40),jit(0,0,95));add(CP.poly([tx+180,ty-20,tx+300,ty-120,tx+310,ty-100,tx+200,ty+40]),jit(rn(0,360),45,55));add(CP.ell(tx,ty-160,90,26),jit(30,40,50));add(CP.ell(tx,ty-190,22,22),jit(30,40,45));
   for(let i=0;i<2+Math.round(q*2);i++){const x=CDW*rn(.62,.85),y=CDH*rn(.72,.92);add(CP.ell(x,y+40,110,26),jit(0,0,92));add(CP.poly([x-70,y-60,x+70,y-60,x+55,y+40,x-55,y+40]),jit(rn(0,360),55,60));add(CP.ell(x,y-60,70,18),jit(25,55,35));ln(CP.curve(x-20,y-90,x,y-140,x-10,y-190),3)}
   for(let i=0;i<3+Math.round(q*3);i++){const x=rn(80,920),y=CDH*rn(.88,.97),r=rn(40,60);add(CP.ell(x,y,r,r*.9),jit(32,60,60));for(let k=0;k<4;k++)add(CP.ell(x+rn(-r*.5,r*.5),y+rn(-r*.4,r*.4),8,8),jit(25,60,25))}}
+ cdKeep(S);
  return{A:S.filter(s=>s.ln||(s.c!=='#00000000'&&s.c!=='#000')),get S(){return this.A.filter(s=>!s.ln)},L:[]}}
 /* palette : on fusionne les teintes les plus proches jusqu’au nombre voulu (10 à 50) */
 function cdPal(S,K){
