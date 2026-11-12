@@ -81,7 +81,7 @@ act.shopX=()=>{const o=document.getElementById('shpo');if(o)o.remove()};
 const shToast=t=>{if(typeof gToast==='function')gToast(t);else if(typeof msg==='function')msg(t)};
 /* la boutique n'est active que sur le site web (pas dans l'appli installée depuis un magasin d'applications) */
 const inStore=()=>{try{if(document.referrer.startsWith('android-app://'))sessionStorage.setItem('twa','1');return sessionStorage.getItem('twa')==='1'||/[?&]src=(play|ios)/.test(location.search)}catch(e){return false}};inStore();
-const shopOn=()=>!!window.fbShop&&!inStore();
+const shopOn=()=>!!window.fbShop&&window.fbShop.live&&!inStore();
 act.shopBuy=async k=>{if(!shopOn())return shToast('Les achats arrivent bientôt ✦');const b=document.querySelector('[data-a="shopBuy"][data-v="'+k+'"]');if(b){if(b.dataset.busy)return;b.dataset.busy=1;b.style.opacity=.6}
  const r=await window.fbShop.buy(k);if(b){delete b.dataset.busy;b.style.opacity=''}
  if(r&&r.err==='login')shToast('Connecte-toi à ton compte (Réglages) pour acheter des flocons.');else if(r&&r.err)shToast('Le paiement n’a pas pu démarrer. Réessaie dans un instant.')};

@@ -36,7 +36,7 @@ window.claude={use:async n=>{
 
 /* ---- Boutique : paiement Stripe (fonction createCheckout) et total des flocons achetés (buys/<uid>, écrit par le webhook) ---- */
 const FN='https://us-central1-calmonus.cloudfunctions.net/';
-window.fbShop={
+window.fbShop={live:false, // passer à true une fois les fonctions déployées et Stripe configuré
  buy:async k=>{let F;try{F=await load()}catch(e){return{err:'x'}}const u=F.auth.currentUser;if(!u)return{err:'login'};
   try{const t=await u.getIdToken(),r=await fetch(FN+'createCheckout',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+t},body:JSON.stringify({pack:k})});
    if(!r.ok)return{err:r.status===401?'login':'x'};const j=await r.json();if(!j.url)return{err:'x'};location.href=j.url;return{}}catch(e){return{err:'x'}}},
