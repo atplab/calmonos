@@ -137,7 +137,7 @@ RR("function prefScreen(){","""const ABOUT_MAIL='nextonset@pm.me';
 function aboutScreen(){
  cur=null;nv('set');
  app.innerHTML=`<header class="top pfh"><h1>À propos</h1></header><section class="glass play pf ab">
-<h2>Nextonset</h2><p>« Calmos » est un jeu de détente en français, édité par <b>Nextonset</b>. Le jeu est gratuit ; les achats de flocons sont facultatifs.</p>
+<h2>Nextonset · Atplab</h2><p>« Calmos » est un jeu de détente en français, édité par <b>Nextonset</b> (Atplab). Le jeu est gratuit ; les achats de flocons sont facultatifs.</p>
 <h2>Conditions d’utilisation</h2>
 <p>En utilisant le jeu, tu acceptes ces conditions.</p>
 <ul><li>Le jeu est fourni pour un usage personnel, tel quel, sans garantie de disponibilité continue.</li><li>Pas de triche ni d’abus qui fausseraient les classements ou perturberaient les autres joueurs. Nextonset peut suspendre un compte en cas d’abus.</li><li>Les flocons ❄ sont une monnaie virtuelle du jeu : ils n’ont aucune valeur réelle, ne sont ni échangeables contre de l’argent, ni transférables entre comptes.</li><li>Nextonset peut modifier le jeu, ses niveaux et ces conditions. L’utilisation continue du jeu vaut acceptation.</li></ul>
@@ -146,7 +146,7 @@ function aboutScreen(){
 <h2>Confidentialité</h2>
 <ul><li>Ta progression est enregistrée sur ton appareil. Si tu crées un compte, elle est aussi sauvegardée en ligne (Google Firebase), avec ton pseudo, tes scores et tes amis, pour la retrouver sur d’autres appareils.</li><li>Les paiements sont traités par Stripe. Nextonset ne voit ni ne conserve ton numéro de carte.</li><li>Le jeu pourra afficher des publicités à l’avenir. Des partenaires publicitaires pourraient alors traiter certaines données (comme l’identifiant publicitaire de ton appareil), selon leurs propres politiques, et cette page sera mise à jour. Nextonset ne vend pas tes données personnelles.</li><li>Tu peux demander la suppression de ton compte et de tes données en nous contactant.</li></ul>
 <h2>Contact</h2><p>${ABOUT_MAIL?'Courriel : <b>'+ABOUT_MAIL+'</b><br>':''}Projet : github.com/atplab/calmonos</p>
-<p class="ab-s">© 2026 Nextonset. Tous droits réservés.</p></section><button class="btn alt" data-a="aboutBack">Retour aux réglages</button>`;
+<p class="ab-s">© 2026 Nextonset · Atplab. Tous droits réservés.</p></section><button class="btn alt" data-a="aboutBack">Retour aux réglages</button>`;
  window.scrollTo(0,0);
 }
 act.about=aboutScreen;act.aboutBack=()=>prefScreen();
