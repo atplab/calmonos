@@ -150,12 +150,12 @@ function biUI(){const s=$("#bist");if(!s||!BG)return;const P=BG.turn,G=BG.grp,mo
  const lock=BG.st==="moving"||BG.st==="over"||(mode==="ai"&&P===1);document.querySelectorAll("#bipw,#biwh,#bisp,.bire").forEach(e=>e.classList.toggle("off",lock))}
 function biScreen(){biActs();cur="billard";nv("games");theme("billard");$("#nav").hidden=!0;
  app.innerHTML=`<div class="bis"><div class="top stk"><button class="back" data-a="biBk">‹ Menu</button><span class="tl">${BG.mode==="ai"?"Contre l’ordinateur · "+["débutant","confirmé","expert"][BG.lv]:BG.mode==="duo"?"À deux":"Entraînement"}</span><div class="chip">❄ ${FLX()}</div></div>
- <div class="bist" id="bist"></div><p class="bim" id="bim" role="status" aria-live="polite"></p>
+ <div class="bist" id="bist"></div>
  <div class="biw"><div class="bipw" id="bipw" aria-label="Puissance : tire vers le bas puis relâche"><div class="bipf" id="bipf"></div><div class="bicq" id="bicq"></div><span>Tirer</span></div>
  <div class="bicw"><canvas id="bicv" aria-label="Table de billard"></canvas><button class="bisp" id="bisp" data-a="biSpin" aria-label="Effet"><i></i></button>${BG.mode==="free"?'<button class="bire" data-a="biRe" aria-label="Replacer les billes">↺</button>':""}<div class="biov" id="biov" hidden></div></div>
- <div class="biwh" id="biwh" aria-label="Réglage fin de la visée : glisse vers le haut ou le bas"><div class="biwr" id="biwr"></div></div></div>
+ <div class="biwh" id="biwh" aria-label="Réglage fin de la visée : glisse vers le haut ou le bas"><div class="biwr" id="biwr"></div></div></div><p class="bim" id="bim" role="status" aria-live="polite"></p>
  <div class="bisv" id="bisv" hidden><div><b>Effet</b><p>Touche la bille blanche où la queue doit la frapper : en haut, elle suit (coulé) ; en bas, elle revient (rétro) ; sur le côté, effet latéral sur les bandes.</p><div class="bisb" id="bisb"><i></i></div><div class="chrow"><button class="btn alt" data-a="biSpC">Centrer</button><button class="btn" data-a="biSpX">OK</button></div></div></div></div>`;
- const wr=$(".biw"),av=innerHeight-wr.getBoundingClientRect().top-14,ww=Math.min(wr.clientWidth-2*54,av/1.85);const cv=$("#bicv");cv.style.width=ww+"px";cv.style.height=ww*1.85+"px";$("#bipw").style.height=$("#biwh").style.height=Math.min(ww*1.85*.7,420)+"px";
+ const wr=$(".biw"),av=innerHeight-wr.getBoundingClientRect().top-62,ww=Math.min(wr.clientWidth-2*54,av/1.85);const cv=$("#bicv");cv.style.width=ww+"px";cv.style.height=ww*1.85+"px";$("#bipw").style.height=$("#biwh").style.height=Math.min(ww*1.85*.7,420)+"px";
  biBind();biUI();biDraw();if(BG.mode==="ai"&&BG.turn===1)setTimeout(biAI,600)}
 function biPt(e){const V=biView(),r=V.cv.getBoundingClientRect();return{x:(e.clientX-r.left-V.m)/V.s,y:(e.clientY-r.top-V.m)/V.s}}
 function biCan(){return BG&&BG.st!=="moving"&&BG.st!=="over"&&BG.st!=="aiaim"&&!(BG.mode==="ai"&&BG.turn===1)}
