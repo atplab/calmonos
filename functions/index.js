@@ -18,7 +18,7 @@ exports.createCheckout=onRequest({secrets:[STRIPE_KEY],cors:ORIGINS,region:'us-c
     const {uid}=await admin.auth().verifyIdToken(tok);
     const k=String((req.body&&req.body.pack)||''),P=PACKS[k];
     if(!P)return res.status(400).json({error:'pack'});
-    const stripe=Stripe(STRIPE_KEY.value());
+    const stripe=Stripe(STRIPE_KEY.value(),{apiVersion:'2025-03-31.basil'});
     const s=await stripe.checkout.sessions.create({
       mode:'payment',
       client_reference_id:uid,
