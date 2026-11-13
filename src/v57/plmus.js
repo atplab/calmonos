@@ -8,7 +8,7 @@ const PLT=[
  ['m3','Marée d’étoiles','Constellations',()=>m3Mus,'#3fc0cc','#0e4f78'],
  ['tetris','Blocs de glace','Tèconta',()=>ttMus,'#8fd8ff','#3d4fa0'],
  ['colorie','Pinceaux d’hiver','Coloriage',()=>cbMus,'#ffb36b','#a23d8a'],
- ['uno','Table de velours','Uno',()=>unMus,'#2a9d68','#0d3b29'],
+ ['hoho','Table de velours','HoHo',()=>unMus,'#2a9d68','#0d3b29'],
  ['cherche','Jardin sous la neige','Cherche et trouve',()=>chMus,'#9ad98a','#2b6a4a'],
  ['sudoku','Chiffres au calme','Sudoku',()=>lfMus,'#9a86e8','#2a1f66'],
  ['chess','La clairière','Échecs',()=>ecMus,'#7fb88a','#2b5f45'],
@@ -22,7 +22,7 @@ function plArt(k){const t=PLT.find(x=>x[0]===k),id='pa'+k;let b='';
  if(k==='m3')b=`<path d="M0 70q12-8 25 0t25 0 25 0 25 0v30H0z" fill="#fff" opacity=".18"/><path d="M0 82q12-8 25 0t25 0 25 0 25 0v18H0z" fill="#fff" opacity=".18"/><path d="M50 18l4.5 11 12 .8-9.3 7.6 3 11.6L50 42l-10.2 7 3-11.6-9.3-7.6 12-.8z" fill="#ffe9a8"/><ellipse cx="26" cy="64" rx="9" ry="5.5" fill="#ffd18a"/><path d="M35 64l7-5v10z" fill="#ffd18a"/><circle cx="72" cy="56" r="4" fill="none" stroke="#fff" stroke-width="1.4"/><circle cx="80" cy="42" r="2.4" fill="none" stroke="#fff" stroke-width="1.2"/><circle cx="18" cy="38" r="2.6" fill="none" stroke="#fff" stroke-width="1.2"/>`;
  else if(k==='tetris')b=`<g fill="#fff" opacity=".92"><rect x="30" y="26" width="18" height="18" rx="3"/><rect x="48" y="26" width="18" height="18" rx="3"/><rect x="66" y="26" width="18" height="18" rx="3"/><rect x="48" y="44" width="18" height="18" rx="3"/></g><g fill="#fff" opacity=".4"><rect x="12" y="66" width="18" height="18" rx="3"/><rect x="30" y="66" width="18" height="18" rx="3"/><rect x="48" y="66" width="18" height="18" rx="3"/><rect x="66" y="66" width="18" height="18" rx="3"/></g>`;
  else if(k==='colorie')b=`<circle cx="38" cy="42" r="22" fill="#ff5d7a" opacity=".85"/><circle cx="62" cy="42" r="22" fill="#ffd24a" opacity=".85"/><circle cx="50" cy="62" r="22" fill="#4fc3ff" opacity=".85"/><path d="M20 88L78 22" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M78 22l6-8" stroke="#5a2d1a" stroke-width="5" stroke-linecap="round"/>`;
- else if(k==='uno')b=`<g transform="rotate(-18 50 62)"><rect x="24" y="22" width="34" height="50" rx="5" fill="#e5464f"/></g><g transform="rotate(0 50 62)"><rect x="33" y="20" width="34" height="50" rx="5" fill="#ffd24a"/></g><g transform="rotate(18 50 62)"><rect x="42" y="22" width="34" height="50" rx="5" fill="#3f8cff"/></g><ellipse cx="50" cy="45" rx="9" ry="14" fill="#fff" transform="rotate(30 50 45)"/>`;
+ else if(k==='hoho')b=`<g transform="rotate(-18 50 62)"><rect x="24" y="22" width="34" height="50" rx="5" fill="#e5464f"/></g><g transform="rotate(0 50 62)"><rect x="33" y="20" width="34" height="50" rx="5" fill="#ffd24a"/></g><g transform="rotate(18 50 62)"><rect x="42" y="22" width="34" height="50" rx="5" fill="#3f8cff"/></g><ellipse cx="50" cy="45" rx="9" ry="14" fill="#fff" transform="rotate(30 50 45)"/>`;
  else if(k==='cherche')b=`<g fill="#fff" opacity=".35"><circle cx="20" cy="76" r="8"/><circle cx="34" cy="84" r="6"/><circle cx="80" cy="30" r="7"/></g><circle cx="44" cy="44" r="22" fill="#fff" fill-opacity=".22" stroke="#fff" stroke-width="5"/><path d="M60 60l22 22" stroke="#fff" stroke-width="7" stroke-linecap="round"/><path d="M36 50q8-14 16-4" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>`;
  else if(k==='sudoku')b=`<g stroke="#fff" stroke-opacity=".6" stroke-width="1.4"><path d="M20 20h60v60H20zM40 20v60M60 20v60M20 40h60M20 60h60"/></g><g fill="#fff" font-family="Georgia,serif" font-size="14" text-anchor="middle"><text x="30" y="35">5</text><text x="50" y="55">3</text><text x="70" y="75">9</text><text x="70" y="35" opacity=".6">1</text><text x="30" y="75" opacity=".6">7</text></g>`;
  else if(k==='chess')b=`<path d="M0 100V78l10-16 8 10 10-24 12 22 8-10 14-26 16 30 8-8 14 20v24z" fill="#0b2e22" opacity=".55"/><text x="50" y="66" font-size="54" text-anchor="middle" fill="#fff">♞</text>`;
@@ -81,7 +81,7 @@ act.plMode=v=>{if(v&&!plUnl(v))return msg(v==='eau'?'Le mode Sous l’eau se dé
 act.socPlay=v=>{const[k,f]=String(v).split(':');if(!f||!SO.P[f])return;const w=(fn,ms)=>setTimeout(fn,ms);
  if(k==='chess'){act.open('chess');w(()=>act.chInv(f),80)}
  else if(k==='scrabble'){act.scrOpen(f);w(()=>{const o=SC.G[f];if(SC.fid===f&&(!o||o.e))act.scNew()},1000)}
- else if(k==='uno'){act.open('uno');w(()=>{UN.cfg.fr=[f];act.unMake()},80)}
+ else if(k==='hoho'){act.open('hoho');w(()=>{UN.cfg.fr=[f];act.unMake()},80)}
  else if(k==='airhockey'){act.open('airhockey');w(()=>act.ahAsk(f),80)}};
 
 const INFN={g2048:1,tetris:1,planetes:1,caches:1,blocs:1};

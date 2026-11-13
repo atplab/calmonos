@@ -1,4 +1,4 @@
-/* ---------- Uno : petit trio de jazz de restaurant en fa majeur (vibraphone, piano électrique, contrebasse, balais) ---------- */
+/* ---------- HoHo : petit trio de jazz de restaurant en fa majeur (vibraphone, piano électrique, contrebasse, balais) ---------- */
 var unMu={on:false,L:null,T:0,s:0,t:0,rep:0,off:0,Q:.68,
  /* 16 mesures : [fondamentale, qualité (4 = majeur/dominante, 3 = mineur), voicing] */
  CH:[[41,4,[57,60,64,67]],[38,4,[54,59,60,64]],[43,3,[58,62,65,69]],[48,4,[52,57,58,62]],[45,3,[55,59,60,64]],[38,4,[54,59,60,64]],[43,3,[58,62,65,69]],[48,4,[52,57,58,62]],

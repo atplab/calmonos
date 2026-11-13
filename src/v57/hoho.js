@@ -1,11 +1,11 @@
-/* ---------- Uno : contre des bots, ou à distance avec jusqu’à 3 amis (4 joueurs), 15 s par tour en ligne ----------
+/* ---------- HoHo : contre des bots, ou à distance avec jusqu’à 3 amis (4 joueurs), 15 s par tour en ligne ----------
    Une partie en ligne = un document sc/<joueurs triés>_u (même règle de sécurité que le Scrabble et les échecs).
    L’hôte crée le salon ; chaque invité signale qu’il le rejoint dans son profil (champ un) ; l’hôte lance la partie.
    Celui dont c’est le tour écrit son coup ; l’hôte fait jouer les bots et les joueurs qui dépassent les 15 s
    (un autre joueur prend le relais si l’hôte n’est plus là). */
 const UNCL=['r','y','g','b'],UNHX={r:'#e8605a',y:'#f0bd3e',g:'#45ad72',b:'#4a8be0',k:'#2b2a3d'},UNNM={r:'rouge',y:'jaune',g:'vert',b:'bleu'};
 const UNBOT=[['Lapin','🐰'],['Renard','🦊'],['Hibou','🦉']],UNT=15000,UNRX=/^([rygb][0-9svd]|k[wf])$/;
-const UN={scr:'',g:null,loc:false,me:0,room:'',m:'',pk:-1,uc:false,cfg:Object.assign({nb:2,bots:1,fr:[]},st.get('uno:cfg',{})),subs:{},G:{},got:{},err:{},busy:false,iv:0,drvN:-1,drvT:0,lastX:0};
+const UN={scr:'',g:null,loc:false,me:0,room:'',m:'',pk:-1,uc:false,cfg:Object.assign({nb:2,bots:1,fr:[]},st.get('hoho:cfg',{})),subs:{},G:{},got:{},err:{},busy:false,iv:0,drvN:-1,drvT:0,lastX:0};
 UN.cfg.fr=[];
 /* ---------- règles ---------- */
 function unDeck(){const d=[];UNCL.forEach(c=>{d.push(c+'0');for(let v=1;v<=9;v++)d.push(c+v,c+v);['s','v','d'].forEach(x=>d.push(c+x,c+x))});for(let i=0;i<4;i++)d.push('kw','kf');return unShuf(d)}
@@ -19,15 +19,15 @@ const unCn=c=>{const v=c[1];return v==='s'?'Passe':v==='v'?'Inversion':v==='d'?'
 const unCnf=c=>unCn(c)+(c[0]!=='k'?' '+UNNM[c[0]]:'');
 function unNew(seats,extra){
  const D=unDeck(),H=seats.map((_,i)=>D.splice(0,(extra&&extra.hs&&extra.hs[i])||7)),k=D.findIndex(c=>/^[rygb]\d$/.test(c)),top=D.splice(k,1)[0];
- return Object.assign({},extra||{},{k:'uno',v:1,id:Math.random().toString(36).slice(2,10),n:(extra&&extra.n)||0,st:'play',S:seats,H,D,X:[top],c:top[0],t:Math.floor(Math.random()*seats.length),d:1,dr:0,w:-1,lg:'La partie commence',uc:seats.map(()=>0),to:seats.map(()=>0),dl:0,at:Date.now()})}
+ return Object.assign({},extra||{},{k:'hoho',v:1,id:Math.random().toString(36).slice(2,10),n:(extra&&extra.n)||0,st:'play',S:seats,H,D,X:[top],c:top[0],t:Math.floor(Math.random()*seats.length),d:1,dr:0,w:-1,lg:'La partie commence',uc:seats.map(()=>0),to:seats.map(()=>0),dl:0,at:Date.now()})}
 function unPick(S){if(!S.D.length){const top=S.X.pop();S.D=unShuf(S.X.slice());S.X=[top]}return S.D.pop()||null}
 function unGive(S,i,k){for(let j=0;j<k;j++){const c=unPick(S);if(c)S.H[i].push(c)}}
-function unPlay(S0,i,ix,col,uno){
+function unPlay(S0,i,ix,col,hoho){
  const S=unCp(S0),c=S.H[i].splice(ix,1)[0],vi=unNx(S,1);
  S.X.push(c);S.c=c[0]==='k'?(UNCL.includes(col)?col:'r'):c[0];S.dr=0;S.to[i]=0;
  let lg='^'+i+' {'+i+':joue|joues} '+unCn(c)+(c[0]==='k'?' · couleur '+UNNM[S.c]:' '+UNNM[c[0]]);
  if(!S.H[i].length){S.st='end';S.w=i;S.lg='^'+i+' {'+i+':a posé sa dernière carte|as posé ta dernière carte} !';S.dl=0;return S}
- if(S.H[i].length===1){if(uno){S.uc[i]=1;lg+=' · « Uno ! »'}else{unGive(S,i,2);S.uc[i]=0;lg+=' · oubli du « Uno ! » : +2'}}else S.uc[i]=0;
+ if(S.H[i].length===1){if(hoho){S.uc[i]=1;lg+=' · « HoHo ! »'}else{unGive(S,i,2);S.uc[i]=0;lg+=' · oubli du « HoHo ! » : +2'}}else S.uc[i]=0;
  const v=c[1],n=S.S.length;
  if(v==='s'){lg+=' · ^'+vi+' {'+vi+':passe son tour|passes ton tour}';S.t=unNx(S,2)}
  else if(v==='v'){if(n===2){S.t=unNx(S,2);lg+=' · {'+i+':et rejoue|et rejoues}'}else{S.d=-S.d;S.t=unNx(S,1);lg+=' · sens inversé'}}
@@ -90,16 +90,16 @@ function unDraw(){
  const S=UN.g,me=UN.me,n=S.S.length,my=S.H[me]||[],live=S.st==='play',myT=live&&S.t===me&&!S.S[me].b,net=!UN.loc;
  const hs=$('#unh'),sl=hs?hs.scrollLeft:0,flip=unHandPos(),myOn=myT&&!(UN.hit&&Date.now()<UN.hit.u);
  let op='';for(let r=1;r<n;r++){const i=(me+r)%n,s=S.S[i],h=S.H[i].length;
-  const hit=UN.hit&&UN.hit.i===i&&Date.now()<UN.hit.u,hold=UN.hit&&Date.now()<UN.hit.u;op+=`<div class="unp${live&&S.t===i&&!hold?' on':''}${hit?' hit':''}" data-i="${i}">${hit?`<em class="unhb">${UN.hit.t}</em>`:''}<span class="unav">${unAv(s)}</span><b>${esc(unDN(s))}${s.ab?' <small>(bot)</small>':''}</b><span class="unbk">${'<i></i>'.repeat(Math.min(h,8))}</span><span class="unn">${h} carte${h>1?'s':''}${S.uc[i]&&h===1?' · <em>Uno !</em>':''}</span></div>`}
+  const hit=UN.hit&&UN.hit.i===i&&Date.now()<UN.hit.u,hold=UN.hit&&Date.now()<UN.hit.u;op+=`<div class="unp${live&&S.t===i&&!hold?' on':''}${hit?' hit':''}" data-i="${i}">${hit?`<em class="unhb">${UN.hit.t}</em>`:''}<span class="unav">${unAv(s)}</span><b>${esc(unDN(s))}${s.ab?' <small>(bot)</small>':''}</b><span class="unbk">${'<i></i>'.repeat(Math.min(h,8))}</span><span class="unn">${h} carte${h>1?'s':''}${S.uc[i]&&h===1?' · <em>HoHo !</em>':''}</span></div>`}
  /* la main : toujours entière à l’écran (chevauchement selon la largeur réelle, sur deux rangées si besoin) */
  const W=Math.max(200,(root.clientWidth||Math.min(innerWidth,440)-36)-16),cw=58,cap=1+Math.floor((W-cw)/17),rows=my.length>cap?[my.slice(0,Math.ceil(my.length/2)),my.slice(Math.ceil(my.length/2))]:[my];
  const ovOf=m=>m>1?Math.min(6,Math.floor((W-cw)/(m-1))-cw):0;
  const turn=!live?'':myT?'À toi de jouer':S.S[me].b&&S.S[me].ab?'Un bot joue à ta place':'Au tour de '+esc(unNmD(S,S.t));
  const w=S.st==='end'?S.w:-1,rw=w<0?'':UN.loc&&S.sty!==undefined?(S.rwd?'+'+S.rwd+' ❄':''):UN.loc?(w===me?'+'+(2+2*(n-1))+' ❄':'+1 ❄'):(S.S[me]&&S.S[me].u===SO.uid?(w===me?'+10 ❄':'+2 ❄'):'');
  const host=!UN.loc&&S.h===SO.uid;
- root.innerHTML=`<div class="top stk"><button class="back" data-a="unBk">‹ Uno</button>${S.sty!==undefined?`<span class="tl">Niveau ${S.sty+1}</span>`:''}<div class="chip">❄ ${FLX()}</div></div>
+ root.innerHTML=`<div class="top stk"><button class="back" data-a="unBk">‹ HoHo</button>${S.sty!==undefined?`<span class="tl">Niveau ${S.sty+1}</span>`:''}<div class="chip">❄ ${FLX()}</div></div>
  <div class="unop">${op}</div>
- <div class="unc"><span class="unar l ${S.d>0?'up':'dn'}" aria-hidden="true"><svg viewBox="0 0 28 72"><path d="M20 66Q2 36 18 8"/><path d="M9 11l9-3 1 9"/></svg></span><button class="btn ununo${UN.uc?' on':''}" data-a="unUno" ${myT&&my.length===2?'':'disabled'} aria-pressed="${UN.uc}">Uno !</button><button class="unk${myT&&!S.dr&&!UN.busy&&!my.some(c=>unOk(S,c))?' must':''}" data-a="unDraw" aria-label="Piocher" ${myT&&!S.dr?'':'disabled'}>${unBack()}<small>${S.D.length}</small><em class="unkm" aria-hidden="true">Pioche !</em></button><div class="untop" style="--cc:${UNHX[S.c]}">${S.X.length>1?`<span class="unund" style="${unJit(S.X.length-2)}" aria-hidden="true">${unCard(S.X[S.X.length-2],'big')}</span>`:''}<span style="${unJit(S.X.length-1)}" class="untc ${S.X.length!==UN.lastX&&wRM?'unpop':''}"${UN.flyX&&UN.flyX===S.X.length?' style="visibility:hidden"':''}>${unCard(unTop(S),'big'+(unTop(S)[0]==='k'?' ukc u-'+S.c:''))}</span></div><span class="unar r ${S.d>0?'dn':'up'}" aria-hidden="true"><svg viewBox="0 0 28 72"><path d="M20 66Q2 36 18 8"/><path d="M9 11l9-3 1 9"/></svg></span></div>
+ <div class="unc"><span class="unar l ${S.d>0?'up':'dn'}" aria-hidden="true"><svg viewBox="0 0 28 72"><path d="M20 66Q2 36 18 8"/><path d="M9 11l9-3 1 9"/></svg></span><button class="btn unhoho${UN.uc?' on':''}" data-a="unHoho" ${myT&&my.length===2?'':'disabled'} aria-pressed="${UN.uc}">HoHo !</button><button class="unk${myT&&!S.dr&&!UN.busy&&!my.some(c=>unOk(S,c))?' must':''}" data-a="unDraw" aria-label="Piocher" ${myT&&!S.dr?'':'disabled'}>${unBack()}<small>${S.D.length}</small><em class="unkm" aria-hidden="true">Pioche !</em></button><div class="untop" style="--cc:${UNHX[S.c]}">${S.X.length>1?`<span class="unund" style="${unJit(S.X.length-2)}" aria-hidden="true">${unCard(S.X[S.X.length-2],'big')}</span>`:''}<span style="${unJit(S.X.length-1)}" class="untc ${S.X.length!==UN.lastX&&wRM?'unpop':''}"${UN.flyX&&UN.flyX===S.X.length?' style="visibility:hidden"':''}>${unCard(unTop(S),'big'+(unTop(S)[0]==='k'?' ukc u-'+S.c:''))}</span></div><span class="unar r ${S.d>0?'dn':'up'}" aria-hidden="true"><svg viewBox="0 0 28 72"><path d="M20 66Q2 36 18 8"/><path d="M9 11l9-3 1 9"/></svg></span></div>
  <p class="unlg vh" role="status" aria-live="polite">${esc(unLg(S,me))}</p>
  <div class="unme${myT&&!(UN.hit&&Date.now()<UN.hit.u)?' on':''}${UN.hit&&UN.hit.i===me&&Date.now()<UN.hit.u?' hit':''}">${UN.hit&&UN.hit.i===me&&Date.now()<UN.hit.u?`<em class="unhb">${UN.hit.t}</em>`:''}<div class="unt"><b>${turn}</b>${net&&myT?'<span class="untb"><i id="untm"></i></span>':''}</div>
  <div class="unh" id="unh">${(()=>{let base=0;return rows.map(R=>{const b0=base;base+=R.length;return`<div class="unhr" style="--ov:${ovOf(R.length)}px">${R.map((c,j)=>{const k=b0+j;const ok=myT&&(S.dr?k===my.length-1&&unOk(S,c):unOk(S,c));return`<button class="ucd${ok&&myOn?' ok':''}${myOn&&!ok?' no':''}${myOn?'':' wt'}" data-a="unPlay" data-v="${k}" data-c="${c}" aria-label="${unCnf(c)}"${ok?'':' aria-disabled="true"'}>${unCard(c)}</button>`}).join('')}</div>`}).join('')})()}</div>
@@ -210,17 +210,17 @@ function unSolo(nb){
 /* mode histoire : 24 niveaux contre les bots, de plus en plus serrés */
 const UNN=24,UNTI=[['Le petit salon','Zeni t’invite près du poêle : Lapin voudrait une partie. Tu commences avec peu de cartes, le temps de te réchauffer.'],['La veillée','Renard rejoint la table. La veillée s’allonge et les cartes s’empilent.'],['Le grand tournoi','Hibou organise un tournoi. Trois adversaires, et des mains bien garnies.'],['La nuit des cartes','Dernière nuit : les bots ont peu de cartes en main. Garde ton sang-froid !']];
 const unSL=l=>{const t=Math.floor(l/6),k=l%6;return{t,k,nb:[1,2,3,3][t],hm:Math.min(9,4+k+t),hb:Math.max(4,7-t)}};
-const unSDone=i=>st.get(ckey('uno')+':'+i,false),unSNext=()=>{for(let i=0;i<UNN;i++)if(!unSDone(i))return i;return UNN-1};
+const unSDone=i=>st.get(ckey('hoho')+':'+i,false),unSNext=()=>{for(let i=0;i<UNN;i++)if(!unSDone(i))return i;return UNN-1};
 function unStory(l){
  const c=unSL(l),seats=[{u:SO.uid||'me',nm:'Toi',b:0}];UNBOT.slice(0,c.nb).forEach(([nm,e])=>seats.push({u:'',nm,e,b:1}));
  UN.loc=true;UN.me=0;UN.uc=false;UN.pk=-1;UN.m='';UN.room='';
  const S=unNew(seats,{sty:l,hs:seats.map((x,i)=>i?c.hb:c.hm)});unArm(S,null,false);UN.g=S;unSave();unScreen()}
 function unStoryCard(){
  const nx=unSNext(),dn=[...Array(UNN).keys()].filter(unSDone).length,c=unSL(nx),T=UNTI[c.t];
- return`<section class="glass play unst"><h2>Histoire</h2><p class="note" style="margin:0 0 4px"><b>${esc(T[0])}</b> · niveau ${nx+1} sur ${UNN}</p><p class="note" style="margin:0 0 12px">${esc(T[1])} Tu as ${c.hm} cartes, ${c.nb>1?'les '+c.nb+' bots en ont':'le bot en a'} ${c.hb}.</p><button class="btn chgo" data-a="unSt" data-v="${nx}">${dn?'Continuer':'Commencer'} · niveau ${nx+1}</button><div class="unsl" role="group" aria-label="Niveaux">${[...Array(UNN).keys()].map(i=>`<button class="${unSDone(i)?'ok':i===nx?'nx':''}" data-a="unSt" data-v="${i}" ${i>nx?'disabled':''} aria-label="Niveau ${i+1}${unSDone(i)?' terminé':''}">${unSDone(i)?'✓':i+1}</button>`).join('')}</div><p class="note" style="margin:10px 0 0">${dn} sur ${UNN} terminés · +${rw('uno')} ❄ à la première victoire</p></section>`}
-function unSave(){if(!UN.loc)return;st.set('uno:sv',UN.g&&UN.g.st==='play'?UN.g:null)}
+ return`<section class="glass play unst"><h2>Histoire</h2><p class="note" style="margin:0 0 4px"><b>${esc(T[0])}</b> · niveau ${nx+1} sur ${UNN}</p><p class="note" style="margin:0 0 12px">${esc(T[1])} Tu as ${c.hm} cartes, ${c.nb>1?'les '+c.nb+' bots en ont':'le bot en a'} ${c.hb}.</p><button class="btn chgo" data-a="unSt" data-v="${nx}">${dn?'Continuer':'Commencer'} · niveau ${nx+1}</button><div class="unsl" role="group" aria-label="Niveaux">${[...Array(UNN).keys()].map(i=>`<button class="${unSDone(i)?'ok':i===nx?'nx':''}" data-a="unSt" data-v="${i}" ${i>nx?'disabled':''} aria-label="Niveau ${i+1}${unSDone(i)?' terminé':''}">${unSDone(i)?'✓':i+1}</button>`).join('')}</div><p class="note" style="margin:10px 0 0">${dn} sur ${UNN} terminés · +${rw('hoho')} ❄ à la première victoire</p></section>`}
+function unSave(){if(!UN.loc)return;st.set('hoho:sv',UN.g&&UN.g.st==='play'?UN.g:null)}
 function unScreen(){
- unActs(); cur='uno';nv('games');theme('uno');UN.scr='game';
+ unActs(); cur='hoho';nv('games');theme('hoho');UN.scr='game';
  app.innerHTML='<div id="ung" class="ung"></div>';UN.lastX=-1;unDraw();
  clearInterval(UN.iv);UN.iv=setInterval(unTick,350);window.scrollTo(0,0)}
 /* un coup : en solo, enregistré ; en ligne, envoyé */
@@ -237,12 +237,12 @@ function unAfter(prev){
  if(S.st==='end'&&(!prev||prev.st!=='end'||prev.id!==S.id)){unPay(S);const won=S.w===UN.me;sfx(won?784:330,won?.7:.3);vib(won?[20,40,20]:15);if(won)try{confetti()}catch(e){}}
  else if(prev&&prev.X.length!==S.X.length){vib(8)}}
 function unPay(S){
- if(UN.loc&&S.sty!==undefined){const k=ckey('uno')+':'+S.sty,first=!st.get(k,false);let r=0;if(S.w===UN.me){st.set(k,true);r=first?rw('uno'):1}else r=0;S.rwd=r;if(r)scrGain(r);return}
+ if(UN.loc&&S.sty!==undefined){const k=ckey('hoho')+':'+S.sty,first=!st.get(k,false);let r=0;if(S.w===UN.me){st.set(k,true);r=first?rw('hoho'):1}else r=0;S.rwd=r;if(r)scrGain(r);return}
  if(UN.loc){const n=S.S.length,r=S.w===UN.me?2+2*(n-1):1;scrGain(r);return}
  unPayN(S)}
 function unPayN(S){
  const me=S.S.findIndex(s=>s.u===SO.uid);if(me<0)return;
- const pd=st.get('uno:paid',[]);if(pd.includes(S.id))return;pd.push(S.id);st.set('uno:paid',pd.slice(-60));
+ const pd=st.get('hoho:paid',[]);if(pd.includes(S.id))return;pd.push(S.id);st.set('hoho:paid',pd.slice(-60));
  scrGain(S.w===me?10:2)}
 function unTick(){
  if(!$('#ung')){clearInterval(UN.iv);UN.iv=0;return}
@@ -260,19 +260,19 @@ function unTick(){
  else if(now>=S.dl+1500+lag)go(unAuto(S,i))}
 /* ---------- accueil ---------- */
 function unHub(){
- unActs(); cur='uno';nv('games');theme('uno');UN.scr='hub';UN.g=null;UN.room='';clearInterval(UN.iv);UN.iv=0;
- app.innerHTML=`<div class="top stk">${bk('home')}<div class="chip">❄ ${FLX()}</div></div><section class="glass story pt-uno"><i>🃏</i><h2>Le salon de cartes</h2><p>Débarrasse-toi de toutes tes cartes avant les autres : pose une carte de la même couleur ou du même symbole, et sers-toi des cartes spéciales. Contre des bots, ou à distance avec jusqu’à 3 amis.</p></section><div id="unhb"></div>`;
+ unActs(); cur='hoho';nv('games');theme('hoho');UN.scr='hub';UN.g=null;UN.room='';clearInterval(UN.iv);UN.iv=0;
+ app.innerHTML=`<div class="top stk">${bk('home')}<div class="chip">❄ ${FLX()}</div></div><section class="glass story pt-hoho"><i>🃏</i><h2>Le salon de cartes</h2><p>Débarrasse-toi de toutes tes cartes avant les autres : pose une carte de la même couleur ou du même symbole, et sers-toi des cartes spéciales. Contre des bots, ou à distance avec jusqu’à 3 amis.</p></section><div id="unhb"></div>`;
  if(!SO.col&&SO.st!=='conn'&&typeof socInit==='function')socInit();
  unSync();unHubDraw();window.scrollTo(0,0)}
 function unHubDraw(){
- const root=$('#unhb');if(!root)return;const c=UN.cfg,sx=window.scrollX,sy=window.scrollY,sv=st.get('uno:sv',null);
+ const root=$('#unhb');if(!root)return;const c=UN.cfg,sx=window.scrollX,sy=window.scrollY,sv=st.get('hoho:sv',null);
  let h='';
  h+=unRooms();
  h+=unStoryCard();
- if(sv&&sv.k==='uno'&&sv.st==='play')h+=`<section class="glass play"><h2>Partie en cours</h2><p class="note" style="margin:0 0 12px">Contre ${sv.S.length-1} bot${sv.S.length>2?'s':''} · ${sv.H[0].length} carte${sv.H[0].length>1?'s':''} en main</p><div class="chrow"><button class="btn" data-a="unRes">Reprendre</button><button class="btn alt" data-a="unDrop">Laisser tomber</button></div></section>`;
+ if(sv&&sv.k==='hoho'&&sv.st==='play')h+=`<section class="glass play"><h2>Partie en cours</h2><p class="note" style="margin:0 0 12px">Contre ${sv.S.length-1} bot${sv.S.length>2?'s':''} · ${sv.H[0].length} carte${sv.H[0].length>1?'s':''} en main</p><div class="chrow"><button class="btn" data-a="unRes">Reprendre</button><button class="btn alt" data-a="unDrop">Laisser tomber</button></div></section>`;
  h+=`<section class="glass play"><h2>Contre des bots</h2><div class="chgr"><div class="chl">Nombre de bots</div><div class="chq">${[1,2,3].map(n=>`<button class="chc${c.nb===n?' on':''}" data-a="unCfg" data-v="nb:${n}" aria-pressed="${c.nb===n}">${UNBOT.slice(0,n).map(b=>b[1]).join('')} ${n}</button>`).join('')}</div></div><p class="note" style="margin:6px 0 14px">Sans minuteur : prends ton temps.</p><button class="btn chgo" data-a="unGo">Commencer la partie</button></section>`;
  h+=unFriends();
- h+=`<section class="glass play unrl"><h2>Les cartes</h2><div class="unrg">${['r5','gs','bv','yd','kw','kf'].map(x=>unCard(x,'sm')).join('')}</div><p class="note" style="margin:10px 0 0"><b>Passe</b> : le suivant passe son tour. <b>Inversion</b> : le sens change. <b>+2</b> : le suivant pioche 2 et passe. <b>Joker</b> : tu choisis la couleur. <b>+4</b> : tu choisis la couleur, le suivant pioche 4 et passe. Quand il te reste 2 cartes, touche <b>Uno !</b> avant de jouer, sinon tu pioches 2 cartes.</p></section>`;
+ h+=`<section class="glass play unrl"><h2>Les cartes</h2><div class="unrg">${['r5','gs','bv','yd','kw','kf'].map(x=>unCard(x,'sm')).join('')}</div><p class="note" style="margin:10px 0 0"><b>Passe</b> : le suivant passe son tour. <b>Inversion</b> : le sens change. <b>+2</b> : le suivant pioche 2 et passe. <b>Joker</b> : tu choisis la couleur. <b>+4</b> : tu choisis la couleur, le suivant pioche 4 et passe. Quand il te reste 2 cartes, touche <b>HoHo !</b> avant de jouer, sinon tu pioches 2 cartes.</p></section>`;
  root.innerHTML=h;window.scrollTo(sx,sy)}
 function unFriends(){
  const crd=(t,b,btn)=>`<section class="glass play soc-i"><h2>Avec des amis</h2><p class="note" style="margin:0"><b>${t}</b><br>${b}</p>${btn?`<button class="btn" style="margin-top:14px" data-a="chSoc">${btn}</button>`:''}</section>`;
@@ -296,12 +296,12 @@ function unRooms(){
   if(S.st==='lobby'){t=me?'Ton salon':'Invitation de '+hn;b=me?'En attente des joueurs':j?'Tu as rejoint le salon':'Te propose une partie';a=me||j?['unOpen','Ouvrir']:['unJoin','Rejoindre']}
   else{const mi=S.S.findIndex(s=>s.u===SO.uid);t='Partie avec '+S.S.filter(s=>s.u!==SO.uid).map(unDN).join(', ');b=mi<0?'Tu regardes la partie':S.t===mi?'À toi de jouer':'En cours';a=['unOpen',mi===S.t?'Jouer':'Ouvrir']}
   return`<div class="fr-i"><button class="fr-o" data-a="${a[0]}" data-v="${esc(g)}"><span class="fr-av em" style="--h:10" aria-hidden="true">🃏</span><span class="fr-t"><b>${esc(t)}</b><small>${esc(b)}</small></span></button><div class="fr-b"><button class="sb buy" data-a="${a[0]}" data-v="${esc(g)}">${a[1]}</button></div></div>`}).join('')}</section>`}
-const unTile=()=>{if(!SO.uid)return'Seul ou entre amis';const L=unMine().filter(([g,S])=>S.st==='lobby'?S.h!==SO.uid&&!unJoined(S,g,SO.uid):S.t===S.S.findIndex(s=>s.u===SO.uid));return L.length?(L[0][1].st==='lobby'?'Invitation au Uno':'À toi de jouer'):'Seul ou entre amis'};
-function unTileUp(){const t=$('.tile.pt-uno small');if(t)t.textContent=unTile()}
+const unTile=()=>{if(!SO.uid)return'Seul ou entre amis';const L=unMine().filter(([g,S])=>S.st==='lobby'?S.h!==SO.uid&&!unJoined(S,g,SO.uid):S.t===S.S.findIndex(s=>s.u===SO.uid));return L.length?(L[0][1].st==='lobby'?'Invitation au HoHo':'À toi de jouer'):'Seul ou entre amis'};
+function unTileUp(){const t=$('.tile.pt-hoho small');if(t)t.textContent=unTile()}
 /* ---------- en ligne : abonnements ---------- */
 const unGid=p=>p.slice().sort().join('_')+'_u';
 function unClean(x,g){
- if(!x||typeof x!=='object'||x.k!=='uno'||!Array.isArray(x.p)||x.p.length<2||x.p.length>4||!x.p.every(s=>typeof s==='string'&&SOK.test(s)))return null;
+ if(!x||typeof x!=='object'||x.k!=='hoho'||!Array.isArray(x.p)||x.p.length<2||x.p.length>4||!x.p.every(s=>typeof s==='string'&&SOK.test(s)))return null;
  if(unGid(x.p)!==g||x.p.indexOf(x.h)<0)return null;
  if(x.st==='lobby'||x.st==='off')return x;
  if(!Array.isArray(x.S)||x.S.length<2||x.S.length>4||!Array.isArray(x.H)||x.H.length!==x.S.length||!Array.isArray(x.X)||!x.X.length||!Array.isArray(x.D))return null;
@@ -334,7 +334,7 @@ function unOnProfiles(){unSync();unTileUp();if(UN.scr==='hub')unHubDraw();else i
 function unMark(g){const M=st.get('soc:me',null);if(!M)return;M.un={g,t:Date.now()};st.set('soc:me',M);if(typeof socLater==='function')socLater()}
 /* ---------- en ligne : salon puis partie ---------- */
 function unRoom(g){
- unActs(); cur='uno';nv('games');theme('uno');UN.scr='room';UN.room=g;UN.loc=false;UN.g=null;UN.m='';UN.pk=-1;UN.uc=false;
+ unActs(); cur='hoho';nv('games');theme('hoho');UN.scr='room';UN.room=g;UN.loc=false;UN.g=null;UN.m='';UN.pk=-1;UN.uc=false;
  app.innerHTML='<div id="ung" class="ung"></div>';UN.lastX=-1;unWatch(g);
  clearInterval(UN.iv);UN.iv=setInterval(unTick,350);unRoomSync(UN.G[g]);window.scrollTo(0,0)}
 function unRoomSync(S){
@@ -348,23 +348,23 @@ function unRoomSync(S){
  unDraw()}
 function unRoomDraw(){
  const root=$('#ung');if(!root)return;const g=UN.room,S=UN.G[g];
- const top=`<div class="top stk"><button class="back" data-a="unBk">‹ Uno</button><div class="chip">❄ ${FLX()}</div></div>`;
+ const top=`<div class="top stk"><button class="back" data-a="unBk">‹ HoHo</button><div class="chip">❄ ${FLX()}</div></div>`;
  if(!S){root.innerHTML=top+`<section class="glass play"><h2>${UN.err[g]?'Salon injoignable':'Connexion au salon…'}</h2><p class="note" style="margin:0">${esc(UN.err[g]||'Un instant.')}</p></section>`;return}
  if(S.st==='off'){root.innerHTML=top+`<section class="glass play"><h2>Salon fermé</h2><p class="note" style="margin:0">L’hôte a fermé ce salon.</p><button class="btn" style="margin-top:14px" data-a="unBk">Retour</button></section>`;return}
  const host=S.h===SO.uid,nm=u=>unDN({u,nm:(S.nms&&S.nms[u])||scrNm(u)}),j=u=>unJoined(S,g,u),ok=S.p.filter(j),nb=S.bt?Math.max(0,4-ok.length):0,tot=ok.length+nb;
  const row=u=>`<div class="fr-i"><span class="fr-o">${unAv({u,nm:nm(u)})}<span class="fr-t"><b>${esc(nm(u))}${u===S.h?' · hôte':''}</b><small>${j(u)?'✓ Dans le salon':'En attente…'}</small></span></span></div>`;
- root.innerHTML=top+`<section class="glass play soc-i"><h2>Salon de Uno</h2><p class="note" style="margin:0 0 6px">${host?'Lance la partie quand tes amis sont là. Ceux qui ne sont pas arrivés ne joueront pas.':'En attente que '+esc(nm(S.h))+' lance la partie.'}</p>${S.p.map(row).join('')}${nb?`<div class="fr-i"><span class="fr-o"><span class="fr-av em" style="--h:200" aria-hidden="true">🤖</span><span class="fr-t"><b>${nb} bot${nb>1?'s':''}</b><small>Complètent la table</small></span></span></div>`:''}
+ root.innerHTML=top+`<section class="glass play soc-i"><h2>Salon de HoHo</h2><p class="note" style="margin:0 0 6px">${host?'Lance la partie quand tes amis sont là. Ceux qui ne sont pas arrivés ne joueront pas.':'En attente que '+esc(nm(S.h))+' lance la partie.'}</p>${S.p.map(row).join('')}${nb?`<div class="fr-i"><span class="fr-o"><span class="fr-av em" style="--h:200" aria-hidden="true">🤖</span><span class="fr-t"><b>${nb} bot${nb>1?'s':''}</b><small>Complètent la table</small></span></span></div>`:''}
  ${host?`<div class="chrow" style="margin-top:14px"><button class="btn" data-a="unLaunch" ${tot>=2?'':'disabled'}>Lancer la partie (${tot} joueurs)</button><button class="btn alt" data-a="unClose">Fermer le salon</button></div>`:`<div class="chrow" style="margin-top:14px">${j(SO.uid)?'':'<button class="btn" data-a="unJoin" data-v="'+esc(g)+'">Rejoindre</button>'}<button class="btn alt" data-a="unBk">Retour</button></div>`}
  ${UN.m?`<p class="note">${esc(UN.m)}</p>`:''}</section>`}
 async function unSetDoc(g,D){const sub=UN.subs[g];if(!sub||!sub.ref){await unWatch(g)}const s2=UN.subs[g];if(!s2||!s2.ref)throw new Error('unavailable');await s2.ref.set(D);UN.G[g]=D}
 /* ---------- actions ---------- */
 let unAO=false;
 function unActs(){if(unAO)return;unAO=true;Object.assign(act,{
- unCfg:v=>{const[k,x]=v.split(':');UN.cfg[k]=+x;st.set('uno:cfg',{nb:UN.cfg.nb,bots:UN.cfg.bots});unHubDraw()},
+ unCfg:v=>{const[k,x]=v.split(':');UN.cfg[k]=+x;st.set('hoho:cfg',{nb:UN.cfg.nb,bots:UN.cfg.bots});unHubDraw()},
  unGo:()=>unSolo(UN.cfg.nb),
  unSt:v=>{const l=+v;if(l>=0&&l<UNN&&l<=unSNext())unStory(l)},
- unRes:()=>{const sv=st.get('uno:sv',null);if(!sv)return unHubDraw();UN.loc=true;UN.me=0;UN.g=sv;UN.uc=false;UN.pk=-1;UN.m='';unArm(UN.g,null,false);unScreen()},
- unDrop:()=>{st.set('uno:sv',null);unHubDraw()},
+ unRes:()=>{const sv=st.get('hoho:sv',null);if(!sv)return unHubDraw();UN.loc=true;UN.me=0;UN.g=sv;UN.uc=false;UN.pk=-1;UN.m='';unArm(UN.g,null,false);unScreen()},
+ unDrop:()=>{st.set('hoho:sv',null);unHubDraw()},
  unBk:()=>{if(UN.loc)unSave();UN.pk=-1;unHub()},
  unAgain:async()=>{
   if(UN.loc&&UN.g&&UN.g.sty!==undefined){const l=UN.g.sty;return unStory(UN.g.w===UN.me&&l+1<UNN?l+1:l)}
@@ -379,17 +379,17 @@ function unActs(){if(unAO)return;unAO=true;Object.assign(act,{
   const ok=S.dr?k===my.length-1&&unOk(S,c):unOk(S,c);
   if(!ok){UN.m=S.dr?'Tu peux poser la carte piochée, ou la garder.':'Cette carte ne va pas : même couleur ou même symbole.';vib(10);unDraw();return}
   if(c[0]==='k'){UN.pk=k;unDraw();return}
-  const uno=UN.uc;UN.uc=false;unCommit(unPlay(S,UN.me,k,null,uno))},
- unCol:v=>{const S=UN.g,k=UN.pk;UN.pk=-1;if(!v||!S||k<0){unDraw();return}const uno=UN.uc;UN.uc=false;unCommit(unPlay(S,UN.me,k,v,uno))},
+  const hoho=UN.uc;UN.uc=false;unCommit(unPlay(S,UN.me,k,null,hoho))},
+ unCol:v=>{const S=UN.g,k=UN.pk;UN.pk=-1;if(!v||!S||k<0){unDraw();return}const hoho=UN.uc;UN.uc=false;unCommit(unPlay(S,UN.me,k,v,hoho))},
  unDraw:()=>{const S=UN.g;if(!S||S.st!=='play'||S.t!==UN.me||S.dr||S.S[UN.me].b||UN.busy)return;UN.uc=false;unCommit(unDrawA(S,UN.me))},
  unPass:()=>{const S=UN.g;if(!S||S.st!=='play'||S.t!==UN.me||!S.dr||UN.busy)return;unCommit(unPass(S,UN.me))},
- unUno:()=>{const S=UN.g;if(!S||S.t!==UN.me||S.H[UN.me].length!==2)return;UN.uc=!UN.uc;if(UN.uc){sfx(660,.1);vib(10)}unDraw()},
+ unHoho:()=>{const S=UN.g;if(!S||S.t!==UN.me||S.H[UN.me].length!==2)return;UN.uc=!UN.uc;if(UN.uc){sfx(660,.1);vib(10)}unDraw()},
  unBackIn:()=>{const S=UN.g;if(!S)return;const T=unCp(S);T.S[UN.me].b=0;T.S[UN.me].ab=0;T.to[UN.me]=0;T.lg='^'+UN.me+' {'+UN.me+':reprend sa place|reprends ta place}';unCommit(T)},
  unFr:v=>{const a=UN.cfg.fr,i=a.indexOf(v);if(i>=0)a.splice(i,1);else if(a.length<3)a.push(v);unHubDraw()},
  unMake:async()=>{
   const sel=UN.cfg.fr.slice(0,3);if(!sel.length||!SO.uid)return;const M=st.get('soc:me',null)||{};
   const p=[SO.uid,...sel],g=unGid(p),nms={};nms[SO.uid]=(M.name||'Hôte').slice(0,20);sel.forEach(u=>nms[u]=scrNm(u).slice(0,20));
-  const D={k:'uno',v:1,id:Math.random().toString(36).slice(2,10),n:0,st:'lobby',h:SO.uid,p:p.slice().sort(),nms,bt:sel.length<3&&UN.cfg.bots?1:0,at:Date.now()};
+  const D={k:'hoho',v:1,id:Math.random().toString(36).slice(2,10),n:0,st:'lobby',h:SO.uid,p:p.slice().sort(),nms,bt:sel.length<3&&UN.cfg.bots?1:0,at:Date.now()};
   try{await unSetDoc(g,D);unMark(g);UN.cfg.fr=[];unRoom(g)}catch(e){UN.m='';const r=$('#unhb');if(r)r.insertAdjacentHTML('afterbegin',`<p class="note">Le salon n’a pas pu être créé. ${esc(scrWhy(e))}</p>`)}},
  unJoin:v=>{const g=v||UN.room;unMark(g);if(UN.scr==='room'&&UN.room===g)unRoomDraw();else unRoom(g)},
  unOpen:v=>unRoom(v),

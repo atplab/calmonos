@@ -54,10 +54,10 @@ RR("maze:30,","maze:50,")
 RR("mv('croises',8,49,'mig:cw49')","mv('croises',8,49,'mig:cw49');mv('maze',30,50,'mig:mz50')")
 # Modes calme / régulier
 RR("const ALL=[...G,ANA,","""/* mode de jeu : calme (jeux stimulants cachés, niveaux ×1,5 flocon, jeux stimulants sans flocons) ou régulier */
-const DMSTIM=['uno','airhockey','cuisine','tetris','brick'],APM=()=>st.get('app:mode','reg'),dmR=(id,v)=>APM()==='calm'?(DMSTIM.includes(id)?0:Math.round(v*1.5)):v;
+const DMSTIM=['hoho','airhockey','cuisine','tetris','brick'],APM=()=>st.get('app:mode','reg'),dmR=(id,v)=>APM()==='calm'?(DMSTIM.includes(id)?0:Math.round(v*1.5)):v;
 function apMode(v){const H=new Set(st.get('g:hide',[]));DMSTIM.forEach(i=>v==='calm'?H.add(i):H.delete(i));st.set('g:hide',[...H]);st.set('app:mode',v)}
 function apChoose(){if(document.getElementById('apm'))return;const d=document.createElement('div');d.className='sfr';d.id='apm';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');
- d.innerHTML=`<div class="glass sfc apmc"><small>Bienvenue</small><h2>Comment veux-tu jouer ?</h2><button class="apmo" data-a="apSet" data-v="calm"><b>🌙 Mode calme</b><span>Pour jouer en douceur, à ton rythme. Les jeux plus stimulants (Uno, air hockey, cuisine, Tèconta, casse-briques) sont cachés, et les niveaux donnent 1,5 fois plus de flocons.</span></button><button class="apmo" data-a="apSet" data-v="reg"><b>✦ Mode régulier</b><span>Tous les jeux, tels quels. Pour les joueurs réguliers.</span></button><p class="note">Tu pourras changer de mode dans les réglages.</p></div>`;document.body.appendChild(d)}
+ d.innerHTML=`<div class="glass sfc apmc"><small>Bienvenue</small><h2>Comment veux-tu jouer ?</h2><button class="apmo" data-a="apSet" data-v="calm"><b>🌙 Mode calme</b><span>Pour jouer en douceur, à ton rythme. Les jeux plus stimulants (HoHo, air hockey, cuisine, Tèconta, casse-briques) sont cachés, et les niveaux donnent 1,5 fois plus de flocons.</span></button><button class="apmo" data-a="apSet" data-v="reg"><b>✦ Mode régulier</b><span>Tous les jeux, tels quels. Pour les joueurs réguliers.</span></button><p class="note">Tu pourras changer de mode dans les réglages.</p></div>`;document.body.appendChild(d)}
 setTimeout(()=>{try{if(st.get('app:mode',null)===null)apChoose()}catch(e){}},700);
 const ALL=[...G,ANA,""")
 RR("r=first?rw(cur,lv):1;\n fl+=r;st.set('fl',fl);","r=first?rw(cur,lv):1,rf=dmR(cur,r);\n fl+=rf;st.set('fl',fl);")
@@ -66,9 +66,9 @@ RR("r=first?3+Math.floor(SL.lv/10):1}else{st.set('sol:inf',st.get('sol:inf',0)+1
 RR("else if(AH.mode==='net'&&win)r=2;\n if(r){","else if(AH.mode==='net'&&win)r=2;\n r=dmR('airhockey',r);if(r){")
 RR("const r=first?2+Math.floor(CB.l/8):1;fl+=r;","const r=dmR('colorie',first?2+Math.floor(CB.l/8):1);fl+=r;")
 RR("const r=first?3+Math.floor(CD.l/8):1;fl+=r;","const r=dmR('colorie',first?3+Math.floor(CD.l/8):1);fl+=r;")
-RR("S.rwd=r;if(r)scrGain(r);return}","r=dmR('uno',r);S.rwd=r;if(r)scrGain(r);return}")
-RR("const n=S.S.length,r=S.w===UN.me?2+2*(n-1):1;scrGain(r);return}","const n=S.S.length,r=dmR('uno',S.w===UN.me?2+2*(n-1):1);if(r)scrGain(r);return}")
-RR("scrGain(S.w===me?10:2)}","{const q=dmR('uno',S.w===me?10:2);if(q)scrGain(q)}}")
+RR("S.rwd=r;if(r)scrGain(r);return}","r=dmR('hoho',r);S.rwd=r;if(r)scrGain(r);return}")
+RR("const n=S.S.length,r=S.w===UN.me?2+2*(n-1):1;scrGain(r);return}","const n=S.S.length,r=dmR('hoho',S.w===UN.me?2+2*(n-1):1);if(r)scrGain(r);return}")
+RR("scrGain(S.w===me?10:2)}","{const q=dmR('hoho',S.w===me?10:2);if(q)scrGain(q)}}")
 RR("${tg('breath','Respiration entre les niveaux'","<div class=\"tg pk\"><span>Mode de jeu<small>${APM()==='calm'?'Calme : jeux stimulants cachés, niveaux ×1,5 flocon':'Régulier : tous les jeux, tels quels'}</small></span><div class=\"seg\" role=\"radiogroup\" aria-label=\"Mode de jeu\">${[['calm','Calme'],['reg','Régulier']].map(([v,l])=>`<button role=\"radio\" aria-checked=\"${APM()===v}\" class=\"${APM()===v?'on':''}\" data-a=\"apPref\" data-v=\"${v}\">${l}</button>`).join('')}</div></div>${tg('breath','Respiration entre les niveaux'")
 RR("function prefScreen(){","act.apSet=v=>{apMode(v==='calm'?'calm':'reg');const e=document.getElementById('apm');if(e)e.remove();if(!playing)home()};act.apPref=v=>{apMode(v==='calm'?'calm':'reg');prefScreen()};\nfunction prefScreen(){")
 # Boutique de flocons (paiement à brancher : liens de paiement dans SHOPL)
@@ -114,7 +114,7 @@ RR("function acFree(){if(!AC||!AC.__md)return;","function acFree(){try{if(AC&&AC
 RR("""${F.length?`<h2 class="s shr"><span>Favoris</span>${window.mpLink?mpLink():''}</h2><div class="grid fgrid">${F.map(tile).join('')}</div>${R.length?'<h2 class="s">Autres jeux</h2>':''}`:`<h2 class="s shr"><span>Choisis ta veillée</span>${window.mpLink?mpLink():''}</h2>`}${R.length?`<div class="grid">${R.map(tile).join('')}</div>`:''}""",
 """${F.length?`<h2 class="s shr"><span>Favoris</span>${window.mpLink?mpLink():''}</h2><div class="grid fgrid">${F.map(tile).join('')}</div>`:`<h2 class="s shr"><span>Choisis ta veillée</span>${window.mpLink?mpLink():''}</h2>`}${gSecs(R,tile)}""")
 RR("const HBI=n=>","""/* sections de jeux par genre (l'ordre choisi par le joueur est gardé à l'intérieur de chaque section) */
-const GCAT=[['mots','Mots',['mots','croises','caches','phrase','ana','quiz','wordle']],['dete','Détente',['tournade','colorie','cherche','demenage','match3','peche','planetes']],['refl','Réflexion',['sudoku','memo','puzzle','flow','maze','g2048','demineur','blocs']],['cart','Cartes et plateau',['solitaire','scrabble','chess','uno']],['arca','Arcade',['tetris','brick','airhockey','cuisine']]];
+const GCAT=[['mots','Mots',['mots','croises','caches','phrase','ana','quiz','wordle']],['dete','Détente',['tournade','colorie','cherche','demenage','match3','peche','planetes']],['refl','Réflexion',['sudoku','memo','puzzle','flow','maze','g2048','demineur','blocs']],['cart','Cartes et plateau',['solitaire','scrabble','chess','hoho']],['arca','Arcade',['tetris','brick','airhockey','cuisine']]];
 const gCatOf=id=>{const c=GCAT.find(c=>c[2].includes(id));return c?c[0]:'autr'};
 function gSecs(R,tile){if(!R.length)return'';const S=[...GCAT,['autr','Autres',[]]].map(c=>({k:c[0],n:c[1],L:R.filter(g=>gCatOf(g.id)===c[0])})).filter(s=>s.L.length);
  return`<nav class="gcats" aria-label="Genres de jeux">${S.map(s=>`<button data-a="gCat" data-v="${s.k}">${s.n}</button>`).join('')}</nav>`+S.map(s=>`<h2 class="s gcs" id="gc-${s.k}"><span>${s.n}</span><small>${s.L.length}</small></h2><div class="grid">${s.L.map(tile).join('')}</div>`).join('')}

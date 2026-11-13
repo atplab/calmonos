@@ -10,7 +10,7 @@ RR('<div class="sy-h">Progression</div>${pr}<div class="sy-h">Aquarium</div>','<
 RR("function socProfile(id,M,p,av,nameOf){","""function socFv(id,fv,self){
  const l=((fv&&fv.l)||[]).map(i=>ALL.find(g=>g.id===i)).filter(g=>g&&!gHid(g.id));
  let o='<div class="sy-h">Jeux favoris</div>'+(l.length?`<div class="fvl">${l.map(g=>`<span class="fvc"><i>${g.ic||''}</i>${esc(g.n||g.t)}</span>`).join('')}</div>`:'<p class="note" style="margin:0">'+(self?'Tes jeux favoris (étoile ★) apparaîtront ici.':'Aucun jeu favori pour l’instant.')+'</p>');
- if(!self&&SO.pt===id)o+='<!--x-->';if(0)o='<div class="fvp-w"><div class="sy-h" style="margin-top:0">Jouer ensemble</div><div class="fvp">'+[['scrabble','Scrabble'],['chess','Échecs'],['uno','Uno'],['airhockey','Air hockey']].map(([k,t])=>{const g=ALL.find(x=>x.id===k);return`<button class="btn alt" data-a="socPlay" data-v="${k}:${esc(id)}">${g?g.ic:''} ${t}</button>`}).join('')+'</div></div>'+o;
+ if(!self&&SO.pt===id)o+='<!--x-->';if(0)o='<div class="fvp-w"><div class="sy-h" style="margin-top:0">Jouer ensemble</div><div class="fvp">'+[['scrabble','Scrabble'],['chess','Échecs'],['hoho','HoHo'],['airhockey','Air hockey']].map(([k,t])=>{const g=ALL.find(x=>x.id===k);return`<button class="btn alt" data-a="socPlay" data-v="${k}:${esc(id)}">${g?g.ic:''} ${t}</button>`}).join('')+'</div></div>'+o;
  return o}
 function socProfile(id,M,p,av,nameOf){""")
 
@@ -22,5 +22,5 @@ assert i>0 and j>i
 h=h[:i]+'<div class="fr-b"><button class="sb buy" data-a="socPl" data-v="${esc(id)}" aria-label="Jouer avec ${esc(nameOf(id))}"${p?\'\':\' disabled\'}>Jouer ensemble</button>'+h[j:]
 
 RR('<div class="sy-h">Progression</div>${pr}${socFv(id,self?M.fv:p&&p.fv,self)}','${self||SO.pt!==id?\'\':socPj(id)}<div class="sy-h">Progression</div>${pr}${socFv(id,self?M.fv:p&&p.fv,self)}')
-RR("function socFv(id,fv,self){","function socPj(id){return'<div class=\"fvp-w\"><div class=\"sy-h\" style=\"margin-top:0\">Jouer ensemble</div><div class=\"fvp\">'+[['scrabble','Scrabble'],['chess','Échecs'],['uno','Uno'],['airhockey','Air hockey']].map(([k,t])=>{const g=ALL.find(x=>x.id===k);return`<button class=\"btn alt\" data-a=\"socPlay\" data-v=\"${k}:${esc(id)}\">${g?g.ic:''} ${t}</button>`}).join('')+'</div></div>'}\nfunction socFv(id,fv,self){")
+RR("function socFv(id,fv,self){","function socPj(id){return'<div class=\"fvp-w\"><div class=\"sy-h\" style=\"margin-top:0\">Jouer ensemble</div><div class=\"fvp\">'+[['scrabble','Scrabble'],['chess','Échecs'],['hoho','HoHo'],['airhockey','Air hockey']].map(([k,t])=>{const g=ALL.find(x=>x.id===k);return`<button class=\"btn alt\" data-a=\"socPlay\" data-v=\"${k}:${esc(id)}\">${g?g.ic:''} ${t}</button>`}).join('')+'</div></div>'}\nfunction socFv(id,fv,self){")
 RR("o+='<!--x-->';if(0)o=","if(0)o=")

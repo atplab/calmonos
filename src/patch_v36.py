@@ -515,22 +515,22 @@ rep("<p class=\"sdu\">✦ +${r} poussière${r>1?'s':''} d’étoile</p>","<p cla
 
 rep("function theme(id,x){m3Mus(id==='match3'&&!x);xmMus(!!x);","function theme(id,x){const xa=xmAll();m3Mus(id==='match3'&&!x&&!xa);xmMus(!!x||xa);")
 
-# ---- Uno ----
-rep("sp:'Seul ou à deux'}];","sp:'Seul ou à deux'},\n{id:'uno',n:'Uno',ic:'🃏',a:'#e8735a',b:'#7a3550',t:'Le salon de cartes',s:'Débarrasse-toi de toutes tes cartes avant les autres, contre des bots ou avec jusqu’à 3 amis.',sp:'Seul ou entre amis'}];")
-rep("v==='chess'?chHub():","v==='chess'?chHub():v==='uno'?unHub():")
-rep("<b>${g.id==='scrabble'||g.id==='chess'?","<b>${g.id==='scrabble'||g.id==='chess'||g.id==='uno'?")
-rep("g.id==='chess'?'':g.sp","g.id==='chess'?'':g.id==='uno'?unTile():g.sp")
+# ---- HoHo ----
+rep("sp:'Seul ou à deux'}];","sp:'Seul ou à deux'},\n{id:'hoho',n:'HoHo',ic:'🃏',a:'#e8735a',b:'#7a3550',t:'Le salon de cartes',s:'Débarrasse-toi de toutes tes cartes avant les autres, contre des bots ou avec jusqu’à 3 amis.',sp:'Seul ou entre amis'}];")
+rep("v==='chess'?chHub():","v==='chess'?chHub():v==='hoho'?unHub():")
+rep("<b>${g.id==='scrabble'||g.id==='chess'?","<b>${g.id==='scrabble'||g.id==='chess'||g.id==='hoho'?")
+rep("g.id==='chess'?'':g.sp","g.id==='chess'?'':g.id==='hoho'?unTile():g.sp")
 rep("  if(x.av&&typeof x.av==='object'){","  if(x.un&&typeof x.un==='object'&&typeof x.un.g==='string'&&(x.un.g===''||/^[A-Za-z0-9_-]{3,600}_u$/.test(x.un.g))&&(+x.un.t||0)>((o.un&&o.un.t)||0))o.un={g:x.un.g,t:+x.un.t||0};\n  if(x.av&&typeof x.av==='object'){")
 rep("Object.entries(o.sg).sort(),","Object.entries(o.sg).sort(),o.un?[o.un.g,o.un.t]:0,")
 rep("scrOnProfiles();chOnProfiles();","scrOnProfiles();chOnProfiles();unOnProfiles();")
-rep("function chHub(){",R57('uno.js')+"\nfunction chHub(){")
+rep("function chHub(){",R57('hoho.js')+"\nfunction chHub(){")
 
 # ---- notifications ----
 rep("(Y.p/SMX*100).toFixed(1)}%\"></b></span></div><div class=\"sht\"><div class=\"chip\" title=\"Flocons\">❄ ${FLX()}</div><button class=\"shb\" data-a=\"sbook\"","(Y.p/SMX*100).toFixed(1)}%\"></b></span></div><div class=\"sht\"><div class=\"chip\" title=\"Flocons\">❄ ${FLX()}</div>${ntBell()}<button class=\"shb\" data-a=\"sbook\"")
 
 # ---- Solitaire ----
 rep("sp:'Seul ou entre amis'}];","sp:'Seul ou entre amis'},\n{id:'solitaire',n:'Solitaire',ic:'♠',a:'#5aa38a',b:'#24505a',t:'La patience',s:'Le solitaire classique : 40 niveaux et un mode infini.',sp:'Niveaux et mode infini'}];")
-rep("v==='uno'?unHub():","v==='uno'?unHub():v==='solitaire'?soHub():")
+rep("v==='hoho'?unHub():","v==='hoho'?unHub():v==='solitaire'?soHub():")
 rep("function chHub(){",R57('solitaire.js')+"\nfunction chHub(){")
 # ---- aquarium : message de repas court, effacé après 4 s ----
 rep("msg('✦ +'+gain+' ❄ '+(M>1000?'(décors ×'+frN(M/1000)+') ':'')+'· merci !');return true;","msg('✦ +'+gain+' ❄');setTimeout(()=>{const m=$('#m');if(m&&m.textContent==='✦ +'+gain+' ❄')m.textContent=''},4000);return true;")
@@ -687,7 +687,7 @@ rep("sp:'IA, à deux ou en ligne'}","sp:''}")
 rep("if(!SO.uid)return'Seul ou entre amis'","if(!SO.uid)return''")
 rep(":'Seul ou entre amis'};",":''};")
 
-rep("g.id==='scrabble'||g.id==='chess'||g.id==='uno'?'<svg class=\"mp\"","g.id==='scrabble'||g.id==='chess'||g.id==='uno'||g.id==='airhockey'?'<svg class=\"mp\"")
+rep("g.id==='scrabble'||g.id==='chess'||g.id==='hoho'?'<svg class=\"mp\"","g.id==='scrabble'||g.id==='chess'||g.id==='hoho'||g.id==='airhockey'?'<svg class=\"mp\"")
 rep(" const F=GD.filter(g=>!g.soon&&fv.includes(g.id)),R=GD.filter(g=>!F.includes(g));"," const GO=gOrd(GD.filter(g=>!gHid(g.id))),F=GO.filter(g=>!g.soon&&fv.includes(g.id)),R=GO.filter(g=>!F.includes(g));")
 rep("${R.length?`<div class=\"grid\">${R.map(tile).join('')}</div>`:''}`;\n}","${R.length?`<div class=\"grid\">${R.map(tile).join('')}</div>`:''}<button class=\"gordb\" data-a=\"gOrd\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 4v16M4 8l4-4 4 4M16 20V4M12 16l4 4 4-4\"/></svg>Modifier l’ordre des jeux</button>`;gLockTiles();gUnlockCheck();\n}\n"+open('v57/gord.js').read())
 

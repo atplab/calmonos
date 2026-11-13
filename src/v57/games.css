@@ -493,8 +493,8 @@ body:has(.pg-quiz) .skh,body:is(:has(.m3),.seabg) .skh{display:none}
 /* histoire de Noël : boules rouges autour du sapin */
 .orb.xm .ring u.on{background:#e8434f;box-shadow:0 0 5px rgba(232,67,79,.95)}
 body[data-tx=d] .orb.xm .ring u.on{background:#d8303c;box-shadow:none}
-/* ---------- Uno ---------- */
-.pt-uno{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23fff' stroke-opacity='.14' stroke-width='3'%3E%3Crect x='14' y='18' width='26' height='38' rx='5' transform='rotate(-12 27 37)'/%3E%3Crect x='74' y='66' width='26' height='38' rx='5' transform='rotate(14 87 85)'/%3E%3C/g%3E%3C/svg%3E")}
+/* ---------- HoHo ---------- */
+.pt-hoho{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23fff' stroke-opacity='.14' stroke-width='3'%3E%3Crect x='14' y='18' width='26' height='38' rx='5' transform='rotate(-12 27 37)'/%3E%3Crect x='74' y='66' width='26' height='38' rx='5' transform='rotate(14 87 85)'/%3E%3C/g%3E%3C/svg%3E")}
 .ung{padding-bottom:20px}
 .ucard{--w:58px;--uc:#2b2a3d;position:relative;display:inline-block;flex:none;width:var(--w);height:calc(var(--w)*1.5);border-radius:calc(var(--w)*.15);background:var(--uc);border:calc(var(--w)*.05) solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.28);overflow:hidden;color:#fff;font:800 14px/1 system-ui,sans-serif;vertical-align:middle;box-sizing:border-box}
 .u-r{--uc:#e8605a}.u-y{--uc:#f0bd3e}.u-g{--uc:#45ad72}.u-b{--uc:#4a8be0}.u-k{--uc:#2b2a3d}
@@ -542,7 +542,7 @@ body[data-tx=d] .orb.xm .ring u.on{background:#d8303c;box-shadow:none}
 .ucd.no .ucard{filter:saturate(.5) brightness(.8)}
 .unbt{display:flex;gap:10px;justify-content:center;margin-top:8px}
 .unbt .btn{flex:0 1 auto;padding-left:20px;padding-right:20px}
-.ununo.on{background:#ffd86b;color:#5a3a00}
+.unhoho.on{background:#ffd86b;color:#5a3a00}
 .unend,.unpk{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(10,10,30,.45)}
 .unend section,.unpk section{max-width:360px;width:100%;text-align:center}
 .unrw{font-size:22px;font-weight:700;margin:6px 0 14px}
@@ -568,7 +568,7 @@ body[data-tx=d] .orb.xm .ring u.on{background:#d8303c;box-shadow:none}
 .nti em{font-style:normal;font-size:11.5px;opacity:.6;margin-top:2px}
 .nti.nw{background:rgba(255,216,107,.1)}
 .nti.nw b::after{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:#ff7a6b;margin-left:7px;vertical-align:middle}
-/* Uno : cartes « Nuit de neige » */
+/* HoHo : cartes « Nuit de neige » */
 .ucard{--w:58px;--uc:#2b2a3d;--ul:#4a4766;--ud:#1b1a2b;position:relative;display:inline-block;flex:none;width:var(--w);height:calc(var(--w)*1.48);border-radius:calc(var(--w)*.17);background:linear-gradient(155deg,var(--ul) 0%,var(--uc) 46%,var(--ud) 100%);border:calc(var(--w)*.04) solid rgba(255,255,255,.92);box-shadow:0 3px 9px rgba(10,10,40,.3),inset 0 0 0 calc(var(--w)*.03) rgba(255,255,255,.18);overflow:hidden;color:#fff;font:800 14px/1 system-ui,sans-serif;vertical-align:middle;box-sizing:border-box}
 .ucard::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 78% 18%,rgba(255,255,255,.55) 0 1.2px,transparent 2px),radial-gradient(circle at 22% 78%,rgba(255,255,255,.45) 0 1px,transparent 1.8px),radial-gradient(circle at 64% 88%,rgba(255,255,255,.4) 0 .9px,transparent 1.6px),linear-gradient(115deg,transparent 30%,rgba(255,255,255,.16) 45%,transparent 60%);pointer-events:none}
 .u-r{--uc:#e2615c;--ul:#f59a8a;--ud:#b23e4a}
@@ -631,7 +631,7 @@ body[data-tx=d] .orb.xm .ring u.on{background:#d8303c;box-shadow:none}
 .untop{padding:0;background:none;box-shadow:none;border-radius:0}
 .uncol{position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3);z-index:2}
 .sobt .btn{width:auto}
-/* Uno : joker posé = carte de la couleur choisie */
+/* HoHo : joker posé = carte de la couleur choisie */
 .ukc.u-r{--uc:#e2615c;--ul:#f59a8a;--ud:#b23e4a}
 .ukc.u-y{--uc:#efb53f;--ul:#ffd98a;--ud:#c98624}
 .ukc.u-g{--uc:#43a873;--ul:#86d6a6;--ud:#2a7a55}
@@ -899,8 +899,8 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 
 .unlg.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0;min-height:0}
 .unc{gap:12px;margin:18px 0 10px}
-.unc .ununo{width:auto;margin:0;padding:12px 12px;font-size:14px;border-radius:16px;flex:none}
-.unc .ununo:disabled{opacity:.45}
+.unc .unhoho{width:auto;margin:0;padding:12px 12px;font-size:14px;border-radius:16px;flex:none}
+.unc .unhoho:disabled{opacity:.45}
 .unar{flex:none;width:22px;height:64px;color:#ffd86b;opacity:.9}
 .unar svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 6px rgba(255,216,107,.55))}
 .unar.dn svg{transform:rotate(180deg)}
@@ -916,7 +916,7 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .unar.l.dn svg{transform:scaleY(-1)}
 .unar.r.dn svg{transform:rotate(180deg)}
 .unar.r.up svg{transform:scaleX(-1)}
-.ung.undeal .unh,.ung.undeal .unk,.ung.undeal .ununo{pointer-events:none}
+.ung.undeal .unh,.ung.undeal .unk,.ung.undeal .unhoho{pointer-events:none}
 .unp{position:relative;overflow:hidden;background:linear-gradient(160deg,#4a3fa6,#2a2370 62%,#1d1752);border:2.5px solid rgba(255,255,255,.88);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 4px 12px rgba(5,5,30,.35);opacity:.8;transition:transform .35s cubic-bezier(.3,1.4,.5,1),opacity .3s,background .3s,box-shadow .3s,border-color .3s}
 .unp::before{content:'';position:absolute;left:50%;top:50%;width:150%;height:62%;translate:-50% -50%;rotate:-28deg;border-radius:50%;background:rgba(255,255,255,.07);pointer-events:none}
 .unp>*{position:relative}
@@ -1110,14 +1110,14 @@ h2.s.shr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .g2b>i.rk::after{content:"";position:absolute;inset:18% 22% auto auto;width:22%;height:14%;border-radius:50%;background:rgba(255,255,255,.8);rotate:-30deg}
 #g2m.lo{color:#ffb3b3}
 .g2b.wonb{animation:g2w 2.4s ease-in-out infinite}
-/* Uno : aucune carte jouable → la pioche appelle le joueur */
+/* HoHo : aucune carte jouable → la pioche appelle le joueur */
 .unk{position:relative}
 .unk .unkm{position:absolute;left:50%;bottom:calc(100% + 6px);translate:-50% 0;padding:3px 9px;border-radius:999px;background:#ffd84a;color:#4a3300;font:800 12px/1.2 "Nunito Sans",sans-serif;font-style:normal;white-space:nowrap;box-shadow:0 3px 10px rgba(0,0,0,.3);opacity:0;scale:.6;transition:opacity .25s,scale .3s cubic-bezier(.3,1.6,.5,1);pointer-events:none}
 .unk.must .unkm{opacity:1;scale:1;animation:unkb 1.4s ease-in-out infinite}
 .unk.must{animation:unkp 1.4s ease-in-out infinite;border-radius:12px}
 @keyframes unkp{0%,100%{box-shadow:0 0 0 0 rgba(255,216,74,.85),0 0 10px rgba(255,216,74,.4);scale:1}50%{box-shadow:0 0 0 7px rgba(255,216,74,0),0 0 22px rgba(255,216,74,.75);scale:1.07}}
 @keyframes unkb{0%,100%{translate:-50% 0}50%{translate:-50% -4px}}
-/* Uno : en attendant son tour, la main est un peu assombrie */
+/* HoHo : en attendant son tour, la main est un peu assombrie */
 .ucd.wt .ucard{filter:saturate(.75) brightness(.9)}
 
 /* Blocs */
@@ -1231,7 +1231,7 @@ body:has(.pg-tetris) .top.stk{margin-bottom:0;padding-bottom:4px}
 
 /* Constellations : plus de rayons de soleil dans les niveaux */
 .m3::before{display:none!important}
-/* Uno : ambiance de table de jeu de cartes, tapis vert */
+/* HoHo : ambiance de table de jeu de cartes, tapis vert */
 body.felt{background:radial-gradient(ellipse 90% 55% at 50% 38%,#238455 0%,#176143 52%,#0d3b29 100%) fixed!important}
 body.felt::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cg fill='%23fff' fill-opacity='.07' font-family='serif' font-size='34' text-anchor='middle'%3E%3Ctext x='35' y='45'%3E%E2%99%A0%3C/text%3E%3Ctext x='105' y='45'%3E%E2%99%A5%3C/text%3E%3Ctext x='35' y='115'%3E%E2%99%A6%3C/text%3E%3Ctext x='105' y='115'%3E%E2%99%A3%3C/text%3E%3C/g%3E%3C/svg%3E"),repeating-linear-gradient(45deg,rgba(255,255,255,.02) 0 2px,transparent 2px 5px)}
 body.felt::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.4) 100%)}

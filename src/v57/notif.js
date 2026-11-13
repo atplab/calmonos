@@ -8,21 +8,21 @@
  const turns=()=>{const T=new Set();
   try{if(Object.values(SC.G||{}).some(S=>S&&!S.e&&S.t===S.p.indexOf(SO.uid)))T.add('scrabble')}catch(e){}
   try{if(Object.keys(CH.G||{}).some(f=>CH.G[f]&&chStat(f).k==='me'))T.add('chess')}catch(e){}
-  try{if(unMine().some(([g,S])=>S.st==='play'&&S.S&&S.S[S.t]&&S.S[S.t].u===SO.uid))T.add('uno')}catch(e){}
+  try{if(unMine().some(([g,S])=>S.st==='play'&&S.S&&S.S[S.t]&&S.S[S.t].u===SO.uid))T.add('hoho')}catch(e){}
   return T};
  const tdots=()=>{const T=turns(),tab=q('#nav [data-v=games]');
   if(tab){let d=tab.querySelector('.tdot');if(!d){tab.insertAdjacentHTML('beforeend','<i class="ndot tdot" hidden></i>');d=tab.querySelector('.tdot')}d.hidden=!T.size}
-  ['scrabble','chess','uno'].forEach(id=>document.querySelectorAll('.tile.pt-'+id).forEach(t=>{let d=t.querySelector('.tdot');if(T.has(id)&&!d)t.insertAdjacentHTML('beforeend','<i class="ndot tdot" aria-label="À toi de jouer"></i>');else if(!T.has(id)&&d)d.remove()}))};
+  ['scrabble','chess','hoho'].forEach(id=>document.querySelectorAll('.tile.pt-'+id).forEach(t=>{let d=t.querySelector('.tdot');if(T.has(id)&&!d)t.insertAdjacentHTML('beforeend','<i class="ndot tdot" aria-label="À toi de jouer"></i>');else if(!T.has(id)&&d)d.remove()}))};
  setInterval(tdots,1500);setTimeout(tdots,300);
  const games=()=>{const L=[];
   try{Object.entries(SC.G||{}).forEach(([f,S])=>{if(S&&!S.e)L.push({g:'scrabble',ic:'Ⓢ',n:'Scrabble',w:'contre '+scrNm(f),me:S.t===S.p.indexOf(SO.uid)})})}catch(e){}
   try{Object.keys(CH.G||{}).forEach(f=>{const S=CH.G[f],k=S&&chStat(f).k;if(S&&(k==='me'||k==='them'))L.push({g:'chess',ic:'♞',n:'Échecs',w:'contre '+chNm(f),me:k==='me'})})}catch(e){}
-  try{unMine().forEach(([g,S])=>{if(S.st==='play'||S.st==='lobby')L.push({g:'uno',ic:'🃏',n:'Uno',w:S.st==='lobby'?'salon en attente':(S.S||[]).length+' joueurs',me:S.st==='play'&&S.S&&S.S[S.t]&&S.S[S.t].u===SO.uid})})}catch(e){}
+  try{unMine().forEach(([g,S])=>{if(S.st==='play'||S.st==='lobby')L.push({g:'hoho',ic:'🃏',n:'HoHo',w:S.st==='lobby'?'salon en attente':(S.S||[]).length+' joueurs',me:S.st==='play'&&S.S&&S.S[S.t]&&S.S[S.t].u===SO.uid})})}catch(e){}
   try{(window.ahInv?ahInv():[]).forEach(x=>L.push({g:'airhockey',ic:'🏒',n:'Air hockey',w:'invitation de '+x.nm,me:true}))}catch(e){}
   return L};
  window.mpLink=()=>{const L=games(),m=L.filter(x=>x.me).length;return`<button class="mplk" data-a="mpOpen">Parties en cours${m?` <b>${m}</b>`:''}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>`};
  Object.assign(act,{mpOpen:()=>{const L=games(),e=q('#mpo');if(e)e.remove();const d=document.createElement('div');d.className='sfr';d.id='mpo';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');
-   d.innerHTML=`<div class="glass sfc"><h2 style="margin:0">Parties en cours</h2>${L.length?`<div class="mpl">${L.map(x=>`<button data-a="mpGo" data-v="${x.g}"><i>${x.ic}</i><span><b>${esc(x.n)}</b><small>${esc(x.w)}</small></span><em class="${x.me?'':'w'}">${x.me?'À toi':'En attente'}</em></button>`).join('')}</div>`:'<p class="note" style="margin:14px 0">Aucune partie multijoueur en cours. Lance une partie de Scrabble, d’Échecs ou de Uno avec tes amis.</p>'}<button class="btn alt" data-a="mpx">Fermer</button></div>`;document.body.appendChild(d)},
+   d.innerHTML=`<div class="glass sfc"><h2 style="margin:0">Parties en cours</h2>${L.length?`<div class="mpl">${L.map(x=>`<button data-a="mpGo" data-v="${x.g}"><i>${x.ic}</i><span><b>${esc(x.n)}</b><small>${esc(x.w)}</small></span><em class="${x.me?'':'w'}">${x.me?'À toi':'En attente'}</em></button>`).join('')}</div>`:'<p class="note" style="margin:14px 0">Aucune partie multijoueur en cours. Lance une partie de Scrabble, d’Échecs ou de HoHo avec tes amis.</p>'}<button class="btn alt" data-a="mpx">Fermer</button></div>`;document.body.appendChild(d)},
   mpx:()=>{const e=q('#mpo');if(e)e.remove()},mpGo:v=>{const e=q('#mpo');if(e)e.remove();act.open(v)}});
  /* conditions « tout ou rien » (faim, entretien, histoire) : une nouvelle notification à chaque fois qu’elles redeviennent vraies */
  const edge=(k,on)=>{const E=st.get('nt:e',{});if(on){if(!E[k]){E[k]=k+':'+Date.now();st.set('nt:e',E)}return E[k]}if(E[k]){E[k]='';st.set('nt:e',E)}return''};
@@ -37,8 +37,8 @@
   try{Object.entries(SC.G||{}).forEach(([f,S])=>{if(S&&!S.e&&S.t===S.p.indexOf(SO.uid))add('scr:'+S.id+':'+S.n,'Ⓢ','Scrabble','À toi de jouer contre '+scrNm(f),'scr')})}catch(e){}
   try{Object.keys(CH.G||{}).forEach(f=>{const S=CH.G[f];if(S&&chStat(f).k==='me')add('ch:'+S.id+':'+S.mv.length,'♞','Échecs','À toi de jouer contre '+chNm(f),'chess')})}catch(e){}
   try{unMine().forEach(([g,S])=>{const hn=(S.nms&&S.nms[S.h])||scrNm(S.h);
-   if(S.st==='lobby'&&S.h!==SO.uid&&!unJoined(S,g,SO.uid))add('uno:inv:'+S.id,'🃏','Uno',hn+' t’invite à une partie','uno',g);
-   else if(S.st==='play'&&S.S.some(s=>s.u===SO.uid)&&!(UN.scr==='room'&&UN.room===g))add('uno:go:'+S.id,'🃏','Uno','La partie de Uno a commencé','uno',g)})}catch(e){}
+   if(S.st==='lobby'&&S.h!==SO.uid&&!unJoined(S,g,SO.uid))add('hoho:inv:'+S.id,'🃏','HoHo',hn+' t’invite à une partie','hoho',g);
+   else if(S.st==='play'&&S.S.some(s=>s.u===SO.uid)&&!(UN.scr==='room'&&UN.room===g))add('hoho:go:'+S.id,'🃏','HoHo','La partie de HoHo a commencé','hoho',g)})}catch(e){}
   return L}
  const ago=t=>{const m=Math.round((Date.now()-t)/6e4);return m<1?'à l’instant':m<60?'il y a '+m+' min':m<1440?'il y a '+Math.round(m/60)+' h':'il y a '+Math.round(m/1440)+' j'};
  const unread=()=>log().filter(x=>!x.r).length;
@@ -59,7 +59,7 @@
   else if(a==='soc')socScreen();
   else if(a==='scr')scrHub();
   else if(a==='chess')chHub();
-  else if(a==='uno'){if(v)unRoom(v);else unHub()}}
+  else if(a==='hoho'){if(v)unRoom(v);else unHub()}}
  function poll(){
   const L=log(),ids=new Set(L.map(x=>x.id)),fresh=items().filter(x=>!ids.has(x.id));
   if(fresh.length){const now=Date.now();fresh.forEach(x=>{x.at=now;x.r=0});st.set(LOGK,[...fresh.reverse(),...L].slice(0,MAX));toast(fresh[0]);if(q('#ntp'))drawP()}
