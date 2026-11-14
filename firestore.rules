@@ -55,6 +55,17 @@ service cloud.firestore {
         && request.resource.data.n is string && request.resource.data.n.size() <= 24;
     }
 
+    // Discussions entre amis : cv/<uid1>_<uid2>_<auteur> (uid1, uid2 triés). Chacun écrit seulement ses propres messages ;
+    // les deux joueurs lisent les deux documents.
+    match /cv/{id} {
+      allow get: if request.auth != null && request.auth.uid in id.split('_')[0:2];
+      allow create, update: if request.auth != null && id.split('_').size() == 3
+        && id.split('_')[2] == request.auth.uid && request.auth.uid in id.split('_')[0:2]
+        && request.resource.data.keys().hasOnly(['j'])
+        && request.resource.data.j is string
+        && request.resource.data.j.size() < 40000;
+    }
+
     // Achats de flocons : écrits seulement par le serveur (webhook Stripe). Le joueur lit son propre total.
     match /buys/{uid} {
       allow get: if request.auth != null && request.auth.uid == uid;
