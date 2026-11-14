@@ -216,6 +216,7 @@ let biLc=0;function biClack(v){const t=performance.now();if(t-biLc<18)return;biL
 function biCush(v){biNoise(380,Math.min(.6,v/3000)+.03,.08)}
 function biThud(){biNoise(220,.5,.18);setTimeout(()=>biNoise(160,.3,.12),90)}
 /* --- tir --- */
+function biStrike(p,cb){BG.st="strike";const t0=performance.now(),D=60+p*70,an=()=>{if(!BG||BG.st!=="strike")return;const k=Math.min(1,(performance.now()-t0)/D);BG.pow=p*(1-k*k);biDraw();if(k<1)requestAnimationFrame(an);else{BG.pow=0;cb()}};an()}
 function biShoot(pow,aim,sp){const c=biCue(),V=120+pow*4650,dx=Math.cos(aim),dy=Math.sin(aim);c.vx=V*dx,c.vy=V*dy;const top=sp[1];c.sx=c.vx*1.25*top,c.sy=c.vy*1.25*top;c.w=2.5*(sp[0]*.5)*V/BI.R;
  if(Math.abs(sp[0])>.05){const sq=-sp[0]*.035*Math.min(1,pow*1.5);c.vx=V*Math.cos(aim+sq),c.vy=V*Math.sin(aim+sq)}
  BG.hand=!1;BG.shot={first:-1,pot:[],rail:0,railAfter:!1,touch:!1,rb:new Set(),brk:BG.brk};BG.st="moving";BG.pow=0;biNoise(1500,.25+pow*.5,.04);vib(12)}
@@ -250,7 +251,7 @@ function biAI(){if(!BG||BG.st==="over"||BG.turn!==1)return;const c=biCue(),R=BI.
  else if(pl){aim=pl.a;pow=Math.min(.95,.18+pl.d/2600);sp=[(Math.random()-.5)*.2,lv?(Math.random()-.55)*.6:0]}
  else{const t=biTargets(),tg=t.sort((a,b)=>Math.hypot(a.x-c.x,a.y-c.y)-Math.hypot(b.x-c.x,b.y-c.y))[0]||BG.b.find(b=>!b.in&&b.n);aim=biAimAt(tg.x,tg.y);pow=.35}
  const err=[.05,.022,.007][lv]*(Math.random()*2-1);aim+=err;BG.aim=aim;BG.sp=sp;BG.st="aiaim";biUI();let t0=performance.now();
- const an=()=>{if(!BG||BG.st!=="aiaim")return;const k=Math.min(1,(performance.now()-t0)/900);BG.pow=pow*(k<.6?k/.6:1-(k-.6)/.4*.0);biDraw();if(k<1)requestAnimationFrame(an);else{biShoot(pow,aim,sp);biRun()}};requestAnimationFrame(an)}
+ const an=()=>{if(!BG||BG.st!=="aiaim")return;const k=Math.min(1,(performance.now()-t0)/900);BG.pow=pow*(k<.6?k/.6:1-(k-.6)/.4*.0);biDraw();if(k<1)requestAnimationFrame(an);else biStrike(pow*1,()=>{biShoot(pow,aim,sp);biRun()})};requestAnimationFrame(an)}
 function biTargets(){const g=BG.grp[BG.turn];return BG.b.filter(b=>!b.in&&b.n&&(g?(biLeft(g)?biType(b.n)===g:b.n===8):b.n!==8))}
 function biPlan(){const c=biCue(),R=BI.R;let best=null;for(const b of biTargets())for(const p of BI.PK){const px=p[0]<0?18:p[0]>1e3?982:500,py=p[1]<0?18:p[1]>2e3?1982:1e3;const dx=px-b.x,dy=py-b.y,L=Math.hypot(dx,dy),gx=b.x-dx/L*2*R,gy=b.y-dy/L*2*R;
  if(Math.abs(py-1e3)<5&&Math.abs(dy)>L*.85)continue;const ax=gx-c.x,ay=gy-c.y,La=Math.hypot(ax,ay),cut=Math.acos(Math.max(-1,Math.min(1,(ax*dx+ay*dy)/(La*L))));if(cut>1.25)continue;
@@ -279,7 +280,7 @@ function biDraw(){const V=biView();if(!V||!BG)return;const{x:c,d,m,s,w,h}=V;c.se
    if(BG.guide===2){const dx=Math.cos(BG.aim),dy=Math.sin(BG.aim),cr=dx*ny/L-dy*nx/L;let tx=-ny/L,ty=nx/L;if(tx*dx+ty*dy<0){tx=-tx;ty=-ty}const fo=BG.sp[1];const vx=tx*(1-Math.abs(fo)*.3)+nx/L*fo*.7,vy=ty*(1-Math.abs(fo)*.3)+ny/L*fo*.7,Lv=Math.hypot(vx,vy)||1;c.strokeStyle="rgba(255,255,255,.35)";c.lineWidth=2;c.beginPath();c.moveTo(r.x,r.y);c.lineTo(r.x+vx/Lv*120,r.y+vy/Lv*120);c.stroke()}}}}
  for(const b of B){if(b.in&&!b.drop)continue;let x=b.x,y=b.y,sc=1,al=1;if(b.drop){b.drop.t=Math.min(1,b.drop.t+.06);const k=b.drop.t;x=b.drop.x+(b.drop.px-b.drop.x)*Math.min(1,k*1.4);y=b.drop.y+(b.drop.py-b.drop.y)*Math.min(1,k*1.4);sc=1-k*.55;al=1-k;if(k>=1){b.drop=null;continue}}
   c.globalAlpha=al;c.fillStyle="rgba(0,0,0,.35)";c.beginPath();c.ellipse(x+5,y+7,R*sc,R*sc*.9,0,0,7);c.fill();biBall(c,b,x,y,R*sc);c.globalAlpha=1}
- if((BG.st==="aim"||BG.st==="pow"||BG.st==="aiaim")&&!cu.in&&!(BG.mode==="ai"&&BG.turn===1&&BG.st!=="aiaim")){const dx=Math.cos(BG.aim),dy=Math.sin(BG.aim),off=R+10+BG.pow*150,L=900;c.save();c.translate(cu.x-dx*off,cu.y-dy*off);c.rotate(BG.aim+Math.PI);c.translate(0,BG.sp[0]*R*.5);
+ if((BG.st==="aim"||BG.st==="pow"||BG.st==="aiaim"||BG.st==="strike")&&!cu.in&&!(BG.mode==="ai"&&BG.turn===1&&BG.st!=="aiaim"&&BG.st!=="strike")){{let d=BG.aim-(BG.da==null?BG.aim:BG.da);d=Math.atan2(Math.sin(d),Math.cos(d));BG.da=Math.abs(d)<.002||BG.st!=="aim"?BG.aim:(BG.da==null?BG.aim:BG.da)+d*.4;if(BG.da!==BG.aim)requestAnimationFrame(()=>BG&&biDraw())}const dx=Math.cos(BG.da),dy=Math.sin(BG.da),off=R+10+BG.pow*150,L=900;c.save();c.translate(cu.x-dx*off,cu.y-dy*off);c.rotate(BG.da+Math.PI);c.translate(0,BG.sp[0]*R*.5);
   const g=c.createLinearGradient(0,-8,0,8);g.addColorStop(0,K.cue[0]);g.addColorStop(.5,K.cue[1]);g.addColorStop(1,K.cue[2]);c.fillStyle=K.ring;c.fillRect(0,-5,8,10);c.fillStyle="#f4f0e4";c.fillRect(8,-5.5,14,11);c.fillStyle=g;c.beginPath();c.moveTo(22,-6);c.lineTo(L*.7,-9);c.lineTo(L*.7,9);c.lineTo(22,6);c.fill();if(K.gold){c.fillStyle="#e8c060";[.3,.45,.6].forEach(f=>c.fillRect(L*f,-7.5,6,15))}c.fillStyle=K.butt;c.beginPath();c.moveTo(L*.7,-9);c.lineTo(L,-12);c.lineTo(L,12);c.lineTo(L*.7,9);c.fill();c.restore()}
  if(BG.hand&&BG.st!=="moving"&&!(BG.mode==="ai"&&BG.turn===1)){c.strokeStyle="rgba(255,255,255,.8)";c.setLineDash([6,6]);c.lineWidth=3;c.beginPath();c.arc(cu.x,cu.y,R+12,0,7);c.stroke();c.setLineDash([]);c.font="34px sans-serif";c.textAlign="center";c.textBaseline="middle";c.fillText("✋",cu.x+R*1.9,cu.y-R*1.9);if(BG.head){c.fillStyle="rgba(255,255,255,.06)";c.fillRect(0,0,BI.W,500)}}
  c.restore()}
@@ -310,7 +311,7 @@ function biScreen(){biActs();cur="billard";nv("games");theme("billard");$("#nav"
  const wr=$(".biw"),av=innerHeight-wr.getBoundingClientRect().top-62,ww=Math.min(wr.clientWidth-2*54,av/1.85);const cv=$("#bicv");cv.style.width=ww+"px";cv.style.height=ww*1.85+"px";$("#bipw").style.height=$("#biwh").style.height=Math.min(ww*1.85*.7,420)+"px";
  biBind();biUI();biDraw();if(BG.mode==="ai"&&BG.turn===1)setTimeout(biAI,600)}
 function biPt(e){const V=biView(),r=V.cv.getBoundingClientRect();return{x:(e.clientX-r.left-V.m)/V.s,y:(e.clientY-r.top-V.m)/V.s}}
-function biCan(){return BG&&BG.st!=="moving"&&BG.st!=="over"&&BG.st!=="aiaim"&&!(BG.mode==="ai"&&BG.turn===1)}
+function biCan(){return BG&&BG.st!=="moving"&&BG.st!=="over"&&BG.st!=="aiaim"&&BG.st!=="strike"&&!(BG.mode==="ai"&&BG.turn===1)}
 function biBind(){const cv=$("#bicv");let drag=0,st0=null;
  cv.addEventListener("pointerdown",e=>{if(!biCan())return;const p=biPt(e),c=biCue();cv.setPointerCapture(e.pointerId);
   if(BG.hand&&Math.hypot(p.x-c.x,p.y-c.y)<BI.R*3){drag=2}else{drag=1;st0={x:e.clientX,y:e.clientY,a:Math.atan2(p.y-c.y,p.x-c.x),aim:BG.aim,mv:!1}}});
@@ -320,7 +321,7 @@ function biBind(){const cv=$("#bicv");let drag=0,st0=null;
  const pw=$("#bipw"),pf=$("#bipf"),cq=$("#bicq");let pd=null;
  pw.addEventListener("pointerdown",e=>{if(!biCan())return;if(BG.st==="place")BG.st="aim";pd={y:e.clientY,h:pw.clientHeight,k:0};pf.style.backgroundSize="100% "+pw.clientHeight+"px";pw.setPointerCapture(e.pointerId);BG.st="pow"});
  pw.addEventListener("pointermove",e=>{if(!pd)return;BG.pow=Math.max(0,Math.min(1,(e.clientY-pd.y)/(pd.h*.8)));pf.style.height=BG.pow*100+"%";{const k=Math.floor(BG.pow*12);if(k!==pd.k){pd.k=k;vib(4);biNoise(2400+k*120,.06,.012)}}pw.classList.toggle("hot",BG.pow>.85);cq.style.transform=`translateY(${BG.pow*pd.h*.8}px)`;biDraw()});
- const pup=()=>{if(!pd)return;pd=null;const p=BG.pow;pf.style.height="0";cq.style.transform="";pw.classList.remove("hot");if(p<.03){BG.st="aim";BG.pow=0;biDraw();return}biShoot(p,BG.aim,BG.sp);biUI();biRun()};pw.addEventListener("pointerup",pup);pw.addEventListener("pointercancel",pup);
+ const pup=()=>{if(!pd)return;pd=null;const p=BG.pow;pf.style.height="0";cq.style.transform="";pw.classList.remove("hot");if(p<.03){BG.st="aim";BG.pow=0;biDraw();return}const a0=BG.aim,s0=BG.sp;biStrike(p,()=>{biShoot(p,a0,s0);biUI();biRun()})};pw.addEventListener("pointerup",pup);pw.addEventListener("pointercancel",pup);
  const wh=$("#biwh"),wrb=$("#biwr");let wy=null,off=0;
  wh.addEventListener("pointerdown",e=>{if(!biCan())return;if(BG.st==="place")BG.st="aim";wy=e.clientY;wh.setPointerCapture(e.pointerId)});
  wh.addEventListener("pointermove",e=>{if(wy===null)return;const dy=e.clientY-wy;wy=e.clientY;off+=dy;wrb.style.backgroundPositionY=off+"px";if(Math.floor(off/9)!==wh._k){wh._k=Math.floor(off/9);vib(3);biNoise(4200,.05,.01)}BG.aim+=dy*.0011;biDraw()});
