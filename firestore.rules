@@ -21,6 +21,7 @@ service cloud.firestore {
         && request.resource.data.keys().hasOnly(['u'])
         && request.resource.data.u == request.auth.uid
         && (resource == null || resource.data.u == request.auth.uid);
+      allow delete: if request.auth != null && resource.data.u == request.auth.uid;
     }
 
     // Boîte d'arrivée : inbox/<destinataire> = { <expéditeur>: 1 } indique qui m'a ajouté ou m'a offert un cadeau.
@@ -64,6 +65,7 @@ service cloud.firestore {
         && request.resource.data.keys().hasOnly(['j'])
         && request.resource.data.j is string
         && request.resource.data.j.size() < 40000;
+      allow delete: if request.auth != null && id.split('_').size() == 3 && id.split('_')[2] == request.auth.uid;
     }
 
     // Zeni : nouvelles générales (écrites seulement par le compte ffxvi@pm.me, lues par tous les joueurs connectés).
@@ -83,6 +85,7 @@ service cloud.firestore {
         && request.resource.data.keys().hasOnly(['j'])
         && request.resource.data.j is string
         && request.resource.data.j.size() < 40000;
+      allow delete: if request.auth != null && request.auth.uid == uid;
     }
 
     // Achats de flocons : écrits seulement par le serveur (webhook Stripe). Le joueur lit son propre total.
