@@ -66,6 +66,25 @@ service cloud.firestore {
         && request.resource.data.j.size() < 40000;
     }
 
+    // Zeni : nouvelles générales (écrites seulement par le compte ffxvi@pm.me, lues par tous les joueurs connectés).
+    match /zn/{id} {
+      allow get: if request.auth != null;
+      allow create, update: if request.auth != null && request.auth.token.email == 'ffxvi@pm.me'
+        && request.resource.data.keys().hasOnly(['j'])
+        && request.resource.data.j is string
+        && request.resource.data.j.size() < 60000;
+    }
+
+    // Avis envoyés à Zeni : av/<uid>. Chacun écrit et relit son propre avis ; seul ffxvi@pm.me peut tous les lire.
+    match /av/{uid} {
+      allow get: if request.auth != null && (request.auth.uid == uid || request.auth.token.email == 'ffxvi@pm.me');
+      allow list: if request.auth != null && request.auth.token.email == 'ffxvi@pm.me';
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['j'])
+        && request.resource.data.j is string
+        && request.resource.data.j.size() < 40000;
+    }
+
     // Achats de flocons : écrits seulement par le serveur (webhook Stripe). Le joueur lit son propre total.
     match /buys/{uid} {
       allow get: if request.auth != null && request.auth.uid == uid;
