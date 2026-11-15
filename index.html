@@ -130,7 +130,7 @@
 .gflc>.gfl-b.gfl-p{min-width:0;width:110px}.gflc>.gfl-b.gfl-n{width:110px}
 .hrt{display:flex;align-items:center;gap:8px}
 .rmkb{font:700 13px/1 "Nunito Sans",sans-serif;color:var(--text);background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:8px 12px;cursor:pointer;white-space:nowrap}
-.rmbar{margin:0 0 12px;display:flex;justify-content:center}
+.rmbar{margin:0 0 12px;display:flex;justify-content:center;gap:8px}
 .rmbar.fx{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 56px);z-index:30;pointer-events:none}
 .rmbar.fx .rmkb{pointer-events:auto;background:rgba(10,12,40,.72)}
 .rmin{width:100%;font:700 28px/1 Fraunces,serif;letter-spacing:.35em;text-align:center;text-transform:uppercase;padding:14px 8px;border-radius:14px;border:1px solid rgba(255,255,255,.3);background:rgba(0,0,0,.25);color:var(--text)}
@@ -1157,7 +1157,7 @@ document.body.appendChild(d);const inp=d.querySelector("#rmin"),er=d.querySelect
 const go=async()=>{er.textContent="Connexion…";const m=await rmJoinCode(inp.value);if(m)er.textContent=m;else d.remove()};
 d.querySelector("#rmgo").onclick=go;d.querySelector("#rmno").onclick=()=>d.remove();inp.onkeydown=e=>{if(e.key==="Enter")go()};inp.oninput=()=>{inp.value=inp.value.toUpperCase()}}
 function rmInject(){const g=RM.gOpen;if(!GN[g]||g==="carcache"||$(".rmbar")||RM.scr==="lobby")return;if(cur!==g)return;
-const b=document.createElement("div");b.className="rmbar"+(g==="galac"?" fx":"");b.innerHTML=`<button class="rmkb" data-a="rmNew" data-v="${g}">🔑 Salon avec un code</button>`;
+const b=document.createElement("div");b.className="rmbar"+(g==="galac"?" fx":"");b.innerHTML=`<button class="rmkb" data-a="rmNew" data-v="${g}">🔑 Créer un salon</button><button class="rmkb" data-a="rmCode">Entrer un code</button>`;
 const t=app.querySelector(".top.stk");if(t&&g!=="galac")t.insertAdjacentElement("afterend",b);else if(g==="galac")document.body.appendChild(b)}
 new MutationObserver(()=>{document.querySelectorAll(".rmbar.fx").forEach(b=>{if(cur!=="galac"||RM.gOpen!=="galac")b.remove()});if(RM.gOpen&&cur===RM.gOpen&&!document.querySelector(".rmbar")&&app.firstChild)rmInject()}).observe(document.getElementById("app"),{childList:!0});
 
