@@ -118,6 +118,24 @@ service cloud.firestore {
       allow delete: if request.auth != null && request.auth.uid == uid;
     }
 
+    // Salons multijoueur : rm/<CODE> (5 caractères) = { j: json }. Lecture d'un salon par son code seulement.
+    match /rm/{code} {
+      allow get: if request.auth != null && code.matches('[A-HJKMNP-Z2-9]{5}');
+      allow create, update: if request.auth != null && code.matches('[A-HJKMNP-Z2-9]{5}')
+        && request.resource.data.keys().hasOnly(['j'])
+        && request.resource.data.j is string
+        && request.resource.data.j.size() < 4000;
+    }
+
+    // Parties de Carcaché : cc/<CODE du salon> = { j: json } (état de la partie).
+    match /cc/{code} {
+      allow get: if request.auth != null && code.matches('[A-HJKMNP-Z2-9]{5}');
+      allow create, update: if request.auth != null && code.matches('[A-HJKMNP-Z2-9]{5}')
+        && request.resource.data.keys().hasOnly(['j'])
+        && request.resource.data.j is string
+        && request.resource.data.j.size() < 30000;
+    }
+
     // Tout le reste est fermé.
     match /{document=**} {
       allow read, write: if false;
