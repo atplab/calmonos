@@ -1241,7 +1241,7 @@ d.innerHTML=`<div class="glass ccbox"><h2>Code multijoueur</h2><p class="note">E
 document.body.appendChild(d);const inp=d.querySelector("#rmin"),er=d.querySelector("#rmerr");setTimeout(()=>inp.focus(),50);
 const go=async()=>{er.textContent="Connexion…";const m=await rmJoinCode(inp.value);if(m)er.textContent=m;else d.remove()};
 d.querySelector("#rmgo").onclick=go;d.querySelector("#rmno").onclick=()=>d.remove();inp.onkeydown=e=>{if(e.key==="Enter")go()};inp.oninput=()=>{inp.value=inp.value.toUpperCase()}}
-function rmInject(){const g=RM.gOpen;if(!GN[g]||g==="carcache"||$(".rmbar")||RM.scr==="lobby")return;if(cur!==g)return;
+function rmInject(){return;const g=RM.gOpen;if(!GN[g]||g==="carcache"||$(".rmbar")||RM.scr==="lobby")return;if(cur!==g)return;
 const b=document.createElement("div");b.className="rmbar"+(g==="galac"?" fx":"");b.innerHTML=`<button class="rmkb" data-a="rmNew" data-v="${g}">🔑 Créer un salon</button><button class="rmkb" data-a="rmCode">Entrer un code</button>`;
 const t=app.querySelector(".top.stk");if(t&&g!=="galac")t.insertAdjacentElement("afterend",b);else if(g==="galac")document.body.appendChild(b)}
 new MutationObserver(()=>{document.querySelectorAll(".rmbar.fx").forEach(b=>{if(cur!=="galac"||RM.gOpen!=="galac")b.remove()});if(RM.gOpen&&cur===RM.gOpen&&!document.querySelector(".rmbar")&&app.firstChild)rmInject()}).observe(document.getElementById("app"),{childList:!0});
