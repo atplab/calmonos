@@ -2387,7 +2387,7 @@ const css=document.createElement("style");css.textContent=`
 .arnv{position:absolute;top:50%;z-index:4;width:40px;height:40px;margin-top:-20px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(20,6,40,.6);color:#fff;font:700 20px system-ui;display:grid;place-items:center}.arnv.l{left:0}.arnv.r{right:0}
 .arw .vzbt{position:relative;z-index:4}
 .arw .vzbig{background:linear-gradient(#ff7be0,#c22b9e);box-shadow:0 0 24px rgba(255,95,210,.55),inset 0 1px 0 rgba(255,255,255,.5);color:#fff}
-.arw .vzb{--k:#5fe3ff}
+.arw .vzb{--k:#5fe3ff}.arw.zm .vzbt,.arw.zm .arsw,.arw.zm .arneon,.arw.zm .arnv,.arw.zm .arlt,.arw.zm .vztp{opacity:0;transition:opacity .4s;pointer-events:none}.arw.zm .arcb:not(.on){opacity:0;transition:opacity .3s}.arw.zm:after{background:#000;opacity:0;animation:arZf .35s .75s forwards;z-index:9}@keyframes arZf{to{opacity:1}}
 @media(prefers-reduced-motion:reduce){.artl{animation:none;transform:rotateX(-6deg) rotateY(-14deg)}}`;document.head.appendChild(css);
 const G=id=>ALL.find(g=>g.id===id)||{id,n:id};
 const av=id=>{try{return!(typeof gOpenAt==="function"&&gOpenAt(id)>Date.now())||(typeof UNL==="function"&&UNL())}catch(e){return!0}};
@@ -2444,6 +2444,10 @@ app.innerHTML=`<div class="arw"><i class="arlt" style="left:22%"></i><i class="a
 <div class="arsw" role="tablist">${L.map(k=>`<button role="tab" data-a="arSel" data-v="${k}" aria-selected="${k===id}">${lk(k)?SV.k:""}${esc(G(k).n)}</button>`).join("")}</div>
 <div class="arst" id="arst">${n>1?'<button class="arnv l" data-a="arMv" data-v="-1" aria-label="Borne précédente">‹</button><button class="arnv r" data-a="arMv" data-v="1" aria-label="Borne suivante">›</button>':""}<div class="artl"><div class="arrg" id="arrg">${L.map((k,j)=>{const g=G(k);return`<div class="arcb" data-v="${k}" style="--a:${g.a||"#ff5fd2"};--b:${g.b||"#2a0f4a"};transform:rotateY(${j*360/n}deg) translateZ(${R(n)}px)"><i class="fc xsh"></i><i class="fc xbk"></i><i class="fc xsd xsl"></i><i class="fc xsd xsr"></i><i class="fc xtp"></i><div class="fc xmq"><b>${esc(g.n)}</b></div><i class="fc xgr"></i><div class="fc xsc"><canvas data-v="${k}"></canvas>${lk(k)?`<span class="xlk">${SV.k}</span>`:""}</div><div class="fc xpn"><i class="j"></i><i class="k1"></i><i class="k2"></i><i class="k3"></i></div><i class="fc xlp"></i><i class="fc xlw"></i></div>`}).join("")}</div></div></div>
 <div class="vzbt"></div></div>`;const nb=$("#nav");nb&&(nb.hidden=!0);upd(id,0);demo();window.scrollTo(0,0);
+const aw=$(".arw");let ZM=0;aw.addEventListener("click",e=>{const b=e.target.closest(".vzbt button");if(!b||ZM||b.disabled)return;const a=b.dataset.a,v=b.dataset.v;if(!["arPl","infGo","zrGo","zrRk","bzGo","bzWv"].includes(a)||a==="zrRk"&&st.get("zr:lv",0)<30)return;e.stopPropagation();e.preventDefault();ZM=1;
+try{sfx(1900,.05);setTimeout(()=>sfx(2500,.07),70);setTimeout(()=>sfx(170,.14),250);setTimeout(()=>sfx(988,.09),430);setTimeout(()=>sfx(1319,.3),520);vib&&vib(15)}catch(x){}
+const tl=$(".artl");tl.style.transform=getComputedStyle(tl).transform;tl.style.animation="none";tl.offsetWidth;tl.style.transition="transform 1s cubic-bezier(.5,0,.3,1)";tl.style.transform="translateY(-39px) translateZ(520px)";aw.classList.add("zm");
+setTimeout(()=>{if(!document.body.contains(aw))return;cancelAnimationFrame(RAF);try{act[a](v)}catch(x){}},1100)},!0);
 const s=$("#arst");let x0=null;s.addEventListener("pointerdown",e=>{e.target.closest("button")||(x0=e.clientX)});s.addEventListener("pointerup",e=>{if(x0==null)return;const d=e.clientX-x0;x0=null;Math.abs(d)>40&&mv(d<0?1:-1)});
 s.addEventListener("click",e=>{const c=e.target.closest(".arcb");if(!c||e.target.closest("button"))return;if(c.dataset.v===sel()){const b=$(".arw .vzbig:not([disabled])");b&&b.click()}else pick(c.dataset.v)})}
 function pick(v){const L=LST();if(!L.includes(v)||v===sel()&&$("#arrg"))return;st.set("ar:sel",v);try{sfx(330,.12);setTimeout(()=>sfx(520,.08),160)}catch(e){}upd(v,1)}
