@@ -1287,7 +1287,7 @@ const go=async()=>{er.textContent="Connexion…";const m=await rmJoinCode(inp.va
 d.querySelector("#rmgo").onclick=go;d.querySelector("#rmno").onclick=()=>d.remove();inp.onkeydown=e=>{if(e.key==="Enter")go()};inp.oninput=()=>{inp.value=inp.value.toUpperCase()}}
 function rmInject(){const g=RM.gOpen;if(!GN[g]||g==="carcache"||(cur!==g&&g!=="galac"))return;const H=new Set(),SEL="[data-a=chInv],[data-a=chOpen],[data-a=ahAsk],[data-a=scNew],[data-a=scrOpen],[data-a=unMake],[data-a=gfRcCh]";
 app.querySelectorAll("section").forEach(sc=>{if(sc.classList.contains("story"))return;const h=sc.querySelector("h2");(sc.classList.contains("soc-i")||h&&/ami|multi|défi/i.test(h.textContent)||sc.querySelector(SEL)||/\bamis?\b/i.test(sc.textContent)&&sc.textContent.length<900)&&H.add(sc)});
-document.querySelectorAll("[data-a=gfRcCh]").forEach(b=>{const c=b.closest("section,.fr-l")||(b.parentElement&&b.parentElement.parentElement);c&&H.add(c)});
+document.querySelectorAll("[data-a=gfRcCh]").forEach(b=>{const c=b.closest("#gflp")||b.closest("section,.fr-l")||(b.parentElement&&b.parentElement.parentElement);c&&H.add(c)});
 H.forEach(sc=>{if(sc.querySelector(".rmrow")||sc.closest("#rmfs"))return;const d=document.createElement("div");d.className="rmrow";d.innerHTML=`<button class="btn alt" data-a="rmNew" data-v="${g}">🔑 Créer un salon</button><button class="btn alt" data-a="rmCode">Entrer un code</button>`;sc.appendChild(d)})}
 {let t=0;new MutationObserver(()=>{clearTimeout(t);t=setTimeout(rmInject,150)}).observe(document.getElementById("app"),{childList:!0,subtree:!0})}
 setTimeout(()=>{const _o=act.open;act.open=function(e){RM.gOpen=e;const r=_o.apply(this,arguments);setTimeout(rmInject,120);return r};
