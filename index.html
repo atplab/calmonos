@@ -1279,7 +1279,7 @@ if(S.st!=="play"){if(!CC.mo&&!CC.mt)CC.mt=setTimeout(()=>{CC.mt=null;CC.mo=1;if(
 function ccNext(){clearTimeout(CC.tm);const S=CC.S;if(!S||S.st!=="play")return;const lv=S.bot[S.turn];if(lv<0)return;if(CC.on&&!CC.on.host)return;
 CC.tm=setTimeout(()=>{if(CC.S!==S||S.st!=="play"||S.bot[S.turn]!==lv)return;
 if(S.ph==="d"){ccTake(S,ccAIdraw(S,lv))}else{const m=ccAIplace(S,lv);m.f?ccFlip(S,m.i):ccPlace(S,m.i)}
-tone(S.ph==="p"?520:380,.08);ccCommit()},S.ph==="d"?1000:1250)}
+ccCommit()},S.ph==="d"?1000:1250)}
 function ccCommit(){const S=CC.S;S.seq++;if(CC.on)CC.on.db.collection("cc").doc(CC.on.code).set({j:J(S)}).catch(()=>gToast("Connexion instable…"));ccShow();ccNext()}
 function ccMine(){const S=CC.S;return S&&S.st==="play"&&S.turn===CC.me&&S.bot[CC.me]<0?S:null}
 function ccPay(){if(CC.paid)return;CC.paid=1;const S=CC.S,best=Math.min(...S.tot),won=S.tot[CC.me]===best,M=CC.meta;let g=0;st.set("cc:g",st.get("cc:g",0)+1);won&&st.set("cc:w",st.get("cc:w",0)+1);
@@ -1291,7 +1291,7 @@ function ccOnline(r){const env=RM.env,code=RM.code;ccStop();RM.unsub&&RM.unsub()
 CC.meta=null;CC.paid=0;CC.gain=0;CC.me=r.p.findIndex(p=>p.u===env.uid);CC.on={db:env.db,code,host:r.h===env.uid,uid:env.uid};cur="carcache";theme("carcache");
 app.innerHTML=`<div class="top stk"><button class="back" data-a="ccQuit">‹ Quitter</button></div><section class="glass story pt-carcache"><i>🐚</i><h2>Manche en cours…</h2><p>Mise en place de la partie.</p></section>`;
 CC.unsub=env.db.collection("cc").doc(code).onSnapshot(d=>{let S=null;try{S=JSON.parse(d.data().j)}catch(e){}if(!S)return;
-if(!CC.on)return;if(!CC.S||S.seq>CC.S.seq){const first=!CC.S;CC.S=S;if(S.st==="play"&&S.turn===CC.me&&!first)tone(700,.08);ccShow();ccNext()}},()=>gToast("Connexion perdue"))}
+if(!CC.on)return;if(!CC.S||S.seq>CC.S.seq){const first=!CC.S;CC.S=S;if(S.st==="play"&&S.turn===CC.me&&!first)ccShow();ccNext()}},()=>gToast("Connexion perdue"))}
 
 /* ───────── Menu du jeu ───────── */
 function ccLvHtml(){const p=st.get("cc:p",0),unl=UNL();
@@ -1410,10 +1410,10 @@ ccHub:()=>ccHub(),ccFr:()=>{RM.sg="carcache";const d=$("#vzsh");d&&d.remove();ac
 ccFree:()=>{const c=CC.cfg,o=[["Crevette","🦐"],["Poisson-clown","🐠"],["Tortue","🐢"],["Calamar","🦑"],["Requin","🦈"]].slice(0,c.n).map(x=>[x[0],x[1],c.lv]);ccLocal(o,c.H,{free:1})},
 ccLv:v=>{const i=+v,l=ccLvl(i);if(!l)return;ccLocal(l[3],l[2],{lv:i})},
 ccAgain:()=>{const M=CC.meta,c=CC.cfg;if(M&&M.lv!=null)act.ccLv(M.lv);else act.ccFree()},
-ccD:()=>{const S=ccMine();if(!S||S.ph!=="d")return;ccTake(S,"d");tone(420,.08);vb(8);ccCommit()},
-ccT:()=>{const S=ccMine();if(!S||S.ph!=="d")return;ccTake(S,"t");tone(460,.08);vb(8);ccCommit()},
+ccD:()=>{const S=ccMine();if(!S||S.ph!=="d")return;ccTake(S,"d");vb(8);ccCommit()},
+ccT:()=>{const S=ccMine();if(!S||S.ph!=="d")return;ccTake(S,"t");vb(8);ccCommit()},
 ccFm:()=>{CC.fm=CC.fm?0:1;ccShow()},
-ccP:v=>{const S=ccMine();if(!S||S.ph!=="p")return;const i=+v;if(CC.fm){if(S.hands[S.turn][i].u)return;ccFlip(S,i)}else ccPlace(S,i);CC.fm=0;tone(600,.1);vb(12);ccCommit()},
+ccP:v=>{const S=ccMine();if(!S||S.ph!=="p")return;const i=+v;if(CC.fm){if(S.hands[S.turn][i].u)return;ccFlip(S,i)}else ccPlace(S,i);CC.fm=0;vb(12);ccCommit()},
 ccNh:()=>{const S=CC.S;if(!S||S.st!=="hole"||(CC.on&&!CC.on.host))return;CC.mo=0;ccNextHole(S);ccCommit()},
 ccQuit:()=>{if(!CC.q){CC.q=1;ccShow();setTimeout(()=>{if(CC.q){CC.q=0;CC.S&&ccShow()}},3000);return}
 const on=CC.on,S=CC.S;if(on&&S&&S.st==="play"){S.bot[CC.me]=1;S.seq++;try{on.db.collection("cc").doc(on.code).set({j:J(S)})}catch(e){}}
