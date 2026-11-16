@@ -1506,8 +1506,6 @@ tick(){const e=this.L,A=typeof AC!=="undefined"?AC:null;if(!e||!A)return;for(thi
 0===k&&this.pad(i,pd,bs,8*E,[.5,.7,.85,.75][sec]);
 if(sec>=1){(k===0||k===4)&&this.kk(i,.13*h());sec===3&&k===3&&bi%2&&this.kk(i,.07);
 k===0?this.sb(this.mf(bs),i,1.6*E,.16*h()):k===3?this.sb(this.mf(bs),i,.8*E,.11*h()):k===6&&this.sb(this.mf(bs+12),i,.9*E,.09*h())}
-(sec>=1||bi>=2)&&k%2&&this.hx(i,(sec?.03:.018)*h(),7500,.05);
-sec>=1&&k%2===0&&this.hx(i,.008*h(),9000,.025);
 sec>=2&&(k===2||k===6)&&this.hx(i,.05*h(),1700,.14,1.1);
 if(sec>=1&&!(3===sec&&7===bi)){const ai=[0,1,2,3,2,1,0,2][k];(sec===2||!(k%2))&&this.gl(this.mf(pd[ai]+12),i,.35,(sec===2?.02:.017)*h(),e.bus)}
 if(0!==sec||bi>=4){const g=0===sec?.045:.065;(2===sec?this.MB:this.MA)[bi].forEach(([st,n,d])=>{st===k&&this.gl(this.mf(n),i+.008,d*E*1.2,g*h(),e.bus)})}
