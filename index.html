@@ -1223,7 +1223,7 @@ const hdr=`<div class="vztp"><button class="back" data-a="ccQuit">${CC.q?"Vraime
 const html=`<div class="vzf game">${hdr}<div class="ccs"><div class="ccops n${Math.min(opp.length,3)}">${oh}</div>
 <div class="ccmid"><div class="ccpw"><div class="ccpile ${canD?"can":""}" ${canD?'data-a="ccD"':""}>${deckC}<span>${S.deck.length}</span></div><small>Pioche</small></div>
 <div class="ccdrw">${drw}</div>
-<div class="ccpw"><div class="ccpile ${tm&&S.ph==="d"?"can":""}" ${tm&&S.ph==="d"?'data-a="ccT"':""}>${cardH({v:top,u:1},topCl,"",0)}</div><small>Défausse</small></div></div>
+<div class="ccpw"><div class="ccpile ${tm&&S.ph==="d"?"can":""}" ${tm&&S.ph==="d"?'data-a="ccT"':""}>${top===undefined?'<div class="ccem" style="width:var(--cw);aspect-ratio:3/4"></div>':cardH({v:top,u:1},topCl,"",0)}</div><small>Défausse</small></div></div>
 <p class="ccmsg" role="status">${msg}</p><div class="ccact">${act1}</div>
 <div class="ccme ${tm?"on":""}"><div class="cch"><i>${S.pl[me].e}</i><b>${esc(S.pl[me].n)}</b><em>Total ${S.tot[me]} · cette manche ${ccSc(S.hands[me],0)}</em></div><div class="ccg4">${ccGrid(S,me,1,CC.fm)}</div></div></div></div>${CC.mo?ccOv():""}`;
 CC.pv=ccSnap(S);return html}
@@ -1247,8 +1247,14 @@ const B=(f,d,w)=>setTimeout(()=>tone(f,d),(w||0)+(t0||0)*1e3);if(k==="deal")B(52
 function ccSd(a,b){if(!b)return;if(!a||a.hole!==b.hole){for(let i=0;i<7;i++)ccSn("deal",i*.06);return}
 if(a.dr==null&&b.dr!=null){ccSn("draw");return}
 if(a.dr!=null&&b.dr==null){let fl=0,pl=0;b.h.forEach((h,p)=>h.forEach((c,i)=>{const o=a.h[p]&&a.h[p][i];if(o&&o!==c){const[ov,ou]=o.split(":"),[nv,nu]=c.split(":");nu==="1"&&ou==="0"&&ov===nv?fl++:pl++}}));pl?(ccSn("place"),setTimeout(()=>ccSn("flip"),90)):ccSn("flip")}}
-function ccShow(){const S=CC.S;if(!S)return;const nb=$("#nav");nb&&(nb.hidden=!0);const pv0=CC.pv&&CC.S===CC.pv.S?CC.pv:CC.pv;
-app.innerHTML=ccDraw();ccSd(pv0,CC.pv);S.st!=="play"&&!CC.sdE&&(CC.sdE=1,ccSn(S.st==="end"?"win":"hole"));S.st==="play"&&(CC.sdE=0);
+function ccRc(){const r=e=>e?e.getBoundingClientRect():null,q=x=>document.querySelector(".vzf.game "+x),pl=document.querySelectorAll(".vzf.game .ccpile");if(!q(".ccs"))return null;return{g:[...document.querySelectorAll(".vzf.game .ccg4")].map(c=>[...c.children].map(r)),dr:r(q(".ccdrw .ccc")),dk:r(pl[0]&&pl[0].querySelector(".ccc")),ds:r(pl[1]&&pl[1].querySelector(".ccc"))}}
+function ccFly(el,f,dl){if(!el||!f||!el.animate)return;const t=el.getBoundingClientRect();if(!t.width||!f.width)return;const dx=f.left-t.left,dy=f.top-t.top,sc=f.width/t.width;if(Math.abs(dx)+Math.abs(dy)<4)return;el.style.animation="none";el.style.zIndex=60;const a=el.animate([{transform:`translate(${dx}px,${dy}px) scale(${sc})`,boxShadow:"0 14px 22px rgba(0,0,0,.45)"},{transform:`translate(${dx*.35}px,${dy*.35-14}px) scale(${1+(sc-1)*.35+.08})`,boxShadow:"0 18px 26px rgba(0,0,0,.4)",offset:.55},{transform:"none",boxShadow:"0 0 0 rgba(0,0,0,0)"}],{duration:560,delay:dl||0,easing:"cubic-bezier(.3,.7,.25,1)",fill:"backwards"});a.onfinish=a.oncancel=()=>{el.style.zIndex="";el.style.animation=""}}
+function ccAnim(R,a,b){const gs=[...document.querySelectorAll(".vzf.game .ccg4")],pl=document.querySelectorAll(".vzf.game .ccpile"),dr=document.querySelector(".vzf.game .ccdrw .ccc"),top=pl[1]&&pl[1].querySelector(".ccc"),gi=p=>p===CC.me?gs.length-1:p<CC.me?p:p-1;let rep=null;
+b.h.forEach((h,p)=>h.forEach((c,i)=>{const o=a.h[p]&&a.h[p][i];if(o&&o!==c){const[ov,ou]=o.split(":"),[nv,nu]=c.split(":");if(!(nu==="1"&&ou==="0"&&ov===nv))rep=[gi(p),i]}}));
+if(a.dr==null&&b.dr!=null){ccFly(dr,a.dt!==b.dt?R.ds:R.dk)}
+else if(a.dr!=null&&b.dr==null){if(rep){const el=gs[rep[0]]&&gs[rep[0]].children[rep[1]];ccFly(el,R.dr);a.dt!==b.dt&&ccFly(top,R.g[rep[0]]&&R.g[rep[0]][rep[1]],80)}else a.dt!==b.dt&&ccFly(top,R.dr)}}
+function ccShow(){const S=CC.S;if(!S)return;const nb=$("#nav");nb&&(nb.hidden=!0);const pv0=CC.pv&&CC.S===CC.pv.S?CC.pv:CC.pv;const R0=ccRc();
+app.innerHTML=ccDraw();try{R0&&pv0&&CC.pv&&pv0.hole===CC.pv.hole&&ccAnim(R0,pv0,CC.pv)}catch(e){}ccSd(pv0,CC.pv);S.st!=="play"&&!CC.sdE&&(CC.sdE=1,ccSn(S.st==="end"?"win":"hole"));S.st==="play"&&(CC.sdE=0);
 if(S.st!=="play"){if(!CC.mo&&!CC.mt)CC.mt=setTimeout(()=>{CC.mt=null;CC.mo=1;if(CC.S&&CC.S.st!=="play")ccShow()},1500)}else{CC.mo=0;clearTimeout(CC.mt);CC.mt=null}}
 function ccNext(){clearTimeout(CC.tm);const S=CC.S;if(!S||S.st!=="play")return;const lv=S.bot[S.turn];if(lv<0)return;if(CC.on&&!CC.on.host)return;
 CC.tm=setTimeout(()=>{if(CC.S!==S||S.st!=="play"||S.bot[S.turn]!==lv)return;
