@@ -1110,6 +1110,7 @@ pz(e,t,a,s,n){const o=AC,i=o.createOscillator(),r=o.createGain(),l=o.createBiqua
 gl(e,t,a,s,n){const o=AC;[[1,1,a+.5],[2.76,.08,.3]].forEach(([k,v,d])=>{const l=o.createOscillator(),c=o.createGain();l.type="sine";l.frequency.value=e*k;c.gain.setValueAtTime(1e-4,t);c.gain.exponentialRampToValueAtTime(s*v,t+.012);c.gain.exponentialRampToValueAtTime(1e-4,t+d);l.connect(c);c.connect(n);l.start(t);l.stop(t+d+.05)})},
 tok(){},
 kk(t,v,d){const o=AC.createOscillator(),g=AC.createGain();o.type="sine";o.frequency.setValueAtTime(95,t);o.frequency.exponentialRampToValueAtTime(45,t+.12);g.gain.setValueAtTime(1e-4,t);g.gain.exponentialRampToValueAtTime(v,t+.012);g.gain.exponentialRampToValueAtTime(1e-4,t+.35);o.connect(g);g.connect(d);o.start(t);o.stop(t+.4)},
+build(){const A=typeof AC!=="undefined"?AC:null;if(!A||typeof mg==="undefined"||!mg||this.L)return;const out=A.createGain();out.gain.value=0;const lp=A.createBiquadFilter();lp.type="lowpass";lp.frequency.value=4500;lp.connect(out);out.connect(mg);const bus=A.createGain();bus.connect(lp);[[.043,.16],[.071,.12],[.097,.09]].forEach(([dt,g])=>{const d=A.createDelay(.2),f=A.createBiquadFilter(),w=A.createGain();d.delayTime.value=dt;f.type="lowpass";f.frequency.value=1600;w.gain.value=g;bus.connect(d);d.connect(f);f.connect(w);w.connect(lp)});const dry=A.createGain();dry.connect(lp);this.L={out,bus,dry,M:{}}},
 hh(t,v,d){const A=AC;if(!this.NB){const n=A.createBuffer(1,A.sampleRate*.3,A.sampleRate),c=n.getChannelData(0);for(let k=0;k<c.length;k++)c[k]=Math.random()*2-1;this.NB=n}const o=A.createBufferSource(),f=A.createBiquadFilter(),g=A.createGain();o.buffer=this.NB;f.type="highpass";f.frequency.value=7000;g.gain.setValueAtTime(1e-4,t);g.gain.linearRampToValueAtTime(v,t+.006);g.gain.exponentialRampToValueAtTime(1e-4,t+.07);o.connect(f);f.connect(g);g.connect(d);o.start(t);o.stop(t+.1)},
 ep(fq,t,d,v,dst){const A=AC,f=A.createBiquadFilter(),g=A.createGain();f.type="lowpass";f.frequency.value=1700;g.gain.setValueAtTime(1e-4,t);g.gain.linearRampToValueAtTime(v,t+.018);g.gain.exponentialRampToValueAtTime(v*.45,t+.25);g.gain.exponentialRampToValueAtTime(1e-4,t+d);[["sine",1,1],["sine",2,.12]].forEach(([ty,m,a])=>{const o=A.createOscillator(),og=A.createGain();o.type=ty;o.frequency.value=fq*m;og.gain.value=a;o.connect(og);og.connect(f);o.start(t);o.stop(t+d+.05)});f.connect(g);g.connect(dst)},
 CD:{F:[41,[57,60,64]],Dm:[38,[57,60,65]],Gm:[43,[58,62,65]],C7:[36,[58,64,67]],Bb:[46,[57,62,65]],Am:[45,[55,60,64]]},
@@ -1118,9 +1119,9 @@ MB:{a1:[[0,72,2],[2,69,1],[3,72,1],[4,76,3]],a2:[[0,74,2],[2,72,1],[4,69,3],[7,7
 MO:["a1","a2","a3","a4","a1","a2","a3","a5","b1","b2","b3","b4","a1","a2","a3","a6"],
 tick(){const e=this.L,A=typeof AC!=="undefined"?AC:null;if(!e||!A)return;for(this.t<A.currentTime&&(this.t=A.currentTime+.12);this.t<A.currentTime+.5;){const p=this.s,bar=p>>3,k=p&7,E=this.E,[r,v]=this.CD[this.SQ[bar]],intro=this.rep===0&&bar<4,T=Math.max(A.currentTime+.01,this.t+(k%2?E*.33:0)+.005*(Math.random()-.5)),h=()=>.9+.2*Math.random();
 if(k===0){v.forEach((n,j)=>this.ep(this.mf(n),T+.014*j,3.2*E,.045*h(),e.bus));this.pz(this.mf(r),T,3.5*E,.22*h(),e.dry);intro||this.kk(T,.09,e.dry)}
-else if(k===3){v.forEach((n,j)=>this.ep(this.mf(n),T+.01*j,1.4*E,.03*h(),e.bus))}
+else if(k===5&&bar%2){v.forEach((n,j)=>this.ep(this.mf(n),T+.01*j,2.2*E,.026*h(),e.bus))}
 else if(k===4){this.pz(this.mf(r+7),T,2.5*E,.16*h(),e.dry);intro||this.kk(T,.05,e.dry)}
-else if(k===6){v.slice(1).forEach((n,j)=>this.ep(this.mf(n),T+.01*j,1.2*E,.024*h(),e.bus));this.pz(this.mf(r+12),T,1.4*E,.08*h(),e.dry)}
+
 k%2===0&&k!==0?this.hh(T,(k===2||k===6?.035:.02)*h(),e.dry):k%2&&!intro&&this.hh(T,.012*h(),e.dry);
 if(!intro){const m=this.MB[this.MO[bar]].find(x=>x[0]===k);m&&this.gl(this.mf(m[1]),T+.01,m[2]*E*1.1,.055*h(),e.bus)}
 this.t+=E;this.s=(p+1)%128;0===this.s&&this.rep++}},
