@@ -1098,18 +1098,18 @@ pz(e,t,a,s,n){const o=AC,i=o.createOscillator(),r=o.createGain(),l=o.createBiqua
 gl(e,t,a,s,n){const o=AC;[[1,1,a+.5],[2.76,.08,.3]].forEach(([k,v,d])=>{const l=o.createOscillator(),c=o.createGain();l.type="sine";l.frequency.value=e*k;c.gain.setValueAtTime(1e-4,t);c.gain.exponentialRampToValueAtTime(s*v,t+.012);c.gain.exponentialRampToValueAtTime(1e-4,t+d);l.connect(c);c.connect(n);l.start(t);l.stop(t+d+.05)})},
 tok(){},
 kk(t,v,d){const o=AC.createOscillator(),g=AC.createGain();o.type="sine";o.frequency.setValueAtTime(110,t);o.frequency.exponentialRampToValueAtTime(48,t+.14);g.gain.setValueAtTime(1e-4,t);g.gain.exponentialRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(1e-4,t+.45);o.connect(g);g.connect(d);o.start(t);o.stop(t+.5)},
-LD:{D:[38,[62,66,69,73],[74,78,81,85]],Bm:[35,[62,66,69,71],[71,74,78,81]],G:[43,[59,62,66,67],[67,71,74,78]],A6:[45,[61,64,66,69],[69,73,76,81]],F:[42,[61,64,66,69],[66,69,73,76]],Em:[40,[59,62,64,67],[64,67,71,74]],A7:[45,[61,64,67,69],[69,73,76,79]]},
+LD:{D:[38,[62,66,69,73],[74,78,81,85]],Bm:[35,[62,66,69,71],[71,74,78,81]],G:[43,[62,67,71,74],[67,71,74,78]],A6:[45,[61,64,66,69],[69,73,76,81]],F:[42,[61,64,66,69],[66,69,73,76]],Em:[40,[59,62,64,67],[64,67,71,74]],A7:[45,[61,64,67,69],[69,73,76,79]]},
 LS:[["D","D","Bm","Bm","G","G","A6","A6"],["D","D","Bm","Bm","G","G","A6","A6"],["G","G","F","F","Bm","Bm","Em","A7"],["D","D","Bm","Bm","G","G","A6","D"]],
 LQ:[[null,2,null,1,null,3,null,2],[null,1,null,0,null,2,1,null],[2,null,1,null,3,null,2,1],[null,0,null,1,2,null,1,null]],
-tick(){const e=this.L,A=typeof AC!=="undefined"?AC:null;if(!e||!A)return;const R=()=>Math.random()-.5;for(this.t<A.currentTime&&(this.t=A.currentTime+.12);this.t<A.currentTime+.5;){const p=this.s,bar=(p>>3)&31,k=p&7,sec=bar>>3,bi=bar&7,E=this.E,dy=[.62,.92,1,.86][sec],id=this.LS[sec][bi],[r,v,ct]=this.LD[id],nx=this.LD[this.LS[sec][(bi+1)&7]||id],T=Math.max(A.currentTime+.01,this.t+(k%2?.016:0)+.008*R()),vv=()=>dy*(1+.18*R()),last=bi===7;
+tick(){const e=this.L,A=typeof AC!=="undefined"?AC:null;if(!e||!A)return;const R=()=>Math.random()-.5,PS=[2,4,6,9,11],pn=n=>{for(const x of[0,-1,1,-2,2])if(PS.includes((n+x)%12))return n+x;return n};for(this.t<A.currentTime&&(this.t=A.currentTime+.12);this.t<A.currentTime+.5;){const p=this.s,bar=(p>>3)&31,k=p&7,sec=bar>>3,bi=bar&7,E=this.E,dy=[.62,.92,1,.86][sec],id=this.LS[sec][bi],[r,v,ct]=this.LD[id],nx=this.LD[this.LS[sec][(bi+1)&7]||id],T=Math.max(A.currentTime+.01,this.t+(k%2?.016:0)+.008*R()),vv=()=>dy*(1+.18*R()),last=bi===7;
 if(k===0){v.forEach((n,j)=>this.gl(this.mf(n)*(1+.0015*R()),T+.012*j+.004*Math.random(),(sec?3.4:7)*E,(sec?.05:.04)*vv()-.004*j,e.bus));this.pz(this.mf(r),T,(sec?6:7)*E,.2*dy,e.dry);sec&&this.kk(T,.11*dy,e.dry)}
 else if(sec&&k===3){v.slice(1).forEach((n,j)=>this.gl(this.mf(n),T+.009*j,1.6*E,.028*vv(),e.bus));this.pz(this.mf(r+7),T,2*E,.1*dy,e.dry)}
 else if(sec&&k===4){this.pz(this.mf(r+12),T,2*E,.07*vv(),e.dry);sec>1&&this.kk(T,.07*dy,e.dry)}
-else if(sec&&k===6){v.slice(2).forEach((n,j)=>this.gl(this.mf(n),T+.008*j,1.4*E,.022*vv(),e.bus));sec===2&&!last&&Math.random()<.6&&this.pz(this.mf(nx[0]+12-(r>nx[0]?0:12)),T+.1,E,.05,e.dry)}
+else if(sec&&k===6){v.slice(2).forEach((n,j)=>this.gl(this.mf(n),T+.008*j,.9*E,.02*vv(),e.bus))}
 if(sec){const q=this.LQ[(bi&1)+2*(sec===2?1:0)][k];let n=null;if(last&&k===0)n=ct[0];else if(last&&k>=5)n=null;else if(q!=null&&(Math.random()<.85||k<2))n=ct[q];
-if(n!=null){const d=last&&k===0?5*E:(q===3||k===7?2.4*E:1.9*E);this.gl(this.mf(n-(sec===2?0:12)+(sec===2&&bi>3?0:0)),T+.014,d,.056*vv(),e.bus);Math.random()<.18&&sec>1&&this.gl(this.mf(n+12),T+.03,E,.02*vv(),e.bus)}
-if(sec===3&&k===5&&bi%2===0)this.gl(this.mf(ct[(bi>>1)%4]+12),T+.02,3*E,.03*vv(),e.bus);
-if(last&&k===7){[0,1,2].forEach(j=>this.gl(this.mf(nx[2][j]-12),this.t+.09*j,E,.03*dy,e.bus))}}
+if(n!=null){const d=last&&k===0?5*E:(q===3||k===7?2.4*E:1.9*E);this.gl(this.mf(pn(n-(sec===2?0:12))),T+.014,d,.05*vv(),e.bus)}
+if(sec===3&&k===5&&bi%2===0)this.gl(this.mf(pn(ct[(bi>>1)%4]+12)),T+.02,3*E,.026*vv(),e.bus);
+if(last&&k===7){[0,1,2].forEach(j=>this.gl(this.mf(pn(nx[2][j]-12)),this.t+.09*j,E,.028*dy,e.bus))}}
 this.t+=E;this.s=(p+1)%256;0===this.s&&this.rep++}},
 CH:[[38,[62,66,69,73]],[43,[62,66,67,71]],[47,[62,66,69,71]],[45,[61,64,66,71]],[38,[62,66,69,73]],[43,[62,66,71,74]],[40,[64,67,71,74]],[45,[61,64,69,73]]],
 PH:[[[0,78,3],[4,81,2],[6,85,2],[8,83,3],[12,81,3]],[[0,83,2],[2,81,2],[4,78,3],[8,74,2],[10,78,2],[12,81,3]],[[0,81,3],[4,78,2],[6,74,2],[8,76,4],[14,78,2]],[[0,73,2],[2,76,2],[4,81,3],[8,85,2],[10,83,2],[12,81,3]],[[0,85,3],[4,83,2],[6,81,2],[8,78,3],[12,81,3]],[[0,86,2],[2,83,2],[4,81,3],[8,78,2],[10,74,2],[12,78,3]],[[0,79,3],[4,83,2],[6,86,2],[8,83,4],[14,79,2]],[[0,85,2],[2,81,2],[4,78,3],[8,81,3],[12,73,4]]]})};
