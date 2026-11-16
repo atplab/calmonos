@@ -1093,10 +1093,20 @@ const myName=()=>{const m=st.get("soc:me",null);return String(m&&m.name||"Toi").
 
 /* ───────── Musique ───────── */
 (function(){
-const mk=()=>{if(typeof bkMu!=="object")return null;return Object.assign({},bkMu,{on:!1,L:null,T:0,s:0,t:0,rep:0,off:0,E:.36,
+const mk=()=>{if(typeof bkMu!=="object")return null;return Object.assign({},bkMu,{on:!1,L:null,T:0,s:0,t:0,rep:0,off:0,E:.357,
 pz(e,t,a,s,n){const o=AC,i=o.createOscillator(),r=o.createGain(),l=o.createBiquadFilter();i.type="triangle";i.frequency.value=e;l.type="lowpass";l.frequency.value=1100;r.gain.setValueAtTime(1e-4,t);r.gain.exponentialRampToValueAtTime(s,t+.03);r.gain.exponentialRampToValueAtTime(1e-4,t+a);i.connect(l);l.connect(r);r.connect(n);i.start(t);i.stop(t+a+.05)},
 gl(e,t,a,s,n){const o=AC;[[1,1,a+.5],[2.76,.08,.3]].forEach(([k,v,d])=>{const l=o.createOscillator(),c=o.createGain();l.type="sine";l.frequency.value=e*k;c.gain.setValueAtTime(1e-4,t);c.gain.exponentialRampToValueAtTime(s*v,t+.012);c.gain.exponentialRampToValueAtTime(1e-4,t+d);l.connect(c);c.connect(n);l.start(t);l.stop(t+d+.05)})},
 tok(){},
+kk(t,v,d){const o=AC.createOscillator(),g=AC.createGain();o.type="sine";o.frequency.setValueAtTime(110,t);o.frequency.exponentialRampToValueAtTime(48,t+.14);g.gain.setValueAtTime(1e-4,t);g.gain.exponentialRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(1e-4,t+.45);o.connect(g);g.connect(d);o.start(t);o.stop(t+.5)},
+LC:[[38,[62,66,69,73]],[35,[62,66,69,71]],[43,[59,62,66,67]],[45,[61,64,66,69]]],
+LM:[[0,0,78,0,81,0,76,0],[0,76,0,74,0,0,78,0],[0,0,83,0,81,0,78,0],[0,81,0,78,0,76,0,74]],
+tick(){const e=this.L,A=typeof AC!=="undefined"?AC:null;if(!e||!A)return;for(this.t<A.currentTime&&(this.t=A.currentTime+.12);this.t<A.currentTime+.5;){const p=this.s,b=(p>>3)&7,k=p&7,[r,v]=this.LC[b>>1],i=this.t,E=this.E,sw=k%2?.018:0,T=i+sw;
+if(k===0){v.forEach((n,j)=>this.gl(this.mf(n),T+.011*j,3.2*E*2,.05-.004*j,e.bus));this.pz(this.mf(r),T,6*E,.2,e.dry);this.kk(T,.11,e.dry)}
+else if(k===3){v.slice(1).forEach((n,j)=>this.gl(this.mf(n),T+.009*j,1.6*E,.028,e.bus));this.pz(this.mf(r+7),T,2*E,.1,e.dry)}
+else if(k===4){this.pz(this.mf(r+12),T,2*E,.07,e.dry);this.kk(T,.07,e.dry)}
+else if(k===6){v.slice(2).forEach((n,j)=>this.gl(this.mf(n),T+.008*j,1.4*E,.022,e.bus))}
+const m=this.LM[b&3][k];if(m&&(Math.random()<.78||b%4===0))this.gl(this.mf(m-(b%2?12:0)),T,2.4*E,.052,e.bus);
+this.t+=E;this.s=(p+1)%64;0===this.s&&this.rep++}},
 CH:[[38,[62,66,69,73]],[43,[62,66,67,71]],[47,[62,66,69,71]],[45,[61,64,66,71]],[38,[62,66,69,73]],[43,[62,66,71,74]],[40,[64,67,71,74]],[45,[61,64,69,73]]],
 PH:[[[0,78,3],[4,81,2],[6,85,2],[8,83,3],[12,81,3]],[[0,83,2],[2,81,2],[4,78,3],[8,74,2],[10,78,2],[12,81,3]],[[0,81,3],[4,78,2],[6,74,2],[8,76,4],[14,78,2]],[[0,73,2],[2,76,2],[4,81,3],[8,85,2],[10,83,2],[12,81,3]],[[0,85,3],[4,83,2],[6,81,2],[8,78,3],[12,81,3]],[[0,86,2],[2,83,2],[4,81,3],[8,78,2],[10,74,2],[12,78,3]],[[0,79,3],[4,83,2],[6,86,2],[8,83,4],[14,79,2]],[[0,85,2],[2,81,2],[4,78,3],[8,81,3],[12,73,4]]]})};
 window.ccMus=e=>{if(typeof ccMu==="undefined"||!ccMu){const m=mk();if(!m)return;window.ccMu=m}ccMu.set(e)}})();
