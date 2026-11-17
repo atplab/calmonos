@@ -3328,5 +3328,5 @@ const sync=on=>{N2.forEach(p=>{const i=AQPT.findIndex(x=>x.id===p.id);on&&i<0?AQ
 let g2=!!window.AQG2;try{Object.defineProperty(window,"AQG2",{configurable:!0,get:()=>g2,set:v=>{g2=!!v;sync(g2)}})}catch(e){}sync(g2);
 try{const _pl=aqPl;aqPl=function(){const r=_pl.apply(this,arguments);try{if(!g2)return r;const e=$("#aql"),c=e&&e.querySelector(".aqcar");if(!c)return r;const C=new Set(N2.map(p=>p.id)),A=[],B=[];[...c.children].forEach(d=>{const b=d.querySelector("[data-a=aqpb]");(b&&C.has(b.dataset.v)?A:B).push(d)});const w=document.createElement("div");w.innerHTML=(A.length?'<h3 class="aqh">Coraux du Lagon</h3><div class="aqcar"></div>':"")+(B.length?'<h3 class="aqh">Plantes du Jardin aquatique</h3><div class="aqcar"></div>':"");const L=w.querySelectorAll(".aqcar");let k=0;A.length&&A.forEach(d=>L[k].appendChild(d)),A.length&&k++;B.forEach(d=>L[k].appendChild(d));c.replaceWith(...w.childNodes)}catch(x){}return r}}catch(e){}
 })()</script>
-</body>
+<script>(()=>{/* Ludothèque : le plateau 3D garde la même rotation d’un jeu à l’autre */const T0=performance.now(),f=()=>document.querySelectorAll(".sgbd:not([data-sy])").forEach(b=>{b.dataset.sy=1;b.style.animationDelay=-((performance.now()-T0)%18e3)/1e3+"s"});new MutationObserver(f).observe(document.body,{childList:!0,subtree:!0})})()</script></body>
 </html>
