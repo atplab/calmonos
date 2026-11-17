@@ -3630,8 +3630,9 @@ const ask=(id,go)=>{if(!on()||!DYN[id]||st.get("cm:ok:"+id,0))return go();const 
  o.addEventListener("click",e=>{const b=e.target.closest("[data-x]");if(!b&&e.target!==o)return;const ok=b&&b.dataset.x==="y";o.querySelector("input").checked&&ok&&st.set("cm:ok:"+id,1);o.remove();ok&&go()})};
 window.calmAsk=ask;
 setTimeout(()=>{const _o=act.open;act.open=function(e){const a=arguments,t=this;if(on()&&DYN[e]&&document.querySelector(".tile"))return ask(e,()=>_o.apply(t,a));return _o.apply(t,a)};
- const _d=act.sjDo;_d&&(act.sjDo=function(v){const a=arguments,t=this,g=(document.querySelector(".sjpl [aria-selected=true]")||{}).dataset?.v;if(g&&DYN[g])return ask(g,()=>_d.apply(t,a));return _d.apply(t,a)});
+ const _d=act.sjDo;_d&&(act.sjDo=function(v){const a=arguments,t=this,g=(document.querySelector(".sjpl [aria-selected=true]")||{}).dataset?.v;if(g&&DYN[g]&&!window.CMIN)return ask(g,()=>{window.CMIN=1;try{_d.apply(t,a)}finally{window.CMIN=0}});return _d.apply(t,a)});
  const _p=act.play;_p&&(act.play=function(){const a=arguments,t=this,g=typeof cur!=="undefined"?cur:null;if(g&&DYN[g]&&on()&&!window.CMIN){return ask(g,()=>{window.CMIN=1;try{_p.apply(t,a)}finally{window.CMIN=0}})}return _p.apply(t,a)});
+ [["infGo",v=>v],["ahLv",()=>"airhockey"],["ahLoc",()=>"airhockey"],["ahOnGo",()=>"airhockey"],["ahMM",()=>"airhockey"]].forEach(([k,f])=>{const o=act[k];o&&(act[k]=function(v){const a=arguments,t=this,g=f(v);if(g&&DYN[g]&&on()&&!window.CMIN)return ask(g,()=>{window.CMIN=1;try{o.apply(t,a)}finally{window.CMIN=0}});return o.apply(t,a)})});
  act.cmPick=v=>{window.CMSEL=v;try{const p=prefs();p.calm=v==="calm";savePrefs();apply()}catch(e){}document.querySelectorAll(".cmc").forEach(b=>b.classList.toggle("on",b.dataset.v===v));sync()};
  const _t=act.tg;act.tg=function(v){const r=_t.apply(this,arguments);v==="calm"&&sync();return r}},900);
 })();</script></body>
