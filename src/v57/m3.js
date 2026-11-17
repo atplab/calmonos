@@ -194,7 +194,7 @@ function pMatch(r){
  const bot0=c=>{for(let q=N-1;q>=0;q--)if(A[q*N+c])return q*N+c;return -1};
  const BK=Array(N*N).fill(0);if(!r){const res=new Set();if(L.jb){const{r:jr,c:jc}=L.jb;[0,1,N,N+1].forEach(d=>{BK[jr*N+jc+d]='jb';res.add(jr*N+jc+d)})}
   const pool=sh(A.map((a,i)=>a&&i>=N&&!res.has(i)&&i!==bot0(i%N)&&!PTT.has(i)&&PM[i]===undefined?i:-1).filter(i=>i>=0));
-  for(let k=0;k<(L.oy||0)&&pool.length;k++)BK[pool.pop()]='oy';for(let k=0;k<(L.ink||0)&&pool.length;k++)BK[pool.pop()]='ink'}
+  const need=(L.oy||0)+(L.ink||0);if(pool.length<need)sh(A.map((a,i)=>a&&!res.has(i)&&!pool.includes(i)?i:-1).filter(i=>i>=0)).forEach(i=>pool.unshift(i));for(let k=0;k<(L.oy||0)&&pool.length;k++)BK[pool.pop()]='oy';for(let k=0;k<(L.ink||0)&&pool.length;k++)BK[pool.pop()]='ink'}
  const mkB=(b,i,hp)=>{const r0=(i/N)|0,c0=i%N,e=document.createElement('div'),x={id:++uid,t:-3,b,hp:hp||(b==='oy'?2:1),s:0,el:e};pos(x,r0,c0);tl.appendChild(e);if(b==='jb'){x.boss=BOSS;e.style.display='none'}else look(x);return x};
  const mkBoss=(i,hp)=>{const r0=(i/N)|0,c0=i%N;BOSS={hp:hp,mx:L.jb.hp,i0:i,el:document.createElement('div')};const e=BOSS.el;e.className='m3jb';e.style.cssText=`left:${c0*12.5}%;top:${r0*12.5}%`;e.innerHTML=`<div class="m3jbb">${M3JB}</div><div class="m3jbh"><u></u></div>`;bd.appendChild(e);bossBar()};
  const bossBar=()=>{if(!BOSS)return;const u=BOSS.el.querySelector('.m3jbh u');if(u)u.style.width=Math.max(0,100*BOSS.hp/BOSS.mx)+'%'};
@@ -208,6 +208,7 @@ function pMatch(r){
  const anOn=()=>g.filter(t=>t&&t.an).length,mkAn=t=>{t.an=1+Math.floor(Math.random()*M3AN.length);t.t=-2;t.s=0;t.a=0;look(t)};
  if(L.an&&!r){const top=[];for(let q=0;q<3;q++)for(let c=0;c<N;c++){const i=q*N+c;if(A[i]&&g[i]&&!g[i].a)top.push(i)}sh(top).slice(0,Math.min(2,L.an)).forEach(i=>mkAn(g[i]));pg.m.sp=Math.min(2,L.an)}
  if(r)for(let i=0;i<N*N;i++)if(A[i]&&!g[i])g[i]=mkT(rnd(),0,0,(i/N)|0,i%N);
+ {const o=ob.find(o=>o.k==='pe');if(o)o.n=Math.max(1,(pg.m.pe||0)+g.filter(t=>t&&t.b==='oy').length)}
  const note=t=>{if(t.t>=0)pg.c[t.t]=(pg.c[t.t]||0)+1};
  const band=(kind,i)=>{if(kind==='diag'){[45,-45].forEach(a=>{const e=document.createElement('div');e.className='m3f diag';e.style.cssText=`left:${((i%N)+.5)*100/N-80}%;top:${(((i/N)|0)+.5)*100/N-6.25}%;rotate:${a}deg`;fxl.appendChild(e);setTimeout(()=>e.remove(),500)});return}const e=document.createElement('div');e.className='m3f '+kind;if(kind==='row')e.style.top=((i/N|0)*100/N)+'%';else if(kind==='col')e.style.left=(i%N*100/N)+'%';else{e.style.left=((i%N)-1)*100/N+'%';e.style.top=(((i/N)|0)-1)*100/N+'%'}fxl.appendChild(e);setTimeout(()=>e.remove(),500)};
  /* explosions en chaîne : renvoie les événements pour l’animation */
