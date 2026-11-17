@@ -194,7 +194,7 @@ function pMatch(r){
  const bot0=c=>{for(let q=N-1;q>=0;q--)if(A[q*N+c])return q*N+c;return -1};
  const BK=Array(N*N).fill(0);if(!r){const res=new Set();if(L.jb){const{r:jr,c:jc}=L.jb;[0,1,N,N+1].forEach(d=>{BK[jr*N+jc+d]='jb';res.add(jr*N+jc+d)})}
   const pool=sh(A.map((a,i)=>a&&i>=N&&!res.has(i)&&i!==bot0(i%N)&&!PTT.has(i)&&PM[i]===undefined?i:-1).filter(i=>i>=0));
-  const need=(L.oy||0)+(L.ink||0);if(pool.length<need)sh(A.map((a,i)=>a&&!res.has(i)&&!pool.includes(i)?i:-1).filter(i=>i>=0)).forEach(i=>pool.unshift(i));for(let k=0;k<(L.oy||0)&&pool.length;k++)BK[pool.pop()]='oy';for(let k=0;k<(L.ink||0)&&pool.length;k++)BK[pool.pop()]='ink'}
+  const need=(L.oy||0)+(L.ink||0);if(pool.length<need)sh(A.map((a,i)=>a&&!res.has(i)&&!pool.includes(i)?i:-1).filter(i=>i>=0)).forEach(i=>pool.unshift(i));/* îles : un seul bloqueur par rangée d’île, en bout de rangée, pour toujours laisser 3 cases alignables */const tk=L.pt?(()=>{const used=new Set(),seg=i=>{let c=i;while(c%N>0&&A[c-1])c--;return c},end=i=>i%N===0||!A[i-1]||i%N===N-1||!A[i+1];return()=>{for(let j=pool.length-1;j>=0;j--){const i=pool[j];if(end(i)&&!used.has(seg(i))){used.add(seg(i));pool.splice(j,1);return i}}return pool.pop()}})():()=>pool.pop();for(let k=0;k<(L.oy||0)&&pool.length;k++){const i=tk();i!==undefined&&(BK[i]='oy')}for(let k=0;k<(L.ink||0)&&pool.length;k++){const i=tk();i!==undefined&&(BK[i]='ink')}}
  const mkB=(b,i,hp)=>{const r0=(i/N)|0,c0=i%N,e=document.createElement('div'),x={id:++uid,t:-3,b,hp:hp||(b==='oy'?2:1),s:0,el:e};pos(x,r0,c0);tl.appendChild(e);if(b==='jb'){x.boss=BOSS;e.style.display='none'}else look(x);return x};
  const mkBoss=(i,hp)=>{const r0=(i/N)|0,c0=i%N;BOSS={hp:hp,mx:L.jb.hp,i0:i,el:document.createElement('div')};const e=BOSS.el;e.className='m3jb';e.style.cssText=`left:${c0*12.5}%;top:${r0*12.5}%`;e.innerHTML=`<div class="m3jbb">${M3JB}</div><div class="m3jbh"><u></u></div>`;bd.appendChild(e);bossBar()};
  const bossBar=()=>{if(!BOSS)return;const u=BOSS.el.querySelector('.m3jbh u');if(u)u.style.width=Math.max(0,100*BOSS.hp/BOSS.mx)+'%'};
@@ -315,6 +315,16 @@ function pMatch(r){
   const T=types();if(!g.some(t=>t&&t.s)&&!m3Swap(T,lk())){const LK=lk(),c=sh(g.map((t,i)=>t&&!t.s&&!t.an&&!fx(t)&&t.t>=0?i:-1).filter(i=>i>=0));let fixd=false;
    for(const i of c){const o=T[i];for(let k of sh([...Array(L.k).keys()])){if(k===o)continue;T[i]=k;if(!m3Has(T)&&m3Swap(T,LK)){const t=g[i];t.t=k;look(t);t.el.classList.add('born');burst(i,K[k],5);sfx(880,.15);fixd=true;break}}if(fixd)break;T[i]=o}
    if(!fixd)await shuffle()}
+  islFix();
+ };
+
+ /* îles : chaque île doit garder au moins un coup possible (sinon les îles du bas restent bloquées) */
+ const islFix=()=>{if(!L.pt||over)return;const T2=types(),LK=lk(),seen=new Set();
+  for(let s0=0;s0<N*N;s0++){if(!A[s0]||seen.has(s0))continue;const isl=[],q=[s0];seen.add(s0);
+   while(q.length){const i=q.pop();isl.push(i);for(const[dr,dc]of[[-1,0],[1,0],[0,-1],[0,1]]){const r=Math.floor(i/N)+dr,c=i%N+dc,j=r*N+c;if(r>=0&&r<N&&c>=0&&c<N&&A[j]&&!seen.has(j)){seen.add(j);q.push(j)}}}
+   const M=T2.map((v,i)=>isl.includes(i)?v:-1);if(m3Swap(M,LK))continue;
+   const c=sh(isl.filter(i=>g[i]&&!g[i].s&&!g[i].an&&!fx(g[i])&&g[i].t>=0));let ok=false;
+   for(const i of c){const o=M[i];for(const k of sh([...Array(L.k).keys()])){if(k===o)continue;M[i]=k;T2[i]=k;if(!m3Has(T2)&&m3Swap(M,LK)){const t=g[i];t.t=k;look(t);t.el.classList.add('born');burst(i,K[k],5);ok=true;break}T2[i]=o}if(ok)break;M[i]=o}}
  };
  const swap=async(a,b)=>{
   if(busy||over)return;inkHit=false;if((g[a]&&g[a].b)||(g[b]&&g[b].b)){unsel();const e=(g[a]&&g[a].b?g[a]:g[b]).el;if(e){e.classList.remove('no');void e.offsetWidth;e.classList.add('no')}msg(g[a]&&g[a].b==='ink'||g[b]&&g[b].b==='ink'?'L’encre ne bouge pas : fais une alignement juste à côté pour l’effacer.':'Cette case est bloquée : fais un alignement juste à côté.');return}if((g[a]&&g[a].a)||(g[b]&&g[b].a)){unsel();msg('Cette pièce est prise dans les algues : aligne-la pour la libérer.');const e=(g[a]&&g[a].a?g[a]:g[b]).el;e.classList.remove('no');void e.offsetWidth;e.classList.add('no');setTimeout(()=>e.classList.remove('no'),260);return}busy=true;unsel();msg('');
@@ -378,6 +388,7 @@ function pMatch(r){
  act.m3r=()=>{st.set(pkey(),null);start('match3',false,lv)};
  act.hint=()=>{if(busy||over)return;let h=null;const T=types();const s=m3Swap(T,lk());if(s)h=s;else{const k=g.findIndex(t=>t&&t.s);if(k>=0)h=[k]}
   if(!h||!spend(5))return;h.forEach(i=>g[i]&&g[i].el.classList.add('hint'));clearTimeout(hintT);hintT=setTimeout(()=>g.forEach(t=>t&&t.el.classList.remove('hint')),2200)};
+ if(L.pt){let n=0;const iv=setInterval(()=>{if(tok!==m3Tok||++n>12)return clearInterval(iv);if(!busy&&g.some(t=>t)){islFix();clearInterval(iv)}},400)}
  if(window.__M3DBG)window.__M3DBG({g:()=>g,look,swap,types,tap,shuffle,boss:()=>BOSS,fall,settle,finish,ob:()=>ob.map(o=>[o.k,cur(o),o.n]),allDone});
  hud();
 const IM={70:'Des huîtres sont fermées sur le plateau : fais deux alignements juste à côté pour les ouvrir et récolter leur perle.',71:'Nouveau : aligne 5 pièces en T ou en croix pour créer une comète, qui efface sa ligne et sa colonne d’un coup !',79:'Une méduse géante bloque le plateau ! Chaque alignement à côté d’elle la touche, et les pièces spéciales lui font encore plus mal.',80:'Attention à l’encre : si tu n’en effaces aucune tache pendant un coup, elle se répand sur une pièce voisine.',90:'Un courant marin traverse le plateau : après chaque coup, les pièces de cette rangée glissent d’une case.',99:'Niveau 100 ! Une pluie d’étoiles tombe du ciel : les pièces spéciales pleuvent. Fais exploser le ciel !',100:'Le plateau est coupé en îles. Les pièces qui tombent dans un tourbillon ressortent sur l’autre île.',109:'La méduse géante est de retour, sur les îles !',119:'La grande méduse des abysses ! Elle crache de l’encre tous les 4 coups. Courage !'};
