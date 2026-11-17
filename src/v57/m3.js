@@ -170,6 +170,7 @@ function pMatch(r){
  const oh=o=>`<span class="m3g${done(o)?' ok':''}" data-k="${o.k}">${o.k==='pe'?`<i>${M3PE}</i>`:o.k==='i'?`<i>${M3INK}</i>`:o.k==='jb'?`<i>${M3JBI}</i>`:o.k==='r'?'<i><span class="m3gr"></span></i>':o.k==='a'?`<i>${M3ALG}</i>`:o.k==='n'?'<i class="m3gn">🐠</i>':o.k==='c'?`<i style="--c:${K[o.t]}">${m3Gem(o.t)}</i>`:o.k==='p'?'<i>✦</i>':`<i>${M3S[o.s]}</i>`}<b>${done(o)?'✓':o.k==='i'?'× '+inkL():o.k==='jb'?Math.max(0,BOSS?BOSS.hp:0)+' ♥':Math.min(cur(o),o.n)+' / '+o.n}</b></span>`;
  const hud=()=>{const a=$('#m3mv'),b=$('#m3sc'),c=$('#m3go');if(a)a.textContent=mv;if(b)b.textContent=sc;if(c)c.innerHTML=ob.map(oh).join('')};
  frame(`<div class="m3 ${BKC}"><div class="m3sea" aria-hidden="true">${[8,22,35,50,63,77,90].map((x,k)=>`<span class="m3bu" style="left:${x}%;--s:${6+k%3*4}px;--d:${5+k%4*1.7}s;animation-delay:-${k*1.3}s"></span>`).join('')}<span class="m3fi" style="top:20%;--t:34s">${fishSVG(FISH.find(f=>f.id==='tortue'))}</span><span class="m3fi r" style="top:52%;--t:26s;animation-delay:-9s">${fishSVG(FISH.find(f=>f.id==='meduse'))}</span><span class="m3fi" style="top:80%;--t:30s;animation-delay:-17s">${fishSVG(FISH.find(f=>f.id==='raie'))}</span></div><div class="m3h"><div class="m3m"><b id="m3mv">${mv}</b><small>coups joués</small></div><div class="m3o" id="m3go"></div><div class="m3m"><b id="m3sc">${sc}</b><small>points</small></div></div><div class="m3b" id="m3b" role="application" aria-label="Plateau de jeu"></div></div>`,5);
+ {let w=document.getElementById('m3wall');if(BKC){if(!w){w=document.createElement('div');w.id='m3wall';document.body.appendChild(w)}w.className='m3wall '+BKC;if(!window.m3WI)window.m3WI=setInterval(()=>{if(!document.querySelector('#m3b')){const x=document.getElementById('m3wall');x&&x.remove()}},400)}else if(w)w.remove()}
  const bd=$('#m3b'),alive=()=>tok===m3Tok&&playing&&$('#m3b')===bd,wt=ms=>new Promise(res=>setTimeout(res,matchMedia('(prefers-reduced-motion: reduce)').matches?ms/3:ms));
  const pos=(t,r0,c0)=>{t.r=r0;t.c=c0;t.el.style.transform=`translate(${c0*100}%,${r0*100}%)`};
  let fxl=bd,tl=bd;
@@ -247,6 +248,7 @@ function pMatch(r){
   for(const CH of CHN){const R=CH.filter(i=>!fx(g[i]));if(!R.length)continue;
    let w=R.length-1;for(let j=R.length-1;j>=0;j--){const t=g[R[j]];if(t){if(j!==w){const q=R[w];g[q]=t;g[R[j]]=null;if(t.c!==q%N){t.el.classList.remove('wp');void t.el.offsetWidth;t.el.classList.add('wp')}pos(t,(q/N)|0,q%N)}w--}}
    const h0=R[0],hc=h0%N,hr=(h0/N)|0;let k=0;for(let j=w;j>=0;j--){k++;const q=R[j],qc=q%N,t=mkT(rnd(),0,0,qc===hc?hr-k:((q/N)|0)-1,qc);if(L.an&&(pg.m.sp||0)<L.an&&anOn()<2&&Math.random()<.35){mkAn(t);pg.m.sp=(pg.m.sp||0)+1}else if(L.fe&&Math.random()<.13){mkSp(t);t.el.classList.add('born')}if(shaped||qc!==hc)t.el.style.opacity=0;hs.push([t,(q/N)|0,qc]);g[q]=t}}
+  if(hs.length&&!m3Swap(types(),lk())){const nw=hs.map(h=>h[0]).filter(t=>!t.s&&!t.an&&!t.b);for(let k=0;k<40&&nw.length;k++){nw.forEach(t=>{t.t=rnd()});if(m3Swap(types(),lk()))break}nw.forEach(t=>look(t))}
   void bd.offsetWidth;hs.forEach(([t,q,c])=>{pos(t,q,c);t.el.style.opacity=''});
   await wt(340);
  };
@@ -309,7 +311,9 @@ function pMatch(r){
   hud();sv();
   if(allDone()){if(L.fe)return finale();over=true;const c=$('#m3b');if(c)confetti(c);setTimeout(()=>{if(tok===m3Tok&&playing)win()},900);return}
   if(L.cu||L.ink||BOSS){busy=true;let a=await current();if(!alive())return;if(a){await settle();if(!alive())return}a=await spread();if(!alive())return;busy=false;hud();sv();if(allDone())return finish()}
-  const T=types();if(!g.some(t=>t&&t.s)&&!m3Swap(T,lk()))await shuffle();
+  const T=types();if(!g.some(t=>t&&t.s)&&!m3Swap(T,lk())){const LK=lk(),c=sh(g.map((t,i)=>t&&!t.s&&!t.an&&!fx(t)&&t.t>=0?i:-1).filter(i=>i>=0));let fixd=false;
+   for(const i of c){const o=T[i];for(let k of sh([...Array(L.k).keys()])){if(k===o)continue;T[i]=k;if(!m3Has(T)&&m3Swap(T,LK)){const t=g[i];t.t=k;look(t);t.el.classList.add('born');burst(i,K[k],5);sfx(880,.15);fixd=true;break}}if(fixd)break;T[i]=o}
+   if(!fixd)await shuffle()}
  };
  const swap=async(a,b)=>{
   if(busy||over)return;inkHit=false;if((g[a]&&g[a].b)||(g[b]&&g[b].b)){unsel();const e=(g[a]&&g[a].b?g[a]:g[b]).el;if(e){e.classList.remove('no');void e.offsetWidth;e.classList.add('no')}msg(g[a]&&g[a].b==='ink'||g[b]&&g[b].b==='ink'?'L’encre ne bouge pas : fais une alignement juste à côté pour l’effacer.':'Cette case est bloquée : fais un alignement juste à côté.');return}if((g[a]&&g[a].a)||(g[b]&&g[b].a)){unsel();msg('Cette pièce est prise dans les algues : aligne-la pour la libérer.');const e=(g[a]&&g[a].a?g[a]:g[b]).el;e.classList.remove('no');void e.offsetWidth;e.classList.add('no');setTimeout(()=>e.classList.remove('no'),260);return}busy=true;unsel();msg('');
