@@ -3089,7 +3089,7 @@ const show=id=>{ON=1;st.set("sg:sel",id);const y=scrollY;_o.call(act,id);wrap();
 let qd=0;const mo=new MutationObserver(()=>{if(qd||!ON)return;qd=1;requestAnimationFrame(()=>{qd=0;wrap()})});const ob=()=>{const a=document.getElementById("app");a?mo.observe(a,{childList:!0}):setTimeout(ob,200)};ob();
 setTimeout(()=>{_o=act.open;act.open=function(e){if(e===HID)return show(sel());if(!SG.includes(e))ON=0;return _o.apply(this,arguments)};
 Object.assign(act,{sgPk:v=>{if(!SG.includes(v)||v===cur&&document.querySelector(".sgw"))return;try{sfx(392,.08);setTimeout(()=>sfx(523,.08),90)}catch(e){}const b=document.querySelector(`.sgb[data-v="${v}"]`);document.querySelectorAll(".sgb").forEach(x=>x.classList.toggle("on",x===b));setTimeout(()=>show(v),260)},sgHm:()=>{ON=0;home()},sgOp:v=>sheet(v),sgCh:v=>{if(typeof CH=="undefined")return;const S=m=>{sheet();const o=document.querySelector(".sgsht");o&&(o.dataset.m=m,(o.querySelector(".sgsx b")||{}).textContent={csk:"Skins",cso:"Mode social",cli:"Mode libre"}[m])};
- if(v==="n"){st.set("ch:md","n");try{sfx(523,.05)}catch(e){}return sgBt(cur)}
+ if(v==="n"){st.set("ch:md","n");v="play"}
  if(v==="sk")return S("csk");
  if(v==="so"){CH.cfg.op="net";st.set("ch:cfg",CH.cfg);chNetInit();chHubDraw();return S("cso")}
  if(v==="li"){st.set("ch:md","l");CH.cfg.op="ai";st.set("ch:cfg",CH.cfg);chHubDraw();sgBt(cur);return S("cli")}
