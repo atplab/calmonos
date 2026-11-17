@@ -3326,6 +3326,7 @@ D.plume=y=>{let a=`<defs>${LG("pm_g","#fff0b0","#e08a2a")}</defs><path d="M49 ${
 N1.forEach(p=>AQPT.some(x=>x.id===p.id)||AQPT.push(p));
 const sync=on=>{N2.forEach(p=>{const i=AQPT.findIndex(x=>x.id===p.id);on&&i<0?AQPT.push(p):!on&&i>=0&&AQPT.splice(i,1)})};
 let g2=!!window.AQG2;try{Object.defineProperty(window,"AQG2",{configurable:!0,get:()=>g2,set:v=>{g2=!!v;sync(g2)}})}catch(e){}sync(g2);
+try{const _pl=aqPl;aqPl=function(){const r=_pl.apply(this,arguments);try{if(!g2)return r;const e=$("#aql"),c=e&&e.querySelector(".aqcar");if(!c)return r;const C=new Set(N2.map(p=>p.id)),A=[],B=[];[...c.children].forEach(d=>{const b=d.querySelector("[data-a=aqpb]");(b&&C.has(b.dataset.v)?A:B).push(d)});const w=document.createElement("div");w.innerHTML=(A.length?'<h3 class="aqh">Coraux du Lagon</h3><div class="aqcar"></div>':"")+(B.length?'<h3 class="aqh">Plantes du Jardin aquatique</h3><div class="aqcar"></div>':"");const L=w.querySelectorAll(".aqcar");let k=0;A.length&&A.forEach(d=>L[k].appendChild(d)),A.length&&k++;B.forEach(d=>L[k].appendChild(d));c.replaceWith(...w.childNodes)}catch(x){}return r}}catch(e){}
 })()</script>
 </body>
 </html>
