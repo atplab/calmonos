@@ -3635,5 +3635,5 @@ setTimeout(()=>{const _o=act.open;act.open=function(e){const a=arguments,t=this;
  [["infGo",v=>v],["ahLv",()=>"airhockey"],["ahLoc",()=>"airhockey"],["ahOnGo",()=>"airhockey"],["ahMM",()=>"airhockey"]].forEach(([k,f])=>{const o=act[k];o&&(act[k]=function(v){const a=arguments,t=this,g=f(v);if(g&&DYN[g]&&on()&&!window.CMIN)return ask(g,()=>{window.CMIN=1;try{o.apply(t,a)}finally{window.CMIN=0}});return o.apply(t,a)})});
  act.cmPick=v=>{window.CMSEL=v;try{const p=prefs();p.calm=v==="calm";savePrefs();apply()}catch(e){}document.querySelectorAll(".cmc").forEach(b=>b.classList.toggle("on",b.dataset.v===v));sync()};
  const _t=act.tg;act.tg=function(v){const r=_t.apply(this,arguments);v==="calm"&&sync();return r}},900);
-})();</script></body>
+})();</script><style>body.calm .xmfl.adv,body.calm .xmfl.adv *,body.calm .xmfl.adv::before,body.calm .xmfl.adv::after,body.calm .advd,body.calm .advd *{animation:none!important}body.calm .xmfl.adv .advlid{transform:none!important}</style></body>
 </html>
