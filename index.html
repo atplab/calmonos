@@ -3191,7 +3191,7 @@ window.rulesOpen=(id,from)=>{const r=R[id];if(!r)return false;const g=ALL.find(x
  const o=document.createElement('div');o.className='rlo';o.innerHTML=`<div class="rlp" role="dialog" aria-label="Règles : ${esc(g.n)}"><div class="rlh"><div class="rll">${window.GIL&&GIL[id]?`<svg viewBox="0 0 64 64">${GIL[id]}</svg>`:''}</div><div><h2>${esc(g.n)}</h2><small>Les règles</small></div><button class="rlx" aria-label="Fermer">✕</button></div>
  <div class="rlg"><b>But du jeu</b><span>${r.g}</span></div>${r.s.map(([k,ti,d],i)=>`<div class="rls"><div class="rli">${P[k]||''}</div><div><b><em>${i+1}</em>${ti}</b><p>${d}</p></div></div>`).join('')}${r.t?`<div class="rlt"><b>Astuce : </b>${r.t}</div>`:''}</div>`;
  document.body.appendChild(o);const p=o.firstChild;if(from&&from.getBoundingClientRect){const a=from.getBoundingClientRect(),b=p.getBoundingClientRect();p.style.setProperty('--ox',(a.left+a.width/2-b.left)+'px');p.style.setProperty('--oy',(a.top+a.height/2-b.top)+'px')}
- const close=()=>{o.remove()};o.addEventListener('click',e=>{if(e.target===o||e.target.closest('.rlx'))close()});addEventListener('keydown',function k(e){if(e.key==='Escape'){close();removeEventListener('keydown',k)}});try{sfx(660,.06)}catch(e){}return true};
+ const close=()=>{if(o.dataset.c)return;o.dataset.c=1;o.classList.add('out');setTimeout(()=>o.remove(),380)};o.addEventListener('click',e=>{if(e.target===o||e.target.closest('.rlx'))close()});addEventListener('keydown',function k(e){if(e.key==='Escape'){close();removeEventListener('keydown',k)}});try{sfx(660,.06)}catch(e){}return true};
 /* quel jeu ? */
 const idOf=b=>{const a=b.dataset.a;const m={zrRu:'recif',bzRu:'bulles',zgRu:'garde',gfRu:'galac',clRu:'colonie',kzRu:'cuisine',hhSh:'hoho',soSh:'solitaire',ccSh:'carcache'};if(m[a])return m[a];let c=typeof cur==='string'?cur:'';if(a==='arRu'){try{c=st.get('ar:sel','brick')}catch(e){}if(c==='garde'&&st.get('ar:m:garde','g')==='b')c='bulles'}return c};
 document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('button');if(!b)return;const a=b.dataset.a||'';if(!(a==='rulesGo'||/Ru$/.test(a)||((a==='hhSh'||a==='soSh'||a==='ccSh')&&/R[èe]gles/.test(b.textContent))))return;const id=idOf(b);if(!R[id])return;e.stopPropagation();e.preventDefault();rulesOpen(id,b)},!0);
@@ -3247,26 +3247,12 @@ const crd=()=>{const{o,x,W,H}=mk(),T0=performance.now(),D=2200,cx=W/2,cy=H/2,cw=
   /* distribution en spirale douce, les cartes se retournent en arrivant */
   cards.forEach(c=>{const k=ease(sm((e-520-c.dl)/650)),out=ease(sm((e-1500-c.dl*.5)/600));const X=cx+(c.tx-cx)*k+(c.tx-cx)*out*1.6,Y=cy+(c.ty-cy)*k+(c.ty-cy)*out*1.6-out*H*.15,r=c.tr*k+out*.6,fl=k<.6?-1:Math.cos((1-(k-.6)/.4)*Math.PI);x.globalAlpha=1-out;card(c,X,Y,r,.8+.2*k,fl);x.globalAlpha=1})};
  requestAnimationFrame(fr);return 1500};
-/* ---------- Salle de jeux : la lampe s’allume, le néon grésille, la casse du billard ---------- */
-const gmr=()=>{const{o,x,W,H}=mk(),T0=performance.now(),D=1750,cx=W/2,cy=H*.56,r=Math.max(9,Math.min(W,H)*.028),sm2=v=>Math.max(0,Math.min(1,v)),COL=["#ffd23a","#2a5ae8","#e8302a","#7a2ad0","#ff8a2a","#1a9a4a","#8a1a1a","#111","#ffd23a","#2a5ae8","#e8302a","#7a2ad0","#ff8a2a","#1a9a4a","#8a1a1a"];
- const B=[];let k=0;for(let row=0;row<5;row++)for(let i=0;i<=row;i++){const a=Math.random()*Math.PI*2,sp=(.55+Math.random()*.6)*Math.max(W,H);B.push({x:cx+(i-row/2)*r*2.05,y:cy-r*1.5-row*r*1.8,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-120,c:k++})}
- S(180,.05,0);S(120,.04,240);S(900,.03,520);S(1900,.07,760);S(1500,.04,790);S(1200,.03,830);S(660,.04,1150);S(880,.05,1260);
- const ball=(b,X,Y)=>{x.save();x.beginPath();x.arc(X,Y,r,0,7);x.clip();x.fillStyle=b.c>7?"#f4f0e6":COL[b.c];x.fillRect(X-r,Y-r,2*r,2*r);b.c>7&&(x.fillStyle=COL[b.c],x.fillRect(X-r,Y-r*.5,2*r,r));x.fillStyle="#fff";x.beginPath();x.arc(X,Y,r*.42,0,7);x.fill();const g=x.createRadialGradient(X-r*.35,Y-r*.4,1,X,Y,r);g.addColorStop(0,"rgba(255,255,255,.75)");g.addColorStop(.35,"rgba(255,255,255,0)");g.addColorStop(1,"rgba(0,0,0,.45)");x.fillStyle=g;x.fillRect(X-r,Y-r,2*r,2*r);x.restore()};
- const fr=t=>{const e=t-T0;if(e>D){o.remove();return}requestAnimationFrame(fr);x.clearRect(0,0,W,H);const out=sm2((e-1350)/400);x.globalAlpha=1-out;
-  x.fillStyle="#07120f";x.fillRect(0,0,W,H);
-  /* la lampe s’allume en clignotant */
-  const on=e<260?0:e<330?1:e<390?.2:e<460?1:1,L=on*sm2((e-260)/300);const g=x.createRadialGradient(cx,H*.12,10,cx,cy,H*.7);g.addColorStop(0,`rgba(255,226,150,${.55*L})`);g.addColorStop(1,"rgba(0,0,0,0)");x.fillStyle=g;x.beginPath();x.moveTo(cx-W*.08,H*.12);x.lineTo(cx+W*.08,H*.12);x.lineTo(cx+W*.6,H);x.lineTo(cx-W*.6,H);x.fill();
-  x.fillStyle="#1a2a24";x.fillRect(cx-W*.1,H*.09,W*.2,H*.035);x.fillStyle=`rgba(255,240,190,${L})`;x.fillRect(cx-W*.08,H*.122,W*.16,3);
-  /* tapis de billard */
-  const tw=Math.min(W*.8,H*.62),th=tw*.62;x.fillStyle=`rgba(90,48,24,${L})`;x.fillRect(cx-tw/2-14,cy-th/2-14,tw+28,th+28);x.fillStyle=`rgba(40,150,90,${L})`;x.fillRect(cx-tw/2,cy-th/2,tw,th);
-  /* néon */
-  const nf=e<600?0:(e<660||(e>720&&e<760))?.3:1;x.font=`800 ${Math.round(Math.min(W*.09,46))}px Fraunces,Georgia,serif`;x.textAlign="center";x.shadowColor="#2fdc9a";x.shadowBlur=24*nf;x.fillStyle=`rgba(191,255,230,${nf})`;x.fillText("SALLE DE JEUX",cx,H*.27);x.shadowBlur=0;
-  /* la blanche part, la casse éclate */
-  const hit=760;if(e<hit){const p=sm2((e-480)/(hit-480));const y0=cy+th*.38,y1=cy+r*.6;x.fillStyle="#fff";x.beginPath();x.arc(cx,y0+(y1-y0)*p*p,r,0,7);x.fill()}
-  B.forEach(b=>{let X=b.x,Y=b.y;if(e>hit){const s=(e-hit)/1e3,f=(1-Math.exp(-s*1.6))/1.6;X+=b.vx*f*.55;Y+=b.vy*f*.55}ball(b,X,Y)});
-  if(e>hit&&e<hit+160){x.fillStyle=`rgba(255,255,255,${(1-(e-hit)/160)*.5})`;x.fillRect(0,0,W,H)}
-  x.globalAlpha=1};
- requestAnimationFrame(fr);return 1350};
+/* ---------- Salle de jeux : la salle est dans le noir, la lampe s’allume doucement sur la dernière table, puis l’interface apparaît ---------- */
+const gmr=()=>{const{o,x,W,H}=mk(),T0=performance.now(),D=2300;document.body.classList.add("sjin");setTimeout(()=>document.body.classList.remove("sjin"),1500);S(196,.03,250);S(294,.025,700);S(392,.02,1100);
+ const fr=t=>{const e=t-T0;if(e>D){o.remove();return}requestAnimationFrame(fr);x.clearRect(0,0,W,H);const sm2=v=>{v=Math.max(0,Math.min(1,v));return v*v*(3-2*v)},L=sm2((e-250)/900),out=sm2((e-1300)/1000),fl=e>250&&e<420?(Math.sin(e/18)>.2?1:.5):1;
+  x.fillStyle=`rgba(3,8,7,${.97*(1-out)})`;x.fillRect(0,0,W,H);x.globalCompositeOperation="destination-out";const cx=W/2,cy=H*.48,g=x.createRadialGradient(cx,H*.05,10,cx,cy,Math.max(W,H)*.75);g.addColorStop(0,`rgba(0,0,0,${L*fl})`);g.addColorStop(.55,`rgba(0,0,0,${.85*L*fl})`);g.addColorStop(1,"rgba(0,0,0,0)");x.fillStyle=g;x.beginPath();x.moveTo(cx-W*.1,0);x.lineTo(cx+W*.1,0);x.lineTo(cx+W*.75,H);x.lineTo(cx-W*.75,H);x.fill();x.globalCompositeOperation="source-over";
+  const w=x.createRadialGradient(cx,H*.08,4,cx,H*.3,H*.5);w.addColorStop(0,`rgba(255,226,150,${.18*L*(1-out)})`);w.addColorStop(1,"rgba(255,226,150,0)");x.fillStyle=w;x.fillRect(0,0,W,H)};
+ requestAnimationFrame(fr);return 0};
 setTimeout(()=>{const _o=act.open;act.open=function(e){const home=!!document.querySelector('.tile')&&!document.querySelector('.trv,.trx');const fx=home&&(e==='sallearcade'?arc:e==='sallejeux'?gmr:null);if(!fx)return _o.apply(this,arguments);const a=arguments,t=this,d=matchMedia('(prefers-reduced-motion: reduce)').matches?0:fx();setTimeout(()=>_o.apply(t,a),d)}},600);
 })();</script>
 
@@ -3626,5 +3612,5 @@ let _o;setTimeout(()=>{_o=act.open;act.open=function(e){if(IN)return _o.apply(th
 .sj3 .ahm{background:radial-gradient(circle,color-mix(in srgb,var(--c) 70%,#000) 0 30%,rgba(255,255,255,.35) 31% 46%,var(--c) 47%);box-shadow:inset 0 0 0 2px rgba(255,255,255,.25)}.sj3 .ahm.b{background:color-mix(in srgb,var(--c) 55%,#000);box-shadow:none}
 .sj3 .ahk{background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.9) 0 9%,transparent 40%),radial-gradient(circle at 60% 70%,transparent 40%,rgba(0,0,0,.5)),var(--c)}
 .sj3 .ahk::after{content:"";position:absolute;left:32%;right:32%;top:70%;height:80%;background:linear-gradient(90deg,color-mix(in srgb,var(--c) 60%,#000),var(--c),color-mix(in srgb,var(--c) 60%,#000));border-radius:0 0 30% 30%;z-index:-1}
-</style></body>
+</style><style>.rlo{animation:rlf .45s ease-out}.rlo.out{animation:rlfo .38s ease-in forwards}@keyframes rlfo{to{opacity:0}}.rlp{animation:rlu2 .6s cubic-bezier(.22,1,.36,1) both}.rlo.out .rlp{animation:rlu2o .38s cubic-bezier(.5,0,.75,0) forwards}@keyframes rlu2{from{transform:scale(.06);opacity:0;filter:blur(6px)}60%{opacity:1}to{transform:none;opacity:1;filter:none}}@keyframes rlu2o{to{transform:scale(.06);opacity:0;filter:blur(4px)}}.rlp>*{animation:rlc .5s .22s ease-out both}@keyframes rlc{from{opacity:0;transform:translateY(6px)}}@media (prefers-reduced-motion:reduce){.rlp,.rlp>*,.rlo{animation-duration:.01s!important}}body.sjin .sjw .vztp,body.sjin .sjw .sjpl,body.sjin .sjw .vzbt{opacity:0;transform:translateY(8px)}body.sjin .sjw .sjar,body.sjin #sjwall .neon{opacity:0}.sjw .vztp,.sjw .sjpl,.sjw .vzbt{transition:opacity .7s ease,transform .7s ease}.sjw .sjar{transition:opacity .7s ease .25s}.sjw .sjpl{transition-delay:.08s}.sjw .vzbt{transition-delay:.18s}#sjwall .neon{transition:opacity 1s ease .2s}</style></body>
 </html>
