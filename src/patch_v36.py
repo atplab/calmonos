@@ -675,9 +675,9 @@ rep(" if(f.hk)s+=`<path d=\"M52 30L70 49\""," if(f.gk)s+=`<circle cx=\"36\" cy=\
 
 rep("  f.px=Math.max(0,Math.min(tw-f.fw,f.px));f.py=Math.max(0,Math.min(th*.8-f.fh,f.py));","  if(f.mode!=='hk'){f.px=Math.max(0,Math.min(tw-f.fw,f.px));f.py=Math.max(0,Math.min(th*.8-f.fh,f.py))}")
 
-rep("sp:'Niveaux et mode infini'}];","sp:'Niveaux et mode infini'},\n{id:'airhockey',n:'Air hockey',ic:'🏒',a:'#4aa3d8',b:'#1d4f7a',t:'La table glisse',s:'Contre l’IA en 20 niveaux, à deux sur le même écran ou en ligne avec un ami.',sp:'IA, à deux ou en ligne'}];")
+rep("sp:'Niveaux et mode infini'}];","sp:'Niveaux et mode infini'},\n{id:'airhockey',n:'Air hockey',ic:'🏒',a:'#4aa3d8',b:'#1d4f7a',t:'La table glisse',s:'Contre l’IA en 20 niveaux, à deux sur le même écran ou en ligne avec un ami.',sp:'IA, à deux ou en ligne'},\n{id:'bowling',n:'Bowling',ic:'🎳',a:'#63b2a6',b:'#274a78',t:'La piste givrée',s:'Viser, doser sa force et faire tomber les quilles. Affronte l’IA sur des niveaux infinis, joue à deux ou lance un salon en ligne.',sp:'IA, à deux ou en ligne'}];")
 rep("v==='solitaire'?soHub():","v==='solitaire'?soHub():v==='airhockey'?ahHub():")
-rep("function chHub(){",R57('airhockey.js')+"\nfunction chHub(){")
+rep("function chHub(){",R57('airhockey.js')+R57('bowling.js')+"\nfunction chHub(){")
 rep("  if(x.av&&typeof x.av==='object'){const t=+x.av.t||0","  if(x.ah&&typeof x.ah==='object'&&typeof x.ah.g==='string'&&/^[a-z0-9]{0,20}$/.test(x.ah.g)&&(x.ah.w===''||SOK.test(x.ah.w))&&(+x.ah.t||0)>((o.ah&&o.ah.t)||0))o.ah={g:x.ah.g,w:x.ah.w,t:+x.ah.t||0};\n  if(x.av&&typeof x.av==='object'){const t=+x.av.t||0")
 rep("o.un?[o.un.g,o.un.t]:0,","o.un?[o.un.g,o.un.t]:0,o.ah?[o.ah.g,o.ah.w,o.ah.t]:0,")
 
@@ -699,7 +699,7 @@ rep(" const xon=xmasOn()&&!g.soon&&!g.nox,"," const xon=xLvOn()&&!g.soon&&!g.nox
 rep("<b>${NLX} niveaux de fêtes</b><span>Disponible le 1er décembre</span>","<b>${NLX} niveaux de fêtes</b><span>${xmasOn()?'Étape 10 de l’histoire':'Disponible le 1er décembre'}</span>")
 
 rep("sp:''},\n{id:'airhockey'","sp:''},\n{id:'colorie',n:'Coloriage',ic:'🎨',a:'#e88ab0',b:'#7a3f8a',t:'Couleurs du soir',s:'Colorie les dessins case par case, en suivant les numéros.',sp:''},\n{id:'airhockey'")
-rep("v==='airhockey'?ahHub():","v==='airhockey'?ahHub():v==='colorie'?cbHub():")
+rep("v==='airhockey'?ahHub():","v==='airhockey'?ahHub():v==='bowling'?bwHub():v==='colorie'?cbHub():")
 rep("function chHub(){",R57('colorie.js')+R57('coldes.js')+"\nfunction chHub(){")
 
 rep("<button class=\"hb\" data-a=\"hint\">Indice · ${hint} ❄</button>","<button class=\"hb hintb\" data-a=\"hint\" aria-label=\"Indice : coûte ${hint} flocon${hint>1?'s':''}\">${HBI(hint)}</button>")
