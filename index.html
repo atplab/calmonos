@@ -3747,9 +3747,9 @@ bwDd:()=>{$("#bwlv").classList.toggle("open")},bwOnT:()=>{$("#bwon").classList.t
 })}
 const bwCss=document.createElement("style");bwCss.textContent=`.pt-bowling{background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.08) 0 38px,transparent 39px 40px)}.bww{position:relative;max-width:440px;margin:8px auto}.bww canvas{display:block;width:100%;border-radius:18px;touch-action:none}.bwscore{position:absolute;left:10px;right:10px;top:10px}.bwhud{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;border-radius:12px;background:rgba(22,43,72,.78);color:#fff}.bwhud span{min-width:72px}.bwhud span:last-child{text-align:right}.bwhud small,.bwhud b{display:block}.bwhud i{font-style:normal}.bwvar{width:max-content;margin:8px auto;padding:5px 9px;border-radius:999px;background:rgba(255,255,255,.82);font-size:12px}`;
 document.head.appendChild(bwCss);
-})();
 window.bwHub=bwHub;
 setTimeout(()=>{const _o=act.open;act.open=function(v){if(v==="bowling")return bwHub();return _o.apply(this,arguments)}},210);
+})();
 
 const TB={
  airhockey(c,w,h,s,dt){if(!s.p){s.p={x:w/2,y:h/2,vx:150,vy:260};s.a={x:w/2,y:h*.85};s.b={x:w/2,y:h*.15};s.tr=[];s.sc=[0,0];s.fl=0}const p=s.p,R=11,M=20;p.x+=p.vx*dt;p.y+=p.vy*dt;const m=24;if(p.x<m+R||p.x>w-m-R){p.vx*=-1;p.x=Math.max(m+R,Math.min(w-m-R,p.x))}
