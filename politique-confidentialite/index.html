@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Politique de confidentialité de Calmos, application de jeux de détente éditée par Nextonset · Atplab."
+    />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#263d64" />
+    <title>Politique de confidentialité — Calmos</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #26334f;
+        --muted: #65708a;
+        --paper: #fffdf8;
+        --line: #e5e2dc;
+        --accent: #5f60a9;
+        --accent-soft: #eeecff;
+        --sky: #edf1ff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 12% 5%, rgba(169, 156, 240, 0.24), transparent 28rem),
+          radial-gradient(circle at 90% 18%, rgba(127, 182, 230, 0.18), transparent 24rem),
+          var(--sky);
+        font-family:
+          Nunito, Inter, ui-rounded, "Segoe UI", system-ui, -apple-system, sans-serif;
+        line-height: 1.65;
+      }
+
+      a {
+        color: #4e4f99;
+        text-underline-offset: 0.18em;
+      }
+
+      .shell {
+        width: min(100% - 32px, 840px);
+        margin: 0 auto;
+        padding: 32px 0 64px;
+      }
+
+      .hero {
+        position: relative;
+        overflow: hidden;
+        padding: clamp(28px, 6vw, 52px);
+        color: white;
+        background: linear-gradient(145deg, #2b426a, #5558a8 65%, #7566b5);
+        border-radius: 28px;
+        box-shadow: 0 24px 70px rgba(39, 49, 85, 0.2);
+      }
+
+      .hero::after {
+        position: absolute;
+        right: -38px;
+        bottom: -72px;
+        width: 230px;
+        height: 230px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 50%;
+        box-shadow:
+          0 0 0 28px rgba(255, 255, 255, 0.04),
+          0 0 0 62px rgba(255, 255, 255, 0.03);
+        content: "";
+      }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        color: #dfe4ff;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3 {
+        line-height: 1.2;
+      }
+
+      h1 {
+        max-width: 650px;
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(2rem, 7vw, 4rem);
+        font-weight: 600;
+        letter-spacing: -0.035em;
+      }
+
+      .hero p {
+        position: relative;
+        z-index: 1;
+        max-width: 610px;
+        margin: 18px 0 0;
+        color: #f2f3ff;
+        font-size: 1.05rem;
+      }
+
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 18px;
+        margin-top: 24px;
+        color: #dfe4ff;
+        font-size: 0.9rem;
+      }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 20px 0;
+        padding: 16px;
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        backdrop-filter: blur(16px);
+      }
+
+      nav a {
+        padding: 7px 12px;
+        color: var(--ink);
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      main {
+        padding: clamp(22px, 5vw, 48px);
+        background: var(--paper);
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        border-radius: 28px;
+        box-shadow: 0 20px 60px rgba(39, 49, 85, 0.12);
+      }
+
+      section + section {
+        margin-top: 42px;
+        padding-top: 36px;
+        border-top: 1px solid var(--line);
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(1.45rem, 4vw, 2rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+      }
+
+      h3 {
+        margin: 24px 0 8px;
+        font-size: 1.05rem;
+      }
+
+      p,
+      ul {
+        margin: 10px 0 0;
+      }
+
+      ul {
+        padding-left: 1.3rem;
+      }
+
+      li + li {
+        margin-top: 8px;
+      }
+
+      .summary,
+      .contact {
+        padding: 20px;
+        background: var(--accent-soft);
+        border: 1px solid #dcd8ff;
+        border-radius: 18px;
+      }
+
+      .summary strong {
+        color: #3d3e80;
+      }
+
+      .data-grid {
+        display: grid;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .data-card {
+        padding: 18px;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+      }
+
+      .data-card h3 {
+        margin-top: 0;
+      }
+
+      .data-card p {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .data-card b {
+        color: var(--ink);
+      }
+
+      footer {
+        padding: 26px 12px 0;
+        color: var(--muted);
+        font-size: 0.88rem;
+        text-align: center;
+      }
+
+      @media (max-width: 560px) {
+        .shell {
+          width: min(100% - 20px, 840px);
+          padding-top: 10px;
+        }
+
+        .hero,
+        main {
+          border-radius: 22px;
+        }
+
+        nav {
+          margin: 10px 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="hero">
+        <p class="eyebrow">Calmos · Nextonset · Atplab</p>
+        <h1>Politique de confidentialité</h1>
+        <p>
+          Cette page explique de façon transparente quelles données Calmos traite, pourquoi elles
+          sont utilisées et comment exercer vos droits.
+        </p>
+        <div class="meta">
+          <span>Dernière mise à jour : 14 novembre 2026</span>
+          <span>Application destinée aux personnes de 14 ans et plus</span>
+        </div>
+      </header>
+
+      <nav aria-label="Sommaire">
+        <a href="#collecte">Données collectées</a>
+        <a href="#cartographie">Cartographie</a>
+        <a href="#utilisation">Utilisation</a>
+        <a href="#partage">Partage</a>
+        <a href="#conservation">Conservation</a>
+        <a href="#droits">Vos droits</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <main>
+        <section class="summary" aria-label="Résumé">
+          <strong>En bref :</strong> sans compte, la progression et les réglages restent sur
+          l’appareil. Calmos ne vend pas les données personnelles et ne réalise pas de profilage
+          publicitaire. Les données d’un compte peuvent être supprimées depuis les réglages de
+          l’application.
+        </section>
+
+        <section>
+          <h2>Responsable du traitement</h2>
+          <p>
+            Calmos est édité par <strong>Emmanuel Ricard</strong>, sous les noms
+            <strong>Nextonset</strong> et <strong>Atplab</strong>, au Québec, Canada.
+          </p>
+          <p>
+            Responsable de la protection des renseignements personnels :
+            <a href="mailto:nextonset@pm.me">nextonset@pm.me</a>.
+          </p>
+        </section>
+
+        <section id="collecte">
+          <h2>Données que nous traitons</h2>
+          <h3>Utilisation sans compte</h3>
+          <ul>
+            <li>Progression, réglages, préférences et scores enregistrés localement sur l’appareil.</li>
+            <li>
+              Tranche d’âge choisie et état de l’autorisation parentale, enregistrés uniquement sur
+              l’appareil. Calmos ne demande pas la date de naissance ni l’identité du parent.
+            </li>
+            <li>Sans compte, ces données de jeu ne sont pas synchronisées avec nos serveurs.</li>
+          </ul>
+
+          <h3>Utilisation avec un compte</h3>
+          <ul>
+            <li>Adresse courriel ou compte Google, identifiant de compte et pseudonyme.</li>
+            <li>Progression, flocons, scores et classements.</li>
+            <li>Liste d’amis, messages entre amis et invitations.</li>
+            <li>Parties sociales de Motuiles et avis envoyés depuis l’application.</li>
+          </ul>
+
+          <h3>Achats facultatifs</h3>
+          <p>
+            Sur la version Web, les paiements sont traités par Stripe. Nous ne voyons ni ne
+            conservons le numéro de carte. Nous conservons uniquement les informations nécessaires
+            au suivi de l’achat, comme sa référence, son montant et son état.
+          </p>
+
+          <h3>Publicités récompensées facultatives</h3>
+          <p>
+            Aucune publicité n’interrompt les parties. Une publicité récompensée peut être lancée
+            volontairement par un utilisateur adulte depuis la boutique. Chaque publicité terminée
+            rapporte 20 flocons, dans la limite de six publicités sur une fenêtre glissante de six
+            heures. Les publicités sont désactivées pour tous les utilisateurs de moins de 18 ans.
+            Pour un adulte, Google peut traiter des données techniques et un identifiant publicitaire
+            selon le consentement donné sur l’appareil.
+          </p>
+
+          <h3>Données techniques</h3>
+          <p>
+            Les fournisseurs contactés par l’application peuvent recevoir des données techniques
+            nécessaires à la connexion, notamment l’adresse IP, le type d’appareil, le système
+            d’exploitation et des informations de diagnostic ou de sécurité.
+          </p>
+          <p>
+            Calmos ne demande pas d’accès direct à la localisation précise, aux contacts, aux photos
+            ou fichiers personnels, au microphone, à la caméra ni aux données de santé de l’appareil.
+          </p>
+        </section>
+
+        <section id="cartographie">
+          <h2>Cartographie des données et des destinataires</h2>
+          <p>
+            Les catégories ci-dessous décrivent les flux de données possibles selon les fonctions
+            effectivement utilisées. Les fonctions facultatives qui ne sont pas activées ne
+            transmettent pas les données correspondantes.
+          </p>
+          <div class="data-grid">
+            <article class="data-card">
+              <h3>Compte et authentification</h3>
+              <p>
+                <b>Données :</b> adresse courriel, identifiant de compte, pseudonyme et, en cas de
+                connexion Google, informations de profil de base fournies par Google.
+              </p>
+              <p><b>Finalité :</b> créer, connecter, sécuriser et supprimer le compte.</p>
+              <p><b>Destinataire :</b> fournisseur d’identité et d’infrastructure — Google Firebase.</p>
+            </article>
+
+            <article class="data-card">
+              <h3>Progression et fonctions sociales</h3>
+              <p>
+                <b>Données :</b> progression, réglages synchronisés, flocons, scores, pseudonyme,
+                amis, messages entre amis, invitations, parties sociales et avis.
+              </p>
+              <p>
+                <b>Finalité :</b> sauvegarde multiappareil, classements et fonctions sociales choisies.
+              </p>
+              <p>
+                <b>Destinataire :</b> fournisseur d’hébergement cloud et de base de données — Google
+                Firebase, y compris Firestore et Cloud Functions.
+              </p>
+            </article>
+
+            <article class="data-card">
+              <h3>Publicité récompensée</h3>
+              <p>
+                <b>Données possibles :</b> adresse IP, identifiant publicitaire, informations sur
+                l’appareil et événement d’affichage ou de récompense, uniquement pour les utilisateurs
+                ayant indiqué avoir 18 ans ou plus.
+              </p>
+              <p>
+                <b>Finalité :</b> afficher une publicité demandée volontairement et attribuer la
+                récompense correspondante.
+              </p>
+              <p>
+                <b>Destinataire :</b> fournisseur de publicité — Google AdMob sur Android ou Google
+                AdSense sur le Web.
+              </p>
+            </article>
+
+            <article class="data-card">
+              <h3>Achat de flocons sur le Web</h3>
+              <p>
+                <b>Données :</b> données de paiement transmises directement à Stripe ; référence,
+                montant et état de l’achat transmis à Calmos.
+              </p>
+              <p><b>Finalité :</b> traiter, confirmer et assister l’achat.</p>
+              <p><b>Destinataire :</b> prestataire de paiement — Stripe.</p>
+              <p>
+                <b>Mineurs :</b> les achats sont désactivés avant 14 ans. De 14 à 17 ans, ils sont
+                disponibles uniquement après l’autorisation explicite du parent ou du tuteur. Stripe
+                reste désactivé dans la version Google Play ; les achats Android ne seront proposés
+                qu’après intégration de Google Play Billing.
+              </p>
+            </article>
+
+            <article class="data-card">
+              <h3>Affichage, livraison et disponibilité du service</h3>
+              <p><b>Données possibles :</b> adresse IP et données techniques de requête.</p>
+              <p>
+                <b>Finalité :</b> charger les polices, les bibliothèques nécessaires et un fichier
+                technique qui permet de désactiver une fonction défectueuse.
+              </p>
+              <p>
+                <b>Destinataires :</b> fournisseurs de contenu et d’infrastructure — Google Fonts,
+                Google gstatic et GitHub.
+              </p>
+            </article>
+
+            <article class="data-card">
+              <h3>Liens vers des ressources externes</h3>
+              <p>
+                <b>Données possibles :</b> adresse IP et données techniques du navigateur lorsque
+                l’utilisateur choisit d’ouvrir un lien externe.
+              </p>
+              <p><b>Finalité :</b> afficher la ressource demandée sur le site tiers.</p>
+              <p>
+                <b>Destinataires :</b> sites externes concernés, notamment les ressources
+                d’information sur le bien-être citées dans Calmos.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section id="utilisation">
+          <h2>Pourquoi nous utilisons ces données</h2>
+          <ul>
+            <li>Faire fonctionner l’application et sauvegarder la progression.</li>
+            <li>Créer et sécuriser un compte, puis permettre la synchronisation.</li>
+            <li>Proposer les fonctions sociales choisies par l’utilisateur.</li>
+            <li>Traiter les achats facultatifs et attribuer les flocons correspondants.</li>
+            <li>Afficher une publicité récompensée uniquement à la demande de l’utilisateur.</li>
+            <li>Prévenir la fraude, les abus et la manipulation des classements.</li>
+            <li>Répondre aux demandes d’assistance et respecter nos obligations légales.</li>
+          </ul>
+          <p>
+            Selon la situation, le traitement repose sur l’exécution du service demandé, le
+            consentement, notre intérêt légitime à sécuriser Calmos ou une obligation légale.
+          </p>
+        </section>
+
+        <section id="partage">
+          <h2>Fournisseurs et partage des données</h2>
+          <p>Nous partageons uniquement les données nécessaires avec les services suivants :</p>
+          <ul>
+            <li>
+              <strong>Google Firebase</strong> : authentification, base de données et synchronisation
+              des comptes.
+            </li>
+            <li><strong>Google Fonts</strong> : chargement des polices sur la version Web.</li>
+            <li>
+              <strong>Google AdSense et AdMob</strong> : publicités récompensées facultatives.
+            </li>
+            <li><strong>Stripe</strong> : traitement sécurisé des paiements sur la version Web.</li>
+          </ul>
+          <p>
+            Ces fournisseurs peuvent traiter des données hors du Québec, notamment aux États-Unis,
+            selon leurs propres politiques et garanties de protection. Nextonset ne vend pas les
+            données personnelles et ne les loue pas à des tiers.
+          </p>
+          <p>
+            Le pseudonyme, les scores et la progression partagée peuvent être visibles par les amis
+            ou dans les classements selon les réglages choisis dans l’application.
+          </p>
+        </section>
+
+        <section id="conservation">
+          <h2>Conservation et sécurité</h2>
+          <p>
+            Les données locales restent sur l’appareil jusqu’à la réinitialisation de l’application
+            ou sa désinstallation. Les données liées à un compte sont conservées tant que ce compte
+            existe.
+          </p>
+          <p>
+            Lorsqu’un compte est supprimé, ses données sont effacées, sauf celles que la loi nous
+            oblige à conserver, notamment certains registres d’achats. Nous appliquons des mesures
+            raisonnables de contrôle d’accès et utilisons des fournisseurs reconnus pour protéger les
+            renseignements.
+          </p>
+          <p>
+            Nous tenons un registre des incidents de confidentialité. Si un incident présente un
+            risque de préjudice sérieux, nous avisons les autorités et les personnes concernées
+            conformément à la loi.
+          </p>
+        </section>
+
+        <section id="droits">
+          <h2>Vos choix et vos droits</h2>
+          <ul>
+            <li>
+              Demander l’accès, la rectification, la suppression ou une copie portable de vos
+              renseignements.
+            </li>
+            <li>Retirer un consentement ou vous opposer à certains traitements.</li>
+            <li>
+              Modifier le partage des scores et le consentement publicitaire depuis les réglages de
+              Calmos.
+            </li>
+            <li>
+              Supprimer le compte et ses données en un geste depuis
+              <strong>Réglages → Supprimer mon compte et mes données</strong>.
+            </li>
+          </ul>
+          <p>
+            Vous pouvez aussi écrire à <a href="mailto:nextonset@pm.me">nextonset@pm.me</a>. Nous
+            répondons aux demandes recevables dans un délai de 30 jours.
+          </p>
+          <p>
+            Au Québec, une plainte peut être adressée à la
+            <a href="https://www.cai.gouv.qc.ca/" rel="noopener">Commission d’accès à l’information</a>.
+            Dans l’Union européenne, les droits prévus par le RGPD s’appliquent et une plainte peut
+            être déposée auprès de l’autorité de protection des données du pays de résidence.
+          </p>
+        </section>
+
+        <section>
+          <h2>Protection des enfants</h2>
+          <p>
+            Calmos affiche un écran d’âge neutre et enregistre uniquement une tranche d’âge sur
+            l’appareil. Aucun avantage de jeu n’est accordé selon la réponse.
+          </p>
+          <ul>
+            <li>
+              <strong>Moins de 14 ans :</strong> seuls les jeux locaux sont accessibles. Les comptes,
+              messages, fonctions en ligne, achats et publicités sont désactivés.
+            </li>
+            <li>
+              <strong>14 à 17 ans :</strong> les publicités restent désactivées. Un parent ou tuteur
+              doit accomplir le contrôle parental et autoriser explicitement le compte, les amis, les
+              classements, les messages et les achats avant leur activation. Chaque achat reste
+              facultatif et son prix doit être confirmé avant paiement.
+            </li>
+            <li>
+              <strong>18 ans ou plus :</strong> les fonctions facultatives sont disponibles selon les
+              choix et consentements de l’utilisateur.
+            </li>
+          </ul>
+          <p>
+            L’autorisation parentale est conservée localement et peut être révoquée en modifiant la
+            tranche d’âge dans les réglages. Les conversations proposent des fonctions de signalement
+            et de blocage. Si vous pensez qu’un enfant nous a transmis des renseignements sans
+            autorisation appropriée, contactez-nous afin que nous puissions les supprimer.
+          </p>
+        </section>
+
+        <section>
+          <h2>Modifications de cette politique</h2>
+          <p>
+            Cette politique peut être mise à jour pour refléter une évolution de Calmos, de ses
+            fournisseurs ou de la loi. La date affichée en haut de la page indique la version en
+            vigueur.
+          </p>
+        </section>
+
+        <section>
+          <h2>Accès public à cette politique</h2>
+          <p>
+            Cette politique est publiée sous la forme d’une page Web HTML standard. Elle est
+            consultable sans compte, sans connexion à Calmos et sans téléchargement de fichier. Son
+            accès n’est volontairement soumis à aucune restriction géographique par Nextonset.
+          </p>
+        </section>
+
+        <section id="contact" class="contact">
+          <h2>Nous contacter</h2>
+          <p>
+            Pour toute question ou demande relative à la confidentialité :
+            <a href="mailto:nextonset@pm.me"><strong>nextonset@pm.me</strong></a>.
+          </p>
+          <p>Éditeur : Emmanuel Ricard · Nextonset · Atplab · Québec, Canada.</p>
+        </section>
+      </main>
+
+      <footer>
+        <p>© 2026 Nextonset · Atplab. Tous droits réservés.</p>
+        <p><a href="../../">Retour à Calmos</a></p>
+      </footer>
+    </div>
+  </body>
+</html>
