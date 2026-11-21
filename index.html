@@ -2189,7 +2189,7 @@ G.fx=G.fx.filter(f=>t-f.t<700);G.fx.forEach(f=>{const a=(t-f.t)/700;c.globalAlph
 const pos=e=>{const d=DIR[e.d]||[0,0];return[(e.x+.5+d[0]*e.p)*TS,(e.y+.5+d[1]*e.p)*TS]};
 G.P.forEach(p=>{const[x,y]=pos(p);pDraw(c,p,x,y,TS,t)});const[zx,zy]=pos(G.z);G.state==="dead"?(c.globalAlpha=Math.max(0,1-G.flash),zDraw(c,zx,zy,TS*(1-G.flash*.5),t),c.globalAlpha=1):zDraw(c,zx,zy,TS,t)}
 /* Logique */
-const can=(x,y,d)=>{const v=DIR[d];return v&&!isW(G.g,x+v[0],y+v[1])&&!(d==="d"&&x===7&&y===DY-2)};
+const can=(x,y,d)=>{const v=DIR[d];return v&&!isW(G.g,x+v[0],y+v[1])&&!(d==="d"&&x===7&&y===DY-2)};const canP=(x,y,d)=>{const v=DIR[d];return v&&!isW(G.g,x+v[0],y+v[1])};
 function moveZ(dt){const z=G.z;if(z.nd&&z.d&&z.nd===REV[z.d]&&z.p>0){z.x+=DIR[z.d][0];z.y+=DIR[z.d][1];z.p=1-z.p;z.d=z.nd}
 let m=G.zs*dt;while(m>0){if(z.p===0){if(z.nd&&can(z.x,z.y,z.nd))z.d=z.nd;if(!z.d||!can(z.x,z.y,z.d)){z.d&&(z.d="");return}DIR[z.d][0]&&(z.f=DIR[z.d][0])}const r=Math.min(m,1-z.p);z.p+=r;m-=r;if(z.p>=1){z.x+=DIR[z.d][0];z.y+=DIR[z.d][1];z.p=0;eat()}}}
 function eat(){const k=G.z.x+","+G.z.y;if(G.pe.delete(k)){G.score+=10;G.snd=(G.snd+1)%2;try{sfx(G.snd?740:820,.035)}catch(e){}}
@@ -2201,7 +2201,7 @@ function moveP(p,dt){if(p.st==="home"){p.rel-=dt;if(p.rel<=0){p.st="leave";p.x=7
 const sp=G.ps*(p.k==="shk"&&p.st==="chase"?1.08:1)*(p.st==="scared"?.55:p.st==="eyes"?2.1:1);let m=sp*dt;
 while(m>0){if(p.p===0){if(p.st==="leave"){if(p.y<=DY-2){p.st=G.pow>0&&p.sc===0?"chase":"chase"}else{p.d="u"}}
 if(p.st==="eyes"&&p.x===7&&p.y===DY){p.st="chase";p.d="u";p.sc=1}
-if(p.st!=="leave"){const T=tgt(p),ops=["u","l","d","r"].filter(d=>(d!==REV[p.d]||0)&&(can(p.x,p.y,d)||p.st==="eyes"&&p.x===7&&p.y===DY-2&&d==="d"));let o=ops.length?ops:["u","l","d","r"].filter(d=>can(p.x,p.y,d));
+if(p.st!=="leave"){const T=tgt(p),ops=["u","l","d","r"].filter(d=>(d!==REV[p.d]||0)&&(canP(p.x,p.y,d)||p.st==="eyes"&&p.x===7&&p.y===DY-2&&d==="d"));let o=ops.length?ops:["u","l","d","r"].filter(d=>canP(p.x,p.y,d));
 if(p.st==="eyes"&&p.x===7&&p.y===DY-2)o=["d"];
 if(!o.length)return;if(!T)p.d=o[Math.floor(Math.random()*o.length)];else p.d=o.reduce((b,d)=>{const q=Math.hypot(p.x+DIR[d][0]-T[0],p.y+DIR[d][1]-T[1]),Q=Math.hypot(p.x+DIR[b][0]-T[0],p.y+DIR[b][1]-T[1]);return q<Q?d:b},o[0])}}
 const r=Math.min(m,1-p.p);p.p+=r;m-=r;if(p.p>=1){p.x+=DIR[p.d][0];p.y+=DIR[p.d][1];p.p=0}}}
