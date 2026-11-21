@@ -2191,7 +2191,7 @@ G.P.forEach(p=>{const[x,y]=pos(p);pDraw(c,p,x,y,TS,t)});const[zx,zy]=pos(G.z);G.
 /* Logique */
 const can=(x,y,d)=>{const v=DIR[d];return v&&!isW(G.g,x+v[0],y+v[1])&&!(d==="d"&&x===7&&y===DY-2)};const canP=(x,y,d)=>{const v=DIR[d];return v&&!isW(G.g,x+v[0],y+v[1])};
 function moveZ(dt){const z=G.z;if(z.nd&&z.d&&z.nd===REV[z.d]&&z.p>0){z.x+=DIR[z.d][0];z.y+=DIR[z.d][1];z.p=1-z.p;z.d=z.nd}
-let m=G.zs*dt;while(m>0){if(z.p===0){if(z.nd&&can(z.x,z.y,z.nd))z.d=z.nd;if(!z.d||!can(z.x,z.y,z.d)){z.d&&(z.d="");return}DIR[z.d][0]&&(z.f=DIR[z.d][0])}const r=Math.min(m,1-z.p);z.p+=r;m-=r;if(z.p>=1){z.x+=DIR[z.d][0];z.y+=DIR[z.d][1];z.p=0;eat()}}}
+let m=G.zs*dt;while(m>0){if(z.p===0){if(z.nd&&canP(z.x,z.y,z.nd))z.d=z.nd;if(!z.d||!canP(z.x,z.y,z.d)){z.d&&(z.d="");return}DIR[z.d][0]&&(z.f=DIR[z.d][0])}const r=Math.min(m,1-z.p);z.p+=r;m-=r;if(z.p>=1){z.x+=DIR[z.d][0];z.y+=DIR[z.d][1];z.p=0;eat()}}}
 function eat(){const k=G.z.x+","+G.z.y;if(G.pe.delete(k)){G.score+=10;G.snd=(G.snd+1)%2;try{sfx(G.snd?740:820,.035)}catch(e){}}
 if(G.pw.delete(k)){G.score+=50;G.pow=G.pdur;G.chain=0;G.P.forEach(p=>{p.st==="chase"&&(p.st="scared",p.d=REV[p.d]||p.d,p.p=p.p?1-p.p:0,p.p&&(p.x+=DIR[REV[p.d]][0],p.y+=DIR[REV[p.d]][1]))});try{sfx(520,.25);setTimeout(()=>sfx(780,.25),90)}catch(e){}}
 hud();G.pe.size||win()}
